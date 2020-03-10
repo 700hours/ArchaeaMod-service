@@ -64,7 +64,7 @@ namespace ArchaeaMod.Tiles
             AddMapEntry(Color.DarkRed, name);
             disableSmartCursor = true;
             adjTiles = new int[] { TileID.OpenDoor };
-            closeDoorID = mod.TileType<m_doorclosed>();
+            closeDoorID = ModContent.TileType<m_doorclosed>();
         }
 
         public override bool HasSmartInteract()

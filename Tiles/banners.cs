@@ -41,7 +41,7 @@ namespace ArchaeaMod.Tiles
             if (closer)
             {
                 Player player = Main.LocalPlayer;
-                player.NPCBannerBuff[mod.NPCType<NPCs.Hatchling_head>()] = true;
+                player.NPCBannerBuff[ModContent.NPCType<NPCs.Hatchling_head>()] = true;
                 player.hasBanner = true;
             }
         }

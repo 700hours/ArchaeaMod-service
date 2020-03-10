@@ -79,7 +79,7 @@ namespace ArchaeaMod.Projectiles
         private Vector2 moveTo;
         public override void AI()
         {
-            if (!owner.active || owner.dead || !owner.HasBuff(mod.BuffType<Buffs.buff_catcher>()))
+            if (!owner.active || owner.dead || !owner.HasBuff(ModContent.BuffType<Buffs.buff_catcher>()))
                 projectile.active = false;
             if (target == null || target.npc.life <= 0 || !target.npc.active)
             {

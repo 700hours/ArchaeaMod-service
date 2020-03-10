@@ -32,8 +32,8 @@ namespace ArchaeaMod.NPCs
             npc.noTileCollide = true;
             npc.noGravity = true;
             npc.knockBackResist = 0f;
-            bodyType = mod.NPCType<Hatchling_body>();
-            tailType = mod.NPCType<Hatchling_tail>();
+            bodyType = ModContent.NPCType<Hatchling_body>();
+            tailType = ModContent.NPCType<Hatchling_tail>();
         }
         
         public override void AI()

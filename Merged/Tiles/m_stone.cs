@@ -38,24 +38,24 @@ namespace ArchaeaMod.Merged.Tiles
             bool random = Main.rand.Next(2) == 0;
 
             if (random && !Main.tileSolid[Main.tile[i - 1, j].type] && Main.tile[i - 1, j].slope() == 0)
-                WorldGen.PlaceTile(i - 1, j, mod.TileType<c_crystalwall>(), true, false);
+                WorldGen.PlaceTile(i - 1, j, ModContent.TileType<c_crystalwall>(), true, false);
             if (random && !Main.tileSolid[Main.tile[i + 1, j].type] && Main.tile[i + 1, j].slope() == 0)
-                WorldGen.PlaceTile(i + 1, j, mod.TileType<c_crystalwall>(), true, false);
+                WorldGen.PlaceTile(i + 1, j, ModContent.TileType<c_crystalwall>(), true, false);
             if (!Main.tileSolid[tile.type] && !tile.active() && tile.slope() == 0)
             {
                 int chance = Main.rand.Next(4);
                 switch (chance)
                 {
                     case 0:
-                        WorldGen.PlaceTile(i, j - 1, mod.TileType<c_crystal2x2>(), true, false);
+                        WorldGen.PlaceTile(i, j - 1, ModContent.TileType<c_crystal2x2>(), true, false);
                         break;
                     case 1:
-                        WorldGen.PlaceTile(i, j - 1, mod.TileType<c_crystal2x1>(), true, false);
+                        WorldGen.PlaceTile(i, j - 1, ModContent.TileType<c_crystal2x1>(), true, false);
                         break;
                 }
             }   */
-        /*  if(tile.type == mod.TileType<c_crystal2x2>() || tile.type == mod.TileType<c_crystal2x1>() ||
-                Main.tile[i - 1, j].type == mod.TileType<c_crystalwall>() || Main.tile[i + 1, j].type == mod.TileType<c_crystalwall>())
+        /*  if(tile.type == ModContent.TileType<c_crystal2x2>() || tile.type == ModContent.TileType<c_crystal2x1>() ||
+                Main.tile[i - 1, j].type == ModContent.TileType<c_crystalwall>() || Main.tile[i + 1, j].type == ModContent.TileType<c_crystalwall>())
                 Main.NewText("Crystal spawned? i, " + i + " j, " +j, Color.White);  */
         }
     }

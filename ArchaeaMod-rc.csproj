@@ -36,6 +36,7 @@
     <None Include="App.config" />
     <None Include="LICENSE" />
     <None Include="README.md" />
+    <None Include="tmod\ArchaeaMod-a.tmod" />
     <None Include="tmod\ArchaeaMod.tmod" />
     <None Include="Waters\delete.me" />
   </ItemGroup>

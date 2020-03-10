@@ -30,7 +30,7 @@ namespace ArchaeaMod.Items.Tiles
             item.autoReuse = true;
             item.noMelee = true;
             item.consumable = true;
-            item.createTile = mod.TileType<ArchaeaMod.Tiles.sky_brick>();
+            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.sky_brick>();
         }
         public override void AddRecipes()
         {

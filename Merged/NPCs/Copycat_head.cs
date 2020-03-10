@@ -33,8 +33,8 @@ namespace ArchaeaMod.Merged.NPCs
             npc.noTileCollide = true;
             npc.noGravity = true;
             npc.knockBackResist = 0f;
-            bodyType = mod.NPCType<Copycat_body>();
-            tailType = mod.NPCType<Copycat_tail>();
+            bodyType = ModContent.NPCType<Copycat_body>();
+            tailType = ModContent.NPCType<Copycat_tail>();
         }
         
         public override void AI()

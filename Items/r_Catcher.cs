@@ -39,7 +39,7 @@ namespace ArchaeaMod.Items
         private int minions;
         private int buffType
         {
-            get { return mod.BuffType<buff_catcher>(); }
+            get { return ModContent.BuffType<buff_catcher>(); }
         }
         private Projectile minion;
         public override bool UseItem(Player player)

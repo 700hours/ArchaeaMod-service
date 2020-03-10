@@ -61,7 +61,7 @@ namespace ArchaeaMod.NPCs.Bosses
             }
             if ((!head.active || head.life <= 0) || !leader.active)
                 npc.active = false;
-            npc.realLife = head.type == mod.NPCType<Magnoliac_head>() ? head.whoAmI : leader.whoAmI;
+            npc.realLife = head.type == ModContent.NPCType<Magnoliac_head>() ? head.whoAmI : leader.whoAmI;
         }
         public override bool CheckActive()
         {

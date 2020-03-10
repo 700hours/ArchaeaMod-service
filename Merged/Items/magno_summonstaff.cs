@@ -32,7 +32,7 @@ namespace ArchaeaMod.Merged.Items
             item.consumable = false;
             item.noMelee = true;
             item.summon = true;
-            item.buffType = mod.BuffType<magno_summon>();
+            item.buffType = ModContent.BuffType<magno_summon>();
             item.buffTime = 18000;
         }
 

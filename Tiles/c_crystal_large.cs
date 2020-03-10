@@ -62,11 +62,11 @@ namespace ArchaeaMod.Tiles
         }
         public override bool CanKillTile(int i, int j, ref bool blockDamaged)
         {
-            return mod.GetModWorld<ArchaeaWorld>().downedMagno;
+            return ModContent.GetInstance<ArchaeaWorld>().downedMagno;
         }
         public override bool CanExplode(int i, int j)
         {
-            return mod.GetModWorld<ArchaeaWorld>().downedMagno;
+            return ModContent.GetInstance<ArchaeaWorld>().downedMagno;
         }
 
         Texture2D texture;

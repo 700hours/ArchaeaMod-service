@@ -112,7 +112,7 @@ namespace ArchaeaMod.NPCs.Bosses
             if (npcCounter > 1)
             {
                 Vector2 newPosition = ArchaeaNPC.FindAny(npc, target(), false, 300);
-                int n = NPC.NewNPC((int)newPosition.X, (int)newPosition.Y, mod.NPCType<Sky_1>(), 0, 0f, 0f, 0f, 0f, npc.target);
+                int n = NPC.NewNPC((int)newPosition.X, (int)newPosition.Y, ModContent.NPCType<Sky_1>(), 0, 0f, 0f, 0f, 0f, npc.target);
                 if (Main.netMode == 2)
                     NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, n);
                 npcCounter = 0;

@@ -34,13 +34,13 @@ namespace ArchaeaMod.Entities
             float cos = player.Center.X + (float)(radius * Math.Cos(start + orbit));
             float sine = player.Center.Y + (float)(radius * Math.Sin(start + orbit));
             Center = new Vector2(cos, sine);
-            if (!player.active || Items.ArchaeaItem.NotEquipped(player, ModLoader.GetMod("ArchaeaMod").GetItem<Items.m_shield>().item))
+            if (!player.active || Items.ArchaeaItem.NotEquipped(player, ModContent.ItemType<Items.m_shield>()))
                 Kill(true);
         }
         public override void Kill(bool effect)
         {
             if (effect && active)
-                ArchaeaNPC.DustSpread(Center, 2, 2, ModLoader.GetMod("ArchaeaMod").DustType<Merged.Dusts.magno_dust>(), 8, 1.2f, Color.White, false, 2f);
+                ArchaeaNPC.DustSpread(Center, 2, 2, ModContent.DustType<Merged.Dusts.magno_dust>(), 8, 1.2f, Color.White, false, 2f);
             active = false;
         }
     }

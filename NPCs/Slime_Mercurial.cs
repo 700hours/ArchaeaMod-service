@@ -60,8 +60,8 @@ namespace ArchaeaMod.NPCs
         }
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
-            target.AddBuff(mod.BuffType<Buffs.mercury>(), 450);
-            NetMessage.SendData(MessageID.AddPlayerBuff, target.whoAmI, -1, null, mod.BuffType<Buffs.mercury>());
+            target.AddBuff(ModContent.BuffType<Buffs.mercury>(), 450);
+            NetMessage.SendData(MessageID.AddPlayerBuff, target.whoAmI, -1, null, ModContent.BuffType<Buffs.mercury>());
         }
         #region slime methods
         public override bool JustSpawned()

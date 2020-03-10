@@ -27,7 +27,7 @@ namespace ArchaeaMod.Tiles
         }
         public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
         {
-            dustType = mod.DustType<Merged.Dusts.c_silver_dust>();
+            dustType = ModContent.DustType<Merged.Dusts.c_silver_dust>();
             makeDust = true;
             color = Color.LightGray;
         }

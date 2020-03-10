@@ -30,7 +30,7 @@ namespace ArchaeaMod.Items.Tiles
             item.autoReuse = true;
             item.noMelee = true;
             item.consumable = true;
-            item.createTile = mod.TileType<ArchaeaMod.Tiles.m_doorclosed>();
+            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.m_doorclosed>();
         }
 
         public override void AddRecipes()

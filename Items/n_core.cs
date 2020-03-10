@@ -31,7 +31,7 @@ namespace ArchaeaMod.Items
             item.autoReuse = false;
             item.consumable = true;
             item.noMelee = true;
-            bossType = mod.NPCType<Sky_boss>();
+            bossType = ModContent.NPCType<Sky_boss>();
         }
         private int bossType;
         public override bool CanUseItem(Player player)

@@ -64,7 +64,7 @@ namespace ArchaeaMod.Merged.Projectiles
         Vector2 npcCenter;
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.AddBuff(mod.BuffType<ArchaeaMod.Buffs.mercury>(), 450);
+            target.AddBuff(ModContent.BuffType<ArchaeaMod.Buffs.mercury>(), 450);
             if (Main.netMode == 2)
                 NetMessage.SendData(MessageID.SendNPCBuffs, -1, -1, null, target.whoAmI);
         }

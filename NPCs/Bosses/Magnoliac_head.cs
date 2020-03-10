@@ -28,8 +28,8 @@ namespace ArchaeaMod.NPCs.Bosses
             npc.noTileCollide = true;
             npc.boss = true;
             npc.npcSlots = maxParts;
-            bodyType = mod.NPCType<Magnoliac_body>();
-            tailType = mod.NPCType<Magnoliac_tail>();
+            bodyType = ModContent.NPCType<Magnoliac_body>();
+            tailType = ModContent.NPCType<Magnoliac_tail>();
             bossBag = ModContent.ItemType<Merged.Items.magno_treasurebag>();
         }
         public override int maxParts
@@ -55,7 +55,7 @@ namespace ArchaeaMod.NPCs.Bosses
             {
                 for (int i = 0; i < Math.Min((npc.life * -1 + npc.lifeMax) * 0.0001d, 5); i++)
                 {
-                    int n = NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, mod.NPCType<Merged.NPCs.Copycat_head>());
+                    int n = NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, ModContent.NPCType<Merged.NPCs.Copycat_head>());
                     Main.npc[n].whoAmI = n;
                     NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, n);
                 }
@@ -141,7 +141,7 @@ namespace ArchaeaMod.NPCs.Bosses
         public override void NPCLoot()
         {
             if (Main.netMode == 0)
-                mod.GetModWorld<ArchaeaWorld>().downedMagno = true;
+                ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
             else
             {
                 NetHandler.Send(Packet.DownedMagno, -1, -1);

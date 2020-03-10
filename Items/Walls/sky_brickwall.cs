@@ -30,7 +30,7 @@ namespace ArchaeaMod.Items.Walls
             item.autoReuse = true;
             item.noMelee = true;
             item.consumable = true;
-            item.createWall = mod.WallType<ArchaeaMod.Walls.sky_brickwall>();
+            item.createWall = ModContent.WallType<ArchaeaMod.Walls.sky_brickwall>();
         }
         public override void AddRecipes()
         {

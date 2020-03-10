@@ -31,7 +31,7 @@ namespace ArchaeaMod.Items.Tiles
             item.autoReuse = true;
             item.noMelee = true;
             item.consumable = true;
-            item.createTile = mod.TileType<ArchaeaMod.Tiles.paintings>();
+            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.paintings>();
         }
     }
 }
