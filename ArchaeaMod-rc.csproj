@@ -1,0 +1,452 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2F846341-2EEF-4753-B771-598D3B4B96F8}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ArchaeaMod_rc</RootNamespace>
+    <AssemblyName>ArchaeaMod-rc</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="LICENSE" />
+    <None Include="README.md" />
+    <None Include="tmod\ArchaeaMod.tmod" />
+    <None Include="Waters\delete.me" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ArchaeaMod.cs" />
+    <Compile Include="ArchaeaMode.cs" />
+    <Compile Include="ArchaeaPlayer.cs" />
+    <Compile Include="ArchaeaWorld.cs" />
+    <Compile Include="Backgrounds\bg_style.cs" />
+    <Compile Include="Buffs\buff_catcher.cs" />
+    <Compile Include="Buffs\buff_cluster.cs" />
+    <Compile Include="Buffs\flask_mercury.cs" />
+    <Compile Include="Buffs\frozen.cs" />
+    <Compile Include="Buffs\mercury.cs" />
+    <Compile Include="ChatLobby.cs" />
+    <Compile Include="Entities\ArchaeaEntity.cs" />
+    <Compile Include="Entities\Shield.cs" />
+    <Compile Include="FortGen.cs" />
+    <Compile Include="GenLegacy.cs" />
+    <Compile Include="Items\acc_cluster.cs" />
+    <Compile Include="Items\Alternate\Broadsword.cs" />
+    <Compile Include="Items\Alternate\Calling.cs" />
+    <Compile Include="Items\Alternate\Deflector.cs" />
+    <Compile Include="Items\Alternate\Sabre.cs" />
+    <Compile Include="Items\Alternate\Staff.cs" />
+    <Compile Include="Items\ArchaeaItem.cs" />
+    <Compile Include="Items\Armors\RustbaneHead.cs" />
+    <Compile Include="Items\Armors\RustbaneLegs.cs" />
+    <Compile Include="Items\Armors\RustbanePlate.cs" />
+    <Compile Include="Items\Armors\ShockLegs.cs" />
+    <Compile Include="Items\Armors\ShockMask.cs" />
+    <Compile Include="Items\Armors\ShockPlate.cs" />
+    <Compile Include="Items\c_Staff.cs" />
+    <Compile Include="Items\c_Sword.cs" />
+    <Compile Include="Items\flask_mercury.cs" />
+    <Compile Include="Items\gray_solution.cs" />
+    <Compile Include="Items\Materials\r_plate.cs" />
+    <Compile Include="Items\m_fossil.cs" />
+    <Compile Include="Items\m_shield.cs" />
+    <Compile Include="Items\n_core.cs" />
+    <Compile Include="Items\n_Staff.cs" />
+    <Compile Include="Items\r_Catcher.cs" />
+    <Compile Include="Items\r_Flail.cs" />
+    <Compile Include="Items\r_Javelin.cs" />
+    <Compile Include="Items\r_Tomohawk.cs" />
+    <Compile Include="Items\Tiles\banner_hatchling.cs" />
+    <Compile Include="Items\Tiles\mbox_magno_1.cs" />
+    <Compile Include="Items\Tiles\mbox_magno_2.cs" />
+    <Compile Include="Items\Tiles\mbox_magno_boss.cs" />
+    <Compile Include="Items\Tiles\m_biomepainting.cs" />
+    <Compile Include="Items\Tiles\m_chair.cs" />
+    <Compile Include="Items\Tiles\m_chandelier.cs" />
+    <Compile Include="Items\Tiles\m_door.cs" />
+    <Compile Include="Items\Tiles\sky_brick.cs" />
+    <Compile Include="Items\Walls\sky_brickwall.cs" />
+    <Compile Include="LobbyServer.cs" />
+    <Compile Include="MagnoBiome.cs" />
+    <Compile Include="MagnoGen.cs" />
+    <Compile Include="Merged\Backgrounds\bg_style.cs" />
+    <Compile Include="Merged\Buffs\magno_summon.cs" />
+    <Compile Include="Merged\Dusts\cinnabar_dust.cs" />
+    <Compile Include="Merged\Dusts\c_silver_dust.cs" />
+    <Compile Include="Merged\Dusts\magno_dust.cs" />
+    <Compile Include="Merged\Items\Armors\ancient_shockgreaves.cs" />
+    <Compile Include="Merged\Items\Armors\ancient_shockhelmet.cs" />
+    <Compile Include="Merged\Items\Armors\ancient_shockplate.cs" />
+    <Compile Include="Merged\Items\Armors\cinnabargreaves.cs" />
+    <Compile Include="Merged\Items\Armors\cinnabarhelmet.cs" />
+    <Compile Include="Merged\Items\Armors\cinnabarmask.cs" />
+    <Compile Include="Merged\Items\Armors\cinnabarplate.cs" />
+    <Compile Include="Merged\Items\Armors\magnogreaves.cs" />
+    <Compile Include="Merged\Items\Armors\magnoheadgear.cs" />
+    <Compile Include="Merged\Items\Armors\magnohelmet.cs" />
+    <Compile Include="Merged\Items\Armors\magnoplate.cs" />
+    <Compile Include="Merged\Items\cinnabar_bow.cs" />
+    <Compile Include="Merged\Items\cinnabar_dagger.cs" />
+    <Compile Include="Merged\Items\cinnabar_hamaxe.cs" />
+    <Compile Include="Merged\Items\cinnabar_pickaxe.cs" />
+    <Compile Include="Merged\Items\magno_book.cs" />
+    <Compile Include="Merged\Items\magno_summonstaff.cs" />
+    <Compile Include="Merged\Items\magno_treasurebag.cs" />
+    <Compile Include="Merged\Items\magno_trophy.cs" />
+    <Compile Include="Merged\Items\magno_yoyo.cs" />
+    <Compile Include="Merged\Items\Materials\cinnabar_bar.cs" />
+    <Compile Include="Merged\Items\Materials\cinnabar_crystal.cs" />
+    <Compile Include="Merged\Items\Materials\magno_bar.cs" />
+    <Compile Include="Merged\Items\Materials\magno_core.cs" />
+    <Compile Include="Merged\Items\Materials\magno_fragment.cs" />
+    <Compile Include="Merged\Items\Tiles\cinnabar_ore.cs" />
+    <Compile Include="Merged\Items\Tiles\magno_books.cs" />
+    <Compile Include="Merged\Items\Tiles\magno_brick.cs" />
+    <Compile Include="Merged\Items\Tiles\magno_chest.cs" />
+    <Compile Include="Merged\Items\Tiles\magno_dirt.cs" />
+    <Compile Include="Merged\Items\Tiles\magno_ore.cs" />
+    <Compile Include="Merged\Items\Tiles\magno_stone.cs" />
+    <Compile Include="Merged\Items\Vanity\magno_mask.cs" />
+    <Compile Include="Merged\Items\Walls\magno_brickwall.cs" />
+    <Compile Include="Merged\Items\Walls\magno_stonewall.cs" />
+    <Compile Include="Merged\NPCs\Copycat_body.cs" />
+    <Compile Include="Merged\NPCs\Copycat_head.cs" />
+    <Compile Include="Merged\NPCs\Copycat_tail.cs" />
+    <Compile Include="Merged\Projectiles\cinnabar_arrow.cs" />
+    <Compile Include="Merged\Projectiles\cinnabar_dagger.cs" />
+    <Compile Include="Merged\Projectiles\cinnabar_orb.cs" />
+    <Compile Include="Merged\Projectiles\cinnabar_spore.cs" />
+    <Compile Include="Merged\Projectiles\magno_minion.cs" />
+    <Compile Include="Merged\Projectiles\magno_minionexplosion.cs" />
+    <Compile Include="Merged\Projectiles\magno_orb.cs" />
+    <Compile Include="Merged\Projectiles\magno_yoyoprojectile.cs" />
+    <Compile Include="Merged\Tiles\c_crystal2x1.cs" />
+    <Compile Include="Merged\Tiles\c_crystal2x2.cs" />
+    <Compile Include="Merged\Tiles\c_crystalsmall.cs" />
+    <Compile Include="Merged\Tiles\c_ore.cs" />
+    <Compile Include="Merged\Tiles\m_bar.cs" />
+    <Compile Include="Merged\Tiles\m_book.cs" />
+    <Compile Include="Merged\Tiles\m_brick.cs" />
+    <Compile Include="Merged\Tiles\m_chest.cs" />
+    <Compile Include="Merged\Tiles\m_ore.cs" />
+    <Compile Include="Merged\Tiles\m_stone.cs" />
+    <Compile Include="Merged\Tiles\m_trophy.cs" />
+    <Compile Include="Merged\Walls\magno_brick.cs" />
+    <Compile Include="Merged\Walls\magno_stone.cs" />
+    <Compile Include="Merged\Walls\magno_stoneunsafe.cs" />
+    <Compile Include="ModUI.cs" />
+    <Compile Include="NPCs\ArchaeaNPC.cs" />
+    <Compile Include="NPCs\Bosses\Magnoliac_body.cs" />
+    <Compile Include="NPCs\Bosses\Magnoliac_head.cs" />
+    <Compile Include="NPCs\Bosses\Magnoliac_tail.cs" />
+    <Compile Include="NPCs\Bosses\Sky_boss.cs" />
+    <Compile Include="NPCs\Caster.cs" />
+    <Compile Include="NPCs\debug\debug_minion.cs" />
+    <Compile Include="NPCs\Digger.cs" />
+    <Compile Include="NPCs\Fanatic.cs" />
+    <Compile Include="NPCs\Hatchling_body.cs" />
+    <Compile Include="NPCs\Hatchling_head.cs" />
+    <Compile Include="NPCs\Hatchling_tail.cs" />
+    <Compile Include="NPCs\Legacy\Digger_legacy.cs" />
+    <Compile Include="NPCs\Legacy\Sky_air.cs" />
+    <Compile Include="NPCs\Legacy\Sky_air_legacy.cs" />
+    <Compile Include="NPCs\Legacy\Sky_boss.cs" />
+    <Compile Include="NPCs\Legacy\Sky_boss_legacy.cs" />
+    <Compile Include="NPCs\Legacy\Sky_ground.cs" />
+    <Compile Include="NPCs\Legacy\Sky_ground_legacy.cs" />
+    <Compile Include="NPCs\Mimic.cs" />
+    <Compile Include="NPCs\Sky_1.cs" />
+    <Compile Include="NPCs\Sky_2.cs" />
+    <Compile Include="NPCs\Sky_3.cs" />
+    <Compile Include="NPCs\Sky_air.cs" />
+    <Compile Include="NPCs\Slime.cs" />
+    <Compile Include="NPCs\Slime_Itchy.cs" />
+    <Compile Include="NPCs\Slime_Mercurial.cs" />
+    <Compile Include="Projectiles\CatcherMinion.cs" />
+    <Compile Include="Projectiles\Flail.cs" />
+    <Compile Include="Projectiles\Javelin.cs" />
+    <Compile Include="Projectiles\Mercury.cs" />
+    <Compile Include="Projectiles\Orbital.cs" />
+    <Compile Include="Projectiles\Pixel.cs" />
+    <Compile Include="Projectiles\Tomohawk.cs" />
+    <Compile Include="Tiles\ambient_rocks.cs" />
+    <Compile Include="Tiles\ArchaeaTiles.cs" />
+    <Compile Include="Tiles\banners.cs" />
+    <Compile Include="Tiles\c_crystal_large.cs" />
+    <Compile Include="Tiles\music_boxes.cs" />
+    <Compile Include="Tiles\music_boxes_alt.cs" />
+    <Compile Include="Tiles\m_chair.cs" />
+    <Compile Include="Tiles\m_chandelier.cs" />
+    <Compile Include="Tiles\m_doorclosed.cs" />
+    <Compile Include="Tiles\m_dooropen.cs" />
+    <Compile Include="Tiles\paintings.cs" />
+    <Compile Include="Tiles\sky_brick.cs" />
+    <Compile Include="Tiles\sky_portal.cs" />
+    <Compile Include="Walls\ArchaeaWall.cs" />
+    <Compile Include="Walls\magno_cavewall_unsafe.cs" />
+    <Compile Include="Walls\sky_brickwall.cs" />
+    <Compile Include="Walls\sky_brickwall_unsafe.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Backgrounds\bg_magno.png" />
+    <Content Include="Backgrounds\bg_magno_connector.png" />
+    <Content Include="Backgrounds\bg_magno_surface.png" />
+    <Content Include="Backgrounds\MapBGMagno.png" />
+    <Content Include="Buffs\buff_catcher.png" />
+    <Content Include="Buffs\buff_cluster.png" />
+    <Content Include="Buffs\flask_mercury.png" />
+    <Content Include="Buffs\frozen.png" />
+    <Content Include="Buffs\mercury.png" />
+    <Content Include="build.txt" />
+    <Content Include="description.txt" />
+    <Content Include="Gores\chain.png" />
+    <Content Include="Gores\class_icons.png" />
+    <Content Include="Gores\config_icons.png" />
+    <Content Include="Gores\fort_vignette_ui.png" />
+    <Content Include="Gores\MagnoShield.png" />
+    <Content Include="Gores\MagnoShieldGlow.png" />
+    <Content Include="Gores\magno_head.png" />
+    <Content Include="Gores\m_slimeglow.png" />
+    <Content Include="Gores\Sky_1_1.png" />
+    <Content Include="Gores\Sky_1_2.png" />
+    <Content Include="Gores\Sky_1_3.png" />
+    <Content Include="Gores\sky_head.png" />
+    <Content Include="Items\acc_cluster.png" />
+    <Content Include="Items\Alternate\Broadsword.png" />
+    <Content Include="Items\Alternate\Calling.png" />
+    <Content Include="Items\Alternate\CallMinionBuff.png" />
+    <Content Include="Items\Alternate\Deflector.png" />
+    <Content Include="Items\Alternate\Minion.png" />
+    <Content Include="Items\Alternate\Sabre.png" />
+    <Content Include="Items\Alternate\Staff.png" />
+    <Content Include="Items\Armors\Bolt.png" />
+    <Content Include="Items\Armors\RustbaneHead.png" />
+    <Content Include="Items\Armors\RustbaneHead_Head.png" />
+    <Content Include="Items\Armors\RustbaneLegs.png" />
+    <Content Include="Items\Armors\RustbaneLegs_Legs.png" />
+    <Content Include="Items\Armors\RustbanePlate.png" />
+    <Content Include="Items\Armors\RustbanePlate_Arms.png" />
+    <Content Include="Items\Armors\RustbanePlate_Body.png" />
+    <Content Include="Items\Armors\RustbanePlate_FemaleBody.png" />
+    <Content Include="Items\Armors\ShockLegs.png" />
+    <Content Include="Items\Armors\ShockLegs_Legs.png" />
+    <Content Include="Items\Armors\ShockMask.png" />
+    <Content Include="Items\Armors\ShockMask_Head.png" />
+    <Content Include="Items\Armors\ShockPlate.png" />
+    <Content Include="Items\Armors\ShockPlate_Arms.png" />
+    <Content Include="Items\Armors\ShockPlate_Body.png" />
+    <Content Include="Items\Armors\ShockPlate_FemaleBody.png" />
+    <Content Include="Items\c_Staff.png" />
+    <Content Include="Items\c_Sword.png" />
+    <Content Include="Items\flask_mercury.png" />
+    <Content Include="Items\GraySolution.png" />
+    <Content Include="Items\gray_solution.png" />
+    <Content Include="Items\Materials\r_plate.png" />
+    <Content Include="Items\m_fossil.png" />
+    <Content Include="Items\m_shield.png" />
+    <Content Include="Items\n_core.png" />
+    <Content Include="Items\n_Staff.png" />
+    <Content Include="Items\r_Catcher.png" />
+    <Content Include="Items\r_Flail.png" />
+    <Content Include="Items\r_Javelin.png" />
+    <Content Include="Items\r_Tomohawk.png" />
+    <Content Include="Items\Tiles\banner_hatchling.png" />
+    <Content Include="Items\Tiles\mbox_magno_1.png" />
+    <Content Include="Items\Tiles\mbox_magno_2.png" />
+    <Content Include="Items\Tiles\mbox_magno_boss.png" />
+    <Content Include="Items\Tiles\m_biomepainting.png" />
+    <Content Include="Items\Tiles\m_chair.png" />
+    <Content Include="Items\Tiles\m_chandelier.png" />
+    <Content Include="Items\Tiles\m_door.png" />
+    <Content Include="Items\Tiles\sky_brick.png" />
+    <Content Include="Items\Walls\sky_brickwall.png" />
+    <Content Include="Merged\Backgrounds\bg_magno.png" />
+    <Content Include="Merged\Backgrounds\bg_magno_connector.png" />
+    <Content Include="Merged\Backgrounds\bg_magno_surface.png" />
+    <Content Include="Merged\Backgrounds\MapBGMagno.png" />
+    <Content Include="Merged\Buffs\magno_summon.png" />
+    <Content Include="Merged\Dusts\cinnabar_dust.png" />
+    <Content Include="Merged\Dusts\c_silver_dust.png" />
+    <Content Include="Merged\Dusts\magno_dust.png" />
+    <Content Include="Merged\Items\Armors\ancient_shockgreaves.png" />
+    <Content Include="Merged\Items\Armors\ancient_shockgreaves_Legs.png" />
+    <Content Include="Merged\Items\Armors\ancient_shockhelmet.png" />
+    <Content Include="Merged\Items\Armors\ancient_shockhelmet_Head.png" />
+    <Content Include="Merged\Items\Armors\ancient_shockplate.png" />
+    <Content Include="Merged\Items\Armors\ancient_shockplate_Arms.png" />
+    <Content Include="Merged\Items\Armors\ancient_shockplate_Body.png" />
+    <Content Include="Merged\Items\Armors\ancient_shockplate_FemaleBody.png" />
+    <Content Include="Merged\Items\Armors\cinnabargreaves.png" />
+    <Content Include="Merged\Items\Armors\cinnabargreaves_Legs.png" />
+    <Content Include="Merged\Items\Armors\cinnabarhelmet.png" />
+    <Content Include="Merged\Items\Armors\cinnabarhelmet_Head.png" />
+    <Content Include="Merged\Items\Armors\cinnabarmask.png" />
+    <Content Include="Merged\Items\Armors\cinnabarmask_Head.png" />
+    <Content Include="Merged\Items\Armors\cinnabarplate.png" />
+    <Content Include="Merged\Items\Armors\cinnabarplate_Arms.png" />
+    <Content Include="Merged\Items\Armors\cinnabarplate_Body.png" />
+    <Content Include="Merged\Items\Armors\cinnabarplate_FemaleBody.png" />
+    <Content Include="Merged\Items\Armors\magnogreaves.png" />
+    <Content Include="Merged\Items\Armors\magnogreaves_Legs.png" />
+    <Content Include="Merged\Items\Armors\magnoheadgear.png" />
+    <Content Include="Merged\Items\Armors\magnoheadgear_Head.png" />
+    <Content Include="Merged\Items\Armors\magnohelmet.png" />
+    <Content Include="Merged\Items\Armors\magnohelmet_Head.png" />
+    <Content Include="Merged\Items\Armors\magnoplate.png" />
+    <Content Include="Merged\Items\Armors\magnoplate_Arms.png" />
+    <Content Include="Merged\Items\Armors\magnoplate_Body.png" />
+    <Content Include="Merged\Items\Armors\magnoplate_FemaleBody.png" />
+    <Content Include="Merged\Items\cinnabar_bow.png" />
+    <Content Include="Merged\Items\cinnabar_dagger.png" />
+    <Content Include="Merged\Items\cinnabar_hamaxe.png" />
+    <Content Include="Merged\Items\cinnabar_pickaxe.png" />
+    <Content Include="Merged\Items\magno_book.png" />
+    <Content Include="Merged\Items\magno_spear.png" />
+    <Content Include="Merged\Items\magno_summonstaff.png" />
+    <Content Include="Merged\Items\magno_treasurebag.png" />
+    <Content Include="Merged\Items\magno_trophy.png" />
+    <Content Include="Merged\Items\magno_yoyo.png" />
+    <Content Include="Merged\Items\Materials\cinnabar_bar.png" />
+    <Content Include="Merged\Items\Materials\cinnabar_crystal.png" />
+    <Content Include="Merged\Items\Materials\cinnabar_crystal_1.png" />
+    <Content Include="Merged\Items\Materials\magno_bar.png" />
+    <Content Include="Merged\Items\Materials\magno_bar_1.png" />
+    <Content Include="Merged\Items\Materials\magno_core.png" />
+    <Content Include="Merged\Items\Materials\magno_fragment.png" />
+    <Content Include="Merged\Items\Tiles\cinnabar_ore.png" />
+    <Content Include="Merged\Items\Tiles\magno_books.png" />
+    <Content Include="Merged\Items\Tiles\magno_brick.png" />
+    <Content Include="Merged\Items\Tiles\magno_chest.png" />
+    <Content Include="Merged\Items\Tiles\magno_dirt.png" />
+    <Content Include="Merged\Items\Tiles\magno_ore.png" />
+    <Content Include="Merged\Items\Tiles\magno_stone.png" />
+    <Content Include="Merged\Items\Tiles\magno_stone_1.png" />
+    <Content Include="Merged\Items\Vanity\magno_mask.png" />
+    <Content Include="Merged\Items\Vanity\magno_mask_Head.png" />
+    <Content Include="Merged\Items\Walls\magno_brickwall.png" />
+    <Content Include="Merged\Items\Walls\magno_stonewall.png" />
+    <Content Include="Merged\NPCs\Copycat_body.png" />
+    <Content Include="Merged\NPCs\Copycat_head.png" />
+    <Content Include="Merged\NPCs\Copycat_tail.png" />
+    <Content Include="Merged\Projectiles\cinnabar_arrow.png" />
+    <Content Include="Merged\Projectiles\cinnabar_dagger.png" />
+    <Content Include="Merged\Projectiles\cinnabar_orb.png" />
+    <Content Include="Merged\Projectiles\cinnabar_spore.png" />
+    <Content Include="Merged\Projectiles\magno_javelin.png" />
+    <Content Include="Merged\Projectiles\magno_minion.png" />
+    <Content Include="Merged\Projectiles\magno_minionexplosion.png" />
+    <Content Include="Merged\Projectiles\magno_orb.png" />
+    <Content Include="Merged\Projectiles\magno_yoyoprojectile.png" />
+    <Content Include="Merged\text.txt" />
+    <Content Include="Merged\Tiles\c_crystal2x1.png" />
+    <Content Include="Merged\Tiles\c_crystal2x2.png" />
+    <Content Include="Merged\Tiles\c_crystalsmall.png" />
+    <Content Include="Merged\Tiles\c_ore.png" />
+    <Content Include="Merged\Tiles\m_bar.png" />
+    <Content Include="Merged\Tiles\m_book.png" />
+    <Content Include="Merged\Tiles\m_brick.png" />
+    <Content Include="Merged\Tiles\m_chest.png" />
+    <Content Include="Merged\Tiles\m_chest_Highlight.png" />
+    <Content Include="Merged\Tiles\m_ore.png" />
+    <Content Include="Merged\Tiles\m_stone.png" />
+    <Content Include="Merged\Tiles\m_trophy.png" />
+    <Content Include="Merged\Walls\magno_brick.png" />
+    <Content Include="Merged\Walls\magno_stone.png" />
+    <Content Include="Merged\Walls\magno_stoneunsafe.png" />
+    <Content Include="NPCs\Bosses\Flame.png" />
+    <Content Include="NPCs\Bosses\Magnoliac_body.png" />
+    <Content Include="NPCs\Bosses\Magnoliac_head.png" />
+    <Content Include="NPCs\Bosses\Magnoliac_tail.png" />
+    <Content Include="NPCs\Bosses\Orb.png" />
+    <Content Include="NPCs\Bosses\Sky_boss.png" />
+    <Content Include="NPCs\debug\debug_minion.png" />
+    <Content Include="NPCs\Fanatic.png" />
+    <Content Include="NPCs\Hatchling_body.png" />
+    <Content Include="NPCs\Hatchling_head.png" />
+    <Content Include="NPCs\Hatchling_tail.png" />
+    <Content Include="NPCs\Legacy\Sky_boss.png" />
+    <Content Include="NPCs\Mimic.png" />
+    <Content Include="NPCs\Sky_1.png" />
+    <Content Include="NPCs\Sky_2.png" />
+    <Content Include="NPCs\Sky_3.png" />
+    <Content Include="NPCs\Slime_Itchy.png" />
+    <Content Include="NPCs\Slime_Mercurial.png" />
+    <Content Include="Projectiles\CatcherMinion.png" />
+    <Content Include="Projectiles\Flail.png" />
+    <Content Include="Projectiles\Javelin.png" />
+    <Content Include="Projectiles\Mercury.png" />
+    <Content Include="Projectiles\Orbital.png" />
+    <Content Include="Projectiles\Pixel.png" />
+    <Content Include="Projectiles\Tomohawk.png" />
+    <Content Include="Sounds\Music\Dark_and_Evil_with_a_hint_of_Magma.mp3" />
+    <Content Include="Sounds\Music\Magno_Biome.wav" />
+    <Content Include="Sounds\Music\The_Undying_Flare.wav" />
+    <Content Include="Tiles\ambient_rocks.png" />
+    <Content Include="Tiles\banners.png" />
+    <Content Include="Tiles\c_crystal_large.png" />
+    <Content Include="Tiles\music_boxes.png" />
+    <Content Include="Tiles\music_boxes_alt.png" />
+    <Content Include="Tiles\m_chair.png" />
+    <Content Include="Tiles\m_chandelier.png" />
+    <Content Include="Tiles\m_doorclosed.png" />
+    <Content Include="Tiles\m_dooropen.png" />
+    <Content Include="Tiles\paintings.png" />
+    <Content Include="Tiles\sky_brick.png" />
+    <Content Include="Tiles\sky_portal.png" />
+    <Content Include="Walls\magno_cavewall_unsafe.png" />
+    <Content Include="Walls\sky_brickwall.png" />
+    <Content Include="Walls\sky_brickwall_unsafe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Documents\lib\Microsoft.Xna.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Documents\lib\Microsoft.Xna.Framework.Game.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Documents\lib\Microsoft.Xna.Framework.GamerServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Documents\lib\Microsoft.Xna.Framework.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Input.Touch, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Documents\lib\Microsoft.Xna.Framework.Input.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="Terraria">
+      <HintPath>..\tServerApi-Plugins\dependencies\Terraria.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
