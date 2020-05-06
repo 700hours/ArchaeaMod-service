@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -91,6 +92,23 @@ namespace ArchaeaMod
         {
             get { return (ushort)ModContent.WallType<Walls.sky_brickwall_unsafe>(); }
         }
+        public class ColorID
+        {
+            public static byte
+                Empty = 0,
+                Ash = 1,
+                Ore = 2,
+                Stone = 3,
+                Plant = 4;
+        }
+        public static System.Drawing.Color[] type = new System.Drawing.Color[]
+        {
+            System.Drawing.Color.Black,
+            System.Drawing.Color.White,
+            System.Drawing.Color.Red,
+            System.Drawing.Color.Brown,
+            System.Drawing.Color.Green
+        };
         public bool downedMagno;
         public static Miner miner;
         public static List<Vector2> origins = new List<Vector2>();
@@ -99,6 +117,7 @@ namespace ArchaeaMod
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
             int CavesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Granite")); // Granite
+            /*  //  New Magno gen--incomplete implementation
             if (CavesIndex != -1)
             {
                 miner = new Miner();
@@ -106,7 +125,57 @@ namespace ArchaeaMod
                 {
                     progress.Start(1f);
                     progress.Message = "Magno miner";
-                    Biome.MagnoBiome.Generate(progress);
+                    int width = 400, height = 600;
+                    int top = (int)(Main.maxTilesY * 0.75f);
+                    int left = WorldGen.genRand.Next(200, Main.maxTilesX - width);
+                    Bitmap bmp = (Bitmap)Bitmap.FromFile(@"C:\Users\nolan\OneDrive\Documents\My Games\Terraria\ModLoader\Mods\output.bmp");
+                    progress.Message = "Render biome";
+                    for (int i = left; i < left + width; i++)
+                    {
+                        progress.Value += 1f / width;
+                        for (int j = top; j < top + height; j++)
+                        {
+                            if (bmp.GetPixel(i - left, j - top) == type[ColorID.Plant])
+                            {
+                                Main.tile[i, j].active(true);
+                                Main.tile[i, j].type = TileID.JungleGrass;
+                            }
+                            else if (bmp.GetPixel(i - left, j - top) == type[ColorID.Ash])
+                            {
+                                Main.tile[i, j].active(true);
+                                Main.tile[i, j].type = TileID.Ash;
+                            }
+                            else if (bmp.GetPixel(i - left, j - top) == type[ColorID.Empty])
+                            {
+                                Main.tile[i, j].active(false);
+                            }
+                            else if (bmp.GetPixel(i - left, j - top) == type[ColorID.Stone])
+                            {
+                                Main.tile[i, j].active(true);
+                                Main.tile[i, j].type = magnoStone;
+                            }
+                            else if (bmp.GetPixel(i - left, j - top) == type[ColorID.Ore])
+                            {
+                                Main.tile[i, j].active(true);
+                                Main.tile[i, j].type = magnoOre;
+                            }
+                        }
+                    }
+                    progress.End();
+                }));
+            }*/
+            if (CavesIndex != -1)
+            {
+                miner = new Miner();
+                tasks.Insert(CavesIndex, new PassLegacy("Miner", delegate (GenerationProgress progress)
+                {
+                    progress.Start(1f);
+                    progress.Message = "MINER";
+                    miner.active = true;
+                    miner.Reset();
+                    while (miner.active)
+                        miner.Update();
+                    genPosition = miner.genPos;
                     progress.End();
                 }));
             }
@@ -273,7 +342,44 @@ namespace ArchaeaMod
                 progress.Value = 1f;
                 progress.End();
             }));
-        
+
+            float PositionX;
+            const int TileSize = 16;
+            int buffer = 16, wellBuffer = 96, surfaceBuffer = 0;
+            int WellIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Larva"));
+            if (WellIndex != -1)
+            {
+                tasks.Insert(WellIndex + 1, new PassLegacy("Digging Well", delegate (GenerationProgress progress)
+                {
+                    progress.Message = "Digging Well";
+                    Vector2 Center = new Vector2((Main.maxTilesX / 2) * 16, (Main.maxTilesY / 2) * 16);
+                    if ((miner.genPos[0].X + wellBuffer / 3) / TileSize > miner.baseCenter.X / TileSize)
+                    {
+                        PositionX = miner.genPos[1].X / 16;
+                    }
+                    else PositionX = miner.genPos[0].X / 16;
+
+                    int gap = 5;
+                    int MaxTries = 128;
+                    bool dirtWall = Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe1 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe2 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe3 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe4;
+                    for (int i = 0; i < MaxTries; i++)
+                    {
+                        if (Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].active() && Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].wall != 0)
+                        {
+                            surfaceBuffer++;
+                        }
+                        if (!Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].active() && Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].wall == 0)
+                        {
+                            surfaceBuffer--;
+                        }
+                    }
+
+                    buffer = 3;
+                    float distance = Vector2.Distance(new Vector2(PositionX, Main.spawnTileY + 10 - surfaceBuffer) - new Vector2(PositionX, miner.genPos[1].Y / 16), Vector2.Zero);
+                    // comment out '/ 3' for max well length
+                    PlaceWell((int)PositionX, Main.spawnTileY - surfaceBuffer - buffer, distance / 3);
+                }));
+            }
             #region Vector2 array
             /* int x = MagnoDen.bounds.X;
             int y = MagnoDen.bounds.Y;
@@ -413,6 +519,126 @@ namespace ArchaeaMod
                     }
                 }
             }
+        }
+
+        int[,] wellShape = new int[,]
+        {
+            { 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0 },
+            { 0, 0, 5, 2, 4, 0, 5, 2, 4, 0, 0 },
+            { 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0 },
+            { 0, 0, 5, 2, 2, 2, 2, 2, 4, 0, 0 },
+            { 0, 0, 0, 6, 0, 3, 0, 6, 0, 0, 0 },
+            { 0, 0, 0, 6, 0, 3, 0, 6, 0, 0, 0 },
+            { 0, 0, 0, 6, 0, 3, 0, 6, 0, 0, 0 },
+            { 0, 0, 0, 6, 0, 3, 0, 6, 0, 0, 0 },
+            { 0, 0, 0, 1, 0, 3, 0, 1, 0, 0, 0 },
+            { 0, 0, 1, 1, 0, 3, 0, 1, 1, 0, 0 },
+            { 0, 1, 1, 1, 0, 3, 0, 1, 1, 1, 0 },
+            { 7, 7, 7, 1, 0, 3, 0, 1, 7, 7, 7 }
+        };
+        int[,] wellShapeWall = new int[,]
+        {
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 }
+        };
+        public bool PlaceWell(int i, int j, float length)
+        {
+            for (int m = 0; m < (int)length; m++)
+            {
+                for (int n = -2; n < 3; n++)
+                {
+                    WorldGen.KillTile(i + n, j + m, false, false, true);
+                    WorldGen.KillTile(i + n, j + m, false, false, true);
+                    if (n == -2 || n == 2)
+                    {
+                        WorldGen.PlaceTile(i + n, j + m, magnoBrick, true, true);
+                    }
+                    if (n > -2 && n < 2)
+                    {
+                        WorldGen.PlaceWall(i + n, j + m, magnoBrickWall, true);
+                        Main.tile[i + n, j + m].wall = magnoBrickWall;
+                    }
+                }
+                WorldGen.PlaceTile(i, j + m, TileID.Rope);
+            }
+            for (int y = 0; y < wellShape.GetLength(0); y++)
+            {
+                for (int x = 0; x < wellShape.GetLength(1); x++)
+                {
+                    int k = i - 5 + x;
+                    int l = j - 8 + y;
+                    if (WorldGen.InWorld(k, l, 30))
+                    {
+                        Tile tile = Framing.GetTileSafely(k, l);
+                        switch (wellShape[y, x])
+                        {
+                            case 1:
+                                tile.type = magnoBrick;
+                                tile.active(true);
+                                tile.slope(0);
+                                break;
+                            case 2:
+                                if (WorldGen.crimson)
+                                    tile.type = TileID.RedDynastyShingles;
+                                else tile.type = TileID.BlueDynastyShingles;
+                                tile.active(true);
+                                tile.slope(0);
+                                break;
+                            case 3:
+                                tile.type = TileID.Rope;
+                                tile.active(true);
+                                break;
+                            case 4:
+                                if (WorldGen.crimson)
+                                    tile.type = TileID.RedDynastyShingles;
+                                else tile.type = TileID.BlueDynastyShingles;
+                                tile.active(true);
+                                tile.slope(3);
+                                break;
+                            case 5:
+                                if (WorldGen.crimson)
+                                    tile.type = TileID.RedDynastyShingles;
+                                else tile.type = TileID.BlueDynastyShingles;
+                                tile.active(true);
+                                tile.slope(4);
+                                break;
+                            case 6:
+                                tile.type = TileID.WoodenBeam;
+                                tile.active(true);
+                                break;
+                            case 7:
+                                tile.type = magnoBrick;
+                                tile.active(true);
+                                tile.slope(0);
+                                for (int o = 0; o < 6; o++)
+                                {
+                                    Tile tileY = Main.tile[k, l + o];
+                                    tileY.type = magnoBrick;
+                                    tileY.active(true);
+                                    tileY.slope(0);
+                                }
+                                break;
+                        }
+                        switch (wellShapeWall[y, x])
+                        {
+                            case 1:
+                                tile.wall = WallID.Planked;
+                                break;
+                        }
+                    }
+                }
+            }
+            return true;
         }
         public bool MagnoBiome;
         public bool SkyFort;
