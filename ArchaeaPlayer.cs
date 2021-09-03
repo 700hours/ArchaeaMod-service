@@ -781,6 +781,12 @@ namespace ArchaeaMod
                 Fort = 11,
                 Magno = 12;
         }
+        public static bool IsEquipped(Player player, int head, int body, int legs)
+        {
+            if (player.armor[0].type == head && player.armor[1].type == body && player.armor[2].type == legs)
+                return true;
+            return false;
+        }
     }
 
     public class Draw

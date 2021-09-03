@@ -47,16 +47,45 @@ namespace ArchaeaMod.Items
         {
             stack = 0;
         }
-        public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+        public override void PostUpdateEquips()
         {
-            if (player.armor.ToList().Contains(ModContent.GetInstance<acc_cluster>().item));
-                stack++;
+            if (!ArchaeaItem.Elapsed(180))
+                return;
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                if (player.armor[i].type == ModContent.ItemType<acc_cluster>())
+                {
+                    return;
+                }
+                if (i == player.armor.Length - 1)
+                {
+                    player.ClearBuff(ModContent.BuffType<Buffs.buff_cluster>());
+                    break;
+                }
+            }
+        }
+        public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+        {
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                if (player.armor[i].type == ModContent.ItemType<acc_cluster>())
+                {
+                    stack++;
+                    break;
+                }
+            }
             damage += stack;
         }
-        public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            if (player.armor.ToList().Contains<Item>(ModContent.GetInstance<acc_cluster>().item))
-                stack++;
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                if (player.armor[i].type == ModContent.ItemType<acc_cluster>())
+                {
+                    stack++;
+                    break;
+                }
+            }
             damage += stack;
         }
     }

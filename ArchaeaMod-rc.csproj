@@ -6,12 +6,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2F846341-2EEF-4753-B771-598D3B4B96F8}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ArchaeaMod_rc</RootNamespace>
-    <AssemblyName>ArchaeaMod-rc</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>ArchaeaMod</RootNamespace>
+    <AssemblyName>ArchaeaMod</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -167,7 +168,6 @@
     <Compile Include="NPCs\Bosses\Magnoliac_tail.cs" />
     <Compile Include="NPCs\Bosses\Sky_boss.cs" />
     <Compile Include="NPCs\Caster.cs" />
-    <Compile Include="NPCs\debug\debug_minion.cs" />
     <Compile Include="NPCs\Digger.cs" />
     <Compile Include="NPCs\Fanatic.cs" />
     <Compile Include="NPCs\Hatchling_body.cs" />
@@ -385,7 +385,6 @@
     <Content Include="NPCs\Bosses\Magnoliac_tail.png" />
     <Content Include="NPCs\Bosses\Orb.png" />
     <Content Include="NPCs\Bosses\Sky_boss.png" />
-    <Content Include="NPCs\debug\debug_minion.png" />
     <Content Include="NPCs\Fanatic.png" />
     <Content Include="NPCs\Hatchling_body.png" />
     <Content Include="NPCs\Hatchling_head.png" />
@@ -444,10 +443,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Documents\lib\Microsoft.Xna.Framework.Input.Touch.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="Terraria">
-      <HintPath>..\tServerApi-Plugins\dependencies\Terraria.exe</HintPath>
+    <Reference Include="ReLogic">
+      <HintPath>C:\Users\Makoto\Documents\My Games\Terraria\ModLoader\references\ReLogic.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
+    <Reference Include="tModLoader">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Terraria\tModLoader.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NPCs\debug\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

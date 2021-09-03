@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using ArchaeaMod.Buffs;
+using ArchaeaMod.Projectiles;
 
 namespace ArchaeaMod.Merged.Projectiles
 {
@@ -70,6 +72,14 @@ namespace ArchaeaMod.Merged.Projectiles
             {
                 int killDust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 4, 0f, 0f, 0, default(Color), 1f);
             }
+            if (ArchaeaPlayer.IsEquipped(Main.player[projectile.owner], ModContent.ItemType<Items.Armors.magnoheadgear>(), ModContent.ItemType<Items.Armors.magnoplate>(), ModContent.ItemType<Items.Armors.magnogreaves>()))
+            {
+                if (Main.rand.NextFloat() < 0.15f)
+                {
+                    ArchaeaProjectiles.Explode(projectile, ModContent.DustType<Dusts.cinnabar_dust>(), 30, projectile.damage, projectile.knockBack, true, ModContent.BuffType<mercury>(), 180, true, 10);
+                    ArchaeaProjectiles.Explode(projectile, DustID.Smoke, 36, projectile.damage, projectile.knockBack, false);
+                }
+            }
             Main.PlaySound(SoundID.Dig, projectile.position);
         }
 
@@ -81,14 +91,20 @@ namespace ArchaeaMod.Merged.Projectiles
                 projectile.netUpdate = true;
             }
         }
-
-    /*  public override void SendExtraAI(BinaryWriter writer)
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            writer.Write(Angle);
+            if (Main.rand.NextBool())
+            {
+                target.AddBuff(ModContent.BuffType<mercury>(), 300);
+            }
         }
-        public override void ReceiveExtraAI(BinaryReader reader)
-        {
-            projectile.rotation = reader.ReadSingle();
-        }   */
+        /*  public override void SendExtraAI(BinaryWriter writer)
+            {
+                writer.Write(Angle);
+            }
+            public override void ReceiveExtraAI(BinaryReader reader)
+            {
+                projectile.rotation = reader.ReadSingle();
+            }   */
     }
 }

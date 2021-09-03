@@ -85,11 +85,25 @@ namespace ArchaeaMod.Merged.Projectiles
         }
         public override void Kill(int timeLeft)
         {
-            for (float k = 0; k < MathHelper.ToRadians(360); k += 0.017f * 9)
+            int num = 48 * 3;
+            int num2 = 24 * 3;
+            for (int i = 0; i < 20; i++)
             {
-                int Proj1 = Projectile.NewProjectile(projectile.position + new Vector2(projectile.width / 2, projectile.height / 2), Distance(null, k, 16f), mod.ProjectileType("dust_diffusion"), projectile.damage, 7.5f, projectile.owner, Distance(null, k, 16f).X, Distance(null, k, 16f).Y);
-                //  if (Main.netMode == 1) NetMessage.SendData(27, -1, -1, null, Proj1);
+                Dust.NewDust(projectile.Center - new Vector2(num2, num2), num, num, ModContent.DustType<Dusts.magno_dust>(), 0, 0, 0, default, 2);
+                Dust.NewDust(projectile.Center - new Vector2(num2, num2), num, num, DustID.Smoke, 0, 0, 0, default, 2f);
             }
+            foreach (NPC npc in Main.npc)
+            {
+                if (npc.active && !npc.friendly && npc.Distance(projectile.Center) < num)
+                {
+                    npc.StrikeNPC(projectile.damage, projectile.knockBack, npc.position.X < projectile.position.X ? -1 : 1, Main.rand.NextBool());
+                }
+            }
+            //for (float k = 0; k < MathHelper.ToRadians(360); k += 0.017f * 9)
+            //{
+            //    int Proj1 = Projectile.NewProjectile(projectile.position + new Vector2(projectile.width / 2, projectile.height / 2), Distance(null, k, 16f), mod.ProjectileType("dust_diffusion"), projectile.damage, 7.5f, projectile.owner, projectile.Center.X, projectile.Center.Y);
+            //    //  if (Main.netMode == 1) NetMessage.SendData(27, -1, -1, null, Proj1);
+            //}
             Main.PlaySound(2, projectile.position, 14);
         }
 
@@ -100,6 +114,10 @@ namespace ArchaeaMod.Merged.Projectiles
             }
         }
 
+        public Vector2 AB(int rise, int run)
+        {
+            return new Vector2(rise, run);
+        }
         public Vector2 Distance(Player player, float Angle, float Radius)
         {
             float VelocityX = (float)(Radius * Math.Cos(Angle));

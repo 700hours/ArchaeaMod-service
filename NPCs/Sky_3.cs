@@ -20,6 +20,7 @@ namespace ArchaeaMod.NPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Gargoyle");
+            Main.npcFrameCount[npc.type] = 10;
         }
         public override void SetDefaults()
         {
@@ -28,7 +29,7 @@ namespace ArchaeaMod.NPCs
             npc.height = 48;
             npc.lifeMax = 200;
             npc.defense = 10;
-            npc.damage = 20;
+            npc.damage = 55;
             npc.value = 150;
             npc.alpha = 255;
             npc.knockBackResist = 0f;
@@ -91,6 +92,13 @@ namespace ArchaeaMod.NPCs
                         init = true;
                     }
                 }
+                return;
+            }
+            if (!Main.tile[(int)(newPosition.X + 8) / 16, (int)(newPosition.Y + npc.height + 8) / 16].active() || !Main.tileSolid[Main.tile[(int)(newPosition.X + 8) / 16, (int)(newPosition.Y + npc.height + 8) / 16].type] ||
+                !Main.tile[(int)(newPosition.X + 24) / 16, (int)(newPosition.Y + npc.height + 8) / 16].active() || !Main.tileSolid[Main.tile[(int)(newPosition.X + 24) / 16, (int)(newPosition.Y + npc.height + 8) / 16].type])
+            {
+                newPosition.Y++;
+                return;
             }
             if (newPosition != Vector2.Zero && ai == Idle)
                 npc.position = newPosition;
@@ -100,31 +108,36 @@ namespace ArchaeaMod.NPCs
                     npc.alpha -= 12;
                 else npc.alpha = 0;
             }
-            if (npc.target == 255)
+            if (npc.life < npc.lifeMax)
             {
-                if (npc.life < npc.lifeMax)
-                    npc.TargetClosest();
-                return;
+                npc.TargetClosest();
+                ai = Activated;
             }
+            if (ai == Idle && Main.player.Where(t => t.Distance(npc.Center) < 64f).Count() > 0f)
+            {
+                ArchaeaNPC.DustSpread(npc.position, npc.width, npc.height, DustID.Stone, 5, 1.2f);
+                npc.TargetClosest();
+                ai = Activated;
+                npc.netUpdate = true;
+            }
+            if (ai == Idle) 
+                return;
+            npc.spriteDirection = Main.player[npc.target].Center.X < npc.Center.X ? 1 : -1;
             if (time > 300)
             {
                 time = 0;
                 ai = Attack;
             }
-            if (time == 240)
+            if (time % 120 == 0)
                 tracking = npcTarget.Center;
             if (ai == Attack)
             {
-                npc.velocity += ArchaeaNPC.AngleToSpeed(npc.AngleTo(tracking), rushSpeed);
-                ai = Activated;
+                npc.velocity = ArchaeaNPC.AngleToSpeed(npc.AngleTo(tracking), rushSpeed);
+                if (time % 10 == 0)
+                    ai = Activated;
                 npc.netUpdate = true;
             }
-            else
-            {
-                ArchaeaNPC.SlowDown(ref npc.velocity, 0.2f);
-                if (time % 45 == 0 && time != 0)
-                    npc.velocity = Vector2.Zero;
-            }
+            ArchaeaNPC.SlowDown(ref npc.velocity, 0.2f);
             if (npc.velocity.X >= npc.oldVelocity.X || npc.velocity.X < npc.oldVelocity.X || npc.velocity.Y >= npc.oldVelocity.Y || npc.velocity.Y < npc.oldVelocity.Y)
                 npc.netUpdate = true;
             if (npc.Center.X <= npcTarget.Center.X)
@@ -141,13 +154,6 @@ namespace ArchaeaMod.NPCs
                 npc.rotation -= rotateSpeed;
                 else npc.rotation += rotateSpeed;
             }
-            if (ai == Idle && npc.Distance(npcTarget.Center) < 64f)
-            {
-                ArchaeaNPC.DustSpread(npc.position, npc.width, npc.height, DustID.Stone, 5, 1.2f);
-                npc.TargetClosest();
-                ai = Activated;
-                npc.netUpdate = true;
-            }
         }
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
@@ -158,6 +164,35 @@ namespace ArchaeaMod.NPCs
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
         {
             return npc.alpha == 0;
+        }
+        private int frame;
+        private int frameCount;
+        private int frameTime = 6;
+        public override void FindFrame(int frameHeight)
+        {
+            if (!Main.dedServ)
+            {
+                frameCount = Main.npcFrameCount[npc.type];
+                frameHeight = Main.npcTexture[npc.type].Height / frameCount;
+            }
+            if (ai == Idle)
+            {
+                if (Main.player.Where(t => t.Distance(npc.Center) < 300f).Count() > 0)
+                {
+                    frame = 1;
+                }
+                else frame = 0;
+            }
+            if (ai > 0)
+            {
+                if (time % frameTime == 0 && time != 0)
+                {
+                    if (frame < frameCount - 1)
+                        frame++;
+                    else frame = 2;
+                }
+            }
+            npc.frame.Y = frame * frameHeight;
         }
 
         public override void SendExtraAI(BinaryWriter writer)

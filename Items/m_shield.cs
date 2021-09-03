@@ -30,10 +30,10 @@ namespace ArchaeaMod.Items
         }
         private bool generate = true;
         private int time;
-        private const int regen = 900;
+        private const int regen = 420;
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            int count =  ArchaeaEntity.entity.Where(e => e != null && e.owner == player.whoAmI && e.active).Count();
+            int count = ArchaeaEntity.entity.Where(e => e != null && e.owner == player.whoAmI && e.active && e.type == ArchaeaEntity.ID.Shield).Count();
             if (count < 4)
             {
                 if (time++ > regen)
@@ -46,9 +46,13 @@ namespace ArchaeaMod.Items
             }
             if ((generate && count == 0) || time > regen)
             {
+                foreach (var e in ArchaeaEntity.entity.Where(e => e != null && e.owner == player.whoAmI))
+                {
+                    e.Kill(false);
+                }
                 for (int i = 0; i < 4; i++)
                 {
-                    ArchaeaEntity.NewEntity(player.Center, Vector2.Zero, 0, player.whoAmI, i * 90f * 0.017f);
+                    var entity = ArchaeaEntity.NewEntity(player.Center, Vector2.Zero, 0, player.whoAmI, i * 90f * 0.017f);
                 }
                 time = 0;
                 generate = false;

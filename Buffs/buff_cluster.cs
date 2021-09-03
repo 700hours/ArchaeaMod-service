@@ -16,6 +16,8 @@ namespace ArchaeaMod.Buffs
         public override void SetDefaults()
         {
             DisplayName.SetDefault("Cluster Count");
+            Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[Type] = true;
         }
         public override void ModifyBuffTip(ref string tip, ref int rare)
         {

@@ -28,7 +28,7 @@ namespace ArchaeaMod.NPCs
             npc.lifeMax = 50;
             npc.defense = 10;
             npc.knockBackResist = 0f;
-            npc.damage = 10;
+            npc.damage = 45;
             npc.value = 4000;
             npc.lavaImmune = true;
             npc.noTileCollide = true;
@@ -59,16 +59,20 @@ namespace ArchaeaMod.NPCs
                     case 0:
                         break;
                     case 1:
-                        Main.npcTexture[npc.type] = mod.GetTexture("Gores/Sky_1_1");
                         npc.defense = 30;
                         npc.netUpdate = true;
                         break;
                     case 2:
-                        Main.npcTexture[npc.type] = mod.GetTexture("Gores/Sky_1_2");
+                        Main.npcTexture[npc.type] = mod.GetTexture("Gores/Sky_1_1");
                         npc.defense = 20;
                         npc.netUpdate = true;
                         break;
                     case 3:
+                        Main.npcTexture[npc.type] = mod.GetTexture("Gores/Sky_1_2");
+                        npc.defense = 25;
+                        npc.netUpdate = true;
+                        break;
+                    case 4:
                         Main.npcTexture[npc.type] = mod.GetTexture("Gores/Sky_1_3");
                         npc.defense = 25;
                         npc.netUpdate = true;

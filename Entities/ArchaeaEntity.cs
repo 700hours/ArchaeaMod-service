@@ -8,6 +8,11 @@ namespace ArchaeaMod.Entities
 {
     public class ArchaeaEntity : Entity
     {
+        public class ID
+        {
+            public const byte
+                Shield = 0;
+        }
         public bool netUpdate;
         public int type;
         public int owner;

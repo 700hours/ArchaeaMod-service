@@ -1,0 +1,4 @@
+# For sky air NPC
+1st frame: idle
+2nd frame: alert, starts flying after that
+3-10 flying cycle

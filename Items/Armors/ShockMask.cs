@@ -31,7 +31,7 @@ namespace ArchaeaMod.Items.Armors
 
         public override void DrawHair(ref bool drawHair, ref bool drawAltHair)
         {
-            drawHair = false;
+            drawHair = true;
             drawAltHair = false;
         }
     }

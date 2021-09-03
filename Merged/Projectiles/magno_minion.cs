@@ -121,9 +121,16 @@ namespace ArchaeaMod.Merged.Projectiles
             {
                 if (n.active && !n.friendly && !n.dontTakeDamage && !n.immortal && n.target == player.whoAmI && ((n.lifeMax >= 50 && (Main.expertMode || Main.hardMode)) || (n.lifeMax >= 15 && !Main.expertMode && !Main.hardMode)))
                 {
+                    bool conditions = n.life <= 0 || !targeted || npcTarget != n.whoAmI;
+                    if (conditions && n.Hitbox.Contains(Main.MouseWorld.ToPoint()) && Main.mouseRight)
+                    {
+                        oldNpcTarget = npcTarget;
+                        npcTarget = n.whoAmI;
+                        projectile.netUpdate = true;
+                        targeted = true;
+                    }
                     npcCenter = new Vector2(n.position.X + n.width / 2, n.position.Y + n.height / 2);
-                    if ((n.life <= 0 || !targeted || npcTarget != n.whoAmI) &&
-                         Vector2.Distance(npcCenter - projectile.position, Vector2.Zero) < 384f)
+                    if (conditions && Vector2.Distance(npcCenter - projectile.position, Vector2.Zero) < 384f)
                     {
                         oldNpcTarget = npcTarget;
                         npcTarget = n.whoAmI;
@@ -137,7 +144,7 @@ namespace ArchaeaMod.Merged.Projectiles
                     projectile.rotation = 0;
                 }
             }
-            if(targeted)
+            if (targeted)
             {
                 NPC n = Main.npc[npcTarget];
                 npcCenter = new Vector2(n.position.X + n.width / 2, n.position.Y + n.height / 2);

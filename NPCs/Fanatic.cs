@@ -50,7 +50,7 @@ namespace ArchaeaMod.NPCs
         private bool init;
         private float compensate
         {
-            get { return (float)(npcTarget.velocity.Y * (0.017d * 5d)); }
+            get { return (float)(npcTarget.velocity.Y * (0.017d * 2.5d)); }
         }
         private bool fade;
         public override void AI()

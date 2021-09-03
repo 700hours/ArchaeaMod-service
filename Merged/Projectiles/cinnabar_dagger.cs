@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using ArchaeaMod.Buffs;
 
 namespace ArchaeaMod.Merged.Projectiles
 {
@@ -86,6 +87,14 @@ namespace ArchaeaMod.Merged.Projectiles
                 int killDust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 4, 0f, 0f, 0, default(Color), 1f);
             }
             Main.PlaySound(SoundID.Dig, projectile.position);
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            if (Main.rand.NextBool())
+            {
+                target.AddBuff(ModContent.BuffType<mercury>(), 300);
+            }
         }
     }
 }

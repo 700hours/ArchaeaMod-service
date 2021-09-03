@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
+using ArchaeaMod;
 using ArchaeaMod.Merged.Items.Materials;
 
 namespace ArchaeaMod.Merged.Items

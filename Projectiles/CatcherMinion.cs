@@ -46,6 +46,12 @@ namespace ArchaeaMod.Projectiles
         private Target target;
         public override bool PreAI()
         {
+            if (alpha && projectile.alpha > 0)
+            {
+                projectile.alpha -= 20;
+            }
+            else alpha = false;
+
             switch (ai)
             {
                 case -1:
@@ -77,15 +83,19 @@ namespace ArchaeaMod.Projectiles
         private int time;
         private Vector2 old;
         private Vector2 moveTo;
+        private bool flag = false;
+        private int num = 0;
+        private bool alpha = false;
         public override void AI()
         {
             if (!owner.active || owner.dead || !owner.HasBuff(ModContent.BuffType<Buffs.buff_catcher>()))
                 projectile.active = false;
             if (target == null || target.npc.life <= 0 || !target.npc.active)
             {
+                FindOwner();
                 if (ArchaeaItem.Elapsed(180))
                 {
-                    target = Target.GetClosest(owner, Target.GetTargets(projectile, 300f).Where(t => t != null).ToArray());
+                    target = Target.GetClosest(owner, Target.GetTargets(projectile, 600f).Where(t => t != null).ToArray());
                     rand = Main.rand.Next(3);
                     old = projectile.Center;
                     Vector2 speed;
@@ -118,18 +128,30 @@ namespace ArchaeaMod.Projectiles
             {
                 ai = 0;
                 float angle = NPCs.ArchaeaNPC.AngleTo(projectile.Center, target.npc.Center);
-                if (ArchaeaItem.Elapsed(120))
+                if (ArchaeaItem.Elapsed(120) || !flag)
+                {
                     projectile.velocity = NPCs.ArchaeaNPC.AngleToSpeed(angle, 10f);
-                else NPCs.ArchaeaNPC.VelocityClamp(ref projectile.velocity, -6f, 6f);
+                    if (num++ >= 15)
+                        flag = true;
+                }
+                else
+                {
+                    NPCs.ArchaeaNPC.VelocityClamp(ref projectile.velocity, -6f, 6f);
+                    if (num++ >= 100)
+                    {
+                        flag = false;
+                        num = 0;
+                    }
+                }
             }
-            FindGround(ai == 0);
+            FindGround(ai != 1);
         }
-        protected bool FindGround(bool update)
+        protected bool FindGround(bool update = true)
         {
             if (update)
             {
                 Tile ground = Main.tile[(int)projectile.Center.X / 16, (int)projectile.Center.Y / 16];
-                if (!ground.active())
+                if (!Main.tileSolid[ground.type])
                     projectile.velocity.Y += 0.655f;
                 return ground.active();
             }
@@ -141,10 +163,19 @@ namespace ArchaeaMod.Projectiles
             {
                 Vector2 move = new Vector2(Main.rand.NextFloat(owner.position.X - 200f, owner.position.X + 200f), Main.rand.NextFloat(owner.position.Y - 200f, owner.position.Y + 200f));
                 Tile ground = Main.tile[(int)move.X / 16, (int)move.Y / 16];
-                if (ground.active())
+                if (Main.tileSolid[ground.type])
                 {
-                    projectile.Center = move;
-                    tries = 0;
+                    if (CleanTeleport(move))
+                    {
+                        tries = 0;
+                        ai = 0;
+                        target = null;
+                        alpha = true;
+                    }
+                }
+                else
+                {
+                    ground = Main.tile[(int)move.X / 16, (int)move.Y / 16];
                 }
                 if (tries++ > 300)
                 {
@@ -154,6 +185,21 @@ namespace ArchaeaMod.Projectiles
                 return true;
             }
             return false;
+        }
+        bool flag2 = false;
+        bool flag3 = false;
+        private bool CleanTeleport(Vector2 moveTo)
+        {
+            if (projectile.alpha < 250)
+            {
+                projectile.alpha += 20;
+                return false;
+            }
+            else
+            {
+                projectile.Center = moveTo;
+                return true;
+            }
         }
         public void FloatyAI()
         {

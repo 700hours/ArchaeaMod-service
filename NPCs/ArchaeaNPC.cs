@@ -42,10 +42,10 @@ namespace ArchaeaMod
         {
             get { return ModContent.NPCType<NPCs.Sky_1>(); }
         }
-        public static int Marauder
-        {
-            get { return ModContent.NPCType<NPCs.Sky_2>(); }
-        }
+        //public static int Marauder
+        //{
+        //    get { return ModContent.NPCType<NPCs.Sky_2>(); }
+        //}
         public static int MagnoliacHead
         {
             get { return ModContent.NPCType<NPCs.Bosses.Magnoliac_head>(); }
@@ -105,7 +105,7 @@ namespace ArchaeaMod.NPCs
             pool.Add(ModNPCID.Mimic,            MagnoBiome && Main.hardMode ? 0.1f : 0f);
             bool SkyFort = spawnInfo.player.GetModPlayer<ArchaeaPlayer>().SkyFort;
             pool.Add(ModNPCID.Observer,         SkyFort ? 0.4f : 0f);
-            pool.Add(ModNPCID.Marauder,         SkyFort ? 0.4f : 0f);
+            //pool.Add(ModNPCID.Marauder,         SkyFort ? 0.4f : 0f);
             pool.Add(ModNPCID.Gargoyle,         SkyFort ? 0.2f : 0f);
         }
         public override bool CheckActive(NPC npc)

@@ -14,8 +14,7 @@ namespace ArchaeaMod.Merged.Items.Armors
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Magno Headgear");
-            Tooltip.SetDefault("10% increased arrow"
-                +   "\ndamage");
+            Tooltip.SetDefault("10% increased arrow damage");
         }
         public override void SetDefaults()
         {
@@ -46,8 +45,7 @@ namespace ArchaeaMod.Merged.Items.Armors
         }
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "15% chance"
-                +   "\nfor arrows to explode";
+            player.setBonus = "15% chance for arrows to explode";
         }
     }
 }

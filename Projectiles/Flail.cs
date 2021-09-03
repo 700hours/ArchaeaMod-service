@@ -49,6 +49,15 @@ namespace ArchaeaMod.Projectiles
             switch (ai)
             {
                 case -1:
+                    int maxParts = 400 / 12;
+                    int[] parts = new int[maxParts];
+                    parts[0] = Projectile.NewProjectile(projectile.position, Vector2.Zero, ModContent.ProjectileType<Chain>(), 0, 0f, projectile.owner, projectile.whoAmI, projectile.whoAmI);
+                    Main.npc[parts[0]].whoAmI = parts[0];
+                    for (int i = 1; i < maxParts; i++)
+                    {
+                        parts[i] = Projectile.NewProjectile(projectile.position, Vector2.Zero, ModContent.ProjectileType<Chain>(), 0, 0f, projectile.owner, parts[i - 1], projectile.whoAmI);
+                        Main.npc[parts[i]].whoAmI = parts[i];
+                    }
                     goto case 0;
                 case 0:
                     ai = 0;
@@ -66,6 +75,14 @@ namespace ArchaeaMod.Projectiles
         private float speed = 1f;
         private float range = 200f;
         private float distance;
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.StrikeNPC(projectile.damage, projectile.knockBack, target.position.X < projectile.position.X ? -1 : 1, Main.rand.NextBool());
+        }
+        public override bool? CanHitNPC(NPC target)
+        {
+            return !target.townNPC;
+        }
         public override void AI()
         {
             switch (style)
@@ -77,6 +94,7 @@ namespace ArchaeaMod.Projectiles
                 case Swing:
                     if (!Main.mouseRight)
                         collide = true;
+                    FloatyAI();
                     if (owner.controlUseItem)
                         projectile.timeLeft = 50;
                     if (projectile.Distance(owner.Center) > range)
@@ -127,53 +145,30 @@ namespace ArchaeaMod.Projectiles
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            DrawChain(owner.Center, projectile.Center, chain, spriteBatch);
+            
             return true;
-        }
-        public void DrawChain(Vector2 start, Vector2 end, Texture2D texture, SpriteBatch sb)
-        {
-            start -= Main.screenPosition;
-            end -= Main.screenPosition;
-
-            Vector2 chain = end - start;
-            float length = chain.Length();
-            float linkLength = texture.Height;
-            int numLinks = (int)Math.Ceiling(length / linkLength);
-            float rotation = (float)Math.Atan2(chain.Y, chain.X);
-
-            Vector2[] links = new Vector2[numLinks];
-            for (int i = 0; i < numLinks; i++)
-            {
-                links[i] = start + chain / numLinks * i;
-            }
-            for (int i = 0; i < links.Length; i++)
-            {
-                Color color = Lighting.GetColor((int)(links[i].X + Main.screenPosition.X) / 16, (int)(links[i].Y + Main.screenPosition.Y) / 16);
-                sb.Draw(texture, new Rectangle((int)links[i].X, (int)links[i].Y, texture.Width, (int)linkLength), null, color, rotation + Draw.radian * 90f, new Vector2(texture.Width / 2, linkLength), SpriteEffects.None, 0f);
-            }
         }
 
         private bool collision;
         public void FloatyAI()
         {
-            if (TileCollide() != Collide.None && !collision)
+            switch (TileCollide())
             {
-                switch (TileCollide())
-                {
-                    case Collide.Bottom:
-                        projectile.velocity.Y = 0f;
-                        break;
-                    case Collide.Left:
-                        projectile.velocity.X = 0f;
-                        break;
-                    case Collide.Right:
-                        projectile.velocity.X = 0f;
-                        break;
-                    case Collide.Top:
-                        projectile.velocity.Y = 0f;
-                        break;
-                }
-                collision = true;
+                case Collide.Bottom:
+                    projectile.velocity.Y = 0f;
+                    goto default;
+                case Collide.Left:
+                    projectile.velocity.X = 0f;
+                    goto default;
+                case Collide.Right:
+                    projectile.velocity.X = 0f;
+                    goto default;
+                case Collide.Top:
+                    projectile.velocity.Y = 0f;
+                    goto default;
+                default:
+                    collision = true;
+                    break;
             }
             if (collision)
             {
@@ -201,26 +196,20 @@ namespace ArchaeaMod.Projectiles
         }
         protected Collide TileCollide()
         {
-            for (int l = -8; l < projectile.height + 8; l++)
-            {
-                for (int k = -8; k < projectile.width + 8; k++)
-                {
-                    int i = (int)projectile.position.X / 16 + k;
-                    int j = (int)projectile.position.Y / 16 + l;
-                    Tile top = Main.tile[i, j - 1];
-                    Tile left = Main.tile[i - 1, j];
-                    Tile bottom = Main.tile[i, j + 1];
-                    Tile right = Main.tile[i + 1, j];
-                    if (top.active() && Main.tileSolid[top.type])
-                        return Collide.Top;
-                    if (left.active() && Main.tileSolid[left.type])
-                        return Collide.Left;
-                    if (bottom.active() && Main.tileSolid[bottom.type])
-                        return Collide.Bottom;
-                    if (right.active() && Main.tileSolid[right.type])
-                        return Collide.Right;
-                }
-            }
+            int i = (int)projectile.Center.X / 16;
+            int j = (int)projectile.Center.Y / 16;
+            Tile top = Main.tile[i, j - 1];
+            Tile left = Main.tile[i - 1, j];
+            Tile bottom = Main.tile[i, j + 1];
+            Tile right = Main.tile[i + 1, j];
+            if (top.active() && Main.tileSolid[top.type])
+                return Collide.Top;
+            if (left.active() && Main.tileSolid[left.type])
+                return Collide.Left;
+            if (bottom.active() && Main.tileSolid[bottom.type])
+                return Collide.Bottom;
+            if (right.active() && Main.tileSolid[right.type])
+                return Collide.Right;
             return Collide.None;
         }
         public enum Collide : byte

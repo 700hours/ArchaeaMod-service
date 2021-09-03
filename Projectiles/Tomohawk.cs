@@ -66,6 +66,14 @@ namespace ArchaeaMod.Projectiles
         {
             Dusts(8, true);
         }
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.StrikeNPC(projectile.damage, projectile.knockBack, target.position.X < projectile.position.X ? -1 : 1, Main.rand.NextBool());
+        }
+        public override bool? CanHitNPC(NPC target)
+        {
+            return !target.townNPC;
+        }
         protected void Dusts(int amount, bool noGravity = false)
         {
             for (int i = 0; i < amount; i++)
