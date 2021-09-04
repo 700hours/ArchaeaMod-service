@@ -104,9 +104,9 @@ namespace ArchaeaMod.NPCs
             pool.Add(ModNPCID.MercurialSlime,   MagnoBiome && downedMagno ? 0.4f : 0f);
             pool.Add(ModNPCID.Mimic,            MagnoBiome && Main.hardMode ? 0.1f : 0f);
             bool SkyFort = spawnInfo.player.GetModPlayer<ArchaeaPlayer>().SkyFort;
-            pool.Add(ModNPCID.Observer,         SkyFort ? 0.4f : 0f);
+            pool.Add(ModNPCID.Observer,         SkyFort ? 0.6f : 0f);
             //pool.Add(ModNPCID.Marauder,         SkyFort ? 0.4f : 0f);
-            pool.Add(ModNPCID.Gargoyle,         SkyFort ? 0.2f : 0f);
+            pool.Add(ModNPCID.Gargoyle,         SkyFort ? 0.4f : 0f);
         }
         public override bool CheckActive(NPC npc)
         {
@@ -126,6 +126,10 @@ namespace ArchaeaMod.NPCs
                 shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Tiles.mbox_magno_1>());
                 shop.item[nextSlot + 1].SetDefaults(ModContent.ItemType<Items.Tiles.mbox_magno_2>());
                 shop.item[nextSlot + 2].SetDefaults(ModContent.ItemType<Items.Tiles.mbox_magno_boss>());
+            }
+            else if (type == NPCID.Steampunker)
+            {
+                shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.gray_solution>());
             }
         }
     }

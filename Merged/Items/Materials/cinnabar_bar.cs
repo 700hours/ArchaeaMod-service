@@ -24,7 +24,8 @@ namespace ArchaeaMod.Merged.Items.Materials
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<Tiles.cinnabar_ore>(), 4);
+            recipe.AddIngredient(ModContent.ItemType<Tiles.magno_ore>(), 4);
+            recipe.AddIngredient(ModContent.ItemType<Materials.cinnabar_crystal>(), 1);
             recipe.AddTile(TileID.Furnaces);
             recipe.SetResult(this, 1);
             recipe.AddRecipe();

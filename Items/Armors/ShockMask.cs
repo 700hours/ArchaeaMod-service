@@ -34,5 +34,13 @@ namespace ArchaeaMod.Items.Armors
             drawHair = true;
             drawAltHair = false;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.Autohammer);
+            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 10);
+            recipe.SetResult(this, 1);
+            recipe.AddRecipe();
+        }
     }
 }

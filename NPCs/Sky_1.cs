@@ -112,6 +112,20 @@ namespace ArchaeaMod.NPCs
             SkyAI();
         }
 
+        public override void NPCLoot()
+        {
+            int rand = Main.rand.Next(10);
+            switch (rand)
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    Item.NewItem(npc.Center, ModContent.ItemType<Items.Materials.r_plate>(), Main.rand.Next(1, 4));
+                    break;
+            }
+        }
+
         private bool BeginActive()
         {
             if (amount < 1f)

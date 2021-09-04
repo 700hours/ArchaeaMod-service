@@ -19,6 +19,7 @@ namespace ArchaeaMod.Items.Armors
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shock Plate");
+            Tooltip.SetDefault("Throwing weapons create bolts of lightning");
         }
         public override void SetDefaults()
         {
@@ -35,6 +36,15 @@ namespace ArchaeaMod.Items.Armors
             head == ModContent.GetInstance<ShockMask>().item &&
             body == item && 
             legs == ModContent.GetInstance<ShockLegs>().item;
+        }
+
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.Autohammer);
+            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 15);
+            recipe.SetResult(this, 1);
+            recipe.AddRecipe();
         }
     }
 

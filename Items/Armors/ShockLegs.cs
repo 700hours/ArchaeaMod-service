@@ -28,5 +28,13 @@ namespace ArchaeaMod.Items.Armors
             item.rare = ItemRarityID.Orange;
             item.value = 5000;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.Autohammer);
+            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 10);
+            recipe.SetResult(this, 1);
+            recipe.AddRecipe();
+        }
     }
 }

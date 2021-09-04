@@ -23,7 +23,7 @@ namespace ArchaeaMod.Items
             item.width = 48;
             item.height = 48;
             item.rare = 2;
-            item.value = 100;
+            item.value = 500;
             item.maxStack = 999;
             item.ammo = AmmoID.Solution;
             item.shoot = ModContent.ProjectileType<GraySolution>() - ProjectileID.PureSpray;

@@ -48,5 +48,15 @@ namespace ArchaeaMod.Items
         {
             return player.Distance(Main.MouseWorld) * multiplier * strength;
         }
+
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.Anvils);
+            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_bar>(), 8);
+            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), 8);
+            recipe.SetResult(this, 1);
+            recipe.AddRecipe();
+        }
     }
 }

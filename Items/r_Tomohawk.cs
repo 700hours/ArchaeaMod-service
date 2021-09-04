@@ -40,5 +40,13 @@ namespace ArchaeaMod.Items
             item.consumable = true;
             item.noUseGraphic = true;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 1);
+            recipe.SetResult(this, 7);
+            recipe.AddRecipe();
+        }
     }
 }

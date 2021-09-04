@@ -18,17 +18,23 @@ namespace ArchaeaMod.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 1;
-            projectile.height = 1;
+            projectile.width = 10;
+            projectile.height = 10;
             projectile.damage = 10;
             projectile.friendly = true;
             projectile.ignoreWater = false;
             projectile.tileCollide = true;
+            projectile.hide = true;
         }
         float distance = 0;
+        int Type
+        {
+             get { return (int)projectile.ai[0]; }
+        }
         public override void AI()
         {
-            
+            var dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, Type);
+            Main.dust[dust].noGravity = true;
         }
     }
 }

@@ -53,5 +53,15 @@ namespace ArchaeaMod.Items
             Main.PlaySound(SoundID.Roar, player.Center, 0);
             return true;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.SoulofLight, 7);
+            recipe.AddIngredient(ModContent.ItemType<Materials.r_plate>(), 3);
+            recipe.AddIngredient(ModContent.ItemType<Items.Tiles.purple_haze>(), 10);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.SetResult(item.type);
+            recipe.AddRecipe();
+        }
     }
 }

@@ -23,13 +23,22 @@ namespace ArchaeaMod.Items.Armors
             item.width = 20;
             item.height = 22;
             item.rare = 3;
-            item.defense = 8;
+            item.defense = 12;
             item.value = 2500;
         }
         public override void DrawHair(ref bool drawHair, ref bool drawAltHair)
         {
             drawHair = false;
             drawAltHair = false;
+        }
+
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 10);
+            recipe.SetResult(this, 1);
+            recipe.AddRecipe();
         }
     }
 }

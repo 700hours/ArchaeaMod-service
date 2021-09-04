@@ -110,6 +110,7 @@ namespace ArchaeaMod
         //    System.Drawing.Color.Green
         //};
         public bool downedMagno;
+        public bool downedNecrosis;
         public static Miner miner;
         public static List<Vector2> origins = new List<Vector2>();
         private Treasures t;
@@ -196,7 +197,7 @@ namespace ArchaeaMod
                         //  WorldGen.TileRunner(WorldGen.genRand.Next((int)(genPosition[0].X / 16) - miner.edge / 2, (int)(genPosition[1].X / 16) + miner.edge / 2), WorldGen.genRand.Next((int)genPosition[0].Y / 16 - miner.edge / 2, (int)genPosition[1].Y / 16 + miner.edge / 2), WorldGen.genRand.Next(15, 18), WorldGen.genRand.Next(2, 6), magnoDirt, false, 0f, 0f, false, true);
                         int randX = WorldGen.genRand.Next((int)(genPosition[0].X / 16) - miner.edge / 2, (int)(genPosition[1].X / 16) + miner.edge / 2);
                         int randY = WorldGen.genRand.Next((int)genPosition[0].Y / 16 - miner.edge / 2, (int)genPosition[1].Y / 16 + miner.edge / 2);
-                        if (Main.tile[randX, randY].type == magnoStone)
+                        if (Main.tile[Math.Max(randX, 10), Math.Max(randY, 10)].type == magnoStone)
                         {
                             WorldGen.TileRunner(randX, randY, WorldGen.genRand.Next(9, 12), WorldGen.genRand.Next(2, 6), magnoOre, false, 0f, 0f, false, true);
                         }
@@ -217,8 +218,8 @@ namespace ArchaeaMod
                     Vector2 position;
                     do
                     {
-                        position = new Vector2(WorldGen.genRand.Next(200, Main.maxTilesX - 600), 50);
-                    } while (position.X < Main.spawnTileX + 250 && position.X > Main.spawnTileX - 250);
+                        position = new Vector2(WorldGen.genRand.Next(200, Main.maxTilesX - 600), Structures.YCoord);
+                    } while (position.X < Main.spawnTileX + 300 && position.X > Main.spawnTileX - 450);
                     var s = new Structures(position, skyBrick, skyBrickWall);
                     s.InitializeFort();
                     progress.Value = 1f;
@@ -405,11 +406,15 @@ namespace ArchaeaMod
         {
             int[] t0 = new int[]
             {
-                ModContent.ItemType<Broadsword>(),
-                ModContent.ItemType<Calling>(),
-                ModContent.ItemType<Deflector>(),
-                ModContent.ItemType<Sabre>(),
-                ModContent.ItemType<Staff>()
+                //ModContent.ItemType<Broadsword>(),
+                //ModContent.ItemType<Calling>(),
+                //ModContent.ItemType<Deflector>(),
+                //ModContent.ItemType<Sabre>(),
+                //ModContent.ItemType<Staff>()
+                ModContent.ItemType<r_Catcher>(),
+                ModContent.ItemType<r_Flail>(),
+                ModContent.ItemType<r_Javelin>(),
+                ModContent.ItemType<r_Tomohawk>()
             };
             int[] t1 = new int[]
             {
@@ -666,6 +671,7 @@ namespace ArchaeaMod
         {
             return new TagCompound {
                 { "m_downed", downedMagno },
+                { "n_downed", downedNecrosis },
                 { "First", first },
                 { "Classes", classes },
                 { "IDs", playerIDs },
@@ -675,6 +681,7 @@ namespace ArchaeaMod
         public override void Load(TagCompound tag)
         {
             downedMagno = tag.GetBool("m_downed");
+            downedNecrosis = tag.GetBool("n_downed");
             first = tag.GetBool("First");
             classes = tag.Get<List<int>>("Classes");
             playerIDs = tag.Get<List<int>>("IDs");
@@ -1381,7 +1388,9 @@ namespace ArchaeaMod
         public void DirectionalMove() // tends to stick to a path
         {
             size = WorldGen.genRand.Next(1, 3);
-            if (WorldGen.genRand.Next(4) == 1 && Main.tile[(int)(minerPos.X + 16 + (16 * lookFurther)) / 16, (int)minerPos.Y / 16].active())
+            minerPos.X = Math.Min((int)Main.maxTilesX * 16 - 16, (int)minerPos.X);
+            minerPos.Y = Math.Min((int)Main.maxTilesY * 16 - 16, (int)minerPos.Y);
+            if (WorldGen.genRand.Next(4) == 1 && Main.tile[Math.Min((int)(minerPos.X + 16 + (16 * lookFurther)) / 16, Main.maxTilesX), (int)minerPos.Y / 16].active())
             {
                 minerPos.X += 16;
                 Dig();
@@ -1391,7 +1400,7 @@ namespace ArchaeaMod
                 minerPos.X -= 16;
                 Dig();
             }
-            if (WorldGen.genRand.Next(4) == 1 && Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y + 16 + (16 * lookFurther)) / 16].active())
+            if (WorldGen.genRand.Next(4) == 1 && Main.tile[(int)minerPos.X / 16, Math.Min((int)(minerPos.Y + 16 + (16 * lookFurther)) / 16, Main.maxTilesY)].active())
             {
                 minerPos.Y += 16;
                 Dig();

@@ -42,6 +42,21 @@ namespace ArchaeaMod.NPCs.Bosses
             set { npc.ai[1] = value; }
         }
         private const int spawnMinions = 30;
+        private int ai = -1;
+        public override bool PreAI()
+        {
+            switch (ai)
+            {
+                case -1:
+                    npc.lifeMax = maxParts / 2 * npc.life;
+                    npc.life = npc.lifeMax;
+                    goto case 0;
+                case 0:
+                    ai = 0;
+                    return true;
+            }
+            return false;
+        }
         public override void AI()
         {
             if (timer % 60 == 0 && timer != 0)
@@ -138,8 +153,18 @@ namespace ArchaeaMod.NPCs.Bosses
         {
             index = NPCHeadLoader.GetBossHeadSlot(ArchaeaMain.magnoHead);
         }
+        Vector2 lastHit = Vector2.Zero;
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            lastHit = npc.Center;
+        }
         public override void NPCLoot()
         {
+            if (lastHit == Vector2.Zero)
+                lastHit = npc.position;
+            if (Main.expertMode)
+                Item.NewItem(lastHit, ModContent.ItemType<Items.m_shield>());
+
             if (Main.netMode == 0)
                 ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
             else

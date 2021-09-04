@@ -144,6 +144,36 @@ namespace ArchaeaMod.NPCs
             flip = reader.ReadBoolean();
             velX = reader.ReadSingle();
         }
+        public override void NPCLoot()
+        {
+            int rand = Main.rand.Next(10);
+            switch (rand)
+            {
+                case 0:
+                    if (Main.hardMode)
+                        Item.NewItem(npc.Center, ModContent.ItemType<Items.dream_catcher>());
+                    else 
+                        Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>());
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.magno_summonstaff>());
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                    Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.magno_yoyo>());
+                    break;
+                case 7:
+                case 8:
+                case 9:
+                    Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.magno_book>());
+                    break;
+                default:
+                    goto case 0;
+            }
+        }
 
         private int time;
         private int frame;

@@ -41,5 +41,15 @@ namespace ArchaeaMod.Items
             }
             return false;
         }
+
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.Bottles);
+            recipe.AddIngredient(ItemID.BottledWater);
+            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), 3);
+            recipe.SetResult(this, 1);
+            recipe.AddRecipe();
+        }
     }
 }

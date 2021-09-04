@@ -63,6 +63,7 @@ namespace ArchaeaMod.Projectiles
                 case Ground:
                     dust.velocity = projectile.velocity;
                     projectile.velocity.Y = velY;
+                    projectile.rotation -= 0.017f * 5f;
                     break;
                 case Falling:
                     projectile.rotation += 0.017f * 5f;

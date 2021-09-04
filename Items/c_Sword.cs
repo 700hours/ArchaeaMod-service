@@ -82,5 +82,15 @@ namespace ArchaeaMod.Items
             }
             return ground.ToArray();
         }
+
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.Anvils);
+            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_bar>(), 8);
+            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), 6);
+            recipe.SetResult(this, 1);
+            recipe.AddRecipe();
+        }
     }
 }

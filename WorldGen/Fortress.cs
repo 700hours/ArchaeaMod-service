@@ -43,6 +43,7 @@ namespace ArchaeaMod
         private ushort[] useful = new ushort[] { TileID.Loom, TileID.SharpeningStation, TileID.Anvils, TileID.CookingPots };
         private Vector2 origin;
         private List<Vector2> path;
+        public const int YCoord = 30;
         private const ushort
             TILE_None = 0,
             TILE_Chain = 1,
@@ -115,7 +116,8 @@ namespace ArchaeaMod
                 Light = 17,
                 Dark = 18,
                 WallHanging = 19,
-                Portal = 20;
+                Portal = 20,
+                Haze = 21;
         }
         class RoomID
         {
@@ -129,7 +131,8 @@ namespace ArchaeaMod
                 Start = 6,
                 End = 7,
                 Lighted = 8,
-                Decorated = 9;
+                Decorated = 9,
+                Haze = 10;
         }
         class FortID
         {
@@ -163,10 +166,10 @@ namespace ArchaeaMod
 
             int lengthX = fort[0].GetLength(0);
             int lengthY = fort[0].GetLength(1);
-            int[] roomTypes = new int[] { RoomID.Chest, RoomID.Danger, RoomID.Decorated, RoomID.Lighted };
+            int[] roomTypes = new int[] { RoomID.Chest, RoomID.Danger, RoomID.Decorated, RoomID.Lighted, RoomID.Haze };
 
             int x1, x2, x3;
-            int y1 = 50, y2 = y1, y3;
+            int y1 = YCoord, y2 = y1, y3;
             int[,] cRoom;
             int cRoomWidth = 100;
 
@@ -175,13 +178,13 @@ namespace ArchaeaMod
             CloudGenerate((int)origin.X + 8, (int)origin.Y + lengthY - 2, lengthX * 2 + cRoomWidth - 8 + 40, 20, TileID.Dirt);
             PlaceEntrance((int)origin.X, (int)origin.Y, 35, lengthY);
             //GenerateStructure(600, 50 + fort[0].GetLength(1), island);
-            GenerateStructure(x1 = (int)origin.X + center - lengthX / 2, 50, fort[0], tileID, wallID);
-            GenerateStructure(x2 = (int)origin.X + center + lengthX / 2, 50, fort[1], tileID, wallID);
-            GenerateStructure(x3 = (int)origin.X + center + lengthX / 2 + lengthX, y3 = (int)(50 + lengthY * 0.33f), cRoom = Chamber(cRoomWidth, (int)(lengthY * 0.67f)), tileID, wallID);
+            GenerateStructure(x1 = (int)origin.X + center - lengthX / 2, y1, fort[0], tileID, wallID);
+            GenerateStructure(x2 = (int)origin.X + center + lengthX / 2, y1, fort[1], tileID, wallID);
+            GenerateStructure(x3 = (int)origin.X + center + lengthX / 2 + lengthX, y3 = (int)(y1 + lengthY * 0.33f), cRoom = Chamber(cRoomWidth, (int)(lengthY * 0.67f)), tileID, wallID);
             ChamberRoof(x3, y1, cRoom.GetLength(0), (int)(lengthY * 0.33f));
 
-            PlaceInteriorRooms(new Vector2((int)origin.X + center - lengthX / 2, 50), roomX, roomY, fort[0], roomTypes);
-            PlaceInteriorRooms(new Vector2((int)origin.X + center + lengthX / 2, 50), roomX, roomY, fort[1], roomTypes);
+            PlaceInteriorRooms(new Vector2((int)origin.X + center - lengthX / 2, y1), roomX, roomY, fort[0], roomTypes);
+            PlaceInteriorRooms(new Vector2((int)origin.X + center + lengthX / 2, y1), roomX, roomY, fort[1], roomTypes);
             house = new int[max][,];
             rooms = new int[max - 1][,];
 
@@ -190,11 +193,11 @@ namespace ArchaeaMod
 
             GenerateWalls(x1, y1, x3, fort[1].GetLength(1));
 
-            GenConnect(x1, 50 + lengthY - 10, 20, 8);
-            GenConnect(x1 + lengthX - 15, 50 + 5, 20, 8);
-            GenConnect(x2, 50 + 5, 10, 8);
-            GenConnect(x2 + lengthX - 50, 50 + lengthY - 11, 40 + cRoom.GetLength(0) / 2, 6);
-            GenConnect(x3 + cRoom.GetLength(0) / 2 - 10, 50 + lengthY - 20, 8, 14);
+            GenConnect(x1, y1 + lengthY - 10, 20, 8);
+            GenConnect(x1 + lengthX - 15, y1 + 5, 20, 8);
+            GenConnect(x2, y1 + 5, 10, 8);
+            GenConnect(x2 + lengthX - 50, y1 + lengthY - 11, 40 + cRoom.GetLength(0) / 2, 6);
+            GenConnect(x3 + cRoom.GetLength(0) / 2 - 10, y1 + lengthY - 20, 8, 14);
         }
        
         internal void PlaceEntrance(int i, int j, int width, int height)
@@ -552,7 +555,7 @@ namespace ArchaeaMod
                             break;
                         case RoomID.Danger:
                             if (structure[i, Math.Max(j - 1, 0)] == ID.Empty && structure[i, j] == ID.Tile)
-                                WorldGen.PlaceTile(x, y, TileID.Spikes);
+                                WorldGen.PlaceTile(x, y, TileID.Spikes, true, true);
                             break;
                         case RoomID.Decorated:
                             if (WorldGen.genRand.NextBool())
@@ -561,6 +564,10 @@ namespace ArchaeaMod
                         case RoomID.Lighted:
                             if (!Treasures.Vicinity(new Vector2(x, y), 15, TileID.HangingLanterns))
                                 WorldGen.PlaceTile(x, y, TileID.HangingLanterns);
+                            break;
+                        case RoomID.Haze:
+                            if (WorldGen.genRand.Next(5) == 0)
+                                WorldGen.PlaceTile(x, y, ModContent.TileType<Tiles.purple_haze>(), true, true);
                             break;
                     }
                     WorldGen.PlaceWall(i, j, wallID);
@@ -970,6 +977,10 @@ namespace ArchaeaMod
                             goto case -1;
                         case ID.WallHanging:
                             WorldGen.Place3x2Wall(m, n, TileID.WeaponsRack, 0);
+                            break;
+                        case ID.Haze:
+                            if (WorldGen.genRand.Next(4) == 0)
+                                WorldGen.PlaceTile(m, n, ModContent.TileType<Tiles.purple_haze>(), true);
                             break;
                     }
                 }

@@ -23,8 +23,16 @@ namespace ArchaeaMod.Items.Armors
             item.width = 22;
             item.height = 18;
             item.rare = 3;
-            item.defense = 7;
+            item.defense = 10;
             item.value = 2000;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 10);
+            recipe.SetResult(this, 1);
+            recipe.AddRecipe();
         }
     }
 }

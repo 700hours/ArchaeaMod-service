@@ -39,5 +39,13 @@ namespace ArchaeaMod.Items
             item.shootSpeed = 6f;
             item.thrown = true;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 1);
+            recipe.SetResult(this, 5);
+            recipe.AddRecipe();
+        }
     }
 }

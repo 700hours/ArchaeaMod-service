@@ -20,11 +20,12 @@ namespace ArchaeaMod.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Orb");
+            Main.projFrames[projectile.type] = 7;
         }
         public override void SetDefaults()
         {
-            projectile.width = 48;
-            projectile.height = 48;
+            projectile.width = 38;
+            projectile.height = 44;
             projectile.damage = 20;
             projectile.friendly = true;
             projectile.ignoreWater = true;
@@ -113,6 +114,17 @@ namespace ArchaeaMod.Projectiles
                     break;
                 default:
                     break;
+            }
+
+            projectile.frameCounter++;
+            if (projectile.frameCounter == 4)
+            {
+                projectile.frame++;
+                projectile.frameCounter = 0;
+            }
+            if (projectile.frame > 6)
+            {
+                projectile.frame = 0;
             }
         }
         public override void Kill(int timeLeft)

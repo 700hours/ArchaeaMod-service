@@ -567,7 +567,7 @@ namespace ArchaeaMod
         private float darkAlpha = 0f;
         private void DarkenedVision()
         {
-            if (!SkyFort)
+            if (!SkyFort || ModContent.GetInstance<ArchaeaWorld>().downedNecrosis)
             {
                 if (darkAlpha > 0f)
                     darkAlpha -= 1f / 150f;
@@ -786,6 +786,10 @@ namespace ArchaeaMod
             if (player.armor[0].type == head && player.armor[1].type == body && player.armor[2].type == legs)
                 return true;
             return false;
+        }
+        public static bool AccIsEquipped(Player player, int type)
+        {
+            return player.armor.Where(t => t.type == type).Count() > 0;
         }
     }
 

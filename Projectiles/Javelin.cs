@@ -25,7 +25,7 @@ namespace ArchaeaMod.Projectiles
         {
             projectile.width = 34;
             projectile.height = 34;
-            projectile.damage = 10;
+            projectile.damage = 28;
             projectile.knockBack = 0f;
             projectile.penetrate = 10;
             projectile.timeLeft = 600;

@@ -28,6 +28,7 @@ namespace ArchaeaMod.Projectiles
             projectile.timeLeft = 50;
             projectile.friendly = true;
             projectile.thrown = true;
+            projectile.damage = 24;
         }
 
         private int ai = -1;

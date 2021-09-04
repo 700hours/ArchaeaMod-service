@@ -33,6 +33,7 @@ namespace ArchaeaMod.NPCs.Bosses
             npc.noGravity = true;
             npc.noTileCollide = true;
             npc.knockBackResist = 0f;
+            npc.alpha = 255;
         }
 
         public bool Hurt()
@@ -195,9 +196,14 @@ namespace ArchaeaMod.NPCs.Bosses
             return true;
         }
 
+        Vector2 lastHit = Vector2.Zero;
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            lastHit = npc.Center;
+        }
         public override void NPCLoot()
         {
-            Item.NewItem(npc.Center, ModContent.ItemType<Items.n_Staff>());
+            Item.NewItem(lastHit, ModContent.ItemType<Items.n_Staff>());
         }
 
         private void SyncNPC()
@@ -230,6 +236,10 @@ namespace ArchaeaMod.NPCs.Bosses
             attack = reader.ReadBoolean();
             npc.immortal = reader.ReadBoolean();
         }
+        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        {
+            spriteBatch.Draw(mod.GetTexture("NPCs/Bosses/Sky_boss"), npc.Hitbox, Lighting.GetColor((int)npc.Center.X, (int)npc.Center.Y, drawColor));
+        }
     }
 
     internal class Orb : ModProjectile
@@ -237,6 +247,7 @@ namespace ArchaeaMod.NPCs.Bosses
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Orb");
+            Main.projFrames[projectile.type] = 7;
         }
         public override void SetDefaults()
         {
@@ -290,6 +301,17 @@ namespace ArchaeaMod.NPCs.Bosses
                     int t = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Fire, 0f, 0f, 0, default(Color), 2f);
                     Main.dust[t].noGravity = true;
                 }
+            }
+
+            projectile.frameCounter++;
+            if (projectile.frameCounter == 4)
+            {
+                projectile.frame++;
+                projectile.frameCounter = 0;
+            }
+            if (projectile.frame > 6)
+            {
+                projectile.frame = 0;
             }
         }
         public override void Kill(int timeLeft)

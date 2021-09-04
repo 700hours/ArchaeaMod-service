@@ -40,5 +40,19 @@ namespace ArchaeaMod.NPCs
         {
             WormAI();
         }
+
+        public override void NPCLoot()
+        {
+            int rand = Main.rand.Next(10);
+            switch (rand)
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>(), Main.rand.Next(1, 4));
+                    break;
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace ArchaeaMod.Items.Armors
             item.width = 34;
             item.height = 20;
             item.rare = 3;
-            item.defense = 13;
+            item.defense = 18;
             item.value = 4000;
         }
         public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -37,6 +37,14 @@ namespace ArchaeaMod.Items.Armors
         public override void UpdateEquip(Player player)
         {
             player.thrownDamage *= 1.20f;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 15);
+            recipe.SetResult(this, 1);
+            recipe.AddRecipe();
         }
     }
 }
