@@ -85,6 +85,18 @@ namespace ArchaeaMod.Projectiles
                 target = Target.GetClosest(owner, Target.GetTargets(projectile, 300f).Where(t => t != null).ToArray());
                 projectile.netUpdate = true;
             }
+
+            projectile.frameCounter++;
+            if (projectile.frameCounter == 4)
+            {
+                projectile.frame++;
+                projectile.frameCounter = 0;
+            }
+            if (projectile.frame > 6)
+            {
+                projectile.frame = 0;
+            }
+
             switch (type)
             {
                 case 0:
@@ -114,17 +126,6 @@ namespace ArchaeaMod.Projectiles
                     break;
                 default:
                     break;
-            }
-
-            projectile.frameCounter++;
-            if (projectile.frameCounter == 4)
-            {
-                projectile.frame++;
-                projectile.frameCounter = 0;
-            }
-            if (projectile.frame > 6)
-            {
-                projectile.frame = 0;
             }
         }
         public override void Kill(int timeLeft)

@@ -329,8 +329,8 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         public override void SetDefaults()
         {
-            projectile.width = 48;
-            projectile.height = 48;
+            projectile.width = 24;
+            projectile.height = 24;
             projectile.damage = 20;
             projectile.knockBack = 2f;
             projectile.timeLeft = 450;

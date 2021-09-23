@@ -1,0 +1,78 @@
+version 0.2.1321.4 -> 0.2.1374.5
+================================
+# Fixed
+- Magno boss map drawing
+- Buffs and not drawing timeleft
+- NPCs not granting debuffs
+- Shield multiplying
+-> note: singleplayer fix
+- Soul cluster properly stacks and adds damage
+- Projectile fixes for some weird unintended 
+effects
+-> note: such as Magno orb explosion
+- Catcher minion handling movement, following, and attacks
+-> note: such as will teleport discretely if player is far away
+- Rusty weapons now damage NPCs
+-> note: Flail has new use AI
+- Sky fortress had missing walls
+- Sky NPCs were very weak and had poor attack functions
+-> note: Spirit has proper texture randomization
+- Fix Necrosis orb texture
+- Multiply Magno's health by the number of body segments
+- Create better way to spawn Necrosis
+- Remove darkness after Necrosis defeated
+- 2 crashes in Magno worldgen
+- Sky Fort generating above player spawn
+
+# Changed
+- Sky Fort generates 20 tiles higher
+-> note: in small worlds, crimson would attach itself to bottom before this
+
+# Added 
+- Purple haze
+-> Separate room generation
+- Dream Catcher with effects
+-> note: grants 1 out of 4 buffs at night, grants immunity to and allows mining of purple haze
+- Necrosis spawn item
+-> note: requires proximity to Sky Fortress portal
+
+# Textures
+- Fixed nearly all missing textures
+-> note: certain Magno weapon effect unknown
+-> note: could not find cinnabar sword crystal animation
+
+# Removed
+- Marauder
+
+# Note
+- Could not port new Magno generation to mod due to weird changes Terraria does to worldgen
+- Foreseeable update could bring Magno plants to generation before next public release
+- The point of this update is to fix the prominent errors 
+- Currently the bonus items are being spawned in the Sky Fortress which are looking to be cut
+ 
+version 0.2.1374.5 -> 0.2.1394.6
+================================
+# Added
+- Rusty items being added to Sky Fort chests
+- Missing recipes for items
+- Various other NPC drops
+
+# Fixed
+- Mimic now drops items
+-> note: including the Dream Catcher (10% chance in hardmode)
+- Steampunker sells gray solution
+- Crystals from Cinnabar Sword now has proper texture
+- Necrosis Staff uses Orb projectile texture
+- Fanatic has chance to drop Ancient Shock Armor set
+
+# Changed
+- Magno boss max life halved
+-> note: still around 50k life
+
+# Removed
+- "Alternate" items now are obtainable only through debug/cheatsheet
+
+version 0.2.1374.5 -> 0.2.1396.7
+================================
+# Fixed 
+- Necrosis projectile texture reference
