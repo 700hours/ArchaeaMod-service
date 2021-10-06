@@ -69,14 +69,14 @@ namespace ArchaeaMod.Merged.Tiles
             return ModContent.GetInstance<ArchaeaWorld>().downedMagno;
         }
 
-        public override void SetSpriteEffects(int i, int j, ref SpriteEffects spriteEffects)
-        {
-            if(i % 2 == 1)
-            {
-                spriteEffects = SpriteEffects.FlipHorizontally;
-            }
-        }
-        bool tileCheckFlip = false;
+        //public override void SetSpriteEffects(int i, int j, ref SpriteEffects spriteEffects)
+        //{
+        //    if(i % 2 == 1)
+        //    {
+        //        spriteEffects = SpriteEffects.FlipHorizontally;
+        //    }
+        //}
+        //bool tileCheckFlip = false;
         Texture2D texture;
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {

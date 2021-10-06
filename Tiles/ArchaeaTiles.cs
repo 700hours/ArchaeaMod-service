@@ -53,7 +53,9 @@ namespace ArchaeaMod.Tiles
                     ArchaeaWorld.crystal,
                     ArchaeaWorld.crystal2x1,
                     ArchaeaWorld.crystal2x2,
-                    ArchaeaWorld.crystalLarge
+                    ArchaeaWorld.crystalLarge,
+                    ArchaeaWorld.magnoPlantsSmall,
+                    ArchaeaWorld.magnoPlantsLarge
                 };
                 for (int k = i - 8; k < i + 8; k++)
                 for (int l = j - 8; l < j + 8; l++)
@@ -87,6 +89,15 @@ namespace ArchaeaMod.Tiles
                         }
                         else if (!left.active())
                             WorldGen.PlaceTile(i, j - 1, (int)types[0], true, false, -1, 2);
+                    }
+                }
+                if (count < 3 && type == ArchaeaWorld.Ash)
+                {
+                    if (!Main.tile[i, j - 1].active() && !Main.tile[i, j - 2].active())
+                    {
+                        if (Main.rand.NextBool())
+                            WorldGen.PlaceTile(i, j - 1, types[4], true, false, -1, WorldGen.genRand.Next(4));
+                        else WorldGen.PlaceTile(i, j - 1, types[5], true, false, -1, WorldGen.genRand.Next(3));
                     }
                 }
             }

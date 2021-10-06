@@ -16,6 +16,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.World.Generation;
 
+using ArchaeaMod.Gen;
 using ArchaeaMod.GenLegacy;
 using ArchaeaMod.Items;
 using ArchaeaMod.Items.Alternate;
@@ -80,9 +81,29 @@ namespace ArchaeaMod
         {
             get { return (ushort)ModContent.WallType<Walls.magno_cavewall_unsafe>(); }
         }
-        public static ushort ambientRocks
+        public static ushort ambientRocksTopLarge
         {
-            get { return (ushort)ModContent.TileType<Tiles.ambient_rocks>(); }
+            get { return (ushort)ModContent.TileType<Tiles.ambient_rocks_1>(); }
+        }
+        public static ushort ambientRocksTopSmall
+        {
+            get { return (ushort)ModContent.TileType<Tiles.ambient_rocks_4>(); }
+        }
+        public static ushort ambientRocksLarge
+        {
+            get { return (ushort)ModContent.TileType<Tiles.ambient_rocks_2>(); }
+        }
+        public static ushort ambientRocksSmall
+        {
+            get { return (ushort)ModContent.TileType<Tiles.ambient_rocks_3>(); }
+        }
+        public static ushort magnoPlantsLarge
+        {
+            get { return (ushort)ModContent.TileType<Tiles.m_plants_large>(); }
+        }
+        public static ushort magnoPlantsSmall
+        {
+            get { return (ushort)ModContent.TileType<Tiles.m_plants_small>(); }
         }
         public static ushort skyBrick
         {
@@ -91,6 +112,10 @@ namespace ArchaeaMod
         public static ushort skyBrickWall
         {
             get { return (ushort)ModContent.WallType<Walls.sky_brickwall_unsafe>(); }
+        }
+        public static ushort Ash
+        {
+            get { return (ushort)ModContent.TileType<Tiles.m_ash>(); }
         }
         public class ColorID
         {
@@ -165,28 +190,35 @@ namespace ArchaeaMod
                     progress.End();
                 }));
             }*/
-            if (CavesIndex != -1)
+            int originX = 0, originY = 0, mWidth = 800, mHeight = 450;
+            int Magno = tasks.FindIndex(genpass => genpass.Name.Equals("Corruption"));
+            if (Magno != -1)
             {
-            //  NEW implementation
+                //  NEW implementation
                 //tasks.Insert(CavesIndex, new PassLegacy("Magno Lair", delegate (GenerationProgress progress)
                 //{
                 //    Biome.MagnoBiome.Generate(progress);
                 //}));
-            //  CURRENT implementation
-                miner = new Miner();
-                tasks.Insert(CavesIndex, new PassLegacy("Miner", delegate (GenerationProgress progress)
+                //  LEGACY implementation
+                //  miner = new Miner();
+                tasks.Insert(CavesIndex, new PassLegacy("Magno Caver", delegate (GenerationProgress progress)
                 {
-                    progress.Start(1f);
-                    progress.Message = "MINER";
-                    miner.active = true;
-                    miner.Reset();
-                    while (miner.active)
-                        miner.Update();
-                    genPosition = miner.genPos;
-                    progress.End();
+                    originX = WorldGen.genRand.Next(200, Main.maxTilesX - 1000);
+                    originY = Main.maxTilesY - 650;
+                    MagnoV2 magno = MagnoV2.NewBiome(ref originX, ref originY);
+                    magno.tGenerate(progress);
+                    //  Legacy Magno gen
+                    //progress.Start(1f);
+                    //progress.Message = "MINER";
+                    //miner.active = true;
+                    //miner.Reset();
+                    //while (miner.active)
+                    //    miner.Update();
+                    //genPosition = miner.genPos;
+                    //progress.End();
                 }));
             }
-            int shinies = tasks.FindIndex(pass => pass.Name.Equals("Shinies"));
+            int shinies = tasks.FindIndex(pass => pass.Name.Equals("Altars"));
             if (shinies != -1)
             {
                 tasks.Insert(shinies, new PassLegacy("Mod Shinies", delegate (GenerationProgress progress)
@@ -195,8 +227,12 @@ namespace ArchaeaMod
                     for (int k = 0; k < (int)((4200 * 1200) * 6E-05); k++)
                     {
                         //  WorldGen.TileRunner(WorldGen.genRand.Next((int)(genPosition[0].X / 16) - miner.edge / 2, (int)(genPosition[1].X / 16) + miner.edge / 2), WorldGen.genRand.Next((int)genPosition[0].Y / 16 - miner.edge / 2, (int)genPosition[1].Y / 16 + miner.edge / 2), WorldGen.genRand.Next(15, 18), WorldGen.genRand.Next(2, 6), magnoDirt, false, 0f, 0f, false, true);
-                        int randX = WorldGen.genRand.Next((int)(genPosition[0].X / 16) - miner.edge / 2, (int)(genPosition[1].X / 16) + miner.edge / 2);
-                        int randY = WorldGen.genRand.Next((int)genPosition[0].Y / 16 - miner.edge / 2, (int)genPosition[1].Y / 16 + miner.edge / 2);
+                        //MINER Legacy
+                        //int randX = WorldGen.genRand.Next((int)(genPosition[0].X / 16) - miner.edge / 2, (int)(genPosition[1].X / 16) + miner.edge / 2);
+                        //int randY = WorldGen.genRand.Next((int)genPosition[0].Y / 16 - miner.edge / 2, (int)genPosition[1].Y / 16 + miner.edge / 2);
+                        //NEW Magno gen
+                        int randX = WorldGen.genRand.Next(originX, originX + mWidth);
+                        int randY = WorldGen.genRand.Next(originY, originY + mHeight);
                         if (Main.tile[Math.Max(randX, 10), Math.Max(randY, 10)].type == magnoStone)
                         {
                             WorldGen.TileRunner(randX, randY, WorldGen.genRand.Next(9, 12), WorldGen.genRand.Next(2, 6), magnoOre, false, 0f, 0f, false, true);
@@ -206,7 +242,7 @@ namespace ArchaeaMod
                     progress.End();
                 }));
             }
-            int index2 = tasks.FindIndex(pass => pass.Name.Equals("Lakes"));
+            int index2 = tasks.FindIndex(pass => pass.Name.Equals("Wet Jungle"));
             if (index2 != -1)
             {
                 tasks.Insert(index2, new PassLegacy("Sky Generation", delegate (GenerationProgress progress)
@@ -226,7 +262,7 @@ namespace ArchaeaMod
                     progress.End();
                 }));
             }
-            int index3 = tasks.FindIndex(pass => pass.Name.Equals("Clean Up Dirt"));
+            int index3 = tasks.FindIndex(pass => pass.Name.Equals("Remove Water From Sand"));
             if (index3 != -1)
             {
                 tasks.Insert(index3, new PassLegacy("Mod Generation", delegate (GenerationProgress progress)
@@ -237,7 +273,7 @@ namespace ArchaeaMod
                     int place = 0;
                     int width = Main.maxTilesX - 100;
                     int height = Main.maxTilesY - 100;
-                    Vector2[] any = Treasures.FindAll(new Vector2(100, 100), width, height, false, new ushort[] { magnoStone });
+                    Vector2[] any = Treasures.FindAll(new Vector2(100, 100), width, height, false, new ushort[] { magnoStone, Ash });
                     foreach (Vector2 floor in any)
                         if (floor != Vector2.Zero)
                         {
@@ -246,6 +282,7 @@ namespace ArchaeaMod
                             int style = 0;
                             Tile top = Main.tile[i, j - 1];
                             Tile bottom = Main.tile[i, j + 1];
+                            Tile bottomLeft = Main.tile[i + 1, j + 1];
                             Tile left = Main.tile[i - 1, j];
                             Tile right = Main.tile[i + 1, j];
                             Tile rock = null;
@@ -254,10 +291,12 @@ namespace ArchaeaMod
                                 style = 0;
                                 if (WorldGen.genRand.Next(10) == 0)
                                 {
-                                    t.PlaceTile(i, j, ambientRocks, true, false, 4, false, WorldGen.genRand.Next(new int[] { 0 , 3 }));
-                                    rock = Main.tile[i, j];
-                                    if (rock.type == ambientRocks)
-                                        Main.tile[i, j].frameX = (short)(18 * WorldGen.genRand.Next(3));
+                                    if (WorldGen.genRand.NextBool())
+                                        t.PlaceTile(i, j, ambientRocksTopLarge, true, false, 4, false, style = WorldGen.genRand.Next(3));
+                                    else t.PlaceTile(i, j, ambientRocksTopSmall, true, false, 4, false, style = WorldGen.genRand.Next(3));
+                                    //rock = Main.tile[i, j];
+                                    //if (rock.type == ambientRocks)
+                                    //    Main.tile[i, j].frameX = (short)(18 * WorldGen.genRand.Next(3));
                                 }
                             }
                             if (left.type == magnoStone && left.active())
@@ -267,28 +306,54 @@ namespace ArchaeaMod
                             if (bottom.type == magnoStone && bottom.active())
                             {
                                 style = 3;
-                                if (WorldGen.genRand.Next(10) == 0)
+                                if (WorldGen.genRand.NextBool())
+                                    t.PlaceTile(i, j, ambientRocksLarge, true, false, 4, false, style = WorldGen.genRand.Next(3));
+                                else t.PlaceTile(i, j, ambientRocksSmall, true, false, 4, false, style = WorldGen.genRand.Next(3));
+                                //if (WorldGen.genRand.Next(10) == 0)
+                                //{
+                                //    t.PlaceTile(i, j, ambientRocks, true, false, 3, false, style = WorldGen.genRand.Next(3));
+                                //    rock = Main.tile[i, j];
+                                //    if (rock.type == ambientRocks)
+                                //        Main.tile[i, j].frameX = (short)(18 * WorldGen.genRand.Next(3));
+                                //}
+                            }
+                            if (bottom.type == Ash && bottom.active())
+                            {
+                                if (WorldGen.genRand.Next(4) == 0)
                                 {
-                                    t.PlaceTile(i, j, ambientRocks, true, false, 4, false, WorldGen.genRand.Next(new int[] { 1 , 2 }));
-                                    rock = Main.tile[i, j];
-                                    if (rock.type == ambientRocks)
-                                        Main.tile[i, j].frameX = (short)(18 * WorldGen.genRand.Next(3));
+                                    //if (!bottomLeft.active() || bottomLeft.slope() != 0)
+                                    //{
+                                    //    WorldGen.KillTile(i + 1, j + 1, false, false, true);
+                                    //    WorldGen.PlaceTile(i + 1, j + 1, Ash, true, true);
+                                    //}
+                                    bool rand = WorldGen.genRand.NextBool();
+                                    if (rand)
+                                        t.PlaceTile(i, j, magnoPlantsSmall, true, false, 6, false, WorldGen.genRand.Next(4));
+                                    else
+                                    {
+                                        Main.tile[i + 1, j].active(false);
+                                        Main.tile[i + 1, j + 1].active(true);
+                                        t.PlaceTile(i, j, magnoPlantsLarge, true, false, 3, false, WorldGen.genRand.Next(3));
+                                    }
                                 }
                             }
-                            t.PlaceTile(i, j, crystal, true, false, 10, false, style);
-                            if (!Main.tile[i + 1, j].active())
+                            else t.PlaceTile(i, j, crystal, true, false, 10, false, style);
+                            if (bottom.type == magnoStone && bottom.active())
                             {
-                                place++;
-                                if (place % 3 == 0)
-                                    t.PlaceTile(i, j, crystal2x2, true, false, 8);
-                                else t.PlaceTile(i, j, crystal2x1, true, false, 8);
+                                if (!Main.tile[i + 1, j].active())
+                                {
+                                    place++;
+                                    if (place % 3 == 0)
+                                        t.PlaceTile(i, j, crystal2x2, true, false, 8);
+                                    else t.PlaceTile(i, j, crystal2x1, true, false, 8);
+                                }
                             }
                         }
                     progress.Value = 1f;
                     progress.End();
                 }));
             }
-            int index4 = tasks.FindIndex(pass => pass.Name.Equals("Pyramids"));
+            int index4 = tasks.FindIndex(pass => pass.Name.Equals("Jungle Temple"));
             if (index4 != -1)
             {
                 tasks.Insert(index4, new PassLegacy("Sorting Floating Tiles", delegate (GenerationProgress progress)
@@ -321,7 +386,7 @@ namespace ArchaeaMod
                         }
                 }));
             }
-            int index5 = tasks.FindIndex(pass => pass.Name.Equals("Dirt Rock Wall Runner"));
+            int index5 = tasks.FindIndex(pass => pass.Name.Equals("Hives"));
             tasks.Insert(index5, new PassLegacy("Structure Generation", delegate (GenerationProgress progress)
             {
                 progress.Start(1f);
@@ -353,18 +418,20 @@ namespace ArchaeaMod
             float PositionX;
             const int TileSize = 16;
             int buffer = 16, wellBuffer = 96, surfaceBuffer = 0;
-            int WellIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Larva"));
+            int WellIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Smooth World"));
             if (WellIndex != -1)
             {
                 tasks.Insert(WellIndex + 1, new PassLegacy("Digging Well", delegate (GenerationProgress progress)
                 {
                     progress.Message = "Digging Well";
                     Vector2 Center = new Vector2((Main.maxTilesX / 2) * 16, (Main.maxTilesY / 2) * 16);
-                    if ((miner.genPos[0].X + wellBuffer / 3) / TileSize > miner.baseCenter.X / TileSize)
-                    {
-                        PositionX = miner.genPos[1].X / 16;
-                    }
-                    else PositionX = miner.genPos[0].X / 16;
+                    //MINER Legacy gen
+                    //if ((miner.genPos[0].X + wellBuffer / 3) / TileSize > miner.baseCenter.X / TileSize)
+                    //{
+                    //    PositionX = miner.genPos[1].X / 16;
+                    //}
+                    //else PositionX = miner.genPos[0].X / 16;
+                    PositionX = WorldGen.genRand.Next(originX, originX + mWidth);
 
                     int gap = 5;
                     int MaxTries = 128;
@@ -382,7 +449,7 @@ namespace ArchaeaMod
                     }
 
                     buffer = 3;
-                    float distance = Vector2.Distance(new Vector2(PositionX, Main.spawnTileY + 10 - surfaceBuffer) - new Vector2(PositionX, miner.genPos[1].Y / 16), Vector2.Zero);
+                    float distance = Vector2.Distance(new Vector2(PositionX, Main.spawnTileY + 10 - surfaceBuffer) - new Vector2(PositionX, originY - (int)Main.worldSurface - 25/*miner.genPos[1].Y / 16*/), Vector2.Zero);
                     // comment out '/ 3' for max well length
                     PlaceWell((int)PositionX, Main.spawnTileY - surfaceBuffer - buffer, distance / 3);
                 }));
@@ -657,7 +724,7 @@ namespace ArchaeaMod
         public bool SkyPortal;
         public override void TileCountsAvailable(int[] tileCounts)
         {
-            MagnoBiome = tileCounts[magnoStone] >= 100;
+            MagnoBiome = tileCounts[magnoStone] >= 80 || tileCounts[Ash] >= 30;
             SkyFort = tileCounts[skyBrick] >= 80;
             SkyPortal = tileCounts[ModContent.TileType<Tiles.sky_portal>()] != 0;
             nearMusicBox = tileCounts[ModContent.TileType<Tiles.music_boxes>()] != 0;
@@ -872,7 +939,10 @@ namespace ArchaeaMod
                 tile.active(true);
                 tile.type = tileType;
             }
-            else WorldGen.PlaceTile(i, j, tileType, true, force, -1, style);
+            else
+            {
+                WorldGen.PlaceTile(i, j, tileType, true, force, -1, style);
+            }
             if (tile.type == tileType)
                 return true;
             return false;
@@ -1112,6 +1182,31 @@ namespace ArchaeaMod
                             }
                     }
                 return tiles;
+            };
+            return count();
+        }
+        public static bool Vicinity(Vector2 region, int radius, ushort[] tileType, int limit)
+        {
+            Func<bool> count = delegate ()
+            {
+                int x = (int)region.X;
+                int y = (int)region.Y;
+                int tiles;
+                foreach (ushort type in tileType)
+                {
+                    tiles = 0;
+                    for (int i = x - radius; i < x + radius; i++)
+                        for (int j = y - radius; j < y + radius; j++)
+                        {
+                            if (!ArchaeaWorld.Inbounds(i, j)) continue;
+                            if (Main.tile[i, j].type == type && Main.tile[i, j].active())
+                            {
+                                if (tiles++ > limit)
+                                    return true;
+                            }
+                        }
+                }
+                return false;
             };
             return count();
         }

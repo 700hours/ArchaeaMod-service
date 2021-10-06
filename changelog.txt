@@ -76,3 +76,19 @@ version 0.2.1374.5 -> 0.2.1396.7
 ================================
 # Fixed 
 - Necrosis projectile texture reference
+
+version 0.2.1396.7 -> 0.2.1404.8
+================================
+# Added
+- Magno ash
+- 2 magno plants
+-> small and large
+-> small plant gives off light
+- Placeable Cinnabar crystal tile
+
+# Changed
+- Magno stone texture
+- Magno wall texture
+- Revised Magno generation
+-> from MINER generation to GenMapViewer
+- Replaced cave backgrounds with newest versions

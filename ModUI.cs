@@ -34,6 +34,7 @@ namespace ArchaeaMod.ModUI
         private static Element selected;
         private static Element lookup;
         private static Element objectiveBox;
+        private static Element toggle;
         private static SpriteBatch sb { get { return Main.spriteBatch; } }
         public static void Initialize()
         {
@@ -49,6 +50,7 @@ namespace ArchaeaMod.ModUI
                 classOptions[i] = new Element(Rectangle.Empty);
             for (int j = 0; j < categories.Length; j++)
                 mainOptions[j] = new Element(Rectangle.Empty);
+            toggle = new Element(new Rectangle(Main.screenWidth / 2 - 24, Main.screenHeight - 80, 48, 48));
             UpdateLocation();
         }
         internal static void UpdateLocation()
@@ -74,6 +76,7 @@ namespace ArchaeaMod.ModUI
         private static bool classSelect;
         private static Mod mod;
         private static ArchaeaPlayer modPlayer;
+        internal static bool Toggled = false;
         public static void MainOptions(Player player)
         {
             if (reset)
@@ -82,15 +85,29 @@ namespace ArchaeaMod.ModUI
                 apply.color = Color.Gray;
                 reset = false;
             }
+            if (toggle.LeftClick())
+            {
+                Toggled = !Toggled;
+                classSelect = false;
+            }
+            mod = ModLoader.GetMod("ArchaeaMod");
+            modPlayer = player.GetModPlayer<ArchaeaPlayer>();
+            var modWorld = ModContent.GetInstance<ArchaeaWorld>();
+            if (Main.playerInventory)
+            { 
+                sb.Draw(mod.GetTexture("Gores/option"), toggle.bounds, null, Color.White);
+                if (toggle.HoverOver())
+                {
+                    sb.DrawString(Main.fontMouseText, "Archaea Mod options", new Vector2(toggle.bounds.X, toggle.bounds.Bottom), Color.White);
+                }
+            }
+            if (!Toggled) return;
             if (classOptions != null && (oldWidth != Main.screenWidth || oldHeight != Main.screenHeight))
             {
                 oldWidth = Main.screenWidth;
                 oldHeight = Main.screenHeight;
                 UpdateLocation();
             }
-            mod = ModLoader.GetMod("ArchaeaMod");
-            modPlayer = player.GetModPlayer<ArchaeaPlayer>();
-            var modWorld = ModContent.GetInstance<ArchaeaWorld>();
             if (classSelect)
             {
                 ClassSelect(player);
@@ -138,6 +155,7 @@ namespace ArchaeaMod.ModUI
                         modWorld.cordonBounds = mainOptions[1].active;
                         ModeToggle.archaeaMode = mainOptions[2].active;
                     }
+                    Toggled = false;
                 }
             }
         }

@@ -12,18 +12,18 @@ using Terraria.ModLoader;
 
 namespace ArchaeaMod.Items.Materials
 {
-    public class r_plate : ModItem
+    public class magno_plant : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rusty Plate");
+            DisplayName.SetDefault("Magno Plant");
         }
         public override void SetDefaults()
         {
-            item.width = 26;
-            item.height = 20;
+            item.width = 16;
+            item.height = 24;
             item.maxStack = 999;
-            item.value = 1500;
+            item.value = 1000;
         }
     }
 }

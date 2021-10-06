@@ -21,6 +21,7 @@ namespace ArchaeaMod.Merged.Items.Materials
             item.value = 1000;
             item.maxStack = 99;
             item.rare = 2;
+            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.c_crystal_block>();
         }
     }
 }

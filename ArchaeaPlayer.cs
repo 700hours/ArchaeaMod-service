@@ -102,265 +102,265 @@ namespace ArchaeaMod
         {
             Color textColor = Color.Yellow;
             //  ITEM TEXT and SKY FORT DEBUG GEN
-            if (!start && !Main.dedServ && KeyPress(Keys.F1) && KeyHold(Keys.Up))
-            {
-                if (Main.netMode == 0)
-                {
-                    Main.NewText("To enter commands, input [Tab + (Hold) Left Control] (instead of Enter), [F2 + LeftControl] for item spawning using chat search via item name, [F3 + LeftControl] for NPC debug and balancing", Color.LightBlue);
-                    Main.NewText("Commands: /list 'npcs' 'items1' 'items2' 'items3', /npc [name], /npc 'strike', /item [name], /spawn, /day, /night, /rain 'off' 'on', hold [Left Control + Left Alt] and click to go to mouse", textColor);
-                }
-                if (Main.netMode == 2)
-                    NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("Input /info and use [Tab] to list commands"), textColor);
-                start = true;
-            }
-            if (KeyHold(Keys.LeftAlt))
-            {
-                if (KeyPress(Keys.LeftControl))
-                {
-                    //SkyHall hall = new SkyHall();
-                    //hall.SkyFortGen();
-                    /*
-                    Vector2 position;
-                    do
-                    {
-                        position = new Vector2(WorldGen.genRand.Next(200, Main.maxTilesX - 200), 50);
-                    } while (position.X < Main.spawnTileX + 150 && position.X > Main.spawnTileX - 150);
-                    var s = new Structures(position, ArchaeaWorld.skyBrick, ArchaeaWorld.skyBrickWall);
-                    s.InitializeFort();
-                    */
-                    if (Main.netMode == 0)
-                    {
-                        for (int i = 0; i < Main.rightWorld / 16; i++)
-                            for (int j = 0; j < Main.bottomWorld / 16; j++)
-                            {
-                                Main.mapInit = true;
-                                Main.loadMap = true;
-                                Main.refreshMap = true;
-                                Main.updateMap = true;
-                                Main.Map.Update(i, j, 255);
-                                Main.Map.ConsumeUpdate(i, j);
-                            }
-                    }
-                }
-            }
-            if (KeyHold(Keys.LeftControl) && KeyHold(Keys.LeftAlt) && LeftClick())
-            {
-                if (Main.netMode == 2)
-                    NetHandler.Send(Packet.TeleportPlayer, -1, -1, player.whoAmI, Main.MouseWorld.X, Main.MouseWorld.Y);
-                else player.Teleport(Main.MouseWorld);
-            }
-            string chat = (string)Main.chatText.Clone();
-            bool enteredCommand = KeyPress(Keys.Tab);
-            if (chat.StartsWith("/info") && KeyHold(Keys.LeftControl))
-            {
-                if (enteredCommand)
-                {
-                    if (Main.netMode != 2)
-                    {
-                        Main.NewText("Commands: /list 'npcs' 'items1' 'items2' 'items3', /npc [name], /npc 'strike', /item [name], /spawn, /day, /night, /rain 'off' 'on', hold Left Control and click to go to mouse", textColor);
-                        Main.NewText("Press [F2] and type an item name in chat, then hover over item icon", textColor);
-                        Main.NewText("[F3] for NPC debug and balancing", textColor);
-                    }
-                }
-            }
-            if (chat.StartsWith("/") && KeyHold(Keys.LeftControl))
-            {
-                if (chat.StartsWith("/list"))
-                {
-                    string[] npcs = new string[]
-                    {
-                        "Fanatic",
-                        "Hatchling_head",
-                        "Mimic",
-                        "Sky_1",
-                        "Sky_2",
-                        "Sky_3",
-                        "Slime_Itchy",
-                        "Slime_Mercurial",
-                        "Magnoliac_head",
-                        "Sky_boss",
-                        "Sky_boss_legacy"
-                    };
-                    string[] items1 = new string[]
-                    {
-                        "cinnabar_bow",
-                        "cinnabar_dagger",
-                        "cinnabar_hamaxe",
-                        "cinnabar_pickaxe",
-                        "magno_Book",
-                        "magno_summonstaff",
-                        "magno_treasurebag",
-                        "magno_trophy",
-                        "magno_yoyo"
-                    };
-                    string[] items2 = new string[]
-                    {
-                        "c_Staff",
-                        "c_Sword",
-                        "n_Staff",
-                        "r_Catcher",
-                        "r_Flail",
-                        "r_Javelin",
-                        "r_Tomohawk",
-                        "ShockLegs",
-                        "ShockMask",
-                        "ShockPlate"
-                    };
-                    string[] items3 = new string[]
-                    {
-                        "Broadsword",
-                        "Calling",
-                        "Deflector",
-                        "Sabre",
-                        "Staff"
-                    };
-                    if (chat.Contains("npcs"))
-                    {
-                        if (enteredCommand)
-                            foreach (string s in npcs)
-                                Main.NewText(s + " " + mod.NPCType(s), textColor);
-                    }
-                    if (chat.Contains("items1"))
-                    {
-                        if (enteredCommand)
-                            foreach (string s in items1)
-                                Main.NewText(s, textColor);
-                    }
-                    if (chat.Contains("items2"))
-                    {
-                        if (enteredCommand)
-                            foreach (string s in items2)
-                                Main.NewText(s, textColor);
-                    }
-                    if (chat.Contains("items3"))
-                    {
-                        if (enteredCommand)
-                            foreach (string s in items3)
-                                Main.NewText(s, textColor);
-                    }
-                }
-                if (chat.StartsWith("/npc"))
-                {
-                    string text = Main.chatText.Substring(Main.chatText.IndexOf(' ') + 1);
-                    if (!chat.Contains("strike"))
-                    {
-                        if (enteredCommand)
-                        {
-                            NPC n = mod.GetNPC(text).npc;
-                            if (Main.netMode != 0)
-                                NetHandler.Send(Packet.SpawnNPC, 256, -1, n.type, Main.MouseWorld.X, Main.MouseWorld.Y, player.whoAmI, n.boss);
-                            else
-                            {
-                                if (n.boss)
-                                    NPC.SpawnOnPlayer(player.whoAmI, n.type);
-                                else NPC.NewNPC((int)Main.MouseWorld.X, (int)Main.MouseWorld.Y, n.type);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (enteredCommand)
-                            foreach (NPC npc in Main.npc)
-                                if (npc.active && !npc.friendly && npc.life > 0)
-                                {
-                                    npc.StrikeNPC(npc.lifeMax, 0f, 1, true);
-                                    if (Main.netMode != 0)
-                                        NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc.whoAmI);
-                                }
-                    }
-                }
-                if (chat.StartsWith("/item"))
-                {
-                    string text = Main.chatText;
-                    if (enteredCommand)
-                    {
-                        string itemType = text.Substring("/item ".Length);
-                        string stackCount = "";
-                        if (itemType.Count(t => t == ' ') != 0)
-                            stackCount = itemType.Substring(text.LastIndexOf(' ') + 1);
-                        bool modded = false;
-                        int type;
-                        int stack = 0;
-                        int.TryParse(stackCount, out stack);
-                        if (modded = !int.TryParse(itemType, out type))
-                            type = mod.ItemType(itemType);
-                        if (modded)
-                        {
-                            int t = Item.NewItem(Main.MouseWorld, type, mod.GetItem(itemType).item.maxStack);
-                            if (Main.netMode != 0)
-                                NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
-                        }
-                        else
-                        {
-                            int.TryParse(stackCount, out stack);
-                            int t2 = Item.NewItem(Main.MouseWorld, type, stack == 0 ? 1 : stack);
-                            if (Main.netMode != 0)
-                                NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t2);
-                        }
-                    }
-                }
-                if (chat.StartsWith("/spawn"))
-                    if (enteredCommand)
-                    {
-                        if (Main.netMode != 0)
-                            NetHandler.Send(Packet.TeleportPlayer, 256, -1, Main.LocalPlayer.whoAmI, Main.spawnTileX * 16, Main.spawnTileY * 16);
-                        else
-                            player.Teleport(new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16));
-                    }
-                if (chat.StartsWith("/day"))
-                {
-                    if (enteredCommand)
-                    {
-                        float time = 10f * 60f * 60f / 2f;
-                        if (Main.netMode == 0)
-                        {
-                            Main.dayTime = true;
-                            Main.time = time;
-                        }
-                        else NetHandler.Send(Packet.WorldTime, 256, -1, 0, time, 0f, 0, true);
-                    }
-                }
-                if (chat.StartsWith("/night"))
-                {
-                    if (enteredCommand)
-                    {
-                        float time = 8f * 60f * 60f / 2f;
-                        if (Main.netMode == 0)
-                        {
-                            Main.dayTime = false;
-                            Main.time = time;
-                        }
-                        else NetHandler.Send(Packet.WorldTime, 256, -1, 0, time, 0f, 0, false);
-                    }
-                }
-                if (chat.StartsWith("/rain"))
-                {
-                    if (chat.Contains("off"))
-                        if (enteredCommand)
-                            Main.raining = false;
-                    if (chat.Contains("on"))
-                        if (enteredCommand)
-                            Main.raining = true;
-                }
-            }
-            if (enteredCommand)
-            {
-                Main.chatText = string.Empty;
-                Main.drawingPlayerChat = false;
-                Main.chatRelease = false;
-            }
-            if (KeyPress(Keys.F2) && KeyHold(Keys.LeftControl))
-            {
-                if (Main.netMode == 1)
-                    NetHandler.Send(Packet.Debug, 256, -1, player.whoAmI);
-                else debugMenu = !debugMenu;
-            }
-            if (KeyPress(Keys.F3) && KeyHold(Keys.LeftControl))
-            {
-                if (Main.netMode == 1)
-                    NetHandler.Send(Packet.Debug, 256, -1, player.whoAmI, 1f);
-                else spawnMenu = !spawnMenu;
-            }
+            //if (!start && !Main.dedServ && KeyPress(Keys.F1) && KeyHold(Keys.Up))
+            //{
+            //    if (Main.netMode == 0)
+            //    {
+            //        Main.NewText("To enter commands, input [Tab + (Hold) Left Control] (instead of Enter), [F2 + LeftControl] for item spawning using chat search via item name, [F3 + LeftControl] for NPC debug and balancing", Color.LightBlue);
+            //        Main.NewText("Commands: /list 'npcs' 'items1' 'items2' 'items3', /npc [name], /npc 'strike', /item [name], /spawn, /day, /night, /rain 'off' 'on', hold [Left Control + Left Alt] and click to go to mouse", textColor);
+            //    }
+            //    if (Main.netMode == 2)
+            //        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("Input /info and use [Tab] to list commands"), textColor);
+            //    start = true;
+            //}
+            //if (KeyHold(Keys.LeftAlt))
+            //{
+            //    if (KeyPress(Keys.LeftControl))
+            //    {
+            //        //SkyHall hall = new SkyHall();
+            //        //hall.SkyFortGen();
+            //        /*
+            //        Vector2 position;
+            //        do
+            //        {
+            //            position = new Vector2(WorldGen.genRand.Next(200, Main.maxTilesX - 200), 50);
+            //        } while (position.X < Main.spawnTileX + 150 && position.X > Main.spawnTileX - 150);
+            //        var s = new Structures(position, ArchaeaWorld.skyBrick, ArchaeaWorld.skyBrickWall);
+            //        s.InitializeFort();
+            //        */
+            //        if (Main.netMode == 0)
+            //        {
+            //            for (int i = 0; i < Main.rightWorld / 16; i++)
+            //                for (int j = 0; j < Main.bottomWorld / 16; j++)
+            //                {
+            //                    Main.mapInit = true;
+            //                    Main.loadMap = true;
+            //                    Main.refreshMap = true;
+            //                    Main.updateMap = true;
+            //                    Main.Map.Update(i, j, 255);
+            //                    Main.Map.ConsumeUpdate(i, j);
+            //                }
+            //        }
+            //    }
+            //}
+            //if (KeyHold(Keys.LeftControl) && KeyHold(Keys.LeftAlt) && LeftClick())
+            //{
+            //    if (Main.netMode == 2)
+            //        NetHandler.Send(Packet.TeleportPlayer, -1, -1, player.whoAmI, Main.MouseWorld.X, Main.MouseWorld.Y);
+            //    else player.Teleport(Main.MouseWorld);
+            //}
+            //string chat = (string)Main.chatText.Clone();
+            //bool enteredCommand = KeyPress(Keys.Tab);
+            //if (chat.StartsWith("/info") && KeyHold(Keys.LeftControl))
+            //{
+            //    if (enteredCommand)
+            //    {
+            //        if (Main.netMode != 2)
+            //        {
+            //            Main.NewText("Commands: /list 'npcs' 'items1' 'items2' 'items3', /npc [name], /npc 'strike', /item [name], /spawn, /day, /night, /rain 'off' 'on', hold Left Control and click to go to mouse", textColor);
+            //            Main.NewText("Press [F2] and type an item name in chat, then hover over item icon", textColor);
+            //            Main.NewText("[F3] for NPC debug and balancing", textColor);
+            //        }
+            //    }
+            //}
+            //if (chat.StartsWith("/") && KeyHold(Keys.LeftControl))
+            //{
+            //    if (chat.StartsWith("/list"))
+            //    {
+            //        string[] npcs = new string[]
+            //        {
+            //            "Fanatic",
+            //            "Hatchling_head",
+            //            "Mimic",
+            //            "Sky_1",
+            //            "Sky_2",
+            //            "Sky_3",
+            //            "Slime_Itchy",
+            //            "Slime_Mercurial",
+            //            "Magnoliac_head",
+            //            "Sky_boss",
+            //            "Sky_boss_legacy"
+            //        };
+            //        string[] items1 = new string[]
+            //        {
+            //            "cinnabar_bow",
+            //            "cinnabar_dagger",
+            //            "cinnabar_hamaxe",
+            //            "cinnabar_pickaxe",
+            //            "magno_Book",
+            //            "magno_summonstaff",
+            //            "magno_treasurebag",
+            //            "magno_trophy",
+            //            "magno_yoyo"
+            //        };
+            //        string[] items2 = new string[]
+            //        {
+            //            "c_Staff",
+            //            "c_Sword",
+            //            "n_Staff",
+            //            "r_Catcher",
+            //            "r_Flail",
+            //            "r_Javelin",
+            //            "r_Tomohawk",
+            //            "ShockLegs",
+            //            "ShockMask",
+            //            "ShockPlate"
+            //        };
+            //        string[] items3 = new string[]
+            //        {
+            //            "Broadsword",
+            //            "Calling",
+            //            "Deflector",
+            //            "Sabre",
+            //            "Staff"
+            //        };
+            //        if (chat.Contains("npcs"))
+            //        {
+            //            if (enteredCommand)
+            //                foreach (string s in npcs)
+            //                    Main.NewText(s + " " + mod.NPCType(s), textColor);
+            //        }
+            //        if (chat.Contains("items1"))
+            //        {
+            //            if (enteredCommand)
+            //                foreach (string s in items1)
+            //                    Main.NewText(s, textColor);
+            //        }
+            //        if (chat.Contains("items2"))
+            //        {
+            //            if (enteredCommand)
+            //                foreach (string s in items2)
+            //                    Main.NewText(s, textColor);
+            //        }
+            //        if (chat.Contains("items3"))
+            //        {
+            //            if (enteredCommand)
+            //                foreach (string s in items3)
+            //                    Main.NewText(s, textColor);
+            //        }
+            //    }
+            //    if (chat.StartsWith("/npc"))
+            //    {
+            //        string text = Main.chatText.Substring(Main.chatText.IndexOf(' ') + 1);
+            //        if (!chat.Contains("strike"))
+            //        {
+            //            if (enteredCommand)
+            //            {
+            //                NPC n = mod.GetNPC(text).npc;
+            //                if (Main.netMode != 0)
+            //                    NetHandler.Send(Packet.SpawnNPC, 256, -1, n.type, Main.MouseWorld.X, Main.MouseWorld.Y, player.whoAmI, n.boss);
+            //                else
+            //                {
+            //                    if (n.boss)
+            //                        NPC.SpawnOnPlayer(player.whoAmI, n.type);
+            //                    else NPC.NewNPC((int)Main.MouseWorld.X, (int)Main.MouseWorld.Y, n.type);
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            if (enteredCommand)
+            //                foreach (NPC npc in Main.npc)
+            //                    if (npc.active && !npc.friendly && npc.life > 0)
+            //                    {
+            //                        npc.StrikeNPC(npc.lifeMax, 0f, 1, true);
+            //                        if (Main.netMode != 0)
+            //                            NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc.whoAmI);
+            //                    }
+            //        }
+            //    }
+            //    if (chat.StartsWith("/item"))
+            //    {
+            //        string text = Main.chatText;
+            //        if (enteredCommand)
+            //        {
+            //            string itemType = text.Substring("/item ".Length);
+            //            string stackCount = "";
+            //            if (itemType.Count(t => t == ' ') != 0)
+            //                stackCount = itemType.Substring(text.LastIndexOf(' ') + 1);
+            //            bool modded = false;
+            //            int type;
+            //            int stack = 0;
+            //            int.TryParse(stackCount, out stack);
+            //            if (modded = !int.TryParse(itemType, out type))
+            //                type = mod.ItemType(itemType);
+            //            if (modded)
+            //            {
+            //                int t = Item.NewItem(Main.MouseWorld, type, mod.GetItem(itemType).item.maxStack);
+            //                if (Main.netMode != 0)
+            //                    NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
+            //            }
+            //            else
+            //            {
+            //                int.TryParse(stackCount, out stack);
+            //                int t2 = Item.NewItem(Main.MouseWorld, type, stack == 0 ? 1 : stack);
+            //                if (Main.netMode != 0)
+            //                    NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t2);
+            //            }
+            //        }
+            //    }
+            //    if (chat.StartsWith("/spawn"))
+            //        if (enteredCommand)
+            //        {
+            //            if (Main.netMode != 0)
+            //                NetHandler.Send(Packet.TeleportPlayer, 256, -1, Main.LocalPlayer.whoAmI, Main.spawnTileX * 16, Main.spawnTileY * 16);
+            //            else
+            //                player.Teleport(new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16));
+            //        }
+            //    if (chat.StartsWith("/day"))
+            //    {
+            //        if (enteredCommand)
+            //        {
+            //            float time = 10f * 60f * 60f / 2f;
+            //            if (Main.netMode == 0)
+            //            {
+            //                Main.dayTime = true;
+            //                Main.time = time;
+            //            }
+            //            else NetHandler.Send(Packet.WorldTime, 256, -1, 0, time, 0f, 0, true);
+            //        }
+            //    }
+            //    if (chat.StartsWith("/night"))
+            //    {
+            //        if (enteredCommand)
+            //        {
+            //            float time = 8f * 60f * 60f / 2f;
+            //            if (Main.netMode == 0)
+            //            {
+            //                Main.dayTime = false;
+            //                Main.time = time;
+            //            }
+            //            else NetHandler.Send(Packet.WorldTime, 256, -1, 0, time, 0f, 0, false);
+            //        }
+            //    }
+            //    if (chat.StartsWith("/rain"))
+            //    {
+            //        if (chat.Contains("off"))
+            //            if (enteredCommand)
+            //                Main.raining = false;
+            //        if (chat.Contains("on"))
+            //            if (enteredCommand)
+            //                Main.raining = true;
+            //    }
+            //}
+            //if (enteredCommand)
+            //{
+            //    Main.chatText = string.Empty;
+            //    Main.drawingPlayerChat = false;
+            //    Main.chatRelease = false;
+            //}
+            //if (KeyPress(Keys.F2) && KeyHold(Keys.LeftControl))
+            //{
+            //    if (Main.netMode == 1)
+            //        NetHandler.Send(Packet.Debug, 256, -1, player.whoAmI);
+            //    else debugMenu = !debugMenu;
+            //}
+            //if (KeyPress(Keys.F3) && KeyHold(Keys.LeftControl))
+            //{
+            //    if (Main.netMode == 1)
+            //        NetHandler.Send(Packet.Debug, 256, -1, player.whoAmI, 1f);
+            //    else spawnMenu = !spawnMenu;
+            //}
         }
         public static bool LeftClick()
         {
@@ -586,7 +586,7 @@ namespace ArchaeaMod
             sb.Draw(texture, new Rectangle(Main.screenWidth - side, 0, side, Main.screenHeight), color);
             sb.Draw(texture, new Rectangle(side, 0, range * 2, top), color);
             sb.Draw(texture, new Rectangle(side, Main.screenHeight - top, range * 2, top), color);
-            sb.Draw(mod.GetTexture("Gores/fort_vignette_ui"), new Rectangle(side, top, range * 2, range * 2), Color.Black * darkAlpha);
+            sb.Draw(mod.GetTexture("Gores/fort_vignette_ui"), new Rectangle(side, top, range * 2, range * 2 + 1), Color.Black * darkAlpha);
         }
         private SpriteBatch sb
         {
@@ -596,7 +596,7 @@ namespace ArchaeaMod
         public bool classChecked;
         public override void ModifyDrawInfo(ref PlayerDrawInfo drawInfo)
         {
-            if (classChoice == ClassID.None && drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI)
+            if (/*classChoice == ClassID.None &&*/ drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI && !drawInfo.drawPlayer.dead)
             {
                 if (ArchaeaWorld.playerIDs.Contains(playerUID))
                     classChoice = ArchaeaWorld.classes[ArchaeaWorld.playerIDs.IndexOf(playerUID)];
