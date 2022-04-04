@@ -54,7 +54,7 @@ namespace ArchaeaMod.Items
         }
         public override bool UseItem(Player player)
         {
-            NPC.SpawnOnPlayer(player.whoAmI, bossType);
+            NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<Magnoliac_head>());
             Main.PlaySound(SoundID.Roar, player.Center, 0);
             return true;
         }

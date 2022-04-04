@@ -92,3 +92,25 @@ version 0.2.1396.7 -> 0.2.1404.8
 - Revised Magno generation
 -> from MINER generation to GenMapViewer
 - Replaced cave backgrounds with newest versions
+
+version 0.2.1404.8 -> 0.2.1414.9
+================================
+# Fixed
+- Magno plants
+-> they only provide under light certain conditions
+-> they grow eventually into bloom
+- Different wall generation in biome
+- Darkness drawing misalignment
+
+# Added
+- Better options menu
+- Magno plant item
+
+version 0.2.1414.9 -> 0.2.1417.10
+=================================
+# Changed
+- Well temporarily disabled
+- Necrosis life set to higher value
+
+# Fixed
+- Boss summons now work

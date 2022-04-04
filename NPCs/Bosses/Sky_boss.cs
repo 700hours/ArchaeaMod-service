@@ -24,7 +24,7 @@ namespace ArchaeaMod.NPCs.Bosses
         {
             npc.width = 176;
             npc.height = 192;
-            npc.lifeMax = 5000;
+            npc.lifeMax = 150000;
             npc.defense = 10;
             npc.damage = 20;
             npc.value = 45000;

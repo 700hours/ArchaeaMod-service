@@ -415,45 +415,45 @@ namespace ArchaeaMod
                 progress.End();
             }));
 
-            float PositionX;
-            const int TileSize = 16;
-            int buffer = 16, wellBuffer = 96, surfaceBuffer = 0;
-            int WellIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Smooth World"));
-            if (WellIndex != -1)
-            {
-                tasks.Insert(WellIndex + 1, new PassLegacy("Digging Well", delegate (GenerationProgress progress)
-                {
-                    progress.Message = "Digging Well";
-                    Vector2 Center = new Vector2((Main.maxTilesX / 2) * 16, (Main.maxTilesY / 2) * 16);
-                    //MINER Legacy gen
-                    //if ((miner.genPos[0].X + wellBuffer / 3) / TileSize > miner.baseCenter.X / TileSize)
-                    //{
-                    //    PositionX = miner.genPos[1].X / 16;
-                    //}
-                    //else PositionX = miner.genPos[0].X / 16;
-                    PositionX = WorldGen.genRand.Next(originX, originX + mWidth);
+            //float PositionX;
+            //const int TileSize = 16;
+            //int buffer = 16, wellBuffer = 96, surfaceBuffer = 0;
+            //int WellIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Smooth World"));
+            //if (WellIndex != -1)
+            //{
+            //    tasks.Insert(WellIndex + 1, new PassLegacy("Digging Well", delegate (GenerationProgress progress)
+            //    {
+            //        progress.Message = "Digging Well";
+            //        Vector2 Center = new Vector2((Main.maxTilesX / 2) * 16, (Main.maxTilesY / 2) * 16);
+            //        //MINER Legacy gen
+            //        //if ((miner.genPos[0].X + wellBuffer / 3) / TileSize > miner.baseCenter.X / TileSize)
+            //        //{
+            //        //    PositionX = miner.genPos[1].X / 16;
+            //        //}
+            //        //else PositionX = miner.genPos[0].X / 16;
+            //        PositionX = WorldGen.genRand.Next(originX, originX + mWidth);
 
-                    int gap = 5;
-                    int MaxTries = 128;
-                    bool dirtWall = Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe1 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe2 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe3 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe4;
-                    for (int i = 0; i < MaxTries; i++)
-                    {
-                        if (Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].active() && Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].wall != 0)
-                        {
-                            surfaceBuffer++;
-                        }
-                        if (!Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].active() && Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].wall == 0)
-                        {
-                            surfaceBuffer--;
-                        }
-                    }
+            //        int gap = 5;
+            //        int MaxTries = 128;
+            //        bool dirtWall = Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe1 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe2 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe3 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe4;
+            //        for (int i = 0; i < MaxTries; i++)
+            //        {
+            //            if (Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].active() && Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].wall != 0)
+            //            {
+            //                surfaceBuffer++;
+            //            }
+            //            if (!Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].active() && Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].wall == 0)
+            //            {
+            //                surfaceBuffer--;
+            //            }
+            //        }
 
-                    buffer = 3;
-                    float distance = Vector2.Distance(new Vector2(PositionX, Main.spawnTileY + 10 - surfaceBuffer) - new Vector2(PositionX, originY - (int)Main.worldSurface - 25/*miner.genPos[1].Y / 16*/), Vector2.Zero);
-                    // comment out '/ 3' for max well length
-                    PlaceWell((int)PositionX, Main.spawnTileY - surfaceBuffer - buffer, distance / 3);
-                }));
-            }
+            //        buffer = 3;
+            //        float distance = Vector2.Distance(new Vector2(PositionX, Main.spawnTileY + 10 + surfaceBuffer) - new Vector2(PositionX, originY - (int)Main.worldSurface - 25/*miner.genPos[1].Y / 16*/), Vector2.Zero);
+            //        // comment out '/ 3' for max well length
+            //        PlaceWell((int)PositionX, Main.spawnTileY + surfaceBuffer - buffer, distance / 3);
+            //    }));
+            //}
             #region Vector2 array
             /* int x = MagnoDen.bounds.X;
             int y = MagnoDen.bounds.Y;

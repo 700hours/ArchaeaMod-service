@@ -113,42 +113,43 @@ namespace ArchaeaMod
             //        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("Input /info and use [Tab] to list commands"), textColor);
             //    start = true;
             //}
-            //if (KeyHold(Keys.LeftAlt))
-            //{
-            //    if (KeyPress(Keys.LeftControl))
-            //    {
-            //        //SkyHall hall = new SkyHall();
-            //        //hall.SkyFortGen();
-            //        /*
-            //        Vector2 position;
-            //        do
-            //        {
-            //            position = new Vector2(WorldGen.genRand.Next(200, Main.maxTilesX - 200), 50);
-            //        } while (position.X < Main.spawnTileX + 150 && position.X > Main.spawnTileX - 150);
-            //        var s = new Structures(position, ArchaeaWorld.skyBrick, ArchaeaWorld.skyBrickWall);
-            //        s.InitializeFort();
-            //        */
-            //        if (Main.netMode == 0)
-            //        {
-            //            for (int i = 0; i < Main.rightWorld / 16; i++)
-            //                for (int j = 0; j < Main.bottomWorld / 16; j++)
-            //                {
-            //                    Main.mapInit = true;
-            //                    Main.loadMap = true;
-            //                    Main.refreshMap = true;
-            //                    Main.updateMap = true;
-            //                    Main.Map.Update(i, j, 255);
-            //                    Main.Map.ConsumeUpdate(i, j);
-            //                }
-            //        }
-            //    }
-            //}
-            //if (KeyHold(Keys.LeftControl) && KeyHold(Keys.LeftAlt) && LeftClick())
-            //{
-            //    if (Main.netMode == 2)
-            //        NetHandler.Send(Packet.TeleportPlayer, -1, -1, player.whoAmI, Main.MouseWorld.X, Main.MouseWorld.Y);
-            //    else player.Teleport(Main.MouseWorld);
-            //}
+            if (!start && KeyHold(Keys.LeftAlt))
+            {
+                if (KeyPress(Keys.LeftControl))
+                {
+                    //SkyHall hall = new SkyHall();
+                    //hall.SkyFortGen();
+                    /*
+                    Vector2 position;
+                    do
+                    {
+                        position = new Vector2(WorldGen.genRand.Next(200, Main.maxTilesX - 200), 50);
+                    } while (position.X < Main.spawnTileX + 150 && position.X > Main.spawnTileX - 150);
+                    var s = new Structures(position, ArchaeaWorld.skyBrick, ArchaeaWorld.skyBrickWall);
+                    s.InitializeFort();
+                    */
+                    if (Main.netMode == 0)
+                    {
+                        for (int i = 0; i < Main.rightWorld / 16; i++)
+                            for (int j = 0; j < Main.bottomWorld / 16; j++)
+                            {
+                                Main.mapInit = true;
+                                Main.loadMap = true;
+                                Main.refreshMap = true;
+                                Main.updateMap = true;
+                                Main.Map.Update(i, j, 255);
+                                Main.Map.ConsumeUpdate(i, j);
+                            }
+                        start = true;
+                    }
+                }
+            }
+            if (KeyHold(Keys.LeftControl) && KeyHold(Keys.LeftAlt) && LeftClick())
+            {
+                if (Main.netMode == 2)
+                    NetHandler.Send(Packet.TeleportPlayer, -1, -1, player.whoAmI, Main.MouseWorld.X, Main.MouseWorld.Y);
+                else player.Teleport(Main.MouseWorld);
+            }
             //string chat = (string)Main.chatText.Clone();
             //bool enteredCommand = KeyPress(Keys.Tab);
             //if (chat.StartsWith("/info") && KeyHold(Keys.LeftControl))
@@ -349,18 +350,18 @@ namespace ArchaeaMod
             //    Main.drawingPlayerChat = false;
             //    Main.chatRelease = false;
             //}
-            //if (KeyPress(Keys.F2) && KeyHold(Keys.LeftControl))
-            //{
-            //    if (Main.netMode == 1)
-            //        NetHandler.Send(Packet.Debug, 256, -1, player.whoAmI);
-            //    else debugMenu = !debugMenu;
-            //}
-            //if (KeyPress(Keys.F3) && KeyHold(Keys.LeftControl))
-            //{
-            //    if (Main.netMode == 1)
-            //        NetHandler.Send(Packet.Debug, 256, -1, player.whoAmI, 1f);
-            //    else spawnMenu = !spawnMenu;
-            //}
+            if (KeyPress(Keys.F2) && KeyHold(Keys.LeftControl))
+            {
+                if (Main.netMode == 1)
+                    NetHandler.Send(Packet.Debug, 256, -1, player.whoAmI);
+                else debugMenu = !debugMenu;
+            }
+            if (KeyPress(Keys.F3) && KeyHold(Keys.LeftControl))
+            {
+                if (Main.netMode == 1)
+                    NetHandler.Send(Packet.Debug, 256, -1, player.whoAmI, 1f);
+                else spawnMenu = !spawnMenu;
+            }
         }
         public static bool LeftClick()
         {
