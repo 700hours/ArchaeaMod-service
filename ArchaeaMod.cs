@@ -19,6 +19,7 @@ namespace ArchaeaMod
         private bool triggerSwap;
         public static string magnoHead = "ArchaeaMod/Gores/magno_head";
         public static string skyHead = "ArchaeaMod/Gores/sky_head";
+        //public static ModHotKey[] macro = new ModHotKey[5];
         public override void Load()
         {
             AddBossHeadTexture(magnoHead, ModNPCID.MagnoliacHead);
@@ -29,6 +30,10 @@ namespace ArchaeaMod
                 AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Magno_Biome"), ModContent.ItemType<Items.Tiles.mbox_magno_1>(), ModContent.TileType<Tiles.music_boxes>(), 36);
                 AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma"), ModContent.ItemType<Items.Tiles.mbox_magno_2>(), ModContent.TileType<Tiles.music_boxes_alt>(), 36);
             }
+            //for (int i = 0; i < macro.Length; i++)
+            //{
+            //    macro[i] = RegisterHotKey($"Macro {i + 1}", "");
+            //}
         }
         public void SetModInfo(out string name, ref ModProperties properties)
         {
