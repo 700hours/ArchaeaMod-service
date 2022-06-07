@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 namespace ArchaeaMod.Merged.Items.Walls
 {
     public class magno_stonewall : ModItem
@@ -15,24 +14,24 @@ namespace ArchaeaMod.Merged.Items.Walls
         }
         public override void SetDefaults()
         {
-            item.width = 14;
-            item.height = 14;
-            item.maxStack = 999;
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.useAnimation = 15;
-            item.useTime = 7;
-            item.useStyle = 1;
-            item.consumable = true;
-            item.createWall = mod.WallType("magno_stone");
+            Item.width = 14;
+            Item.height = 14;
+            Item.maxStack = 999;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.useAnimation = 15;
+            Item.useTime = 7;
+            Item.useStyle = 1;
+            Item.consumable = true;
+            Item.createWall = Mod.Find<ModWall>("magno_stone").Type;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<Tiles.magno_stone>());
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this, 4);
-            recipe.AddRecipe();
+            var r = CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Tiles.magno_stone>())
+                .AddTile(TileID.WorkBenches);
+            r.ReplaceResult(Type, 4);
+            r.Register();
         }
     }
 }

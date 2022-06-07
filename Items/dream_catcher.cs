@@ -23,11 +23,11 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 34;
-            item.rare = ItemRarityID.LightPurple;
-            item.value = 10000;
-            item.accessory = true;
+            Item.width = 30;
+            Item.height = 34;
+            Item.rare = ItemRarityID.LightPurple;
+            Item.value = 10000;
+            Item.accessory = true;
         }
         bool init;
         int effect = -1;

@@ -14,12 +14,12 @@ namespace ArchaeaMod.Merged.Items.Materials
         }
         public override void SetDefaults()
         {
-            item.width = 24;
-            item.height = 32;
-            item.scale = 1f;
-            item.maxStack = 99;
-            item.value = 3500;
-            item.rare = 3;
+            Item.width = 24;
+            Item.height = 32;
+            Item.scale = 1f;
+            Item.maxStack = 99;
+            Item.value = 3500;
+            Item.rare = 3;
         }
     }
 }

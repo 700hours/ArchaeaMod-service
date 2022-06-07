@@ -23,30 +23,30 @@ namespace ArchaeaMod.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 34;
-            projectile.height = 34;
-            projectile.damage = 28;
-            projectile.knockBack = 0f;
-            projectile.penetrate = 10;
-            projectile.timeLeft = 600;
-            projectile.tileCollide = true;
-            projectile.friendly = true;
-            projectile.thrown = true;
+            Projectile.width = 34;
+            Projectile.height = 34;
+            Projectile.damage = 28;
+            Projectile.knockBack = 0f;
+            Projectile.penetrate = 10;
+            Projectile.timeLeft = 600;
+            Projectile.tileCollide = true;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Throwing;
         }
         private int ai = -1;
         private Player owner
         {
-            get { return Main.player[projectile.owner]; }
+            get { return Main.player[Projectile.owner]; }
         }
         public override bool PreAI()
         {
             switch (ai)
             {
                 case -1:
-                    projectile.rotation = NPCs.ArchaeaNPC.AngleTo(owner.Center, Main.MouseWorld) + (float)(Math.PI / 4f);
-                    rotate = projectile.rotation;
+                    Projectile.rotation = NPCs.ArchaeaNPC.AngleTo(owner.Center, Main.MouseWorld) + (float)(Math.PI / 4f);
+                    rotate = Projectile.rotation;
                     rotate += (float)Math.PI / 4f;
-                    projectile.position = new Vector2(ArchaeaItem.StartThrowX(owner), projectile.position.Y - 16f);
+                    Projectile.position = new Vector2(ArchaeaItem.StartThrowX(owner), Projectile.position.Y - 16f);
                     goto case 0;
                 case 0:
                     ai = 0;
@@ -64,12 +64,12 @@ namespace ArchaeaMod.Projectiles
         public override void AI()
         {
             if (ArchaeaItem.Elapsed(5))
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Fire);
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 6);
         }
         public override void Kill(int timeLeft)
         {
             for (int i = 0; i < 6; i++)
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Fire, 0f, 0f, 0, default(Color), 2f);
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 6, 0f, 0f, 0, default(Color), 2f);
         }
     }
 }

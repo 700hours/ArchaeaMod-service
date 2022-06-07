@@ -1,14 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 namespace ArchaeaMod.Items.Tiles
 {
     public class m_door : ModItem
@@ -19,28 +17,27 @@ namespace ArchaeaMod.Items.Tiles
         }
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 34;
-            item.useTime = 10;
-            item.useAnimation = 15;
-            item.useStyle = 1;
-            item.value = 0;
-            item.rare = 1;
-            item.maxStack = 99;
-            item.autoReuse = true;
-            item.noMelee = true;
-            item.consumable = true;
-            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.m_doorclosed>();
+            Item.width = 22;
+            Item.height = 34;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.value = 0;
+            Item.rare = 1;
+            Item.maxStack = 99;
+            Item.autoReuse = true;
+            Item.noMelee = true;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<ArchaeaMod.Tiles.m_doorclosed>();
         }
-
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Tiles.magno_brick>(), 6);
-            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.magno_bar>(), 2);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(item.type);
-            recipe.AddRecipe();
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Merged.Items.Tiles.magno_brick>(), 6)
+                .AddIngredient(ModContent.ItemType<Merged.Items.Materials.magno_bar>(), 2)
+                .AddTile(TileID.Anvils)
+//            recipe.SetResult(Item.type);
+                .Register();
         }
     }
 }

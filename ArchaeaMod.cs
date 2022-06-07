@@ -15,8 +15,7 @@ namespace ArchaeaMod
         {
             get { return ModLoader.GetMod("ArchaeaMod"); }
         }
-        private bool swapTracks;
-        private bool triggerSwap;
+        
         public static string magnoHead = "ArchaeaMod/Gores/magno_head";
         public static string skyHead = "ArchaeaMod/Gores/sky_head";
         //public static ModHotKey[] macro = new ModHotKey[5];
@@ -26,25 +25,73 @@ namespace ArchaeaMod
             AddBossHeadTexture(skyHead, ModNPCID.SkyBoss);
             if (!Main.dedServ)
             {
-                AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/The_Undying_Flare"), ModContent.ItemType<Items.Tiles.mbox_magno_boss>(), ModContent.TileType<Tiles.music_boxes>(), 0);
-                AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Magno_Biome"), ModContent.ItemType<Items.Tiles.mbox_magno_1>(), ModContent.TileType<Tiles.music_boxes>(), 36);
-                AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma"), ModContent.ItemType<Items.Tiles.mbox_magno_2>(), ModContent.TileType<Tiles.music_boxes_alt>(), 36);
+                MusicLoader.AddMusicBox(this, MusicLoader.GetMusicSlot(this, "Sounds/Music/The_Undying_Flare"), ModContent.ItemType<Items.Tiles.mbox_magno_boss>(), ModContent.TileType<Tiles.music_boxes>(), 0);
+                MusicLoader.AddMusicBox(this, MusicLoader.GetMusicSlot(this, "Sounds/Music/Magno_Biome"), ModContent.ItemType<Items.Tiles.mbox_magno_1>(), ModContent.TileType<Tiles.music_boxes>(), 36);
+                MusicLoader.AddMusicBox(this, MusicLoader.GetMusicSlot(this, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma"), ModContent.ItemType<Items.Tiles.mbox_magno_2>(), ModContent.TileType<Tiles.music_boxes_alt>(), 36);
             }
             //for (int i = 0; i < macro.Length; i++)
             //{
             //    macro[i] = RegisterHotKey($"Macro {i + 1}", "");
             //}
         }
-        public void SetModInfo(out string name, ref ModProperties properties)
-        {
-            name = "Archaea Mod";
-            properties.Autoload = true;
-            properties.AutoloadBackgrounds = true;
-            properties.AutoloadGores = true;
-            properties.AutoloadSounds = true;
-        }
+        //public void SetModInfo(out string name, ref ModProperties properties)
+        //{
+        //    name = "Archaea Mod";
+        //    properties.Autoload = true;
+        //    properties.AutoloadBackgrounds = true;
+        //    properties.AutoloadGores = true;
+        //    properties.AutoloadSounds = true;
+        //}
         
-        public override void UpdateMusic(ref int music, ref MusicPriority priority)
+        public override void HandlePacket(BinaryReader reader, int whoAmI)
+        {
+            NetHandler.Receive(reader);
+        }
+    }
+    public class SkyFortPortalBiome : ModBiome
+    {
+        public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+        public override bool IsBiomeActive(Player player)
+        {
+            return Main.SceneMetrics.GetTileCount((ushort)ModContent.TileType<Tiles.sky_portal>()) != 0;
+        }
+        public override void OnEnter(Player player)
+        {
+            player.GetModPlayer<ArchaeaPlayer>().SkyPortal = true;
+        }
+        public override void OnLeave(Player player)
+        {
+            player.GetModPlayer<ArchaeaPlayer>().SkyPortal = false;
+        }
+    }
+    public class SkyFortBiome : ModBiome
+    {
+        public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+        public override bool IsBiomeActive(Player player)
+        {
+            return Main.SceneMetrics.GetTileCount(ArchaeaWorld.skyBrick) >= 80;
+        }
+        public override void OnEnter(Player player)
+        {
+            player.GetModPlayer<ArchaeaPlayer>().SkyFort = true;
+        }
+        public override void OnLeave(Player player)
+        {
+            player.GetModPlayer<ArchaeaPlayer>().SkyFort = false;
+        }
+    }
+    public class MagnoBiome : ModBiome
+    {
+        private bool swapTracks;
+        private bool triggerSwap;
+        public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
+        public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetModUndergroundBackgroundStyle(Backgrounds.bg_style.Style);
+        public override int Music => UpdateMusic();
+        public override bool IsBiomeActive(Player player)
+        {
+            return Main.SceneMetrics.GetTileCount(ArchaeaWorld.magnoStone) >= 80 || Main.SceneMetrics.GetTileCount(ArchaeaWorld.Ash) >= 30;
+        }
+        public int UpdateMusic()
         {
             Player player = Main.LocalPlayer;
             if ((int)Main.time == Main.dayLength / 2)
@@ -54,9 +101,8 @@ namespace ArchaeaMod
                 if (player.GetModPlayer<ArchaeaPlayer>().MagnoBiome)
                 {
                     if (!swapTracks)
-                        music = GetSoundSlot(SoundType.Music, "Sounds/Music/Magno_Biome");
-                    else music = GetSoundSlot(SoundType.Music, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma");
-                    priority = MusicPriority.BiomeHigh;
+                        return MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Magno_Biome");
+                    else return MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma");
                 }
                 else if (triggerSwap)
                 {
@@ -64,10 +110,7 @@ namespace ArchaeaMod
                     triggerSwap = false;
                 }
             }
-        }
-        public override void HandlePacket(BinaryReader reader, int whoAmI)
-        {
-            NetHandler.Receive(reader);
+            return 0;
         }
     }
     public class NetHandler
@@ -114,7 +157,7 @@ namespace ArchaeaMod
                 case Packet.SpawnNPC:
                     if (f5 != 0f)
                     {
-                        n = NPC.NewNPC((int)f4, (int)f5, t, 0);
+                        n = NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)f4, (int)f5, t, 0);
                         Main.npc[n].whoAmI = n;
                         Main.npc[n].lifeMax = (int)f;
                         Main.npc[n].life = (int)f;
@@ -126,7 +169,7 @@ namespace ArchaeaMod
                     }
                     else if (!b)
                     {
-                        n = NPC.NewNPC((int)f, (int)f2, t);
+                        n = NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)f, (int)f2, t);
                         Main.npc[n].whoAmI = n;
                         NetMessage.SendData(23, -1, -1, null, n);
                     }

@@ -16,13 +16,13 @@ namespace ArchaeaMod.Merged.Items.Vanity
         }
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.maxStack = 1;
-            item.value = 1000;
-            item.rare = 2;
-            item.defense = 0;
-            item.vanity = true;
+            Item.width = 18;
+            Item.height = 18;
+            Item.maxStack = 1;
+            Item.value = 1000;
+            Item.rare = 2;
+            Item.defense = 0;
+            Item.vanity = true;
         }
     }
 }

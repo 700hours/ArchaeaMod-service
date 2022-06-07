@@ -6,7 +6,7 @@ namespace ArchaeaMod.Walls
 {
     public class magno_cavewall_unsafe : ModWall
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.wallHouse[Type] = false;
             AddMapEntry(Color.DarkRed);

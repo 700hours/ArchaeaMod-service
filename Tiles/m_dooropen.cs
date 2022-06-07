@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -16,7 +17,7 @@ namespace ArchaeaMod.Tiles
 {
     public class m_dooropen : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileBlockLight[Type] = true;
             Main.tileFrameImportant[Type] = true;
@@ -58,16 +59,16 @@ namespace ArchaeaMod.Tiles
             TileObjectData.addTile(Type);
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
             TileID.Sets.HousingWalls[Type] = true;
-            drop = ModContent.ItemType<Items.Tiles.m_door>();
+            ItemDrop = ModContent.ItemType<Items.Tiles.m_door>();
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Door");
             AddMapEntry(Color.DarkRed, name);
-            disableSmartCursor = true;
-            adjTiles = new int[] { TileID.OpenDoor };
-            closeDoorID = ModContent.TileType<m_doorclosed>();
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            AdjTiles = new int[] { TileID.OpenDoor };
+            CloseDoorID = ModContent.TileType<m_doorclosed>();
         }
 
-        public override bool HasSmartInteract()
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
         {
             return true;
         }
@@ -78,15 +79,15 @@ namespace ArchaeaMod.Tiles
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.m_door>());
+            Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.m_door>());
         }
 
         public override void MouseOver(int i, int j)
         {
             Player player = Main.LocalPlayer;
             player.noThrow = 2;
-            player.showItemIcon = true;
-            player.showItemIcon2 = ModContent.ItemType<Items.Tiles.m_door>();
+            player.cursorItemIconEnabled = true;
+            player.cursorItemIconID = ModContent.ItemType<Items.Tiles.m_door>();
         }
     }
 }

@@ -2,8 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -13,7 +15,7 @@ namespace ArchaeaMod.Merged.Tiles
 {
     public class m_chest : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSpelunker[Type] = true;
             Main.tileShine2[Type] = true;
@@ -27,8 +29,8 @@ namespace ArchaeaMod.Merged.Tiles
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Origin = new Point16(0, 1);
             TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16 };
-            TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
+            //TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
+            //TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
             TileObjectData.newTile.AnchorInvalidTiles = new int[] { 127 };
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.LavaDeath = false;
@@ -37,13 +39,13 @@ namespace ArchaeaMod.Merged.Tiles
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Magnoliac Chest");
             AddMapEntry(new Color(110, 110, 210), name);
-            disableSmartCursor = true;
-            adjTiles = new int[] { TileID.Containers };
-            chest = "Magno Chest";
-            chestDrop = mod.ItemType("magno_chest");
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            AdjTiles = new int[] { TileID.Containers };
+            ContainerName.SetDefault("Magno Chest");
+            ChestDrop = Mod.Find<ModItem>("magno_chest").Type;
         }
 
-        public override bool HasSmartInteract()
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
         {
             return true;
         }
@@ -53,22 +55,22 @@ namespace ArchaeaMod.Merged.Tiles
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(i * 16, j * 16, 16, 16, chestDrop);
+            Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 16, 16, ChestDrop);
             Chest.DestroyChest(i, j);
         }
 
-        public override void RightClick(int i, int j)
+        public override bool RightClick(int i, int j)
         {
             Player player = Main.LocalPlayer;
             Tile tile = Main.tile[i, j];
             Main.mouseRightRelease = false;
             int left = i;
             int top = j;
-            if (tile.frameX % 36 != 0)
+            if (tile.TileFrameX % 36 != 0)
             {
                 left--;
             }
-            if (tile.frameY != 0)
+            if (tile.TileFrameY != 0)
             {
                 top--;
             }
@@ -78,13 +80,14 @@ namespace ArchaeaMod.Merged.Tiles
                 {
                     player.chest = -1;
                     Recipe.FindRecipes();
-                    Main.PlaySound(SoundID.MenuClose);
+                    SoundEngine.PlaySound(SoundID.MenuClose);
                 }
                 else
                 {
                     NetMessage.SendData(31, -1, -1, null, left, top, 0f, 0f, 0, 0, 0);
                     Main.stackSplit = 600;
                 }
+                return true;
             }
             else
             {
@@ -95,7 +98,7 @@ namespace ArchaeaMod.Merged.Tiles
                     if (chest == player.chest)
                     {
                         player.chest = -1;
-                        Main.PlaySound(SoundID.MenuClose);
+                        SoundEngine.PlaySound(SoundID.MenuClose);
                     }
                     else
                     {
@@ -104,11 +107,13 @@ namespace ArchaeaMod.Merged.Tiles
                         Main.recBigList = false;
                         player.chestX = left;
                         player.chestY = top;
-                        Main.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
+                        SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
                     }
                     Recipe.FindRecipes();
                 }
+                return true;
             }
+            return false;
         }
         public override void MouseOver(int i, int j)
         {
@@ -116,40 +121,40 @@ namespace ArchaeaMod.Merged.Tiles
             Tile tile = Main.tile[i, j];
             int left = i;
             int top = j;
-            if (tile.frameX % 36 != 0)
+            if (tile.TileFrameX % 36 != 0)
             {
                 left--;
             }
-            if (tile.frameY != 0) 
+            if (tile.TileFrameY != 0) 
             {
                 top--;
             }
             int chest = Chest.FindChest(left, top);
-            player.showItemIcon2 = -1;
+            player.cursorItemIconID = -1;
             if (chest < 0)
             {
-                player.showItemIconText = Language.GetTextValue("LegacyChestType.0");
+                player.cursorItemIconText = Language.GetTextValue("LegacyChestType.0");
             }
             else
             {
-                player.showItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Magno Chest";
-                if(player.showItemIconText == "Magno Chest")
+                player.cursorItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Magno Chest";
+                if(player.cursorItemIconText == "Magno Chest")
                 {
-                    player.showItemIcon2 = mod.ItemType("magno_chest");
-                    player.showItemIconText = "";
+                    player.cursorItemIconID = Mod.Find<ModItem>("magno_chest").Type;
+                    player.cursorItemIconText = "";
                 }
             }
             player.noThrow = 2;
-            player.showItemIcon = true;
+            player.cursorItemIconEnabled = true;
         }
         public override void MouseOverFar(int i, int j)
         {
             MouseOver(i, j);
             Player player = Main.LocalPlayer;
-            if(player.showItemIconText == "")
+            if(player.cursorItemIconText == "")
             {
-                player.showItemIcon = false;
-                player.showItemIcon2 = 0;
+                player.cursorItemIconEnabled = false;
+                player.cursorItemIconID = 0;
             }
         }
     }

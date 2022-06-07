@@ -14,7 +14,7 @@ namespace ArchaeaMod.Merged.Items.Tiles
         }
         public override void SetDefaults()
         {
-            item.CloneDefaults(ItemID.Book);
+            Item.CloneDefaults(ItemID.Book);
         //  item.createTile = mod.TileType("m_book");
         }
     }

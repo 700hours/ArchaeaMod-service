@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -18,34 +19,34 @@ namespace ArchaeaMod.NPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Fanatical Caster");
-            Main.npcFrameCount[npc.type] = 3;
+            Main.npcFrameCount[NPC.type] = 3;
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 48;
-            npc.height = 58;
-            npc.lifeMax = 100;
-            npc.defense = 10;
-            npc.knockBackResist = 1f;
-            npc.damage = 10;
-            npc.value = 1000;
-            npc.lavaImmune = true;
+            NPC.aiStyle = -1;
+            NPC.width = 48;
+            NPC.height = 58;
+            NPC.lifeMax = 100;
+            NPC.defense = 10;
+            NPC.knockBackResist = 1f;
+            NPC.damage = 10;
+            NPC.value = 1000;
+            NPC.lavaImmune = true;
         }
         public int timer
         {
-            get { return (int)npc.ai[0]; }
-            set { npc.ai[0] = value; }
+            get { return (int)NPC.ai[0]; }
+            set { NPC.ai[0] = value; }
         }
         public int maxAttacks
         {
             get { return 4; }
         }
-        public int dustType;
+        public int DustType;
         public Vector2 move;
         public Player npcTarget
         {
-            get { return Main.player[npc.target]; }
+            get { return Main.player[NPC.target]; }
         }
         private bool init;
         private float compensate
@@ -58,34 +59,34 @@ namespace ArchaeaMod.NPCs
             int attackTime = 180 + 90 * maxAttacks;
             if (timer++ > 60 + attackTime)
                 timer = 0;
-            ArchaeaNPC.SlowDown(ref npc.velocity, 0.1f);
+            ArchaeaNPC.SlowDown(ref NPC.velocity, 0.1f);
             if (!init)
             {
-                npc.target = ArchaeaNPC.FindClosest(npc, true).whoAmI;
-                SyncNPC(npc.position.X, npc.position.Y);
-                dustType = 6;
-                var dusts = ArchaeaNPC.DustSpread(npc.Center, 1, 1, dustType, 10);
+                NPC.target = ArchaeaNPC.FindClosest(NPC, true).whoAmI;
+                SyncNPC(NPC.position.X, NPC.position.Y);
+                DustType = 6;
+                var dusts = ArchaeaNPC.DustSpread(NPC.Center, 1, 1, DustType, 10);
                 foreach (Dust d in dusts)
                     d.noGravity = true;
                 init = true;
             }
             if (!fade)
             {
-                if (npc.alpha > 0)
-                    npc.alpha -= 255 / 60;
+                if (NPC.alpha > 0)
+                    NPC.alpha -= 255 / 60;
             }
             else
             {
-                if (npc.alpha < 255)
-                    npc.alpha += 255 / 50;
+                if (NPC.alpha < 255)
+                    NPC.alpha += 255 / 50;
                 else
                 {
                     timer = attackTime + 50;
-                    move = ArchaeaNPC.FindAny(npc, npcTarget, true);
+                    move = ArchaeaNPC.FindAny(NPC, npcTarget, true);
                     if (move != Vector2.Zero)
                     {
                         SyncNPC(move.X, move.Y);
-                        var dusts = ArchaeaNPC.DustSpread(npc.Center - new Vector2(npc.width / 4, npc.height / 4), npc.width / 2, npc.height / 2, dustType, 10, 2.4f);
+                        var dusts = ArchaeaNPC.DustSpread(NPC.Center - new Vector2(NPC.width / 4, NPC.height / 4), NPC.width / 2, NPC.height / 2, DustType, 10, 2.4f);
                         foreach (Dust d in dusts)
                             d.noGravity = true;
                         fade = false;
@@ -108,7 +109,7 @@ namespace ArchaeaMod.NPCs
         private Dust energy;
         public void Attack()
         {
-            int proj = Projectile.NewProjectile(npc.Center + new Vector2(npc.width * 0.35f * npc.direction, -4f), ArchaeaNPC.AngleToSpeed(ArchaeaNPC.AngleTo(npc, npcTarget) + compensate, 4f), ProjectileID.Fireball, 10, 1f);
+            int proj = Projectile.NewProjectile(Projectile.GetSource_None(), NPC.Center + new Vector2(NPC.width * 0.35f * NPC.direction, -4f), ArchaeaNPC.AngleToSpeed(ArchaeaNPC.AngleTo(NPC, npcTarget) + compensate, 4f), ProjectileID.Fireball, 10, 1f);
             Main.projectile[proj].timeLeft = 300;
             Main.projectile[proj].friendly = false;
             Main.projectile[proj].tileCollide = false;
@@ -116,24 +117,24 @@ namespace ArchaeaMod.NPCs
         }
         public void OrbGrow()
         {
-            npc.direction = npc.position.X < npcTarget.position.X ? 1 : -1;
-            npc.spriteDirection = npc.direction;
+            NPC.direction = NPC.position.X < npcTarget.position.X ? 1 : -1;
+            NPC.spriteDirection = NPC.direction;
             scale += 0.03f;
-            energy = Dust.NewDustDirect(npc.Center + new Vector2(npc.width * 0.35f * npc.direction, -4f), 3, 3, dustType, 0f, -0.2f, 0, default(Color), scale);
+            energy = Dust.NewDustDirect(NPC.Center + new Vector2(NPC.width * 0.35f * NPC.direction, -4f), 3, 3, DustType, 0f, -0.2f, 0, default(Color), scale);
             energy.noGravity = true;
         }
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
         {
-            return npc.alpha < 20;
+            return NPC.alpha < 20;
         }
 
         public void SyncNPC(float x, float y)
         {
             if (Main.netMode != 0)
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
             else
             {
-                npc.position = new Vector2(x, y);
+                NPC.position = new Vector2(x, y);
             }
         }
         public override void SendExtraAI(BinaryWriter writer)
@@ -142,7 +143,7 @@ namespace ArchaeaMod.NPCs
         }
         public override void ReceiveExtraAI(BinaryReader reader)
         {
-            npc.position = reader.ReadVector2();
+            NPC.position = reader.ReadVector2();
         }
 
         private int frame;
@@ -154,13 +155,13 @@ namespace ArchaeaMod.NPCs
             if (timer > 180 && timer < 180 + attackPhase && timer % 30 == 0)
                 frame++;
             if (!Main.dedServ)
-                frameHeight = Main.npcTexture[npc.type].Height / Main.npcFrameCount[npc.type];
+                frameHeight = TextureAssets.Npc[NPC.type].Value.Height / Main.npcFrameCount[NPC.type];
             if (frame < 3)
-                npc.frame.Y = frame * frameHeight;
+                NPC.frame.Y = frame * frameHeight;
             else frame = 0;
         }
 
-        public override void NPCLoot()
+        public override void OnKill()
         {
             int rand = Main.rand.Next(12);
             switch (rand)
@@ -168,20 +169,20 @@ namespace ArchaeaMod.NPCs
                 case 0:
                 case 1:
                 case 2:
-                    Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>());
+                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>());
                     break;
                 case 10:
                     int rand2 = Main.rand.Next(3);
                     switch (rand2)
                     {
                         case 0:
-                            Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>());
+                            Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>());
                             break;
                         case 1:
-                            Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>());
+                            Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>());
                             break;
                         case 2:
-                            Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.Armors.ancient_shockgreaves>());
+                            Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Armors.ancient_shockgreaves>());
                             break;
                     }
                     break;

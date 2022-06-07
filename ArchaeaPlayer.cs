@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.Map;
@@ -20,6 +21,7 @@ using ReLogic.Graphics;
 using ArchaeaMod.GenLegacy;
 using ArchaeaMod.Mode;
 using ArchaeaMod.ModUI;
+using Terraria.DataStructures;
 
 namespace ArchaeaMod
 {
@@ -29,42 +31,6 @@ namespace ArchaeaMod
         public bool MagnoBiome;
         public bool SkyFort;
         public bool SkyPortal;
-        public override void UpdateBiomes()
-        {
-            ArchaeaWorld modWorld = ModContent.GetInstance<ArchaeaWorld>();
-            MagnoBiome = modWorld.MagnoBiome;
-            SkyFort = modWorld.SkyFort;
-            SkyPortal = modWorld.SkyPortal;
-        }
-        public override bool CustomBiomesMatch(Player other)
-        {
-            if (MagnoBiome)
-                return MagnoBiome = other.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
-            if (SkyFort)
-                return SkyFort = other.GetModPlayer<ArchaeaPlayer>().SkyFort;
-            return false;
-        }
-        public override void CopyCustomBiomesTo(Player other)
-        {
-            other.GetModPlayer<ArchaeaPlayer>().MagnoBiome = MagnoBiome;
-            other.GetModPlayer<ArchaeaPlayer>().SkyFort = SkyFort;
-            other.GetModPlayer<ArchaeaPlayer>().SkyPortal = SkyPortal;
-        }
-        public override void SendCustomBiomes(BinaryWriter writer)
-        {
-            BitsByte flag = new BitsByte();
-            flag[0] = MagnoBiome;
-            flag[1] = SkyFort;
-            flag[2] = SkyPortal;
-            writer.Write(flag);
-        }
-        public override void ReceiveCustomBiomes(BinaryReader reader)
-        {
-            BitsByte flag = reader.ReadByte();
-            MagnoBiome = flag[0];
-            SkyFort = flag[1];
-            SkyPortal = flag[2];
-        }
         #endregion
         public static class ClassID
         {
@@ -80,20 +46,17 @@ namespace ArchaeaMod
         }
         public int classChoice = 0;
         public int playerUID = 0;
-        public override void Load(TagCompound tag)
+        public override void LoadData(TagCompound tag)
         {
             playerUID = tag.GetInt("PlayerID");
             if (playerUID == 0)
                 playerUID = GetHashCode();
             classChosen = tag.GetBool("Chosen");
         }
-        public override TagCompound Save()
+        public override void SaveData(TagCompound tag)
         {
-            return new TagCompound
-            {
-                { "PlayerID", playerUID },
-                { "Chosen", classChosen }
-            };
+            tag.Set("PlayerID", playerUID, true);
+            tag.Set("Chosen", classChosen, true);
         }
         private bool start;
         public bool debugMenu;
@@ -101,6 +64,7 @@ namespace ArchaeaMod
         public override void PreUpdate()
         {
             Color textColor = Color.Yellow;
+            return;
             //  ITEM TEXT and SKY FORT DEBUG GEN
             //if (!start && !Main.dedServ && KeyPress(Keys.F1) && KeyHold(Keys.Up))
             //{
@@ -147,8 +111,8 @@ namespace ArchaeaMod
             if (KeyHold(Keys.LeftControl) && KeyHold(Keys.LeftAlt) && LeftClick())
             {
                 if (Main.netMode == 2)
-                    NetHandler.Send(Packet.TeleportPlayer, -1, -1, player.whoAmI, Main.MouseWorld.X, Main.MouseWorld.Y);
-                else player.Teleport(Main.MouseWorld);
+                    NetHandler.Send(Packet.TeleportPlayer, -1, -1, Player.whoAmI, Main.MouseWorld.X, Main.MouseWorld.Y);
+                else Player.Teleport(Main.MouseWorld);
             }
             //string chat = (string)Main.chatText.Clone();
             //bool enteredCommand = KeyPress(Keys.Tab);
@@ -353,13 +317,13 @@ namespace ArchaeaMod
             if (KeyPress(Keys.F2) && KeyHold(Keys.LeftControl))
             {
                 if (Main.netMode == 1)
-                    NetHandler.Send(Packet.Debug, 256, -1, player.whoAmI);
+                    NetHandler.Send(Packet.Debug, 256, -1, Player.whoAmI);
                 else debugMenu = !debugMenu;
             }
             if (KeyPress(Keys.F3) && KeyHold(Keys.LeftControl))
             {
                 if (Main.netMode == 1)
-                    NetHandler.Send(Packet.Debug, 256, -1, player.whoAmI, 1f);
+                    NetHandler.Send(Packet.Debug, 256, -1, Player.whoAmI, 1f);
                 else spawnMenu = !spawnMenu;
             }
         }
@@ -382,9 +346,9 @@ namespace ArchaeaMod
 
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
-            if (item.melee)
+            if (item.CountsAsClass(DamageClass.Melee))
             {
-                if (player.HasBuff(ModContent.BuffType<Buffs.flask_mercury>()))
+                if (Player.HasBuff(ModContent.BuffType<Buffs.flask_mercury>()))
                 {
                     target.AddBuff(ModContent.BuffType<Buffs.mercury>(), 600);
                 }
@@ -403,9 +367,9 @@ namespace ArchaeaMod
                 for (float i = 0; i < Math.PI * 2f; i += new Draw().radians(effectTime / 64f))
                 {
                     int offset = 4;
-                    float x = (float)(player.Center.X - offset + (effectTime / 4) * Math.Cos(i));
-                    float y = (float)(player.Center.Y + (effectTime / 4) * Math.Sin(i));
-                    var dust = Dust.NewDustDirect(new Vector2(x, y), 1, 1, DustID.Fire, Main.rand.NextFloat(-0.5f, 0.5f), -2f, 0, default(Color), 2f);
+                    float x = (float)(Player.Center.X - offset + (effectTime / 4) * Math.Cos(i));
+                    float y = (float)(Player.Center.Y + (effectTime / 4) * Math.Sin(i));
+                    var dust = Dust.NewDustDirect(new Vector2(x, y), 1, 1, DustID.Torch, Main.rand.NextFloat(-0.5f, 0.5f), -2f, 0, default(Color), 2f);
                     dust.noGravity = true;
                 }
                 if ((int)Main.time % 60 == 0)
@@ -415,8 +379,8 @@ namespace ArchaeaMod
                     if (oldPosition != Vector2.Zero)
                     {
                         if (Main.netMode == 0)
-                            player.Teleport(oldPosition);
-                        else NetHandler.Send(Packet.TeleportPlayer, 256, -1, player.whoAmI, oldPosition.X, oldPosition.Y);
+                            Player.Teleport(oldPosition);
+                        else NetHandler.Send(Packet.TeleportPlayer, 256, -1, Player.whoAmI, oldPosition.X, oldPosition.Y);
                     }
                     oldPosition = Vector2.Zero;
                     effectTime = maxTime;
@@ -443,7 +407,7 @@ namespace ArchaeaMod
 
         public override bool PreItemCheck()
         {
-            Item item = player.inventory[player.selectedItem];
+            Item item = Player.inventory[Player.selectedItem];
             bool nonTool = item.pick == 0 && item.axe == 0 && item.hammer == 0;
             switch (classChoice)
             {
@@ -452,23 +416,23 @@ namespace ArchaeaMod
                         return false;
                     break;
                 case ClassID.Melee:
-                    if (!item.melee)
+                    if (!item.CountsAsClass(DamageClass.Melee))
                         goto case -1;
                     break;
                 case ClassID.Magic:
-                    if (!item.magic)
+                    if (!item.CountsAsClass(DamageClass.Magic))
                         goto case -1;
                     break;
                 case ClassID.Ranged:
-                    if (!item.ranged)
+                    if (!item.CountsAsClass(DamageClass.Ranged))
                         goto case -1;
                     break;
                 case ClassID.Summoner:
-                    if (!item.summon)
+                    if (!item.CountsAsClass(DamageClass.Summon))
                         goto case -1;
                     break;
                 case ClassID.Throwing:
-                    if (!item.thrown)
+                    if (!item.CountsAsClass(DamageClass.Throwing))
                         goto case -1;
                     break;
                 case ClassID.All:
@@ -480,12 +444,12 @@ namespace ArchaeaMod
         {
             for (int i = 0; i < 10; i++)
             {
-                Item item = player.inventory[i];
+                Item item = Player.inventory[i];
                 bool nonTool = item.pick == 0 && item.axe == 0 && item.hammer == 0;
                 switch (classChoice)
                 {
                     case ClassID.Melee:
-                        if (!item.melee && nonTool && item.damage > 0)
+                        if (!item.CountsAsClass(DamageClass.Melee) && nonTool && item.damage > 0)
                         {
                             MoveItem(item);
                             item.type = ItemID.None;
@@ -497,12 +461,12 @@ namespace ArchaeaMod
         }
         private void MoveItem(Item item)
         {
-            for (int i = player.inventory.Length - 10; i >= 10; i--)
+            for (int i = Player.inventory.Length - 10; i >= 10; i--)
             {
-                Item slot = player.inventory[i];
+                Item slot = Player.inventory[i];
                 if (slot.Name == "" || slot.stack < 1 || slot == null || slot.type == ItemID.None)
                 {
-                    player.inventory[i] = item.DeepClone();
+                    Player.inventory[i] = item.Clone();
                     return;
                 }
             }
@@ -515,17 +479,17 @@ namespace ArchaeaMod
         {
             zones = new bool[]
             {
-                player.ZoneBeach,
-                player.ZoneCorrupt,
-                player.ZoneCrimson,
-                player.ZoneDesert,
-                player.ZoneDungeon,
-                player.ZoneHoly,
-                player.ZoneJungle,
-                player.ZoneMeteor,
-                player.ZoneOverworldHeight,
-                player.ZoneSnow,
-                player.ZoneUndergroundDesert,
+                Player.ZoneBeach,
+                Player.ZoneCorrupt,
+                Player.ZoneCrimson,
+                Player.ZoneDesert,
+                Player.ZoneDungeon,
+                Player.ZoneHallow,
+                Player.ZoneJungle,
+                Player.ZoneMeteor,
+                Player.ZoneOverworldHeight,
+                Player.ZoneSnow,
+                Player.ZoneUndergroundDesert,
                 SkyFort,
                 MagnoBiome
             };
@@ -539,7 +503,7 @@ namespace ArchaeaMod
                         if (outOfBounds = !ObjectiveMet(i))
                         {
                             if (oldPosition == Vector2.Zero)
-                                oldPosition = player.position;
+                                oldPosition = Player.position;
                             break;
                         }
                         else
@@ -578,7 +542,7 @@ namespace ArchaeaMod
                 if (darkAlpha < 1f)
                     darkAlpha += 1f / 150f;
             }
-            Texture2D texture = Main.magicPixel;
+            Texture2D texture = TextureAssets.MagicPixel.Value;
             Color color = Color.Black * darkAlpha;
             int range = 200;
             int side = Main.screenWidth / 2 - range;
@@ -587,7 +551,7 @@ namespace ArchaeaMod
             sb.Draw(texture, new Rectangle(Main.screenWidth - side, 0, side, Main.screenHeight), color);
             sb.Draw(texture, new Rectangle(side, 0, range * 2, top), color);
             sb.Draw(texture, new Rectangle(side, Main.screenHeight - top, range * 2, top), color);
-            sb.Draw(mod.GetTexture("Gores/fort_vignette_ui"), new Rectangle(side, top, range * 2, range * 2 + 1), Color.Black * darkAlpha);
+            sb.Draw(Mod.Assets.Request<Texture2D>("Gores/fort_vignette_ui").Value, new Rectangle(side, top, range * 2, range * 2 + 1), Color.Black * darkAlpha);
         }
         private SpriteBatch sb
         {
@@ -595,7 +559,7 @@ namespace ArchaeaMod
         }
         private Action<float, float> method;
         public bool classChecked;
-        public override void ModifyDrawInfo(ref PlayerDrawInfo drawInfo)
+        public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
             if (/*classChoice == ClassID.None &&*/ drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI && !drawInfo.drawPlayer.dead)
             {
@@ -615,13 +579,14 @@ namespace ArchaeaMod
         private List<int> id = new List<int>();
         private void DebugMenu()
         {
+            return;
             if (!init || id == null || id.Count == 0 || name == null || name.Count == 0)
             {
                 name.Clear();
                 id.Clear();
-                for (int i = 0; i < Main.itemTexture.Length; i++)
+                for (int i = 0; i < TextureAssets.Item.Length; i++)
                 {
-                    int item = Item.NewItem(Vector2.Zero, i, 1);
+                    int item = Item.NewItem(Item.GetSource_None(), Vector2.Zero, i, 1);
                     name.Add(Main.item[item].Name);
                     id.Add(i);
                     if (item < Main.item.Length)
@@ -638,31 +603,31 @@ namespace ArchaeaMod
                     {
                         if (name[i].ToLower().Contains(Name.ToLower()))
                         {
-                            t.Add(Main.itemTexture[i]);
+                            t.Add(TextureAssets.Item[i].Value);
                         }
                     }
                 }
-                t.Add(Main.magicPixel);
+                t.Add(TextureAssets.MagicPixel.Value);
                 return t.ToArray();
             };
             if (Main.chatText != null && Main.chatText.Length > 2)
             {
                 Texture2D[] array = search(Main.chatText);
-                if (array != null && array.Length > 0 && array[0] != Main.magicPixel)
+                if (array != null && array.Length > 0 && array[0] != TextureAssets.MagicPixel.Value)
                 {
-                    int index = Main.itemTexture.ToList().IndexOf(array[0]);
+                    int index = 0; //TextureAssets.Item.ToList().IndexOf(array[0]); // Need to translate Texture2D value to a texture asset
                     int x = 20;
                     int y = 112;
                     sb.Draw(array[0], new Vector2(x, y), Color.White);
-                    sb.DrawString(Main.fontMouseText, string.Format("{0} {1}", name[index], id[index]), new Vector2(x + 50, y + 4), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, string.Format("{0} {1}", name[index], id[index]), new Vector2(x + 50, y + 4), Color.White);
 
                     Rectangle grab = new Rectangle(x, y, 48, 48);
                     if (grab.Contains(Main.MouseScreen.ToPoint()))
                     {
-                        sb.DrawString(Main.fontMouseText, "Left/Right click", new Vector2(x, y + 50), Color.White);
+                        sb.DrawString(FontAssets.MouseText.Value, "Left/Right click", new Vector2(x, y + 50), Color.White);
                         if (LeftClick() || RightHold())
                         {
-                            int t = Item.NewItem(player.Center, index);
+                            int t = Item.NewItem(Item.GetSource_None(), Player.Center, index);
                             if (Main.netMode != 0)
                                 NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
                         }
@@ -677,6 +642,7 @@ namespace ArchaeaMod
         private Button[] button;
         private void SpawnMenu()
         {
+            return;
             int x = 80;
             int y = 180;
             int width = 300;
@@ -707,9 +673,9 @@ namespace ArchaeaMod
                 };
                 initMenu = true;
             }
-            sb.Draw(Main.magicPixel, box, Color.Black * 0.25f);
+            sb.Draw(TextureAssets.MagicPixel.Value, box, Color.Black * 0.25f);
             for (int n = 0; n < label.Length; n++)
-                sb.DrawString(Main.fontMouseText, label[n], new Vector2(x - 6, y + 4 + n * 20), Color.White * 0.9f);
+                sb.DrawString(FontAssets.MouseText.Value, label[n], new Vector2(x - 6, y + 4 + n * 20), Color.White * 0.9f);
             foreach (TextBox t in input)
             {
                 if (t.box.Contains(Main.MouseScreen.ToPoint()) && LeftClick())
@@ -741,13 +707,13 @@ namespace ArchaeaMod
                         {
                             float.TryParse(input[i].text, out vars[i]);
                         }
-                        float randX = Main.rand.NextFloat(player.position.X - 300, player.position.X + 300);
-                        float Y = player.position.Y - 100;
+                        float randX = Main.rand.NextFloat(Player.position.X - 300, Player.position.X + 300);
+                        float Y = Player.position.Y - 100;
                         if (Main.netMode != 0)
                             NetHandler.Send(Packet.SpawnNPC, -1, -1, (int)vars[0], vars[1], vars[2], (int)vars[3], false, vars[4], Main.MouseWorld.X, Main.MouseWorld.Y);
                         else
                         {
-                            int n = NPC.NewNPC((int)randX, (int)Y, (int)vars[0], 0);
+                            int n = NPC.NewNPC(NPC.GetSource_None(), (int)randX, (int)Y, (int)vars[0], 0);
                             Main.npc[n].lifeMax = (int)vars[1];
                             Main.npc[n].life = (int)vars[1];
                             Main.npc[n].defense = (int)vars[2];
@@ -762,7 +728,7 @@ namespace ArchaeaMod
         public override Texture2D GetMapBackgroundImage()
         {
             if (MagnoBiome)
-                return mod.GetTexture("Backgrounds/MapBGMagno");
+                return Mod.Assets.Request<Texture2D>("Backgrounds/MapBGMagno").Value;
             return base.GetMapBackgroundImage();
         }
         sealed class BiomeID

@@ -20,10 +20,10 @@ namespace ArchaeaMod.Items.Materials
         }
         public override void SetDefaults()
         {
-            item.width = 16;
-            item.height = 24;
-            item.maxStack = 999;
-            item.value = 1000;
+            Item.width = 16;
+            Item.height = 24;
+            Item.maxStack = 999;
+            Item.value = 1000;
         }
     }
 }

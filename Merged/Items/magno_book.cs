@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -22,33 +23,33 @@ namespace ArchaeaMod.Merged.Items
         }
         public override void SetDefaults()
         {
-            item.width = 62;
-            item.height = 24;
-            item.scale = 1f;
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.damage = 15;
-            item.mana = 8;
-            item.useStyle = 1;
-            item.value = 2500;
-            item.rare = 2;
-            item.noMelee = true;
-            item.magic = true;
+            Item.width = 62;
+            Item.height = 24;
+            Item.scale = 1f;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.damage = 15;
+            Item.mana = 8;
+            Item.useStyle = 1;
+            Item.value = 2500;
+            Item.rare = 2;
+            Item.noMelee = true;
+            Item.DamageType = DamageClass.Magic;
         }
 
         public override bool CanUseItem(Player player)
         {
-            if (player.ownedProjectileCounts[mod.ProjectileType("magno_orb")] < 1)
+            if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("magno_orb").Type] < 1)
             {
                 return true;
             }
             else return false;
         }
         int Proj1;
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
-            Main.PlaySound(2, player.Center, 20);
-            Proj1 = Projectile.NewProjectile(player.position + new Vector2(player.width / 2, player.height / 2), Vector2.Zero, mod.ProjectileType("magno_orb"), (int)(15 * player.magicDamage), 4f, player.whoAmI, 0f, 0f);
+            SoundEngine.PlaySound(SoundID.Item14, player.Center);
+            Proj1 = Projectile.NewProjectile(Projectile.GetSource_None(), player.position + new Vector2(player.width / 2, player.height / 2), Vector2.Zero, Mod.Find<ModProjectile>("magno_orb").Type, (int)(15f * player.GetDamage(DamageClass.Magic).Multiplicative), 4f, player.whoAmI, 0f, 0f);
             Main.projectile[Proj1].netUpdate = true;
             return true;
         }

@@ -8,10 +8,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 using ReLogic.Graphics;
 
 using ArchaeaMod.ModUI;
+using Terraria.DataStructures;
 
 namespace ArchaeaMod
 {
@@ -58,7 +60,7 @@ namespace ArchaeaMod
                 writer.Write(hash);
                 writer.Write(text);
                 writer.Flush();
-                Main.NewText("[!] <" + player.name + "> " + text, new Color(150, 150, 150));
+                Main.NewText("[!] <" + Player.name + "> " + text, new Color(150, 150, 150));
                 text = string.Empty;
                 Main.chatRelease = false;
                 Main.drawingPlayerChat = false;
@@ -139,14 +141,14 @@ namespace ArchaeaMod
                 }
             }
         }
-        public override void ModifyDrawInfo(ref PlayerDrawInfo drawInfo)
+        public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
-            if (!Main.hideUI && player.active && Main.playerInventory)
+            if (!Main.hideUI && Player.active && Main.playerInventory)
             {
                 lobbyButton.Draw();
                 if (showLobbyConnect)
                 {
-                    Main.spriteBatch.DrawString(Main.fontMouseText, "Chat Lobby", new Vector2(Main.screenWidth - 400, Main.screenHeight - 124), Color.WhiteSmoke);
+                    Main.spriteBatch.DrawString(FontAssets.MouseText.Value, "Chat Lobby", new Vector2(Main.screenWidth - 400, Main.screenHeight - 124), Color.WhiteSmoke);
                     button.Draw();
                     mute.Draw();
                     foreach (var t in details)
@@ -169,8 +171,8 @@ namespace ArchaeaMod
             NetworkStream stream = new NetworkStream(client.Client);
             writer = new BinaryWriter(stream);
             BinaryReader reader = new BinaryReader(stream);
-            writer.Write(player.name);
-            hash = player.GetHashCode();
+            writer.Write(Player.name);
+            hash = Player.GetHashCode();
             writer.Write(hash);
             writer.Flush();
             timer = new Timer(1000);

@@ -16,7 +16,7 @@ namespace ArchaeaMod.Tiles
 {
     public class banners : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             TileID.Sets.NotReallySolid[Type] = true;
@@ -30,7 +30,7 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16 };
             TileObjectData.addTile(Type);
-            drop = ModContent.ItemType<Items.Tiles.banner_hatchling>();
+            ItemDrop = ModContent.ItemType<Items.Tiles.banner_hatchling>();
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Banner");
             AddMapEntry(new Color(8f, 0.6f, 0.6f), name);
@@ -41,8 +41,8 @@ namespace ArchaeaMod.Tiles
             if (closer)
             {
                 Player player = Main.LocalPlayer;
-                player.NPCBannerBuff[ModContent.NPCType<NPCs.Hatchling_head>()] = true;
-                player.hasBanner = true;
+                Main.SceneMetrics.NPCBannerBuff[ModContent.NPCType<NPCs.Hatchling_head>()] = true;
+                Main.SceneMetrics.hasBanner = true;
             }
         }
 
@@ -52,7 +52,7 @@ namespace ArchaeaMod.Tiles
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.banner_hatchling>());
+            Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.banner_hatchling>());
         }
     }
 }

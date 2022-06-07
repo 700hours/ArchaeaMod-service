@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,15 +15,15 @@ namespace ArchaeaMod.Tiles
 {
     public class purple_haze : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = false;
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;
-            drop = mod.ItemType("purple_haze");
+            ItemDrop = Mod.Find<ModItem>("purple_haze").Type;
             AddMapEntry(Color.MediumPurple);
-            minPick = 95;
+            MinPick = 95;
         }
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
@@ -30,7 +31,7 @@ namespace ArchaeaMod.Tiles
             g = Color.Purple.G / 5;
             b = Color.Purple.B / 5;
         }
-        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
+        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
         {
             if (Main.rand.Next(60) == 0)
             {

@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 using ArchaeaMod.Items;
 using ArchaeaMod.Merged.Items.Materials;
-
+using Terraria.DataStructures;
 namespace ArchaeaMod.Merged.Items
 {
     public class cinnabar_bow : ModItem
@@ -19,36 +18,34 @@ namespace ArchaeaMod.Merged.Items
         }
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 50;
-            item.scale = 1f;
-            item.useTime = 19;
-            item.useAnimation = 19;
-            item.useStyle = 5;
-            item.damage = 24;
-            item.knockBack = 1.5f;
-            item.shootSpeed = 7.5f;
-            item.value = 2500;
-            item.rare = 1;
-            item.UseSound = SoundID.Item5;
-            item.autoReuse = false;
-            item.consumable = false;
-            item.noMelee = true;
-            item.ranged = true;
-            item.shoot = ProjectileID.WoodenArrowFriendly;
-            item.useAmmo = AmmoID.Arrow;
+            Item.width = 22;
+            Item.height = 50;
+            Item.scale = 1f;
+            Item.useTime = 19;
+            Item.useAnimation = 19;
+            Item.useStyle = 5;
+            Item.damage = 24;
+            Item.knockBack = 1.5f;
+            Item.shootSpeed = 7.5f;
+            Item.value = 2500;
+            Item.rare = 1;
+            Item.UseSound = SoundID.Item5;
+            Item.autoReuse = false;
+            Item.consumable = false;
+            Item.noMelee = true;
+            Item.DamageType = DamageClass.Ranged;
+            Item.shoot = ProjectileID.WoodenArrowFriendly;
+            Item.useAmmo = AmmoID.Arrow;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<magno_bar>(), 10);
-            recipe.AddIngredient(ModContent.ItemType<cinnabar_crystal>(), 4);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<magno_bar>(), 10)
+                .AddIngredient(ModContent.ItemType<cinnabar_crystal>(), 4)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
-
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (type == ProjectileID.WoodenArrowFriendly)
             {

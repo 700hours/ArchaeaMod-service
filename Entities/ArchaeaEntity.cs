@@ -66,9 +66,9 @@ namespace ArchaeaMod.Entities
         {
         }
     }
-    public class EntityWorld : ModWorld
+    public class EntityWorld : ModSystem
     {
-        public override void PostUpdate()
+        public override void PostUpdateEverything()
         {
             foreach (var e in ArchaeaEntity.entity)
             {
@@ -87,8 +87,8 @@ namespace ArchaeaMod.Entities
         public override void PostDrawTiles()
         {
             SpriteBatch sb = Main.spriteBatch;
-            Texture2D shield = mod.GetTexture("Gores/MagnoShield");
-            Texture2D glow = mod.GetTexture("Gores/MagnoShieldGlow");
+            Texture2D shield = Mod.Assets.Request<Texture2D>("Gores/MagnoShield").Value;
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Gores/MagnoShieldGlow").Value;
             sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             foreach (var e in ArchaeaEntity.entity)
             {

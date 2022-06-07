@@ -23,14 +23,14 @@ namespace ArchaeaMod.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 1;
-            projectile.height = 1;
-            projectile.damage = 0;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = true;
-            projectile.friendly = true;
-            projectile.timeLeft = 120;
-            projectile.alpha = 255;
+            Projectile.width = 1;
+            Projectile.height = 1;
+            Projectile.damage = 0;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.friendly = true;
+            Projectile.timeLeft = 120;
+            Projectile.alpha = 255;
         }
         public override Color? GetAlpha(Color lightColor)
         {
@@ -49,7 +49,7 @@ namespace ArchaeaMod.Projectiles
         private Dust dust;
         private Player owner
         {
-            get { return Main.player[projectile.owner]; }
+            get { return Main.player[Projectile.owner]; }
         }
         public override bool PreAI()
         {
@@ -68,20 +68,20 @@ namespace ArchaeaMod.Projectiles
         }
         public void AIType()
         {
-            switch ((int)projectile.ai[1])
+            switch ((int)Projectile.ai[1])
             {
                 case None:
-                    projectile.alpha = 0;
+                    Projectile.alpha = 0;
                     alpha = 1f;
-                    projectile.timeLeft = 100;
+                    Projectile.timeLeft = 100;
                     break;
                 case Default:
-                    dust.position = projectile.position;
+                    dust.position = Projectile.position;
                     break;
                 case Sword:
                     NPCs.ArchaeaNPC.RotateIncrement(true, ref rotate, (float)Math.PI / 2f, 0.15f, out rotate);
-                    projectile.velocity += NPCs.ArchaeaNPC.AngleToSpeed(rotate, 0.25f);
-                    dust.position = projectile.position;
+                    Projectile.velocity += NPCs.ArchaeaNPC.AngleToSpeed(rotate, 0.25f);
+                    dust.position = Projectile.position;
                     break;
                 case Active:
                     dust = SetDust();
@@ -94,14 +94,14 @@ namespace ArchaeaMod.Projectiles
         }
         public override void Kill(int timeLeft)
         {
-            switch ((int)projectile.ai[1])
+            switch ((int)Projectile.ai[1])
             {
                 case Default:
                     break;
                 case Sword:
-                    NPCs.ArchaeaNPC.DustSpread(projectile.Center, 1, 1, 6, 4, 2f);
-                    if (projectile.ai[0] == Mercury)
-                        Projectile.NewProjectileDirect(new Vector2(owner.position.X, owner.position.Y - 600f), Vector2.Zero, ModContent.ProjectileType<Mercury>(), 20, 4f, owner.whoAmI, Projectiles.Mercury.Falling, projectile.position.X);
+                    NPCs.ArchaeaNPC.DustSpread(Projectile.Center, 1, 1, 6, 4, 2f);
+                    if (Projectile.ai[0] == Mercury)
+                        Projectile.NewProjectileDirect(Projectile.GetSource_Death(), new Vector2(owner.position.X, owner.position.Y - 600f), Vector2.Zero, ModContent.ProjectileType<Mercury>(), 20, 4f, owner.whoAmI, Projectiles.Mercury.Falling, Projectile.position.X);
                     break;
             }
         }
@@ -116,16 +116,16 @@ namespace ArchaeaMod.Projectiles
         }
         public Dust SetDust()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
                 case 0:
                     break;
                 case Fire:
-                    return Dust.NewDustDirect(projectile.Center, 2, 2, DustID.Fire, 0f, 0f, 0, default(Color), Main.rand.NextFloat(1f, 3f));
+                    return Dust.NewDustDirect(Projectile.Center, 2, 2, 6, 0f, 0f, 0, default(Color), Main.rand.NextFloat(1f, 3f));
                 case Mercury:
-                    return Dust.NewDustDirect(projectile.Center, 2, 2, DustID.Fire, 0f, 0f, 0, default(Color), Main.rand.NextFloat(1f, 3f));
+                    return Dust.NewDustDirect(Projectile.Center, 2, 2, 6, 0f, 0f, 0, default(Color), Main.rand.NextFloat(1f, 3f));
                 case Electric:
-                    Dust dust = Dust.NewDustDirect(projectile.Center, 2, 2, DustID.Fire, 0f, 0f, 0, default(Color), Main.rand.NextFloat(1f, 3f));
+                    Dust dust = Dust.NewDustDirect(Projectile.Center, 2, 2, 6, 0f, 0f, 0, default(Color), Main.rand.NextFloat(1f, 3f));
                     dust.noGravity = true;
                     return dust;
             }

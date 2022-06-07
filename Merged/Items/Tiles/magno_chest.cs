@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 using ArchaeaMod.Merged.Items.Materials;
-
 namespace ArchaeaMod.Merged.Items.Tiles
 {
     public class magno_chest : ModItem
@@ -16,28 +14,28 @@ namespace ArchaeaMod.Merged.Items.Tiles
         }
         public override void SetDefaults()
         {
-            item.width = 32;
-            item.height = 32;
-            item.scale = 1f;
-            item.useTime = 10;
-            item.useAnimation = 15;
-            item.useStyle = 1;
-            item.useTurn = true;
-            item.consumable = true;
-            item.autoReuse = true;
-            item.value = 0;
-            item.rare = 1;
-            item.maxStack = 999;
-            item.createTile = mod.TileType("m_chest");
+            Item.width = 32;
+            Item.height = 32;
+            Item.scale = 1f;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.useTurn = true;
+            Item.consumable = true;
+            Item.autoReuse = true;
+            Item.value = 0;
+            Item.rare = 1;
+            Item.maxStack = 999;
+            Item.createTile = Mod.Find<ModTile>("m_chest").Type;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<magno_bar>(), 2);
-            recipe.AddIngredient(9, 8);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<magno_bar>(), 2)
+                .AddIngredient(9, 8)
+                .AddTile(TileID.WorkBenches)
+//            recipe.SetResult(this, 1);
+                .Register();
         }
     }
 }

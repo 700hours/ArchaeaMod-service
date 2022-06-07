@@ -23,12 +23,12 @@ namespace ArchaeaMod.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 20;
-            projectile.height = 26;
-            projectile.damage = 10;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.friendly = true;
+            Projectile.width = 20;
+            Projectile.height = 26;
+            Projectile.damage = 10;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.friendly = true;
         }
 
         private int ai = -1;
@@ -41,21 +41,21 @@ namespace ArchaeaMod.Projectiles
         private float followSpeed = 6f;
         private Player owner
         {
-            get { return Main.player[projectile.owner]; }
+            get { return Main.player[Projectile.owner]; }
         }
         private Target target;
         public override bool PreAI()
         {
-            if (alpha && projectile.alpha > 0)
+            if (alpha && Projectile.alpha > 0)
             {
-                projectile.alpha -= 20;
+                Projectile.alpha -= 20;
             }
             else alpha = false;
 
             switch (ai)
             {
                 case -1:
-                    projectile.position = owner.Center + new Vector2(32 * owner.direction, 0f);
+                    Projectile.position = owner.Center + new Vector2(32 * owner.direction, 0f);
                     goto case 0;
                 case 0:
                     ai = 0;
@@ -65,14 +65,14 @@ namespace ArchaeaMod.Projectiles
                         elapsed++;
                     if (elapsed == 5)
                         goto case 0;
-                    float angle = NPCs.ArchaeaNPC.AngleTo(projectile.Center, new Vector2(owner.Center.X, owner.position.Y + owner.height));
-                    projectile.velocity = NPCs.ArchaeaNPC.AngleToSpeed(angle, followSpeed);
-                    if (projectile.Hitbox.Intersects(owner.Hitbox))
+                    float angle = NPCs.ArchaeaNPC.AngleTo(Projectile.Center, new Vector2(owner.Center.X, owner.position.Y + owner.height));
+                    Projectile.velocity = NPCs.ArchaeaNPC.AngleToSpeed(angle, followSpeed);
+                    if (Projectile.Hitbox.Intersects(owner.Hitbox))
                         goto case 2;
                     return false;
                 case 2:
                     ai = 2;
-                    projectile.Center = owner.Center - new Vector2(owner.width / 2 * owner.direction, 16f);
+                    Projectile.Center = owner.Center - new Vector2(owner.width / 2 * owner.direction, 16f);
                     if (target != null)
                         goto case 0;
                     break;
@@ -89,29 +89,29 @@ namespace ArchaeaMod.Projectiles
         public override void AI()
         {
             if (!owner.active || owner.dead || !owner.HasBuff(ModContent.BuffType<Buffs.buff_catcher>()))
-                projectile.active = false;
+                Projectile.active = false;
             if (target == null || target.npc.life <= 0 || !target.npc.active)
             {
                 FindOwner();
                 if (ArchaeaItem.Elapsed(180))
                 {
-                    target = Target.GetClosest(owner, Target.GetTargets(projectile, 600f).Where(t => t != null).ToArray());
+                    target = Target.GetClosest(owner, Target.GetTargets(Projectile, 600f).Where(t => t != null).ToArray());
                     rand = Main.rand.Next(3);
-                    old = projectile.Center;
+                    old = Projectile.Center;
                     Vector2 speed;
                     switch (rand)
                     {
                         case 0:
                             speed = NPCs.ArchaeaNPC.AngleToSpeed(NPCs.ArchaeaNPC.RandAngle(), idleSpeed);
-                            projectile.velocity += speed;
+                            Projectile.velocity += speed;
                             break;
                         case 1:
                             speed = NPCs.ArchaeaNPC.AngleToSpeed((float)-Math.PI / 2f, idleSpeed);
-                            moveTo = projectile.Center + speed;
+                            moveTo = Projectile.Center + speed;
                             Tile ground = Main.tile[(int)moveTo.X / 16, (int)moveTo.Y / 16];
-                            if (ground.active())
+                            if (ground.HasTile)
                             {
-                                projectile.velocity += speed;
+                                Projectile.velocity += speed;
                                 break;
                             }
                             else goto case 0;
@@ -121,22 +121,22 @@ namespace ArchaeaMod.Projectiles
                             break;
                     }
                 }
-                if (projectile.Distance(old) > roam * 1.5f)
-                    projectile.velocity = Vector2.Zero;
+                if (Projectile.Distance(old) > roam * 1.5f)
+                    Projectile.velocity = Vector2.Zero;
             }
             else if (!FindOwner())
             {
                 ai = 0;
-                float angle = NPCs.ArchaeaNPC.AngleTo(projectile.Center, target.npc.Center);
+                float angle = NPCs.ArchaeaNPC.AngleTo(Projectile.Center, target.npc.Center);
                 if (ArchaeaItem.Elapsed(120) || !flag)
                 {
-                    projectile.velocity = NPCs.ArchaeaNPC.AngleToSpeed(angle, 10f);
+                    Projectile.velocity = NPCs.ArchaeaNPC.AngleToSpeed(angle, 10f);
                     if (num++ >= 15)
                         flag = true;
                 }
                 else
                 {
-                    NPCs.ArchaeaNPC.VelocityClamp(ref projectile.velocity, -6f, 6f);
+                    NPCs.ArchaeaNPC.VelocityClamp(ref Projectile.velocity, -6f, 6f);
                     if (num++ >= 100)
                     {
                         flag = false;
@@ -150,20 +150,20 @@ namespace ArchaeaMod.Projectiles
         {
             if (update)
             {
-                Tile ground = Main.tile[(int)projectile.Center.X / 16, (int)projectile.Center.Y / 16];
-                if (!Main.tileSolid[ground.type])
-                    projectile.velocity.Y += 0.655f;
-                return ground.active();
+                Tile ground = Main.tile[(int)Projectile.Center.X / 16, (int)Projectile.Center.Y / 16];
+                if (!Main.tileSolid[ground.TileType])
+                    Projectile.velocity.Y += 0.655f;
+                return ground.HasTile;
             }
             return false;
         }
         protected bool FindOwner()
         {
-            if (projectile.Distance(owner.Center) > 400f)
+            if (Projectile.Distance(owner.Center) > 400f)
             {
                 Vector2 move = new Vector2(Main.rand.NextFloat(owner.position.X - 200f, owner.position.X + 200f), Main.rand.NextFloat(owner.position.Y - 200f, owner.position.Y + 200f));
                 Tile ground = Main.tile[(int)move.X / 16, (int)move.Y / 16];
-                if (Main.tileSolid[ground.type])
+                if (Main.tileSolid[ground.TileType])
                 {
                     if (CleanTeleport(move))
                     {
@@ -190,14 +190,14 @@ namespace ArchaeaMod.Projectiles
         bool flag3 = false;
         private bool CleanTeleport(Vector2 moveTo)
         {
-            if (projectile.alpha < 250)
+            if (Projectile.alpha < 250)
             {
-                projectile.alpha += 20;
+                Projectile.alpha += 20;
                 return false;
             }
             else
             {
-                projectile.Center = moveTo;
+                Projectile.Center = moveTo;
                 return true;
             }
         }
@@ -205,18 +205,18 @@ namespace ArchaeaMod.Projectiles
         {
             if (target == null)
             {
-                float angle = NPCs.ArchaeaNPC.AngleTo(projectile.Center, owner.Center);
-                if (owner.controlJump || projectile.Distance(owner.Center) > 500f)
-                    projectile.velocity.X += NPCs.ArchaeaNPC.AngleToSpeed(angle, 1f).X;
+                float angle = NPCs.ArchaeaNPC.AngleTo(Projectile.Center, owner.Center);
+                if (owner.controlJump || Projectile.Distance(owner.Center) > 500f)
+                    Projectile.velocity.X += NPCs.ArchaeaNPC.AngleToSpeed(angle, 1f).X;
                 if (owner.controlLeft || owner.controlRight)
                 {
-                    projectile.velocity.X += owner.velocity.X / projectile.Distance(owner.Center);
-                    if (projectile.Center.X > owner.Center.X)
-                        projectile.velocity.X -= 0.2f;
-                    else projectile.velocity.X += 0.2f;
+                    Projectile.velocity.X += owner.velocity.X / Projectile.Distance(owner.Center);
+                    if (Projectile.Center.X > owner.Center.X)
+                        Projectile.velocity.X -= 0.2f;
+                    else Projectile.velocity.X += 0.2f;
                 }
-                projectile.velocity.Y = owner.velocity.Y;
-                NPCs.ArchaeaNPC.VelocityClamp(projectile, -8f, 8f);
+                Projectile.velocity.Y = owner.velocity.Y;
+                NPCs.ArchaeaNPC.VelocityClamp(Projectile, -8f, 8f);
             }
             else
             {

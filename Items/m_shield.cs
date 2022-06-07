@@ -21,12 +21,12 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            item.width = 40;
-            item.height = 40;
-            item.value = 10000;
-            item.rare = -12;
-            item.accessory = true;
-            item.expert = true;
+            Item.width = 40;
+            Item.height = 40;
+            Item.value = 10000;
+            Item.rare = -12;
+            Item.accessory = true;
+            Item.expert = true;
         }
         private bool generate = true;
         private int time;

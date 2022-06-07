@@ -4,6 +4,7 @@ using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -12,7 +13,7 @@ namespace ArchaeaMod.Merged.Tiles
 {
     public class c_crystalsmall : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLighted[Type] = true;
@@ -35,13 +36,13 @@ namespace ArchaeaMod.Merged.Tiles
             TileObjectData.newAlternate.AnchorRight = new AnchorData(AnchorType.SolidSide, 1, 0);
             TileObjectData.addAlternate(2);
             TileObjectData.addTile(Type);
-            drop = mod.ItemType("cinnabar_crystal");
+            ItemDrop = Mod.Find<ModItem>("cinnabar_crystal").Type;
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Cinnabar Crystal");
             AddMapEntry(new Color(210, 110, 110), name);
-            disableSmartCursor = true;
-            mineResist = 1.2f;
-            minPick = 55;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            MineResist = 1.2f;
+            MinPick = 55;
         }
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
@@ -60,7 +61,7 @@ namespace ArchaeaMod.Merged.Tiles
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
             if (!fail)
-                Item.NewItem(new Vector2(i * 16, j * 16), mod.ItemType("cinnabar_crystal"), 1, true, 0, true, false);
+                Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), Mod.Find<ModItem>("cinnabar_crystal").Type, 1, true, 0, true, false);
         }
 
         bool tileCheckFlip = false;
@@ -73,16 +74,16 @@ namespace ArchaeaMod.Merged.Tiles
             SpriteEffects effects = SpriteEffects.None;
             Tile tile = Main.tile[i, j];
 
-            if (Main.tileSolid[Main.tile[i, j + 1].type] && Main.tile[i, j + 1].active() && Main.tile[i, j + 1].type != 0)
+            if (Main.tileSolid[Main.tile[i, j + 1].TileType] && Main.tile[i, j + 1].HasTile && Main.tile[i, j + 1].TileType != 0)
                 frame = 3;
-            if (Main.tileSolid[Main.tile[i, j - 1].type] && Main.tile[i, j - 1].active() && Main.tile[i, j - 1].type != 0)
+            if (Main.tileSolid[Main.tile[i, j - 1].TileType] && Main.tile[i, j - 1].HasTile && Main.tile[i, j - 1].TileType != 0)
                 frame = 0;
-            if (Main.tileSolid[Main.tile[i + 1, j].type] && Main.tile[i + 1, j].active() && Main.tile[i + 1, j].type != 0)
+            if (Main.tileSolid[Main.tile[i + 1, j].TileType] && Main.tile[i + 1, j].HasTile && Main.tile[i + 1, j].TileType != 0)
                 frame = 2;
-            if (Main.tileSolid[Main.tile[i - 1, j].type] && Main.tile[i - 1, j].active() && Main.tile[i - 1, j].type != 0)
+            if (Main.tileSolid[Main.tile[i - 1, j].TileType] && Main.tile[i - 1, j].HasTile && Main.tile[i - 1, j].TileType != 0)
                 frame = 1;
 
-            texture = Main.tileTexture[Type];
+            texture = TextureAssets.Tile[Type].Value;
 
             Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
             if (Main.drawToScreen)

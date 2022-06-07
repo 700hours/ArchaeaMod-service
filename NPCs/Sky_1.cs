@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -18,29 +19,29 @@ namespace ArchaeaMod.NPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Resentful Spirit");
-            Main.npcFrameCount[npc.type] = 4;
+            Main.npcFrameCount[NPC.type] = 4;
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 24;
-            npc.height = 48;
-            npc.lifeMax = 50;
-            npc.defense = 10;
-            npc.knockBackResist = 0f;
-            npc.damage = 45;
-            npc.value = 4000;
-            npc.lavaImmune = true;
-            npc.noTileCollide = true;
-            npc.noGravity = true;
+            NPC.aiStyle = -1;
+            NPC.width = 24;
+            NPC.height = 48;
+            NPC.lifeMax = 50;
+            NPC.defense = 10;
+            NPC.knockBackResist = 0f;
+            NPC.damage = 45;
+            NPC.value = 4000;
+            NPC.lavaImmune = true;
+            NPC.noTileCollide = true;
+            NPC.noGravity = true;
         }
 
         private bool init;
         private bool chosenTexture;
         private int time
         {
-            get { return (int)npc.ai[3]; }
-            set { npc.ai[3] = value; }
+            get { return (int)NPC.ai[3]; }
+            set { NPC.ai[3] = value; }
         }
         private float upperPoint;
         private float oldX;
@@ -59,45 +60,45 @@ namespace ArchaeaMod.NPCs
                     case 0:
                         break;
                     case 1:
-                        npc.defense = 30;
-                        npc.netUpdate = true;
+                        NPC.defense = 30;
+                        NPC.netUpdate = true;
                         break;
                     case 2:
-                        Main.npcTexture[npc.type] = mod.GetTexture("Gores/Sky_1_1");
-                        npc.defense = 20;
-                        npc.netUpdate = true;
+                        TextureAssets.Npc[NPC.type] = Mod.Assets.Request<Texture2D>("Gores/Sky_1_1");
+                        NPC.defense = 20;
+                        NPC.netUpdate = true;
                         break;
                     case 3:
-                        Main.npcTexture[npc.type] = mod.GetTexture("Gores/Sky_1_2");
-                        npc.defense = 25;
-                        npc.netUpdate = true;
+                        TextureAssets.Npc[NPC.type] = Mod.Assets.Request<Texture2D>("Gores/Sky_1_2");
+                        NPC.defense = 25;
+                        NPC.netUpdate = true;
                         break;
                     case 4:
-                        Main.npcTexture[npc.type] = mod.GetTexture("Gores/Sky_1_3");
-                        npc.defense = 25;
-                        npc.netUpdate = true;
+                        TextureAssets.Npc[NPC.type] = Mod.Assets.Request<Texture2D>("Gores/Sky_1_3");
+                        NPC.defense = 25;
+                        NPC.netUpdate = true;
                         break;
                 }
                 chosenTexture = true;
             }
             if (!init)
             {
-                int i = (int)npc.position.X / 16;
-                int j = (int)npc.position.Y / 16;
-                if (ArchaeaWorld.Inbounds(i, j) && Main.tile[i, j].wall != ArchaeaWorld.skyBrickWall)
+                int i = (int)NPC.position.X / 16;
+                int j = (int)NPC.position.Y / 16;
+                if (ArchaeaWorld.Inbounds(i, j) && Main.tile[i, j].WallType != ArchaeaWorld.skyBrickWall)
                 {
-                    newPosition = ArchaeaNPC.FindAny(npc, target(), true, 800);
+                    newPosition = ArchaeaNPC.FindAny(NPC, target(), true, 800);
                     if (newPosition != Vector2.Zero)
                     {
-                        npc.netUpdate = true;
+                        NPC.netUpdate = true;
                         if (Main.netMode == 0)
-                            npc.position = newPosition;
+                            NPC.position = newPosition;
                     }
                     else return false;
                 }
-                oldX = npc.position.X;
-                upperPoint = npc.position.Y - 50f;
-                idle = npc.position;
+                oldX = NPC.position.X;
+                upperPoint = NPC.position.Y - 50f;
+                idle = NPC.position;
                 upper = new Vector2(oldX, upperPoint);
                 init = true;
             }
@@ -112,7 +113,7 @@ namespace ArchaeaMod.NPCs
             SkyAI();
         }
 
-        public override void NPCLoot()
+        public override void OnKill()
         {
             int rand = Main.rand.Next(10);
             switch (rand)
@@ -121,7 +122,7 @@ namespace ArchaeaMod.NPCs
                 case 1:
                 case 2:
                 case 3:
-                    Item.NewItem(npc.Center, ModContent.ItemType<Items.Materials.r_plate>(), Main.rand.Next(1, 4));
+                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Items.Materials.r_plate>(), Main.rand.Next(1, 4));
                     break;
             }
         }
@@ -132,8 +133,8 @@ namespace ArchaeaMod.NPCs
             {
                 amount += 0.02f;
                 degree = 5d * amount;
-                npc.position.Y = Vector2.Lerp(idle, upper, amount).Y;
-                npc.position.X += (float)Math.Cos(degree);
+                NPC.position.Y = Vector2.Lerp(idle, upper, amount).Y;
+                NPC.position.X += (float)Math.Cos(degree);
                 return false;
             }
             else return true;
@@ -141,7 +142,7 @@ namespace ArchaeaMod.NPCs
 
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
         {
-            return npc.alpha == 0;
+            return NPC.alpha == 0;
         }
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
@@ -157,8 +158,8 @@ namespace ArchaeaMod.NPCs
             frameTime = 7;
             if (!Main.dedServ)
             {
-                frameCount = Main.npcFrameCount[npc.type];
-                frameHeight = Main.npcTexture[npc.type].Height / frameCount;
+                frameCount = Main.npcFrameCount[NPC.type];
+                frameHeight = TextureAssets.Npc[NPC.type].Value.Height / frameCount;
             }
             if (time % frameTime == 0 && time != 0)
             {
@@ -166,26 +167,26 @@ namespace ArchaeaMod.NPCs
                     frame++;
                 else frame = 0;
             }
-            npc.frame.Y = frame * frameHeight;
+            NPC.frame.Y = frame * frameHeight;
         }
 
         private void SyncNPC()
         {
             if (Main.netMode == 2)
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
         }
         private void SyncNPC(float x, float y)
         {
             if (Main.netMode == 2)
             {
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
                 move = new Vector2(x, y);
             }
         }
         private void SyncNPC(bool attack)
         {
             if (Main.netMode == 2)
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
             this.attack = attack;
         }
         private bool foundWall;
@@ -200,7 +201,7 @@ namespace ArchaeaMod.NPCs
         {
             if (!foundWall)
             {
-                npc.position = reader.ReadVector2();
+                NPC.position = reader.ReadVector2();
                 foundWall = true;
             }
             move = reader.ReadVector2();

@@ -12,9 +12,10 @@ using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 using ArchaeaMod.Gen;
 using ArchaeaMod.GenLegacy;
@@ -27,7 +28,7 @@ using ArchaeaMod.Merged.Walls;
 
 namespace ArchaeaMod
 {
-    public class ArchaeaWorld : ModWorld
+    public class ArchaeaWorld : ModSystem
     {
         public static Mod getMod
         {
@@ -201,7 +202,7 @@ namespace ArchaeaMod
                 //}));
                 //  LEGACY implementation
                 //  miner = new Miner();
-                tasks.Insert(CavesIndex, new PassLegacy("Magno Caver", delegate (GenerationProgress progress)
+                tasks.Insert(CavesIndex, new PassLegacy("Magno Caver", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     originX = WorldGen.genRand.Next(200, Main.maxTilesX - 1000);
                     originY = Main.maxTilesY - 650;
@@ -216,12 +217,12 @@ namespace ArchaeaMod
                     //    miner.Update();
                     //genPosition = miner.genPos;
                     //progress.End();
-                }));
+                }, 1f));
             }
             int shinies = tasks.FindIndex(pass => pass.Name.Equals("Altars"));
             if (shinies != -1)
             {
-                tasks.Insert(shinies, new PassLegacy("Mod Shinies", delegate (GenerationProgress progress)
+                tasks.Insert(shinies, new PassLegacy("Mod Shinies", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     progress.Start(1f);
                     for (int k = 0; k < (int)((4200 * 1200) * 6E-05); k++)
@@ -233,19 +234,19 @@ namespace ArchaeaMod
                         //NEW Magno gen
                         int randX = WorldGen.genRand.Next(originX, originX + mWidth);
                         int randY = WorldGen.genRand.Next(originY, originY + mHeight);
-                        if (Main.tile[Math.Max(randX, 10), Math.Max(randY, 10)].type == magnoStone)
+                        if (Main.tile[Math.Max(randX, 10), Math.Max(randY, 10)].TileType == magnoStone)
                         {
                             WorldGen.TileRunner(randX, randY, WorldGen.genRand.Next(9, 12), WorldGen.genRand.Next(2, 6), magnoOre, false, 0f, 0f, false, true);
                         }
                         progress.Value = k / (float)((4200 * 1200) * 6E-05);
                     }
                     progress.End();
-                }));
+                }, 1f));
             }
             int index2 = tasks.FindIndex(pass => pass.Name.Equals("Wet Jungle"));
             if (index2 != -1)
             {
-                tasks.Insert(index2, new PassLegacy("Sky Generation", delegate (GenerationProgress progress)
+                tasks.Insert(index2, new PassLegacy("Sky Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     progress.Start(1f);
                     progress.Message = "Fort";
@@ -260,12 +261,12 @@ namespace ArchaeaMod
                     s.InitializeFort();
                     progress.Value = 1f;
                     progress.End();
-                }));
+                }, 1f));
             }
             int index3 = tasks.FindIndex(pass => pass.Name.Equals("Remove Water From Sand"));
             if (index3 != -1)
             {
-                tasks.Insert(index3, new PassLegacy("Mod Generation", delegate (GenerationProgress progress)
+                tasks.Insert(index3, new PassLegacy("Mod Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     progress.Start(1f);
                     progress.Message = "Magno extras";
@@ -285,8 +286,8 @@ namespace ArchaeaMod
                             Tile bottomLeft = Main.tile[i + 1, j + 1];
                             Tile left = Main.tile[i - 1, j];
                             Tile right = Main.tile[i + 1, j];
-                            Tile rock = null;
-                            if (top.type == magnoStone && top.active())
+                            Tile rock = default;
+                            if (top.TileType == magnoStone && top.HasTile)
                             {
                                 style = 0;
                                 if (WorldGen.genRand.Next(10) == 0)
@@ -299,11 +300,11 @@ namespace ArchaeaMod
                                     //    Main.tile[i, j].frameX = (short)(18 * WorldGen.genRand.Next(3));
                                 }
                             }
-                            if (left.type == magnoStone && left.active())
+                            if (left.TileType == magnoStone && left.HasTile)
                                 style = 1;
-                            if (right.type == magnoStone && right.active())
+                            if (right.TileType == magnoStone && right.HasTile)
                                 style = 2;
-                            if (bottom.type == magnoStone && bottom.active())
+                            if (bottom.TileType == magnoStone && bottom.HasTile)
                             {
                                 style = 3;
                                 if (WorldGen.genRand.NextBool())
@@ -317,7 +318,7 @@ namespace ArchaeaMod
                                 //        Main.tile[i, j].frameX = (short)(18 * WorldGen.genRand.Next(3));
                                 //}
                             }
-                            if (bottom.type == Ash && bottom.active())
+                            if (bottom.TileType == Ash && bottom.HasTile)
                             {
                                 if (WorldGen.genRand.Next(4) == 0)
                                 {
@@ -331,16 +332,18 @@ namespace ArchaeaMod
                                         t.PlaceTile(i, j, magnoPlantsSmall, true, false, 6, false, WorldGen.genRand.Next(4));
                                     else
                                     {
-                                        Main.tile[i + 1, j].active(false);
-                                        Main.tile[i + 1, j + 1].active(true);
+                                        Tile t1 = Main.tile[i + 1, j];
+                                        t1.HasTile = false;
+                                        Tile t2 = Main.tile[i + 1, j + 1];
+                                        t2.HasTile = true;
                                         t.PlaceTile(i, j, magnoPlantsLarge, true, false, 3, false, WorldGen.genRand.Next(3));
                                     }
                                 }
                             }
                             else t.PlaceTile(i, j, crystal, true, false, 10, false, style);
-                            if (bottom.type == magnoStone && bottom.active())
+                            if (bottom.TileType == magnoStone && bottom.HasTile)
                             {
-                                if (!Main.tile[i + 1, j].active())
+                                if (!Main.tile[i + 1, j].HasTile)
                                 {
                                     place++;
                                     if (place % 3 == 0)
@@ -351,12 +354,12 @@ namespace ArchaeaMod
                         }
                     progress.Value = 1f;
                     progress.End();
-                }));
+                }, 1f));
             }
             int index4 = tasks.FindIndex(pass => pass.Name.Equals("Jungle Temple"));
             if (index4 != -1)
             {
-                tasks.Insert(index4, new PassLegacy("Sorting Floating Tiles", delegate (GenerationProgress progress)
+                tasks.Insert(index4, new PassLegacy("Sorting Floating Tiles", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     progress.Message = "Magno Sorting";
                     for (int j = 100; j < Main.maxTilesY - 250; j++)
@@ -370,24 +373,24 @@ namespace ArchaeaMod
                                 Main.tile[i + 1, j]
                             };
                             int count = 0;
-                            if (t.type == crystal)
+                            if (t.TileType == crystal)
                             {
                                 foreach (Tile tile in tiles)
                                 {
-                                    if (!tile.active())
+                                    if (!tile.HasTile)
                                         count++;
                                     if (count == 3)
                                     {
-                                        t.active(false);
+                                        t.HasTile = false;
                                         break;
                                     }
                                 }
                             }
                         }
-                }));
+                }, 1f));
             }
             int index5 = tasks.FindIndex(pass => pass.Name.Equals("Hives"));
-            tasks.Insert(index5, new PassLegacy("Structure Generation", delegate (GenerationProgress progress)
+            tasks.Insert(index5, new PassLegacy("Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
             {
                 progress.Start(1f);
                 progress.Message = "More Magno";
@@ -413,7 +416,7 @@ namespace ArchaeaMod
                 }
                 progress.Value = 1f;
                 progress.End();
-            }));
+            }, 1f));
 
             //float PositionX;
             //const int TileSize = 16;
@@ -522,7 +525,7 @@ namespace ArchaeaMod
                 Chest chest = Main.chest[i];
                 if (chest == null)
                     continue;
-                if (Main.tile[chest.x, chest.y].type == magnoChest)
+                if (Main.tile[chest.x, chest.y].TileType == magnoChest)
                 {
                     for (int j = 0; j < 4; j++)
                     {
@@ -564,7 +567,7 @@ namespace ArchaeaMod
                         }
                     }
                 }
-                if (chest.y < Main.spawnTileY && Main.tile[chest.x, chest.y].frameX == 0)
+                if (chest.y < Main.spawnTileY && Main.tile[chest.x, chest.y].TileFrameX == 0)
                 {
                     for (int j = 0; j < 4; j++)
                     {
@@ -644,7 +647,7 @@ namespace ArchaeaMod
                     if (n > -2 && n < 2)
                     {
                         WorldGen.PlaceWall(i + n, j + m, magnoBrickWall, true);
-                        Main.tile[i + n, j + m].wall = magnoBrickWall;
+                        Main.tile[i + n, j + m].WallType = magnoBrickWall;
                     }
                 }
                 WorldGen.PlaceTile(i, j + m, TileID.Rope);
@@ -661,56 +664,56 @@ namespace ArchaeaMod
                         switch (wellShape[y, x])
                         {
                             case 1:
-                                tile.type = magnoBrick;
-                                tile.active(true);
-                                tile.slope(0);
+                                tile.TileType = magnoBrick;
+                                tile.HasTile = true;
+                                tile.Slope = 0;
                                 break;
                             case 2:
                                 if (WorldGen.crimson)
-                                    tile.type = TileID.RedDynastyShingles;
-                                else tile.type = TileID.BlueDynastyShingles;
-                                tile.active(true);
-                                tile.slope(0);
+                                    tile.TileType = TileID.RedDynastyShingles;
+                                else tile.TileType = TileID.BlueDynastyShingles;
+                                tile.HasTile = true;
+                                tile.Slope = 0;
                                 break;
                             case 3:
-                                tile.type = TileID.Rope;
-                                tile.active(true);
+                                tile.TileType = TileID.Rope;
+                                tile.HasTile = true;
                                 break;
                             case 4:
                                 if (WorldGen.crimson)
-                                    tile.type = TileID.RedDynastyShingles;
-                                else tile.type = TileID.BlueDynastyShingles;
-                                tile.active(true);
-                                tile.slope(3);
+                                    tile.TileType = TileID.RedDynastyShingles;
+                                else tile.TileType = TileID.BlueDynastyShingles;
+                                tile.HasTile = true;
+                                tile.Slope = (SlopeType)3;
                                 break;
                             case 5:
                                 if (WorldGen.crimson)
-                                    tile.type = TileID.RedDynastyShingles;
-                                else tile.type = TileID.BlueDynastyShingles;
-                                tile.active(true);
-                                tile.slope(4);
+                                    tile.TileType = TileID.RedDynastyShingles;
+                                else tile.TileType = TileID.BlueDynastyShingles;
+                                tile.HasTile = true;
+                                tile.Slope = (SlopeType)4;
                                 break;
                             case 6:
-                                tile.type = TileID.WoodenBeam;
-                                tile.active(true);
+                                tile.TileType = TileID.WoodenBeam;
+                                tile.HasTile = true;
                                 break;
                             case 7:
-                                tile.type = magnoBrick;
-                                tile.active(true);
-                                tile.slope(0);
+                                tile.TileType = magnoBrick;
+                                tile.HasTile = true;
+                                tile.Slope = 0;
                                 for (int o = 0; o < 6; o++)
                                 {
                                     Tile tileY = Main.tile[k, l + o];
-                                    tileY.type = magnoBrick;
-                                    tileY.active(true);
-                                    tileY.slope(0);
+                                    tileY.TileType = magnoBrick;
+                                    tileY.HasTile = true;
+                                    tileY.Slope = 0;
                                 }
                                 break;
                         }
                         switch (wellShapeWall[y, x])
                         {
                             case 1:
-                                tile.wall = WallID.Planked;
+                                tile.WallType = WallID.Planked;
                                 break;
                         }
                     }
@@ -722,30 +725,28 @@ namespace ArchaeaMod
         public bool SkyFort;
         public bool nearMusicBox;
         public bool SkyPortal;
-        public override void TileCountsAvailable(int[] tileCounts)
+        private void UpdateTileCounts()
         {
-            MagnoBiome = tileCounts[magnoStone] >= 80 || tileCounts[Ash] >= 30;
-            SkyFort = tileCounts[skyBrick] >= 80;
-            SkyPortal = tileCounts[ModContent.TileType<Tiles.sky_portal>()] != 0;
-            nearMusicBox = tileCounts[ModContent.TileType<Tiles.music_boxes>()] != 0;
+            MagnoBiome = Main.SceneMetrics.GetTileCount(magnoStone) >= 80 || Main.SceneMetrics.GetTileCount(Ash) >= 30;
+            SkyFort = Main.SceneMetrics.GetTileCount(skyBrick) >= 80;
+            SkyPortal = Main.SceneMetrics.GetTileCount((ushort)ModContent.TileType<Tiles.sky_portal>()) != 0;
+            nearMusicBox = Main.SceneMetrics.GetTileCount((ushort)ModContent.TileType<Tiles.music_boxes>()) != 0;
         }
         public bool cordonBounds = false;
         private bool spawnedCrystals;
         public static int worldID;
         public static List<int> classes = new List<int>();
         public static List<int> playerIDs = new List<int>();
-        public override TagCompound Save()
+        public override void SaveWorldData(TagCompound tag)/* Edit tag parameter rather than returning new TagCompound */
         {
-            return new TagCompound {
-                { "m_downed", downedMagno },
-                { "n_downed", downedNecrosis },
-                { "First", first },
-                { "Classes", classes },
-                { "IDs", playerIDs },
-                { "Crystals", spawnedCrystals }
-            };
+            tag.Set("m_downed", downedMagno, true);
+            tag.Set("n_downed", downedNecrosis, true);
+            tag.Set("First", first, true);
+            tag.Set("Classes", classes, true);
+            tag.Set("IDs", playerIDs, true);
+            tag.Set("Crystals", spawnedCrystals, true);
         }
-        public override void Load(TagCompound tag)
+        public override void LoadWorldData(TagCompound tag)
         {
             downedMagno = tag.GetBool("m_downed");
             downedNecrosis = tag.GetBool("n_downed");
@@ -757,8 +758,9 @@ namespace ArchaeaMod
         private bool begin;
         private bool first;
         public static Player firstPlayer;
-        public override void PreUpdate()
+        public override void PostUpdateEverything()
         {
+            UpdateTileCounts();
             if (!first)
             {
                 if (firstPlayer == null)
@@ -868,9 +870,9 @@ namespace ArchaeaMod
                     int x = (int)ground.X;
                     int y = (int)ground.Y;
                     if (!ArchaeaWorld.Inbounds(x, y)) continue;
-                    if (Main.tile[x, y].wall == wallID && WorldGen.genRand.Next(8) == 0)
+                    if (Main.tile[x, y].WallType == wallID && WorldGen.genRand.Next(8) == 0)
                         WorldGen.PlaceTile(x, y, newTileID, true, true);
-                    if (Main.tile[x, y].type == newTileID)
+                    if (Main.tile[x, y].TileType == newTileID)
                     {
                         added[index] = true;
                         count++;
@@ -905,7 +907,7 @@ namespace ArchaeaMod
                 int y = (int)getFloor[index].Y;
                 Tile tile = Main.tile[x, y];
                 if (random && WorldGen.genRand.Next(odds) != 0) continue;
-                if (onlyOnWall && Main.tile[x, y].wall != wallID)
+                if (onlyOnWall && Main.tile[x, y].WallType != wallID)
                 {
                     index++;
                     continue;
@@ -919,10 +921,10 @@ namespace ArchaeaMod
                     WorldGen.PlaceTile(x, y, newTileID, true, force);
                 else
                 {
-                    tile.active(true);
-                    tile.type = newTileID;
+                    tile.HasTile = true;
+                    tile.TileType = newTileID;
                 }
-                if (total == 1 && tile.type == newTileID && tile.active())
+                if (total == 1 && tile.TileType == newTileID && tile.HasTile)
                     break;
                 if (iterate && index == getFloor.Length - 1)
                     index = 0;
@@ -936,14 +938,14 @@ namespace ArchaeaMod
                 return false;
             if (!genPlace)
             {
-                tile.active(true);
-                tile.type = tileType;
+                tile.HasTile = true;
+                tile.TileType = tileType;
             }
             else
             {
                 WorldGen.PlaceTile(i, j, tileType, true, force, -1, style);
             }
-            if (tile.type == tileType)
+            if (tile.TileType == tileType)
                 return true;
             return false;
         }
@@ -962,8 +964,8 @@ namespace ArchaeaMod
                     {
                         Tile floor = Main.tile[i, j];
                         Tile ground = Main.tile[i, j + 1];
-                        if ((!floor.active() || !Main.tileSolid[floor.type]) &&
-                            ground.active() && Main.tileSolid[ground.type] && ground.type == floorID)
+                        if ((!floor.HasTile || !Main.tileSolid[floor.TileType]) &&
+                            ground.HasTile && Main.tileSolid[ground.TileType] && ground.TileType == floorID)
                         {
                             if (count < tiles[index].Length)
                             {
@@ -997,11 +999,11 @@ namespace ArchaeaMod
                         Tile ground = Main.tile[i, j + 1];
                         Tile right = Main.tile[i + 1, j];
                         Tile ieft = Main.tile[i - 1, j];
-                        if (origin.active() && Main.tileSolid[origin.type]) continue;
-                        if (ceiling.active() && Main.tileSolid[ceiling.type] && ceiling.type == floorType || 
-                            ground.active() && Main.tileSolid[ground.type] && ground.type == floorType || 
-                            right.active() && Main.tileSolid[right.type] && right.type == floorType || 
-                            ieft.active() && Main.tileSolid[ieft.type] && ieft.type == floorType)
+                        if (origin.HasTile && Main.tileSolid[origin.TileType]) continue;
+                        if (ceiling.HasTile && Main.tileSolid[ceiling.TileType] && ceiling.TileType == floorType || 
+                            ground.HasTile && Main.tileSolid[ground.TileType] && ground.TileType == floorType || 
+                            right.HasTile && Main.tileSolid[right.TileType] && right.TileType == floorType || 
+                            ieft.HasTile && Main.tileSolid[ieft.TileType] && ieft.TileType == floorType)
                         {
                             if (count < tiles.Length)
                             {
@@ -1026,8 +1028,8 @@ namespace ArchaeaMod
                         if (overflow & WorldGen.genRand.Next(5) == 0) continue;
                         Tile floor = Main.tile[i, j];
                         Tile ground = Main.tile[i, j + 1];
-                        if (floor.active() && Main.tileSolid[floor.type]) continue;
-                        if (ground.active() && Main.tileSolid[ground.type] && ground.type == floorType)
+                        if (floor.HasTile && Main.tileSolid[floor.TileType]) continue;
+                        if (ground.HasTile && Main.tileSolid[ground.TileType] && ground.TileType == floorType)
                         {
                             if (count < tiles.Length)
                             {
@@ -1050,8 +1052,8 @@ namespace ArchaeaMod
                     if (overflow & WorldGen.genRand.Next(5) == 0) continue;
                     Tile roof = Main.tile[i, j];
                     Tile ceiling = Main.tile[i, j + 1];
-                    if (ceiling.active() && Main.tileSolid[ceiling.type]) continue;
-                    if (roof.active() && Main.tileSolid[roof.type] && roof.type == tileType)
+                    if (ceiling.HasTile && Main.tileSolid[ceiling.TileType]) continue;
+                    if (roof.HasTile && Main.tileSolid[roof.TileType] && roof.TileType == tileType)
                     {
                         if (count < tiles.Length)
                         {
@@ -1072,8 +1074,8 @@ namespace ArchaeaMod
                     if (overflow & WorldGen.genRand.Next(5) == 0) continue;
                     Tile roof = Main.tile[i, j];
                     Tile ceiling = Main.tile[i, j + 1];
-                    if (ceiling.active() && Main.tileSolid[ceiling.type]) continue;
-                    if (roof.active() && Main.tileSolid[roof.type] && roof.type == tileType)
+                    if (ceiling.HasTile && Main.tileSolid[ceiling.TileType]) continue;
+                    if (roof.HasTile && Main.tileSolid[roof.TileType] && roof.TileType == tileType)
                         tiles.Add(new Vector2(i, j + 1));
                 }
             return tiles.ToArray();
@@ -1089,7 +1091,7 @@ namespace ArchaeaMod
                     {
                         if (count >= tiles.Length) continue;
                         if (!ArchaeaWorld.Inbounds(i, j)) continue;
-                        if (attach && Main.tile[i, j].type != tileType) continue;
+                        if (attach && Main.tile[i, j].TileType != tileType) continue;
                         if (overflow & WorldGen.genRand.Next(5) == 0) continue;
                         tiles[count] = new Vector2(i, j);
                         count++;
@@ -1111,16 +1113,16 @@ namespace ArchaeaMod
                         Tile tile = Main.tile[i, j];
                         Tile wallL = Main.tile[i - 1, j];
                         Tile wallR = Main.tile[i + 1, j];
-                        if (wallL.active() && Main.tileSolid[wallL.type])
-                            if (!tile.active() || !Main.tileSolid[tile.type])
+                        if (wallL.HasTile && Main.tileSolid[wallL.TileType])
+                            if (!tile.HasTile || !Main.tileSolid[tile.TileType])
                             {
-                                if (attach && wallL.type != tileType) continue;
+                                if (attach && wallL.TileType != tileType) continue;
                                 tiles[count] = new Vector2(i, j);
                             }
-                        if (wallR.active() && Main.tileSolid[wallR.type])
-                            if (!tile.active() || !Main.tileSolid[tile.type])
+                        if (wallR.HasTile && Main.tileSolid[wallR.TileType])
+                            if (!tile.HasTile || !Main.tileSolid[tile.TileType])
                             {
-                                if (attach && wallR.type != tileType) continue;
+                                if (attach && wallR.TileType != tileType) continue;
                                 tiles[count] = new Vector2(i, j);
                             }
                         count++;
@@ -1142,7 +1144,7 @@ namespace ArchaeaMod
                         Tile up = Main.tile[i, j - 1];
                         Tile left = Main.tile[i - 1, j];
                         Tile right = Main.tile[i + 1, j];
-                        if ((left.type == tileType || right.type == tileType) && !up.active())
+                        if ((left.TileType == tileType || right.TileType == tileType) && !up.HasTile)
                         {
                             list.Add(new Vector2(i, j));
                             count++;
@@ -1158,7 +1160,7 @@ namespace ArchaeaMod
                 for (int j = y - radius; j < y + radius; j++)
                 {
                     if (!ArchaeaWorld.Inbounds(i, j)) continue;
-                    if (Main.tile[i, j].type == tileType)
+                    if (Main.tile[i, j].TileType == tileType)
                         return true;
                 }
             return false;
@@ -1175,7 +1177,7 @@ namespace ArchaeaMod
                     {
                         if (!ArchaeaWorld.Inbounds(i, j)) continue;
                         foreach (ushort type in tileType)
-                            if (Main.tile[i, j].type == type && Main.tile[i, j].active())
+                            if (Main.tile[i, j].TileType == type && Main.tile[i, j].HasTile)
                             {
                                 tiles++;
                                 break;
@@ -1199,7 +1201,7 @@ namespace ArchaeaMod
                         for (int j = y - radius; j < y + radius; j++)
                         {
                             if (!ArchaeaWorld.Inbounds(i, j)) continue;
-                            if (Main.tile[i, j].type == type && Main.tile[i, j].active())
+                            if (Main.tile[i, j].TileType == type && Main.tile[i, j].HasTile)
                             {
                                 if (tiles++ > limit)
                                     return true;
@@ -1220,14 +1222,14 @@ namespace ArchaeaMod
                 {
                     if (!ArchaeaWorld.Inbounds(i, j)) continue;
                     Tile tile = Main.tile[i, j];
-                    if (tile.type == tileType)
+                    if (tile.TileType == tileType)
                         count++;
                 }
             return count;
         }
         public static bool ActiveAndSolid(int i, int j)
         {
-            return Main.tile[i, j].active() && Main.tileSolid[Main.tile[i, j].type];
+            return Main.tile[i, j].HasTile && Main.tileSolid[Main.tile[i, j].TileType];
         }
     }
     public class Digger
@@ -1272,13 +1274,14 @@ namespace ArchaeaMod
                     for (int i = (int)lerp.X - offset; i < (int)lerp.X + offset; i++)
                         for (int j = (int)lerp.Y - offset; j < (int)lerp.Y + offset; j++)
                         {
-                            Main.tile[i, j].type = tileID;
-                            Main.tile[i, j].active(true);
+                            Main.tile[i, j].TileType = tileID;
+                            Tile tile = Main.tile[i, j];
+                            tile.HasTile = true;
                             //  WorldGen.PlaceTile(i, j, tileID, true, true);
                         }
                     for (int i = (int)lerp.X - offset + 2; i < (int)lerp.X + offset - 1; i++)
                         for (int j = (int)lerp.Y - offset + 2; j < (int)lerp.Y + offset - 1; j++)
-                            Main.tile[i, j].wall = wallID;
+                            Main.tile[i, j].WallType = wallID;
                     radius += 0.5f;
                 }
             }
@@ -1291,8 +1294,9 @@ namespace ArchaeaMod
                     for (int i = (int)lerp.X - offset; i < (int)lerp.X + offset; i++)
                         for (int j = (int)lerp.Y - offset; j < (int)lerp.Y + offset; j++)
                         {
-                            Main.tile[i, j].type = 0;
-                            Main.tile[i, j].active(false);
+                            Main.tile[i, j].TileType = 0;
+                            Tile tile = Main.tile[i, j];
+                            tile.HasTile = false;
                             //  WorldGen.KillTile(i, j, false, false, true);
                         }
                     radius += 0.5f;
@@ -1328,7 +1332,7 @@ namespace ArchaeaMod
         }
     }
 
-    public class Miner : ModWorld
+    public class Miner : ModSystem
     {
         public Mod moda = ModLoader.GetMod("ArchaeaMod");
         public static string progressText = "";
@@ -1485,30 +1489,30 @@ namespace ArchaeaMod
             size = WorldGen.genRand.Next(1, 3);
             minerPos.X = Math.Min((int)Main.maxTilesX * 16 - 16, (int)minerPos.X);
             minerPos.Y = Math.Min((int)Main.maxTilesY * 16 - 16, (int)minerPos.Y);
-            if (WorldGen.genRand.Next(4) == 1 && Main.tile[Math.Min((int)(minerPos.X + 16 + (16 * lookFurther)) / 16, Main.maxTilesX), (int)minerPos.Y / 16].active())
+            if (WorldGen.genRand.Next(4) == 1 && Main.tile[Math.Min((int)(minerPos.X + 16 + (16 * lookFurther)) / 16, Main.maxTilesX), (int)minerPos.Y / 16].HasTile)
             {
                 minerPos.X += 16;
                 Dig();
             }
-            if (WorldGen.genRand.Next(4) == 1 && Main.tile[(int)(minerPos.X - 16 - (16 * lookFurther)) / 16, (int)minerPos.Y / 16].active())
+            if (WorldGen.genRand.Next(4) == 1 && Main.tile[(int)(minerPos.X - 16 - (16 * lookFurther)) / 16, (int)minerPos.Y / 16].HasTile)
             {
                 minerPos.X -= 16;
                 Dig();
             }
-            if (WorldGen.genRand.Next(4) == 1 && Main.tile[(int)minerPos.X / 16, Math.Min((int)(minerPos.Y + 16 + (16 * lookFurther)) / 16, Main.maxTilesY)].active())
+            if (WorldGen.genRand.Next(4) == 1 && Main.tile[(int)minerPos.X / 16, Math.Min((int)(minerPos.Y + 16 + (16 * lookFurther)) / 16, Main.maxTilesY)].HasTile)
             {
                 minerPos.Y += 16;
                 Dig();
             }
-            if (WorldGen.genRand.Next(4) == 1 && Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y - 16 - (16 * lookFurther)) / 16].active())
+            if (WorldGen.genRand.Next(4) == 1 && Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y - 16 - (16 * lookFurther)) / 16].HasTile)
             {
                 minerPos.Y -= 16;
                 Dig();
             }
-            if (!Main.tile[(int)(minerPos.X + 16 + (16 * lookFurther)) / 16, (int)minerPos.Y / 16].active() &&
-                !Main.tile[(int)(minerPos.X - 16 - (16 * lookFurther)) / 16, (int)minerPos.Y / 16].active() &&
-                !Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y + 16 + (16 * lookFurther)) / 16].active() &&
-                !Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y - 16 - (16 * lookFurther)) / 16].active())
+            if (!Main.tile[(int)(minerPos.X + 16 + (16 * lookFurther)) / 16, (int)minerPos.Y / 16].HasTile &&
+                !Main.tile[(int)(minerPos.X - 16 - (16 * lookFurther)) / 16, (int)minerPos.Y / 16].HasTile &&
+                !Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y + 16 + (16 * lookFurther)) / 16].HasTile &&
+                !Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y - 16 - (16 * lookFurther)) / 16].HasTile)
             {
                 lookFurther++;
                 if (lookFurther % 2 == 0) progressText = "Looking " + lookFurther + " tiles further";
@@ -1520,19 +1524,19 @@ namespace ArchaeaMod
         public void ToTheSurfaceMove() // it likes randomizer = 3
         {
             moveID = 0;
-            if (Main.tile[(int)(minerPos.X + 16 + (16 * lookFurther)) / 16, (int)minerPos.Y / 16].active())
+            if (Main.tile[(int)(minerPos.X + 16 + (16 * lookFurther)) / 16, (int)minerPos.Y / 16].HasTile)
             {
                 moveID++;
             }
-            if (Main.tile[(int)(minerPos.X - 16 - (16 * lookFurther)) / 16, (int)minerPos.Y / 16].active())
+            if (Main.tile[(int)(minerPos.X - 16 - (16 * lookFurther)) / 16, (int)minerPos.Y / 16].HasTile)
             {
                 moveID++;
             }
-            if (Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y + 16 + (16 * lookFurther)) / 16].active())
+            if (Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y + 16 + (16 * lookFurther)) / 16].HasTile)
             {
                 moveID++;
             }
-            if (Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y - 16 - (16 * lookFurther)) / 16].active())
+            if (Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y - 16 - (16 * lookFurther)) / 16].HasTile)
             {
                 moveID++;
             }
@@ -1594,19 +1598,19 @@ namespace ArchaeaMod
         public void StiltedMove()    // stilted, might work if more iterations of movement, sometimes longest tunnel
         {                                   // best water placer, there's another move that could be extracted from this if the ID segments were removed
             moveID = 0;
-            if (Main.tileSolid[Main.tile[(int)(minerPos.X + 16 + (16 * lookFurther)) / 16, (int)minerPos.Y / 16].type])
+            if (Main.tileSolid[Main.tile[(int)(minerPos.X + 16 + (16 * lookFurther)) / 16, (int)minerPos.Y / 16].TileType])
             {
                 moveID++;
             }
-            if (Main.tileSolid[Main.tile[(int)(minerPos.X - 16 - (16 * lookFurther)) / 16, (int)minerPos.Y / 16].type])
+            if (Main.tileSolid[Main.tile[(int)(minerPos.X - 16 - (16 * lookFurther)) / 16, (int)minerPos.Y / 16].TileType])
             {
                 moveID++;
             }
-            if (Main.tileSolid[Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y + 16 + (16 * lookFurther)) / 16].type])
+            if (Main.tileSolid[Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y + 16 + (16 * lookFurther)) / 16].TileType])
             {
                 moveID++;
             }
-            if (Main.tileSolid[Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y - 16 - (16 * lookFurther)) / 16].type])
+            if (Main.tileSolid[Main.tile[(int)minerPos.X / 16, (int)(minerPos.Y - 16 - (16 * lookFurther)) / 16].TileType])
             {
                 moveID++;
             }
@@ -1703,8 +1707,8 @@ namespace ArchaeaMod
                     {
                         if (tile != null)
                         {
-                            tile.type = ArchaeaWorld.magnoStone;
-                            tile.active(true);
+                            tile.TileType = ArchaeaWorld.magnoStone;
+                            tile.HasTile = true;
                         }
                     }
                     WorldGen.KillWall((int)minerPos.X / 16 + k, (int)minerPos.Y / 16 + k, false);
@@ -1736,65 +1740,67 @@ namespace ArchaeaMod
                         };
                         foreach (Tile tile in tiles)
                         {
-                            tile.type = 0;
-                            tile.active(false);
+                            tile.TileType = 0;
+                            tile.HasTile = false;
                         }
                     }
                     else if (size == 2)
                     {
-                        Main.tile[(int)(minerPos.X / 16) + circumference, (int)(minerPos.Y / 16) + circumference].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + circumference, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + circumference * 2, (int)(minerPos.Y / 16) + circumference * 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + circumference * 2, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference * 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) - 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16) + 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16) - 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16) - 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16) + 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 2, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 2, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) - 2].active(false);
+                        //MINER worldgen replaced
+                        //Main.tile[(int)(minerPos.X / 16) + circumference, (int)(minerPos.Y / 16) + circumference].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + circumference, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + circumference * 2, (int)(minerPos.Y / 16) + circumference * 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + circumference * 2, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference * 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) - 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16) + 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16) - 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16) - 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16) + 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 2, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 2, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) - 2].HasTile = false;
                     }
                     else if (size == 3)
                     {
-                        Main.tile[(int)(minerPos.X / 16) + circumference, (int)(minerPos.Y / 16) + circumference].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + circumference, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + circumference * 2, (int)(minerPos.Y / 16) + circumference * 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + circumference * 2, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference * 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + circumference * 3, (int)(minerPos.Y / 16) + circumference * 3].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + circumference * 3, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference * 3].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) - 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16) + 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16) - 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16) - 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16) + 1].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 2, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 2, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) - 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 2, (int)(minerPos.Y / 16) + 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 2, (int)(minerPos.Y / 16) - 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 2, (int)(minerPos.Y / 16) - 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 2, (int)(minerPos.Y / 16) + 2].active(false);
-                        Main.tile[(int)(minerPos.X / 16) + 3, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16) - 3, (int)(minerPos.Y / 16)].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + 3].active(false);
-                        Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) - 3].active(false);
+                        //MINER worldgen replaced
+                        //Main.tile[(int)(minerPos.X / 16) + circumference, (int)(minerPos.Y / 16) + circumference].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + circumference, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + circumference * 2, (int)(minerPos.Y / 16) + circumference * 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + circumference * 2, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference * 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + circumference * 3, (int)(minerPos.Y / 16) + circumference * 3].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + circumference * 3, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference * 3].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) - 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16) + 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16) - 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 1, (int)(minerPos.Y / 16) - 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 1, (int)(minerPos.Y / 16) + 1].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 2, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 2, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) - 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 2, (int)(minerPos.Y / 16) + 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 2, (int)(minerPos.Y / 16) - 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 2, (int)(minerPos.Y / 16) - 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 2, (int)(minerPos.Y / 16) + 2].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) + 3, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16) - 3, (int)(minerPos.Y / 16)].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + 3].HasTile = false;
+                        //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) - 3].HasTile = false;
                     }
                     if (WorldGen.genRand.NextFloat() > 0.5f)
-                        Main.tile[(int)minerPos.X / 16, (int)minerPos.Y / 16].wall = ArchaeaWorld.magnoCaveWall;
+                        Main.tile[(int)minerPos.X / 16, (int)minerPos.Y / 16].WallType = ArchaeaWorld.magnoCaveWall;
                 }
             }
         }
@@ -1809,7 +1815,7 @@ namespace ArchaeaMod
                     {
                         float cos = i + (float)(n * (Math.Cos(r)));
                         float sine = j + (float)(n * (Math.Sin(r)));
-                        Main.tile[(int)cos, (int)sine].wall = ArchaeaWorld.magnoCaveWall;
+                        Main.tile[(int)cos, (int)sine].WallType = ArchaeaWorld.magnoCaveWall;
                     }
                 }
             }
@@ -1819,8 +1825,9 @@ namespace ArchaeaMod
             int randomizer = WorldGen.genRand.Next(0, 100);
             if (randomizer < 8)
             { // old randomizer%12 == 0
-                Main.tile[(int)(minerPos.X / 16) + circumference, (int)(minerPos.Y / 16)].liquid = 255;
-                Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference].liquid = 255;
+                //MINER worldgen replaced
+                //Main.tile[(int)(minerPos.X / 16) + circumference, (int)(minerPos.Y / 16)].liquid = 255;
+                //Main.tile[(int)(minerPos.X / 16), (int)(minerPos.Y / 16) + circumference].liquid = 255;
                 WorldGen.SquareTileFrame((int)(minerPos.X / 16), (int)(minerPos.Y / 16));
             }
             if (circumference != 1) return;

@@ -22,17 +22,17 @@ namespace ArchaeaMod.Merged.NPCs
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 26;
-            npc.height = 38;
-            npc.lifeMax = 50;
-            npc.defense = 10;
-            npc.damage = 10;
-            npc.value = 0;
-            npc.lavaImmune = true;
-            npc.noTileCollide = true;
-            npc.noGravity = true;
-            npc.knockBackResist = 0f;
+            NPC.aiStyle = -1;
+            NPC.width = 26;
+            NPC.height = 38;
+            NPC.lifeMax = 50;
+            NPC.defense = 10;
+            NPC.damage = 10;
+            NPC.value = 0;
+            NPC.lavaImmune = true;
+            NPC.noTileCollide = true;
+            NPC.noGravity = true;
+            NPC.knockBackResist = 0f;
             bodyType = ModContent.NPCType<Copycat_body>();
             tailType = ModContent.NPCType<Copycat_tail>();
         }

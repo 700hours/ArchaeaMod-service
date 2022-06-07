@@ -13,35 +13,35 @@ namespace ArchaeaMod.Merged.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Minion Explosion");
-            Main.projFrames[projectile.type] = 4;
+            Main.projFrames[Projectile.type] = 4;
         }
         public override void SetDefaults()
         {
-            projectile.width = 58;
-            projectile.height = 58;
-            projectile.scale = 1f;
-            projectile.damage = 0;
-            projectile.aiStyle = -1;
-            projectile.timeLeft = 60;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 58;
+            Projectile.height = 58;
+            Projectile.scale = 1f;
+            Projectile.damage = 0;
+            Projectile.aiStyle = -1;
+            Projectile.timeLeft = 60;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            Lighting.AddLight(new Vector2(projectile.position.X / 16, projectile.position.Y / 16), new Vector3(0.4f, 0.5f, 0.25f));
+            Lighting.AddLight(new Vector2(Projectile.position.X / 16, Projectile.position.Y / 16), new Vector3(0.4f, 0.5f, 0.25f));
 
-            projectile.frameCounter++;
-            if(projectile.frameCounter > 3)
+            Projectile.frameCounter++;
+            if(Projectile.frameCounter > 3)
             {
-                projectile.frame++;
-                projectile.frameCounter = 0;
+                Projectile.frame++;
+                Projectile.frameCounter = 0;
             }
-            if(projectile.frame > 3)
+            if(Projectile.frame > 3)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
         }
 

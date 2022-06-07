@@ -15,7 +15,7 @@ namespace ArchaeaMod.Tiles
 {
     public class sky_portal : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             TileID.Sets.NotReallySolid[Type] = true;

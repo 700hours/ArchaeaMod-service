@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 namespace ArchaeaMod.Items.Armors
 {
     [AutoloadEquip(EquipType.Body)]
@@ -23,31 +21,28 @@ namespace ArchaeaMod.Items.Armors
         }
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 18;
-            item.defense = 10;
-            item.value = 5000;
-            item.rare = ItemRarityID.Orange;
+            Item.width = 30;
+            Item.height = 18;
+            Item.defense = 10;
+            Item.value = 5000;
+            Item.rare = ItemRarityID.Orange;
         }
-
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
             return
-            head == ModContent.GetInstance<ShockMask>().item &&
-            body == item && 
-            legs == ModContent.GetInstance<ShockLegs>().item;
+            head == ModContent.GetInstance<ShockMask>().Item &&
+            body == Item && 
+            legs == ModContent.GetInstance<ShockLegs>().Item;
         }
-
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddTile(TileID.Autohammer);
-            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 15);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe()
+                .AddTile(TileID.Autohammer)
+                .AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 15)
+//            recipe.SetResult(this, 1);
+                .Register();
         }
     }
-
     public class Bolt : ModProjectile
     {
         public override void SetStaticDefaults()
@@ -56,16 +51,15 @@ namespace ArchaeaMod.Items.Armors
         }
         public override void SetDefaults()
         {
-            projectile.width = 48;
-            projectile.height = 48;
-            projectile.damage = 10;
-            projectile.knockBack = 0f;
-            projectile.alpha = 240;
-            projectile.timeLeft = 40;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
+            Projectile.width = 48;
+            Projectile.height = 48;
+            Projectile.damage = 10;
+            Projectile.knockBack = 0f;
+            Projectile.alpha = 240;
+            Projectile.timeLeft = 40;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
         }
-
         private int ai = -1;
         private float spawnY = 800f;
         private float speedY
@@ -74,14 +68,14 @@ namespace ArchaeaMod.Items.Armors
         }
         private NPC target
         {
-            get { return Main.npc[(int)projectile.ai[0]]; }
+            get { return Main.npc[(int)Projectile.ai[0]]; }
         }
         public override bool PreAI()
         {
             switch (ai)
             {
                 case -1:
-                    projectile.Center = target.Center - new Vector2(0f, spawnY);
+                    Projectile.Center = target.Center - new Vector2(0f, spawnY);
                     goto case 0;
                 case 0:
                     ai = 0;
@@ -91,10 +85,10 @@ namespace ArchaeaMod.Items.Armors
         }
         public override void AI()
         {
-            if (projectile.alpha > 0)
-                projectile.alpha -= 20;
-            if (projectile.position.Y < target.position.Y + target.height - projectile.height)
-                projectile.position.Y += speedY;
+            if (Projectile.alpha > 0)
+                Projectile.alpha -= 20;
+            if (Projectile.position.Y < target.position.Y + target.height - Projectile.height)
+                Projectile.position.Y += speedY;
         }
     }
 }

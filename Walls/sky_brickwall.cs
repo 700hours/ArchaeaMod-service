@@ -7,11 +7,11 @@ namespace ArchaeaMod.Walls
 {
     public class sky_brickwall : ModWall
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.wallHouse[Type] = true;
             TileID.Sets.HousingWalls[Type] = true;
-            drop = ModContent.ItemType<Items.Walls.sky_brickwall>();
+            ItemDrop = ModContent.ItemType<Items.Walls.sky_brickwall>();
             AddMapEntry(new Color(80, 10, 10));
         }
     }

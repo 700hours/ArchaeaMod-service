@@ -23,12 +23,12 @@ namespace ArchaeaMod.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 48;
-            projectile.height = 48;
-            projectile.damage = 10;
-            projectile.friendly = true;
-            projectile.ignoreWater = false;
-            projectile.tileCollide = true;
+            Projectile.width = 48;
+            Projectile.height = 48;
+            Projectile.damage = 10;
+            Projectile.friendly = true;
+            Projectile.ignoreWater = false;
+            Projectile.tileCollide = true;
         }
 
         private int ai = -1;
@@ -41,7 +41,7 @@ namespace ArchaeaMod.Projectiles
         private Dust dust;
         public Player owner
         {
-            get { return Main.player[projectile.owner]; }
+            get { return Main.player[Projectile.owner]; }
         }
         public override bool PreAI()
         {
@@ -58,39 +58,39 @@ namespace ArchaeaMod.Projectiles
         }
         public override void AI()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
                 case Ground:
-                    dust.velocity = projectile.velocity;
-                    projectile.velocity.Y = velY;
-                    projectile.rotation -= 0.017f * 5f;
+                    dust.velocity = Projectile.velocity;
+                    Projectile.velocity.Y = velY;
+                    Projectile.rotation -= 0.017f * 5f;
                     break;
                 case Falling:
-                    projectile.rotation += 0.017f * 5f;
-                    projectile.velocity = new Vector2(velX, velY);
+                    Projectile.rotation += 0.017f * 5f;
+                    Projectile.velocity = new Vector2(velX, velY);
                     break;
             }
         }
         public override void Kill(int timeLeft)
         {
-            if ((int)projectile.ai[0] != Ground)
-                NPCs.ArchaeaNPC.DustSpread(projectile.Center, 1, 1, 6, 3, 2f);
+            if ((int)Projectile.ai[0] != Ground)
+                NPCs.ArchaeaNPC.DustSpread(Projectile.Center, 1, 1, 6, 3, 2f);
         }
         protected void Initialize()
         {
-            switch ((int)projectile.ai[0])
+            switch ((int)Projectile.ai[0])
             {
                 case Ground:
                     velY = -8f;
                     dust = defaultDust;
-                    projectile.timeLeft = 30;
-                    projectile.tileCollide = false;
-                    projectile.friendly = true;
-                    NPCs.ArchaeaNPC.DustSpread(projectile.Center, 1, 1, 6, 4, 2f);
+                    Projectile.timeLeft = 30;
+                    Projectile.tileCollide = false;
+                    Projectile.friendly = true;
+                    NPCs.ArchaeaNPC.DustSpread(Projectile.Center, 1, 1, 6, 4, 2f);
                     break;
                 case Falling:
-                    start = new Vector2(projectile.ai[1], owner.position.Y - 600f);
-                    projectile.position = start;
+                    start = new Vector2(Projectile.ai[1], owner.position.Y - 600f);
+                    Projectile.position = start;
                     velX = Main.rand.NextFloat(-2f, 2f);
                     velY = 12f;
                     break;
@@ -98,7 +98,7 @@ namespace ArchaeaMod.Projectiles
         }
         private Dust defaultDust
         {
-            get { return Dust.NewDustDirect(projectile.Center, 1, 1, 6); }
+            get { return Dust.NewDustDirect(Projectile.Center, 1, 1, 6); }
         }
     }
 }

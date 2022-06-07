@@ -8,7 +8,7 @@ namespace ArchaeaMod.Merged.Buffs
 {
     class magno_summon : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Magno Fly");
             Description.SetDefault("Chemically enhanced minion");
@@ -18,7 +18,7 @@ namespace ArchaeaMod.Merged.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            if (player.ownedProjectileCounts[mod.ProjectileType("magno_minion")] == 0)
+            if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("magno_minion").Type] == 0)
             {
                 player.DelBuff(buffIndex);
                 buffIndex--;

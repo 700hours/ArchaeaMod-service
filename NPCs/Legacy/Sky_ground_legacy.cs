@@ -14,16 +14,11 @@ namespace ArchaeaMod.NPCs.Legacy
 {
     public class Sky_ground_legacy : ModNPC
     {
-        public override bool Autoload(ref string name)
-        {
-            if (name == "Sky_ground_legacy")
-                return false;
-            return true;
-        }
+        public override bool IsLoadingEnabled(Mod mod) => false;
 
         public bool Hurt()
         {
-            return npc.life < npc.lifeMax && npc.life > 0 && oldLife != npc.life;
+            return NPC.life < NPC.lifeMax && NPC.life > 0 && oldLife != NPC.life;
         }
         private bool findClosest;
         public virtual bool aggroChance(int chance)
@@ -33,13 +28,13 @@ namespace ArchaeaMod.NPCs.Legacy
         public bool canSee()
         {
             Vector2 line;
-            for (float k = 0; k < npc.Distance(target().position); k += 0.5f)
+            for (float k = 0; k < NPC.Distance(target().position); k += 0.5f)
             {
-                line = npc.Center + ArchaeaNPC.AngleToSpeed(ArchaeaNPC.AngleTo(npc, target()), k);
+                line = NPC.Center + ArchaeaNPC.AngleToSpeed(ArchaeaNPC.AngleTo(NPC, target()), k);
                 int i = (int)line.X / 16;
                 int j = (int)line.Y / 16;
                 Tile tile = Main.tile[i, j];
-                if (tile.active() && Main.tileSolid[tile.type])
+                if (tile.HasTile && Main.tileSolid[tile.TileType])
                     return false;
             }
             return true;
@@ -48,18 +43,18 @@ namespace ArchaeaMod.NPCs.Legacy
         public float range = 400f;
         public virtual Rectangle Range
         {
-            get { return new Rectangle((int)npc.position.X - 200, (int)npc.position.Y - 150, 400, 300); }
+            get { return new Rectangle((int)NPC.position.X - 200, (int)NPC.position.Y - 150, 400, 300); }
         }
         internal Pattern pattern = Pattern.JustSpawned;
         public Player target()
         {
-            Player player = ArchaeaNPC.FindClosest(npc, findClosest);
-            if (player != null && npc.Distance(player.position) < range)
+            Player player = ArchaeaNPC.FindClosest(NPC, findClosest);
+            if (player != null && NPC.Distance(player.position) < range)
             {
-                npc.target = player.whoAmI;
+                NPC.target = player.whoAmI;
                 return player;
             }
-            else return Main.player[npc.target];
+            else return Main.player[NPC.target];
         }
         public override bool PreAI()
         {
@@ -73,7 +68,7 @@ namespace ArchaeaMod.NPCs.Legacy
                 case Pattern.JustSpawned:
                     if (JustSpawned())
                     {
-                        oldLife = npc.life;
+                        oldLife = NPC.life;
                         if (aggroChance(80))
                             pattern = Pattern.Attack;
                         goto case Pattern.Idle;
@@ -87,7 +82,7 @@ namespace ArchaeaMod.NPCs.Legacy
                         findClosest = true;
                         goto case Pattern.Attack;
                     }
-                    if (target().Distance(npc.position) < range * 1.2f)
+                    if (target().Distance(NPC.position) < range * 1.2f)
                         goto case Pattern.Active;
                     return true;
                 case Pattern.Active:
@@ -101,11 +96,11 @@ namespace ArchaeaMod.NPCs.Legacy
                     AttackPattern();
                     return true;
             }
-            if (!target().active || target().dead || npc.Distance(target().position) > range)
+            if (!target().active || target().dead || NPC.Distance(target().position) > range)
                 DefaultAI();
-            if (npc.Distance(target().position) < range && pattern != Pattern.Attack)
-                if (npc.alpha != 0)
-                    npc.alpha -= 5;
+            if (NPC.Distance(target().position) < range && pattern != Pattern.Attack)
+                if (NPC.alpha != 0)
+                    NPC.alpha -= 5;
             return false;
         }
         public virtual bool JustSpawned()
@@ -124,25 +119,25 @@ namespace ArchaeaMod.NPCs.Legacy
                 case 0:
                     ai = 0;
                     move = Vector2.Zero;
-                    if (target() != null && target().Distance(npc.position) < range * 3f)
+                    if (target() != null && target().Distance(NPC.position) < range * 3f)
                         move = ArchaeaNPC.FastMove(target());
                     if (move != Vector2.Zero)
                         goto case 1;
                     return false;
                 case 1:
                     ai = 1;
-                    if (npc.alpha < 250)
-                        npc.alpha += 25;
+                    if (NPC.alpha < 250)
+                        NPC.alpha += 25;
                     else
                     {
-                        npc.position = move;
+                        NPC.position = move;
                         goto case 2;
                     }
                     return true;
                 case 2:
                     ai = 2;
-                    if (npc.alpha > 0)
-                        npc.alpha -= 25;
+                    if (NPC.alpha > 0)
+                        NPC.alpha -= 25;
                     else goto case 0;
                     return true;
             }
@@ -163,8 +158,8 @@ namespace ArchaeaMod.NPCs.Legacy
         {
             if (reData)
             {
-                oldX = npc.position.X;
-                idle = npc.position;
+                oldX = NPC.position.X;
+                idle = NPC.position;
                 reData = false;
                 type = -1;
             }
@@ -232,7 +227,7 @@ namespace ArchaeaMod.NPCs.Legacy
                 reData = true;
             }
             if (attack != FadeOut)
-                npc.velocity = Vector2.Zero;
+                NPC.velocity = Vector2.Zero;
             AttackMovement();
             switch (attack)
             {
@@ -266,19 +261,19 @@ namespace ArchaeaMod.NPCs.Legacy
                     break;
                 case FadeOut:
                     attack = FadeOut;
-                    if (npc.alpha < 200)
-                        npc.alpha += 5;
+                    if (NPC.alpha < 200)
+                        NPC.alpha += 5;
                     else
                     {
-                        if (npc.Distance(target().position) < 800f)
-                            npc.position = move;
+                        if (NPC.Distance(target().position) < 800f)
+                            NPC.position = move;
                         goto case FadeIn;
                     }
                     break;
                 case FadeIn:
                     attack = FadeIn;
-                    if (npc.alpha > 0)
-                        npc.alpha -= 5;
+                    if (NPC.alpha > 0)
+                        NPC.alpha -= 5;
                     else goto case Attack_;
                     break;
             }

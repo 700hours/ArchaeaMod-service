@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,19 +8,19 @@ namespace ArchaeaMod.Merged.Tiles
 {
     public class m_stone : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
-            drop = mod.ItemType("magno_stone");
+            ItemDrop = Mod.Find<ModItem>("magno_stone").Type;
             //  UI map tile color
             AddMapEntry(new Color(119, 111, 98));
-            soundStyle = 0;
-            soundType = 21;
-            mineResist = 2.5f;
-            minPick = 35;
+           // soundStyle = 0;
+            HitSound = SoundID.Tink;
+            MineResist = 2.5f;
+            MinPick = 35;
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num)

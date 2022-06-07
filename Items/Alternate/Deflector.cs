@@ -22,14 +22,14 @@ namespace ArchaeaMod.Items.Alternate
         }
         public override void SetDefaults()
         {
-            item.width = 32;
-            item.height = 32;
-            item.mana = 10;
-            item.damage = 10;
-            item.value = 10000;
-            item.expert = true;
-            item.rare = ItemRarityID.Expert;
-            item.accessory = true;
+            Item.width = 32;
+            Item.height = 32;
+            Item.mana = 10;
+            Item.damage = 10;
+            Item.value = 10000;
+            Item.expert = true;
+            Item.rare = ItemRarityID.Expert;
+            Item.accessory = true;
         }
 
         private int ai = -1;
@@ -84,7 +84,7 @@ namespace ArchaeaMod.Items.Alternate
         }
         public override void UpdateEquip(Player player)
         {
-            if (ArchaeaItem.NotEquipped(player, item.type))
+            if (ArchaeaItem.NotEquipped(player, Item.type))
             {
                 ai = -1;
                 foreach (Shield s in shield)
@@ -148,7 +148,7 @@ namespace ArchaeaMod.Items.Alternate
             this.player = player;
             this.rotation = rotation;
             radius = 64f;
-            proj = Projectile.NewProjectileDirect(Vector2.Zero, Vector2.Zero, ProjectileID.Fireball, damage, 8f, player.whoAmI);
+            proj = Projectile.NewProjectileDirect(Projectile.GetSource_None(), Vector2.Zero, Vector2.Zero, ProjectileID.Fireball, damage, 8f, player.whoAmI);
             proj.Center = GetPosition(player.Center, radius);
             proj.tileCollide = false;
             proj.ignoreWater = true;
@@ -216,7 +216,7 @@ namespace ArchaeaMod.Items.Alternate
                             for (int r = 0; r < distance; r++)
                             {
                                 float angle = NPCs.ArchaeaNPC.AngleTo(proj.Center, n.Center);
-                                Dust dust = Dust.NewDustDirect(proj.Center + NPCs.ArchaeaNPC.AngleToSpeed(angle, r), 1, 1, DustID.Fire);
+                                Dust dust = Dust.NewDustDirect(proj.Center + NPCs.ArchaeaNPC.AngleToSpeed(angle, r), 1, 1, 6);
                             }
                             n.StrikeNPC(damage, 0f, 0);
                             break;
@@ -231,7 +231,7 @@ namespace ArchaeaMod.Items.Alternate
             float angle = NPCs.ArchaeaNPC.AngleTo(itemHitbox, target.Center);
             for (int d = 0; d < target.Distance(itemHitbox); d++)
             {
-                Dust dust = Dust.NewDustDirect(itemHitbox + NPCs.ArchaeaNPC.AngleToSpeed(angle, d), 1, 1, DustID.Fire);
+                Dust dust = Dust.NewDustDirect(itemHitbox + NPCs.ArchaeaNPC.AngleToSpeed(angle, d), 1, 1, 6);
             }
             target.StrikeNPC(damage, 0f, 0);
         }

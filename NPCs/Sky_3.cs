@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -20,22 +21,22 @@ namespace ArchaeaMod.NPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Gargoyle");
-            Main.npcFrameCount[npc.type] = 10;
+            Main.npcFrameCount[NPC.type] = 10;
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 48;
-            npc.height = 48;
-            npc.lifeMax = 200;
-            npc.defense = 10;
-            npc.damage = 55;
-            npc.value = 150;
-            npc.alpha = 255;
-            npc.knockBackResist = 0f;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.lavaImmune = true;
+            NPC.aiStyle = -1;
+            NPC.width = 48;
+            NPC.height = 48;
+            NPC.lifeMax = 200;
+            NPC.defense = 10;
+            NPC.damage = 55;
+            NPC.value = 150;
+            NPC.alpha = 255;
+            NPC.knockBackResist = 0f;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.lavaImmune = true;
         }
         private bool attack;
         private bool init;
@@ -48,13 +49,13 @@ namespace ArchaeaMod.NPCs
         private Vector2 newPosition;
         private int time
         {
-            get { return (int)npc.ai[0]; }
-            set { npc.ai[0] = value; }
+            get { return (int)NPC.ai[0]; }
+            set { NPC.ai[0] = value; }
         }
         private int ai
         {
-            get { return (int)npc.ai[1]; }
-            set { npc.ai[1] = value; }
+            get { return (int)NPC.ai[1]; }
+            set { NPC.ai[1] = value; }
         }
         private const int 
             Idle = 0,
@@ -62,67 +63,67 @@ namespace ArchaeaMod.NPCs
             Attack = 2;
         private Player npcTarget
         {
-            get { return Main.player[npc.target]; }
+            get { return Main.player[NPC.target]; }
         }
         public Player target()
         {
-            Player player = ArchaeaNPC.FindClosest(npc, firstTarget, 800);
+            Player player = ArchaeaNPC.FindClosest(NPC, firstTarget, 800);
             firstTarget = false;
             if (player != null && player.active && !player.dead)
             {
-                npc.target = player.whoAmI;
-                npc.netUpdate = true;
+                NPC.target = player.whoAmI;
+                NPC.netUpdate = true;
                 return player;
             }
-            else return Main.player[npc.target];
+            else return Main.player[NPC.target];
         }
         public override void AI()
         {
             time++;
             if (!init)
             {
-                int i = (int)npc.position.X / 16;
-                int j = (int)npc.position.Y / 16;
-                if (ArchaeaWorld.Inbounds(i, j) && Main.tile[i, j].wall != ArchaeaWorld.skyBrickWall)
+                int i = (int)NPC.position.X / 16;
+                int j = (int)NPC.position.Y / 16;
+                if (ArchaeaWorld.Inbounds(i, j) && Main.tile[i, j].WallType != ArchaeaWorld.skyBrickWall)
                 {
-                    newPosition = ArchaeaNPC.FindAny(npc, ArchaeaNPC.FindClosest(npc, true), true, 800);
+                    newPosition = ArchaeaNPC.FindAny(NPC, ArchaeaNPC.FindClosest(NPC, true), true, 800);
                     if (newPosition != Vector2.Zero)
                     {
-                        npc.netUpdate = true;
+                        NPC.netUpdate = true;
                         init = true;
                     }
                 }
                 return;
             }
-            if (!Main.tile[(int)(newPosition.X + 8) / 16, (int)(newPosition.Y + npc.height + 8) / 16].active() || !Main.tileSolid[Main.tile[(int)(newPosition.X + 8) / 16, (int)(newPosition.Y + npc.height + 8) / 16].type] ||
-                !Main.tile[(int)(newPosition.X + 24) / 16, (int)(newPosition.Y + npc.height + 8) / 16].active() || !Main.tileSolid[Main.tile[(int)(newPosition.X + 24) / 16, (int)(newPosition.Y + npc.height + 8) / 16].type])
+            if (!Main.tile[(int)(newPosition.X + 8) / 16, (int)(newPosition.Y + NPC.height + 8) / 16].HasTile || !Main.tileSolid[Main.tile[(int)(newPosition.X + 8) / 16, (int)(newPosition.Y + NPC.height + 8) / 16].TileType] ||
+                !Main.tile[(int)(newPosition.X + 24) / 16, (int)(newPosition.Y + NPC.height + 8) / 16].HasTile || !Main.tileSolid[Main.tile[(int)(newPosition.X + 24) / 16, (int)(newPosition.Y + NPC.height + 8) / 16].TileType])
             {
                 newPosition.Y++;
                 return;
             }
             if (newPosition != Vector2.Zero && ai == Idle)
-                npc.position = newPosition;
+                NPC.position = newPosition;
             if (time > 150)
             {
-                if (npc.alpha > 12)
-                    npc.alpha -= 12;
-                else npc.alpha = 0;
+                if (NPC.alpha > 12)
+                    NPC.alpha -= 12;
+                else NPC.alpha = 0;
             }
-            if (npc.life < npc.lifeMax)
+            if (NPC.life < NPC.lifeMax)
             {
-                npc.TargetClosest();
+                NPC.TargetClosest();
                 ai = Activated;
             }
-            if (ai == Idle && Main.player.Where(t => t.Distance(npc.Center) < 64f).Count() > 0f)
+            if (ai == Idle && Main.player.Where(t => t.Distance(NPC.Center) < 64f).Count() > 0f)
             {
-                ArchaeaNPC.DustSpread(npc.position, npc.width, npc.height, DustID.Stone, 5, 1.2f);
-                npc.TargetClosest();
+                ArchaeaNPC.DustSpread(NPC.position, NPC.width, NPC.height, DustID.Stone, 5, 1.2f);
+                NPC.TargetClosest();
                 ai = Activated;
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
             }
             if (ai == Idle) 
                 return;
-            npc.spriteDirection = Main.player[npc.target].Center.X < npc.Center.X ? 1 : -1;
+            NPC.spriteDirection = Main.player[NPC.target].Center.X < NPC.Center.X ? 1 : -1;
             if (time > 300)
             {
                 time = 0;
@@ -132,31 +133,31 @@ namespace ArchaeaMod.NPCs
                 tracking = npcTarget.Center;
             if (ai == Attack)
             {
-                npc.velocity = ArchaeaNPC.AngleToSpeed(npc.AngleTo(tracking), rushSpeed);
+                NPC.velocity = ArchaeaNPC.AngleToSpeed(NPC.AngleTo(tracking), rushSpeed);
                 if (time % 10 == 0)
                     ai = Activated;
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
             }
-            ArchaeaNPC.SlowDown(ref npc.velocity, 0.2f);
-            if (npc.velocity.X >= npc.oldVelocity.X || npc.velocity.X < npc.oldVelocity.X || npc.velocity.Y >= npc.oldVelocity.Y || npc.velocity.Y < npc.oldVelocity.Y)
-                npc.netUpdate = true;
-            if (npc.Center.X <= npcTarget.Center.X)
+            ArchaeaNPC.SlowDown(ref NPC.velocity, 0.2f);
+            if (NPC.velocity.X >= NPC.oldVelocity.X || NPC.velocity.X < NPC.oldVelocity.X || NPC.velocity.Y >= NPC.oldVelocity.Y || NPC.velocity.Y < NPC.oldVelocity.Y)
+                NPC.netUpdate = true;
+            if (NPC.Center.X <= npcTarget.Center.X)
             {
                 float angle = (float)Math.Round(Math.PI * 0.2f, 1);
-                if (npc.rotation > angle)
-                npc.rotation -= rotateSpeed;
-                else npc.rotation += rotateSpeed;
+                if (NPC.rotation > angle)
+                NPC.rotation -= rotateSpeed;
+                else NPC.rotation += rotateSpeed;
             }
             else
             {
                 float angle = (float)Math.Round((Math.PI * 0.2f) * -1, 1);
-                if (npc.rotation > angle)
-                npc.rotation -= rotateSpeed;
-                else npc.rotation += rotateSpeed;
+                if (NPC.rotation > angle)
+                NPC.rotation -= rotateSpeed;
+                else NPC.rotation += rotateSpeed;
             }
         }
 
-        public override void NPCLoot()
+        public override void OnKill()
         {
             int rand = Main.rand.Next(10);
             switch (rand)
@@ -165,7 +166,7 @@ namespace ArchaeaMod.NPCs
                 case 1:
                 case 2:
                 case 3:
-                    Item.NewItem(npc.Center, ModContent.ItemType<Items.Materials.r_plate>(), Main.rand.Next(1, 4));
+                    Item.NewItem(Item.GetSource_None(), NPC.Center, ModContent.ItemType<Items.Materials.r_plate>(), Main.rand.Next(1, 4));
                     break;
             }
         }
@@ -178,7 +179,7 @@ namespace ArchaeaMod.NPCs
         }
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
         {
-            return npc.alpha == 0;
+            return NPC.alpha == 0;
         }
         private int frame;
         private int frameCount;
@@ -187,12 +188,12 @@ namespace ArchaeaMod.NPCs
         {
             if (!Main.dedServ)
             {
-                frameCount = Main.npcFrameCount[npc.type];
-                frameHeight = Main.npcTexture[npc.type].Height / frameCount;
+                frameCount = Main.npcFrameCount[NPC.type];
+                frameHeight = TextureAssets.Npc[NPC.type].Value.Height / frameCount;
             }
             if (ai == Idle)
             {
-                if (Main.player.Where(t => t.Distance(npc.Center) < 300f).Count() > 0)
+                if (Main.player.Where(t => t.Distance(NPC.Center) < 300f).Count() > 0)
                 {
                     frame = 1;
                 }
@@ -207,7 +208,7 @@ namespace ArchaeaMod.NPCs
                     else frame = 2;
                 }
             }
-            npc.frame.Y = frame * frameHeight;
+            NPC.frame.Y = frame * frameHeight;
         }
 
         public override void SendExtraAI(BinaryWriter writer)

@@ -1,18 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 using ArchaeaMod.Projectiles;
-
 namespace ArchaeaMod.Items
 {
     public class c_Sword : ModItem
@@ -24,22 +21,21 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.damage = 10;
-            item.knockBack = 2f;
-            item.value = 3500;
-            item.useTime = 40;
-            item.useAnimation = 40;
-            item.useTurn = false;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.melee = true;
+            Item.width = 48;
+            Item.height = 48;
+            Item.damage = 10;
+            Item.knockBack = 2f;
+            Item.value = 3500;
+            Item.useTime = 40;
+            Item.useAnimation = 40;
+            Item.useTurn = false;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.DamageType = DamageClass.Melee;
         }
-
         private int time;
         private int index;
         private Vector2[] ground;
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             index = 0;
             ground = GetGround(player, 10);
@@ -52,10 +48,9 @@ namespace ArchaeaMod.Items
             if (index < ground.Length)
             {
                 if (ArchaeaItem.Elapsed(5))
-                    Projectile.NewProjectileDirect(ground[index++], Vector2.Zero, ModContent.ProjectileType<Mercury>(), item.damage, item.knockBack, player.whoAmI, Mercury.Ground);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_None(), ground[index++], Vector2.Zero, ModContent.ProjectileType<Mercury>(), Item.damage, Item.knockBack, player.whoAmI, Mercury.Ground);
             }
         }
-
         protected Vector2[] GetGround(Player start, int length)
         {
             List<Vector2> ground = new List<Vector2>();
@@ -68,7 +63,7 @@ namespace ArchaeaMod.Items
                 int total = 0;
                 int i = k + x / 16;
                 int j = y / 16;
-                while (!Main.tile[i, j].active())
+                while (!Main.tile[i, j].HasTile)
                 {
                     j++;
                     if (total++ > 10)
@@ -82,15 +77,14 @@ namespace ArchaeaMod.Items
             }
             return ground.ToArray();
         }
-
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddTile(TileID.Anvils);
-            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_bar>(), 8);
-            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), 6);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe()
+                .AddTile(TileID.Anvils)
+                .AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_bar>(), 8)
+                .AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), 6)
+//            recipe.SetResult(this, 1);
+                .Register();
         }
     }
 }

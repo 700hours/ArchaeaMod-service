@@ -12,7 +12,7 @@ namespace ArchaeaMod.Merged.Tiles
 {
     public class m_bar : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSpelunker[Type] = true;
             Main.tileShine2[Type] = true;
@@ -28,14 +28,14 @@ namespace ArchaeaMod.Merged.Tiles
 			Main.tileNoSunLight[Type]		= false;
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
-            dustType = 1;
-            drop = mod.ItemType("magno_bar");
+            DustType = 1;
+            ItemDrop = Mod.Find<ModItem>("magno_bar").Type;
             //  UI map tile color
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Rubidium Bar");
             AddMapEntry(new Color(151, 102, 65), name);
-            mineResist = 1.2f;
-            minPick = 35;
+            MineResist = 1.2f;
+            MinPick = 35;
         }
         public override void NumDust(int i, int j, bool fail, ref int num)
         {

@@ -20,17 +20,17 @@ namespace ArchaeaMod.Items.Tiles
         }
         public override void SetDefaults()
         {
-            item.width = 32;
-            item.height = 32;
-            item.value = 3500;
-            item.rare = 3;
-            item.useStyle = 1;
-            item.useTime = 10;
-            item.useAnimation = 15;
-            item.autoReuse = true;
-            item.noMelee = true;
-            item.consumable = true;
-            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.music_boxes>();
+            Item.width = 32;
+            Item.height = 32;
+            Item.value = 3500;
+            Item.rare = 3;
+            Item.useStyle = 1;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.autoReuse = true;
+            Item.noMelee = true;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<ArchaeaMod.Tiles.music_boxes>();
         }
     }
 }

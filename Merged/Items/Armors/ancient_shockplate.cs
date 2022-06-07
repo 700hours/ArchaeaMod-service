@@ -17,12 +17,12 @@ namespace ArchaeaMod.Merged.Items.Armors
         }
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.maxStack = 1;
-            item.value = 100;
-            item.rare = 3;
-            item.defense = 5;
+            Item.width = 18;
+            Item.height = 18;
+            Item.maxStack = 1;
+            Item.value = 100;
+            Item.rare = 3;
+            Item.defense = 5;
         }
 
         int Proj1;
@@ -30,7 +30,7 @@ namespace ArchaeaMod.Merged.Items.Armors
         int d = 0;
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
-            return head.type == mod.ItemType("ancient_shockhelmet") && legs.type == mod.ItemType("ancient_shockgreaves");
+            return head.type == Mod.Find<ModItem>("ancient_shockhelmet").Type && legs.type == Mod.Find<ModItem>("ancient_shockgreaves").Type;
         }
     }
 }

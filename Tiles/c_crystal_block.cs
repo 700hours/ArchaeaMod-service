@@ -14,20 +14,20 @@ namespace ArchaeaMod.Tiles
 {
     public class c_crystal_block : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
-            drop = ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>();
+            ItemDrop = ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>();
             AddMapEntry(new Color(230, 130, 130));
-            soundStyle = 0;
-            soundType = 21;
+           // soundStyle = 0;
+            HitSound = SoundID.Tink;
         }
-        public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
+        public override void WalkDust(ref int DustType, ref bool makeDust, ref Color color)
         {
-            dustType = ModContent.DustType<Merged.Dusts.c_silver_dust>();
+            DustType = ModContent.DustType<Merged.Dusts.c_silver_dust>();
             makeDust = true;
             color = new Color(210, 110, 110);
         }

@@ -14,24 +14,19 @@ namespace ArchaeaMod.NPCs
 {
     public class Slime : ModNPC
     {
-        public override bool Autoload(ref string name)
-        {
-            if (name == "Slime")
-                return false;
-            else return true;
-        }
+        public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 48;
-            npc.height = 32;
-            npc.lifeMax = 50;
-            npc.defense = 6;
-            npc.damage = 10;
-            npc.value = 500;
+            NPC.aiStyle = -1;
+            NPC.width = 48;
+            NPC.height = 32;
+            NPC.lifeMax = 50;
+            NPC.defense = 6;
+            NPC.damage = 10;
+            NPC.value = 500;
         }
 
         public bool flip;
@@ -39,18 +34,18 @@ namespace ArchaeaMod.NPCs
         public bool inRange;
         public virtual bool Hurt()
         {
-            return npc.life < npc.lifeMax && npc.life > 0 && oldLife != npc.life;
+            return NPC.life < NPC.lifeMax && NPC.life > 0 && oldLife != NPC.life;
         }
         public bool FacingWall()
         {
-            if (Collision.SolidCollision(npc.position + new Vector2(-8f, 0f), npc.width + 16, npc.height))
+            if (Collision.SolidCollision(NPC.position + new Vector2(-8f, 0f), NPC.width + 16, NPC.height))
                 return true;
             else return false;
         }
         public int timer
         {
-            get { return (int)npc.ai[0]; }
-            set { npc.ai[0] = value; }
+            get { return (int)NPC.ai[0]; }
+            set { NPC.ai[0] = value; }
         }
         public int counter;
         public int oldLife;
@@ -80,15 +75,15 @@ namespace ArchaeaMod.NPCs
             if (timer++ > interval)
                 timer = 0;
             
-            if (npc.velocity.Y == 0f && !npc.wet && Collision.SolidCollision(npc.position, npc.width, npc.height + 8))
-                npc.velocity = Vector2.Zero;
-            target = ArchaeaNPC.FindClosest(npc, true);
+            if (NPC.velocity.Y == 0f && !NPC.wet && Collision.SolidCollision(NPC.position, NPC.width, NPC.height + 8))
+                NPC.velocity = Vector2.Zero;
+            target = ArchaeaNPC.FindClosest(NPC, true);
             if (target == null)
             {
                 DefaultActions();
                 return false;
             }
-            inRange = ArchaeaNPC.WithinRange(target.position, ArchaeaNPC.defaultBounds(npc));
+            inRange = ArchaeaNPC.WithinRange(target.position, ArchaeaNPC.defaultBounds(NPC));
             switch (pattern)
             {
                 case Pattern.JustSpawned:
@@ -143,11 +138,11 @@ namespace ArchaeaMod.NPCs
         {
             if (fadeOut)
             {
-                if (npc.alpha < alpha)
-                    npc.alpha++;
+                if (NPC.alpha < alpha)
+                    NPC.alpha++;
             }
-            else if (npc.alpha > 0)
-                npc.alpha--;
+            else if (NPC.alpha > 0)
+                NPC.alpha--;
         }
         public virtual void SyncNPC()
         {

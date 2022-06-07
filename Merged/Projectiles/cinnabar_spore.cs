@@ -12,23 +12,23 @@ namespace ArchaeaMod.Merged.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cinnabar Spore");
-            Main.projFrames[projectile.type] = 8;
+            Main.projFrames[Projectile.type] = 8;
         }
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.scale = 1f;
-            projectile.aiStyle = -1;
-            projectile.timeLeft = 300;
-            projectile.damage = 10;
-            projectile.knockBack = 0f;
-            projectile.penetrate = -1;
-            projectile.friendly = true;
-            projectile.ownerHitCheck = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.magic = true;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.scale = 1f;
+            Projectile.aiStyle = -1;
+            Projectile.timeLeft = 300;
+            Projectile.damage = 10;
+            Projectile.knockBack = 0f;
+            Projectile.penetrate = -1;
+            Projectile.friendly = true;
+            Projectile.ownerHitCheck = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.CountsAsClass(DamageClass.Magic);
         }
 
         bool spawnOK = false;
@@ -36,9 +36,9 @@ namespace ArchaeaMod.Merged.Projectiles
         int x, y;
         public void Initialize()
         {
-            maxTime = projectile.timeLeft;
+            maxTime = Projectile.timeLeft;
 
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
 
             foreach (NPC n in Main.npc)
             {
@@ -50,7 +50,7 @@ namespace ArchaeaMod.Merged.Projectiles
             }
             if (target && Vector2.Distance(player.position - Main.npc[npcTarget].position, Vector2.Zero) <= 512)
             {
-                projectile.Center = Main.npc[npcTarget].Center;
+                Projectile.Center = Main.npc[npcTarget].Center;
             }
             else NewPosition(player, 128);
         }
@@ -76,26 +76,26 @@ namespace ArchaeaMod.Merged.Projectiles
                 init = true;
             }
 
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
 
             NPC nme = Main.npc[npcTarget];
 
             int direction = 0;
-            if (projectile.velocity.X < 0)
+            if (Projectile.velocity.X < 0)
                 direction = -1;
             else direction = 1;
 
-            projectile.velocity.Y = 1f;
+            Projectile.velocity.Y = 1f;
 
             foreach (NPC n in Main.npc)
             {
                 if (n.active && !n.friendly && !n.dontTakeDamage && !n.immortal)
                 {
-                    if (projectile.Hitbox.Intersects(n.Hitbox))
+                    if (Projectile.Hitbox.Intersects(n.Hitbox))
                     {
                         if (ticks % 60 == 0)
                         {
-                            n.StrikeNPC(projectile.damage, projectile.knockBack, direction, false, false, false);
+                            n.StrikeNPC(Projectile.damage, Projectile.knockBack, direction, false, false, false);
                         }
                     }
                 }
@@ -103,39 +103,39 @@ namespace ArchaeaMod.Merged.Projectiles
 
             ticks++;
 
-            if (!IsTile(projectile.position.X, projectile.position.Y))
+            if (!IsTile(Projectile.position.X, Projectile.position.Y))
             {
-                projectile.alpha = 255 * (maxTime - ticks) / maxTime;
-                Lighting.AddLight(projectile.Center, new Vector3(0.804f, 0.361f, 0.361f));
+                Projectile.alpha = 255 * (maxTime - ticks) / maxTime;
+                Lighting.AddLight(Projectile.Center, new Vector3(0.804f, 0.361f, 0.361f));
             }
 
-            projectile.frameCounter++;
-            if (projectile.frameCounter == 4)
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter == 4)
             {
-                projectile.frame++;
-                projectile.frameCounter = 0;
+                Projectile.frame++;
+                Projectile.frameCounter = 0;
             }
-            if (projectile.frame > 7)
+            if (Projectile.frame > 7)
             {
-                projectile.frame = 0;
+                Projectile.frame = 0;
             }
 
-            Tile tile = Main.tile[(int)projectile.Center.X / 16, (int)projectile.Center.Y / 16];
-            if (!Main.tileSolid[tile.type] || !tile.active())
-                projectile.timeLeft = 5;
+            Tile tile = Main.tile[(int)Projectile.Center.X / 16, (int)Projectile.Center.Y / 16];
+            if (!Main.tileSolid[tile.TileType] || !tile.HasTile)
+                Projectile.timeLeft = 5;
         }
         public override void Kill(int timeLeft)
         {
-            int dustType = mod.DustType("cinnabar_dust");
-            int dustType2 = mod.DustType("c_silver_dust");
+            int DustType = Mod.Find<ModDust>("cinnabar_dust").Type;
+            int dustType2 = Mod.Find<ModDust>("c_silver_dust").Type;
             for (int k = 0; k < 3; k++)
             {
-                int killDust = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType, 0f, 0f, 0, default(Color), 1.2f);
+                int killDust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType, 0f, 0f, 0, default(Color), 1.2f);
                 Main.dust[killDust].noGravity = false;
             }
             for (int k = 0; k < 2; k++)
             {
-                int killDust2 = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType2, 0f, 0f, 0, default(Color), 1.2f);
+                int killDust2 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, dustType2, 0f, 0f, 0, default(Color), 1.2f);
                 Main.dust[killDust2].noGravity = false;
             }
         }
@@ -149,13 +149,13 @@ namespace ArchaeaMod.Merged.Projectiles
         {
             if (Main.netMode == 2)
             {
-                projectile.position = new Vector2(x, y);
-                NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, projectile.whoAmI, projectile.position.X, projectile.position.Y);
-                projectile.netUpdate = true;
+                Projectile.position = new Vector2(x, y);
+                NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile.whoAmI, Projectile.position.X, Projectile.position.Y);
+                Projectile.netUpdate = true;
             }
             else if (Main.netMode == 0)
             {
-                projectile.position = new Vector2(x, y);
+                Projectile.position = new Vector2(x, y);
             }
         }
 
@@ -176,8 +176,8 @@ namespace ArchaeaMod.Merged.Projectiles
         {
             int i = (int)x / 16;
             int j = (int)y / 16;
-            bool Active = Main.tile[i, j].active() == true;
-            bool Solid = Main.tileSolid[Main.tile[i, j].type] == true;
+            bool Active = Main.tile[i, j].HasTile == true;
+            bool Solid = Main.tileSolid[Main.tile[i, j].TileType] == true;
 
             if (Solid && Active) return true;
             else return false;

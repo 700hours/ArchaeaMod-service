@@ -1,14 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 namespace ArchaeaMod.Items.Tiles
 {
     public class sky_brick : ModItem
@@ -19,26 +17,26 @@ namespace ArchaeaMod.Items.Tiles
         }
         public override void SetDefaults()
         {
-            item.width = 16;
-            item.height = 16;
-            item.useTime = 10;
-            item.useAnimation = 15;
-            item.useStyle = 1;
-            item.value = 0;
-            item.rare = 1;
-            item.maxStack = 999;
-            item.autoReuse = true;
-            item.noMelee = true;
-            item.consumable = true;
-            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.sky_brick>();
+            Item.width = 16;
+            Item.height = 16;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.value = 0;
+            Item.rare = 1;
+            Item.maxStack = 999;
+            Item.autoReuse = true;
+            Item.noMelee = true;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<ArchaeaMod.Tiles.sky_brick>();
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(item.type);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(ModContent.ItemType<Walls.sky_brickwall>(), 4);
-            recipe.AddRecipe();
+            var r = CreateRecipe()
+                .AddIngredient(Item.type)
+                .AddTile(TileID.WorkBenches);
+            r.ReplaceResult(ModContent.ItemType<Walls.sky_brickwall>(), 4);
+            r.Register();
         }
     }
 }

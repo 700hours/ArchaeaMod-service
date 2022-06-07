@@ -15,7 +15,7 @@ namespace ArchaeaMod.Tiles
 {
     public class paintings : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             TileID.Sets.NotReallySolid[Type] = true;
@@ -29,7 +29,7 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.AnchorWall = true;
             TileObjectData.newTile.Origin = new Point16(1, 0);
             TileObjectData.addTile(Type);
-            drop = ModContent.ItemType<Items.Tiles.m_biomepainting>();
+            ItemDrop = ModContent.ItemType<Items.Tiles.m_biomepainting>();
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Painting");
             AddMapEntry(new Color(0.6f, 0.4f, 0.1f), name);
@@ -41,7 +41,7 @@ namespace ArchaeaMod.Tiles
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.m_biomepainting>());
+            Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.m_biomepainting>());
         }
     }
 }

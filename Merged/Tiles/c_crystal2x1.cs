@@ -4,6 +4,7 @@ using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -12,7 +13,7 @@ namespace ArchaeaMod.Merged.Tiles
 {
     public class c_crystal2x1 : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLighted[Type] = true;
@@ -34,11 +35,10 @@ namespace ArchaeaMod.Merged.Tiles
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Cinnabar Crystal");
             AddMapEntry(new Color(210, 110, 110), name);
-            disableSmartCursor = true;
-            soundStyle = 27;
-            soundType = 2;
-            mineResist = 1.5f;
-            minPick = 45;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            HitSound = SoundID.Item27;
+            MineResist = 1.5f;
+            MinPick = 45;
         }
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
@@ -56,7 +56,7 @@ namespace ArchaeaMod.Merged.Tiles
             int random = Main.rand.Next(1, 3);
             for (int k = 0; k < random; k++)
             {
-                Item.NewItem(new Vector2(i * 16, j * 16), mod.ItemType("cinnabar_crystal"), random, true, 0, true, false);
+                Item.NewItem(Item.GetSource_None(), new Vector2(i * 16, j * 16), Mod.Find<ModItem>("cinnabar_crystal").Type, random, true, 0, true, false);
             }
         }
         public override bool CanKillTile(int i, int j, ref bool blockDamaged)
@@ -82,7 +82,7 @@ namespace ArchaeaMod.Merged.Tiles
             SpriteEffects effects = SpriteEffects.None;
             Tile tile = Main.tile[i, j];
 
-            texture = Main.tileTexture[Type];
+            texture = TextureAssets.Tile[Type].Value;
 
             Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
             if (Main.drawToScreen)
@@ -92,7 +92,7 @@ namespace ArchaeaMod.Merged.Tiles
 
             Main.spriteBatch.Draw(texture,
                 new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
-                new Rectangle(tile.frameX, tile.frameY, 16, 16),
+                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
                 Lighting.GetColor(i, j), 0f, default(Vector2), 1f, effects, 0f);
 
             return false;

@@ -7,11 +7,11 @@ namespace ArchaeaMod.Buffs
 {
     public class mercury : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Mercury Sickness");
-            canBeCleared = false;
-            longerExpertDebuff = true;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = false;
+            BuffID.Sets.LongerExpertDebuff[Type] = true;
         }
         public override void ModifyBuffTip(ref string tip, ref int rare)
         {

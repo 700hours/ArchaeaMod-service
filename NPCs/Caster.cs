@@ -16,61 +16,57 @@ namespace ArchaeaMod.NPCs
 {
     public class Caster : ModNPC
     {
-        public override bool Autoload(ref string name)
-        {
-            if (name == "Caster")
-                return false;
-            return true;
-        }
+        public override bool IsLoadingEnabled(Mod mod) => false;
+        
         public override void SetStaticDefaults()
         {
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 48;
-            npc.height = 48;
-            npc.lifeMax = 50;
-            npc.defense = 10;
-            npc.damage = 20;
-            npc.value = 5000;
-            npc.alpha = 255;
-            npc.lavaImmune = true;
+            NPC.aiStyle = -1;
+            NPC.width = 48;
+            NPC.height = 48;
+            NPC.lifeMax = 50;
+            NPC.defense = 10;
+            NPC.damage = 20;
+            NPC.value = 5000;
+            NPC.alpha = 255;
+            NPC.lavaImmune = true;
         }
         
         public bool hasAttacked;
         public int timer
         {
-            get { return (int)npc.ai[0]; }
-            set { npc.ai[0] = value; }
+            get { return (int)NPC.ai[0]; }
+            set { NPC.ai[0] = value; }
         }
         public int elapse = 180;
         public int attacks
         {
-            get { return (int)npc.ai[1]; }
-            set { npc.ai[1] = value; }
+            get { return (int)NPC.ai[1]; }
+            set { NPC.ai[1] = value; }
         }
         public int pattern
         {
-            get { return (int)npc.ai[2]; }
-            set { npc.ai[2] = value; }
+            get { return (int)NPC.ai[2]; }
+            set { NPC.ai[2] = value; }
         }
         public int maxAttacks
         {
             get { return Main.rand.Next(3, 6); }
         }
-        public int dustType;
+        public int DustType;
         public Vector2 move;
         public Player npcTarget
         {
-            get { return Main.player[npc.target]; }
+            get { return Main.player[NPC.target]; }
         }
         public virtual Player nearbyPlayer()
         {
-            Player player = ArchaeaNPC.FindClosest(npc, false, 800);
+            Player player = ArchaeaNPC.FindClosest(NPC, false, 800);
             if (player != null && player.active && !player.dead)
             {
-                npc.target = player.whoAmI;
+                NPC.target = player.whoAmI;
                 return player;
             }
             else return npcTarget;
@@ -114,13 +110,13 @@ namespace ArchaeaMod.NPCs
         {
             if (Main.netMode == 2)
             {
-                npc.position = new Vector2(x, y);
-                NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, npc.whoAmI, npc.position.X, npc.position.Y);
-                npc.netUpdate = true;
+                NPC.position = new Vector2(x, y);
+                NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, NPC.whoAmI, NPC.position.X, NPC.position.Y);
+                NPC.netUpdate = true;
             }
             if (Main.netMode == 0)
             {
-                npc.position = new Vector2(x, y);
+                NPC.position = new Vector2(x, y);
             }
         }
 
@@ -128,34 +124,34 @@ namespace ArchaeaMod.NPCs
         {
             if (timer++ > elapse)
                 timer = 0;
-            ArchaeaNPC.SlowDown(ref npc.velocity);
+            ArchaeaNPC.SlowDown(ref NPC.velocity);
             switch (pattern)
             {
                 case PatternID.JustSpawned:
-                    npc.target = ArchaeaNPC.FindClosest(npc, true).whoAmI;
+                    NPC.target = ArchaeaNPC.FindClosest(NPC, true).whoAmI;
                     if (JustSpawned())
                         goto case PatternID.FadeIn;
                     break;
                 case PatternID.FadeIn:
                     pattern = PatternID.FadeIn;
-                    if (npc.alpha > 0)
+                    if (NPC.alpha > 0)
                     {
-                        npc.alpha -= 5;
+                        NPC.alpha -= 5;
                         break;
                     }
                     else goto case PatternID.Idle;
                 case PatternID.FadeOut:
                     pattern = PatternID.FadeOut;
-                    if (npc.alpha < 255)
+                    if (NPC.alpha < 255)
                     {
-                        npc.immortal = true;
-                        npc.alpha += 5;
+                        NPC.immortal = true;
+                        NPC.alpha += 5;
                         break;
                     }
                     goto case PatternID.Teleport;
                 case PatternID.Teleport:
                     pattern = PatternID.Teleport;
-                    move = ArchaeaNPC.FindAny(npc, npcTarget);
+                    move = ArchaeaNPC.FindAny(NPC, npcTarget);
                     if (move != Vector2.Zero)
                     {
                         SyncNPC(move.X, move.Y);
@@ -166,7 +162,7 @@ namespace ArchaeaMod.NPCs
                     break;
                 case PatternID.Idle:
                     pattern = PatternID.Idle;
-                    npc.immortal = false;
+                    NPC.immortal = false;
                     if (timer % elapse == 0 && Main.rand.Next(3) == 0)
                     {
                         if (!hasAttacked)
@@ -193,7 +189,7 @@ namespace ArchaeaMod.NPCs
                     return true;
             }
             if (oldPattern != pattern)
-                SyncNPC(npc.position.X, npc.position.Y);
+                SyncNPC(NPC.position.X, NPC.position.Y);
             oldPattern = pattern;
             return false;
         }
@@ -220,11 +216,11 @@ namespace ArchaeaMod.NPCs
                 }
                 else
                 {
-                    if (npc.alpha < 255)
-                        npc.alpha += 5;
+                    if (NPC.alpha < 255)
+                        NPC.alpha += 5;
                     else
                     {
-                        move = ArchaeaNPC.FindAny(npc, Main.player[npc.target], true, 300);
+                        move = ArchaeaNPC.FindAny(NPC, Main.player[NPC.target], true, 300);
                         if (move != Vector2.Zero)
                         {
                             pattern++;
@@ -235,8 +231,8 @@ namespace ArchaeaMod.NPCs
                 }
                 return true;
             }
-            if (npc.alpha > 0)
-                npc.alpha -= 5;
+            if (NPC.alpha > 0)
+                NPC.alpha -= 5;
             else pattern = 0;
             return false;
         }

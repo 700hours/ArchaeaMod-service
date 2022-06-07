@@ -16,7 +16,7 @@ namespace ArchaeaMod.Merged.Tiles
 {
 	public class m_ore : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
             Main.tileSpelunker[Type] = true;
             Main.tileShine2[Type] = true;
@@ -25,16 +25,16 @@ namespace ArchaeaMod.Merged.Tiles
             Main.tileMergeDirt[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = false;
-            dustType = 1;
-			drop = mod.ItemType("magno_ore");
+            DustType = 1;
+			ItemDrop = Mod.Find<ModItem>("magno_ore").Type;
             //  UI map tile color
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Rubidium");
             AddMapEntry(new Color(201, 152, 115), name);
-            soundStyle = 0;
-            soundType = 21;
-            mineResist = 1.5f;
-            minPick = 35;
+           // soundStyle = 0;
+            HitSound = SoundID.Tink;
+            MineResist = 1.5f;
+            MinPick = 35;
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num)
@@ -68,7 +68,7 @@ namespace ArchaeaMod.Merged.Tiles
                     if (rand == 0)
                         Dust.NewDustDirect(ArchaeaNPC.AngleBased(center, k, range), 1, 1, DustID.Smoke, velocity.X, velocity.Y, 0, default(Color), 2f);
                     if (rand == 10)
-                        Dust.NewDustDirect(ArchaeaNPC.AngleBased(center, k, l), 4, 4, DustID.Fire, 0f, 0f, 0, default(Color), 2f);
+                        Dust.NewDustDirect(ArchaeaNPC.AngleBased(center, k, l), 4, 4, 6, 0f, 0f, 0, default(Color), 2f);
                 }
             }
             foreach (Player player in proximity)

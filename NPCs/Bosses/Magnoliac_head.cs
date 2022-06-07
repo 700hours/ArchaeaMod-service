@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -15,22 +17,22 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 32;
-            npc.height = 32;
-            npc.lifeMax = 5000;
-            npc.defense = 10;
-            npc.knockBackResist = 0.5f;
-            npc.damage = 20;
-            npc.value = 45000;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.boss = true;
-            npc.npcSlots = maxParts;
+            NPC.aiStyle = -1;
+            NPC.width = 32;
+            NPC.height = 32;
+            NPC.lifeMax = 5000;
+            NPC.defense = 10;
+            NPC.knockBackResist = 0.5f;
+            NPC.damage = 20;
+            NPC.value = 45000;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.boss = true;
+            NPC.npcSlots = maxParts;
             bodyType = ModContent.NPCType<Magnoliac_body>();
             tailType = ModContent.NPCType<Magnoliac_tail>();
-            bossBag = ModContent.ItemType<Merged.Items.magno_treasurebag>();
+            //bossBag = ModContent.ItemType<Merged.Items.magno_treasurebag>();
         }
         public override int maxParts
         {
@@ -38,8 +40,8 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         private int cycle
         {
-            get { return (int)npc.ai[1]; }
-            set { npc.ai[1] = value; }
+            get { return (int)NPC.ai[1]; }
+            set { NPC.ai[1] = value; }
         }
         private const int spawnMinions = 30;
         private int ai = -1;
@@ -48,8 +50,8 @@ namespace ArchaeaMod.NPCs.Bosses
             switch (ai)
             {
                 case -1:
-                    npc.lifeMax = maxParts / 2 * npc.life;
-                    npc.life = npc.lifeMax;
+                    NPC.lifeMax = maxParts / 2 * NPC.life;
+                    NPC.life = NPC.lifeMax;
                     goto case 0;
                 case 0:
                     ai = 0;
@@ -68,13 +70,13 @@ namespace ArchaeaMod.NPCs.Bosses
             bool patch = true;
             if (cycle == spawnMinions && !patch)
             {
-                for (int i = 0; i < Math.Min((npc.life * -1 + npc.lifeMax) * 0.0001d, 5); i++)
+                for (int i = 0; i < Math.Min((NPC.life * -1 + NPC.lifeMax) * 0.0001d, 5); i++)
                 {
-                    int n = NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, ModContent.NPCType<Merged.NPCs.Copycat_head>());
+                    int n = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X, (int)NPC.position.Y, ModContent.NPCType<Merged.NPCs.Copycat_head>());
                     Main.npc[n].whoAmI = n;
                     NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, n);
                 }
-                Main.PlaySound(SoundID.Roar, npc.Center);
+                SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
                 cycle = 0;
             }
             return true;
@@ -84,12 +86,12 @@ namespace ArchaeaMod.NPCs.Bosses
         {
             if (projs == null || projCenter == null || attack == null)
                 return;
-            attack.Update(npc, target());
+            attack.Update(NPC, target());
             for (int j = 0; j < projs[1].Length; j++)
             {
                 for (int i = 0; i < max; i++)
                 {
-                    projs[i][j].Stationary(j, npc.width);
+                    projs[i][j].Stationary(j, NPC.width);
                     if (timer % maxTime / 2 == 0 && timer != 0)
                     {
                         Vector2 v = ArchaeaNPC.FindEmptyRegion(target(), ArchaeaNPC.defaultBounds(target()));
@@ -116,10 +118,10 @@ namespace ArchaeaMod.NPCs.Bosses
                         foreach (Attack sets in projs[j])
                             sets.proj.active = false;
                 }
-                attack = new Attack(Projectile.NewProjectileDirect(npc.Center, Vector2.Zero, ProjectileID.Fireball, 20, 4f));
+                attack = new Attack(Projectile.NewProjectileDirect(Projectile.GetSource_NaturalSpawn(), NPC.Center, Vector2.Zero, ProjectileID.Fireball, 20, 4f));
                 attack.proj.tileCollide = false;
                 attack.proj.ignoreWater = true;
-                max = Math.Max(8 / npc.life, 3);
+                max = Math.Max(8 / NPC.life, 3);
                 projCenter = new Vector2[max];
                 projs = new Attack[max][];
                 for (int i = 0; i < projs.GetLength(0); i++)
@@ -130,7 +132,7 @@ namespace ArchaeaMod.NPCs.Bosses
                     {
                         if (index < 6)
                         {
-                            projs[i][index] = new Attack(Projectile.NewProjectileDirect(ArchaeaNPC.AngleBased(npc.Center, (float)r, npc.width * 4f), Vector2.Zero, ProjectileID.Fireball, 20, 4f), (float)r);
+                            projs[i][index] = new Attack(Projectile.NewProjectileDirect(Projectile.GetSource_None(), ArchaeaNPC.AngleBased(NPC.Center, (float)r, NPC.width * 4f), Vector2.Zero, ProjectileID.Fireball, 20, 4f), (float)r);
                             projs[i][index].proj.timeLeft = maxTime;
                             projs[i][index].proj.rotation = (float)r;
                             projs[i][index].proj.tileCollide = false;
@@ -156,14 +158,14 @@ namespace ArchaeaMod.NPCs.Bosses
         Vector2 lastHit = Vector2.Zero;
         public override void HitEffect(int hitDirection, double damage)
         {
-            lastHit = npc.Center;
+            lastHit = NPC.Center;
         }
-        public override void NPCLoot()
+        public override void OnKill()
         {
             if (lastHit == Vector2.Zero)
-                lastHit = npc.position;
+                lastHit = NPC.position;
             if (Main.expertMode)
-                Item.NewItem(lastHit, ModContent.ItemType<Items.m_shield>());
+                Item.NewItem(Item.GetSource_NaturalSpawn(), lastHit, ModContent.ItemType<Items.m_shield>());
 
             if (Main.netMode == 0)
                 ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
@@ -171,6 +173,11 @@ namespace ArchaeaMod.NPCs.Bosses
             {
                 NetHandler.Send(Packet.DownedMagno, -1, -1);
             }
+        }
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<Merged.Items.magno_treasurebag>()));
+            npcLoot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<Items.m_shield>(), 1, 1));
         }
     }
 

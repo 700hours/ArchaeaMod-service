@@ -13,19 +13,17 @@ namespace ArchaeaMod.Merged.Items.Armors
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Ancient Shock Mask");
+            ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
+            // drawHair = true;
         }
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.maxStack = 1;
-            item.value = 100;
-            item.rare = 3;
-            item.defense = 5;
-        }
-        public override void DrawHair(ref bool drawHair, ref bool drawAltHair)
-        {
-            drawHair = true;
+            Item.width = 18;
+            Item.height = 18;
+            Item.maxStack = 1;
+            Item.value = 100;
+            Item.rare = 3;
+            Item.defense = 5;
         }
     }
 }

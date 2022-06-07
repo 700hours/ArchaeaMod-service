@@ -13,29 +13,26 @@ using Terraria.ModLoader;
 
 namespace ArchaeaMod.NPCs.Legacy
 {
-    public class Sky_boss : Legacy.Sky_air
+    public class Sky_boss_legacy : Legacy.Sky_air_legacy
     {
-        public override bool Autoload(ref string name)
-        {
-            return false;
-        }
+        public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Sky_boss");
         }
         public override void SetDefaults()
         {
-            npc.width = 48;
-            npc.height = 48;
-            npc.lifeMax = 5000;
-            npc.defense = 10;
-            npc.damage = 20;
-            npc.value = 45000;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.knockBackResist = 0f;
+            NPC.width = 48;
+            NPC.height = 48;
+            NPC.lifeMax = 5000;
+            NPC.defense = 10;
+            NPC.damage = 20;
+            NPC.value = 45000;
+            NPC.boss = true;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.knockBackResist = 0f;
         }
 
         private int index;
@@ -44,7 +41,7 @@ namespace ArchaeaMod.NPCs.Legacy
         public override void AI()
         {
             ProjectileDirection();
-            if (pattern != (Pattern.Active | Pattern.Idle) && npc.position != npc.oldPosition || npc.velocity.X < 0f && npc.oldVelocity.X >= 0f || npc.velocity.X > 0f && npc.oldVelocity.X <= 0f || npc.velocity.Y < 0f && npc.oldVelocity.Y >= 0f || npc.velocity.Y > 0f && npc.oldVelocity.Y <= 0f)
+            if (pattern != (Pattern.Active | Pattern.Idle) && NPC.position != NPC.oldPosition || NPC.velocity.X < 0f && NPC.oldVelocity.X >= 0f || NPC.velocity.X > 0f && NPC.oldVelocity.X <= 0f || NPC.velocity.Y < 0f && NPC.oldVelocity.Y >= 0f || NPC.velocity.Y > 0f && NPC.oldVelocity.Y <= 0f)
                 SyncNPC();
         }
         public override bool PreFadeOut()
@@ -54,7 +51,7 @@ namespace ArchaeaMod.NPCs.Legacy
             {
                 if (index < max)
                 {
-                    projs[index] = Projectile.NewProjectileDirect(npc.Center, ArchaeaNPC.AngleToSpeed((float)r, 2f), ProjectileID.Fireball, 20, 4f);
+                    projs[index] = Projectile.NewProjectileDirect(Projectile.GetSource_None(), NPC.Center, ArchaeaNPC.AngleToSpeed((float)r, 2f), ProjectileID.Fireball, 20, 4f);
                     projs[index].timeLeft = 900;
                     projs[index].rotation = (float)r;
                     projs[index].tileCollide = false;
@@ -76,8 +73,8 @@ namespace ArchaeaMod.NPCs.Legacy
             energy = new Energy[total];
             for (double r = 0; r < Math.PI * 2d; r += Math.PI / (total / 2d))
                 if (index < total)
-                    energy[index++] = new Energy(npc, radius, (float)r);
-            Target.npc = npc;
+                    energy[index++] = new Energy(NPC, radius, (float)r);
+            Target.npc = NPC;
             range = 300f;
             oldRange = range;
             targets = UpdateTargets();
@@ -112,7 +109,7 @@ namespace ArchaeaMod.NPCs.Legacy
             {
                 if (proj != null)
                 {
-                    ArchaeaNPC.RotateIncrement(target().Center.X > npc.Center.X, ref proj.rotation, ArchaeaNPC.AngleTo(proj.Center, target().Center), 1f, out proj.rotation);
+                    ArchaeaNPC.RotateIncrement(target().Center.X > NPC.Center.X, ref proj.rotation, ArchaeaNPC.AngleTo(proj.Center, target().Center), 1f, out proj.rotation);
                     proj.velocity += ArchaeaNPC.AngleToSpeed(proj.rotation, 0.10f);
                     proj.timeLeft = 60;
                     if (proj.Colliding(proj.Hitbox, target().Hitbox))
@@ -127,7 +124,7 @@ namespace ArchaeaMod.NPCs.Legacy
             Player[] targets = new Player[Main.player.Length];
             for (int i = 0; i < Main.player.Length; i++)
                 if (Main.player[i].active && !Main.player[i].dead)
-                    if (Main.player[i].Distance(npc.Center) < 1000f)
+                    if (Main.player[i].Distance(NPC.Center) < 1000f)
                         targets[i] = Main.player[i];
             return targets;
         }
@@ -176,7 +173,7 @@ namespace ArchaeaMod.NPCs.Legacy
             if (time % elapsed * 5 * rotate == 0)
             {
                 center = ArchaeaNPC.AngleBased(npc.Center, rotation + variance, range);
-                dust[total] = Dust.NewDustDirect(center, 1, 1, DustID.Fire, 0f, 0f, 0, color, scale);
+                dust[total] = Dust.NewDustDirect(center, 1, 1, 6, 0f, 0f, 0, color, scale);
                 dust[total].noGravity = true;
                 total++;
             }
@@ -212,7 +209,7 @@ namespace ArchaeaMod.NPCs.Legacy
         private static Energy[] energy = new Energy[3000];
         public static void BeingAttacked()
         {
-            foreach (Player target in Sky_boss.targets)
+            foreach (Player target in Sky_boss_legacy.targets)
             {
                 if (time++ % elapsed * 2 == 0 && time != 0)
                 {

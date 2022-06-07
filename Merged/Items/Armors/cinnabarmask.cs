@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using ArchaeaMod.Merged.Items.Materials;
-
 namespace ArchaeaMod.Merged.Items.Armors
 {
     [AutoloadEquip(EquipType.Head)]
@@ -19,30 +18,29 @@ namespace ArchaeaMod.Merged.Items.Armors
         }
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.maxStack = 1;
-            item.value = 100;
-            item.rare = 3;
-            item.defense = 4;
+            Item.width = 18;
+            Item.height = 18;
+            Item.maxStack = 1;
+            Item.value = 100;
+            Item.rare = 3;
+            Item.defense = 4;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<magno_bar>(), 10);
-            recipe.AddIngredient(ModContent.ItemType<cinnabar_crystal>(), 8);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<magno_bar>(), 10)
+                .AddIngredient(ModContent.ItemType<cinnabar_crystal>(), 8)
+                .AddTile(TileID.Anvils)
+//            recipe.SetResult(this, 1);
+                .Register();
         }
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
             return body.type == ModContent.ItemType<cinnabarplate>() && legs.type == ModContent.ItemType<cinnabargreaves>();
         }
-
         public override void UpdateEquip(Player player)
         {
-            player.magicDamage /= 0.9f;
+            player.GetDamage(DamageClass.Magic) /= 0.9f;
         }
         bool spawnOK = false;
         int ticks = 0;
@@ -52,19 +50,16 @@ namespace ArchaeaMod.Merged.Items.Armors
         {
             player.setBonus = "Generates lethal" 
                 +   "\nspores";
-
             if (ticks++ % 60 == 0)
             {
-                int newProj = Projectile.NewProjectile(player.Center, Vector2.Zero, mod.ProjectileType("cinnabar_spore"), 14, 0f, player.whoAmI, x, y);
+                int newProj = Projectile.NewProjectile(Projectile.GetSource_NaturalSpawn(), player.Center, Vector2.Zero, Mod.Find<ModProjectile>("cinnabar_spore").Type, 14, 0f, player.whoAmI, x, y);
             }
         }
-
         public bool TileCheck(int i, int j)
         {
         //  bool Dirt = Main.tile[i, j].type == TileID.Dirt;
-            bool Active = Main.tile[i, j].active() == true;
-            bool Solid = Main.tileSolid[Main.tile[i, j].type] == true;
-
+            bool Active = Main.tile[i, j].HasTile == true;
+            bool Solid = Main.tileSolid[Main.tile[i, j].TileType] == true;
             if (Solid && Active) return true;
             else return false;
         }

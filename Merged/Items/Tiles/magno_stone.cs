@@ -14,19 +14,19 @@ namespace ArchaeaMod.Merged.Items.Tiles
         }
         public override void SetDefaults()
         {
-            item.width = 16;
-            item.height = 16;
-            item.scale = 1f;
-            item.useTime = 10;
-            item.useAnimation = 15;
-            item.useStyle = 1;
-            item.useTurn = true;
-            item.consumable = true;
-            item.autoReuse = true;
-            item.value = 0;
-            item.rare = 1;
-            item.maxStack = 999;
-            item.createTile = mod.TileType("m_stone");
+            Item.width = 16;
+            Item.height = 16;
+            Item.scale = 1f;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.useTurn = true;
+            Item.consumable = true;
+            Item.autoReuse = true;
+            Item.value = 0;
+            Item.rare = 1;
+            Item.maxStack = 999;
+            Item.createTile = Mod.Find<ModTile>("m_stone").Type;
         }
     }
 }

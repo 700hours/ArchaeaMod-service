@@ -25,22 +25,22 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.damage = 10;
-            item.knockBack = 0f;
-            item.mana = 10;
-            item.value = 3500;
-            item.useTime = 100;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.magic = true;
+            Item.width = 48;
+            Item.height = 48;
+            Item.damage = 10;
+            Item.knockBack = 0f;
+            Item.mana = 10;
+            Item.value = 3500;
+            Item.useTime = 100;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.DamageType = DamageClass.Magic;
         }
 
         private int index = -1;
         private float angle;
         private Projectile[] projs = new Projectile[6];
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             foreach (Projectile proj in projs.Where(t => t != null))
                 proj.Kill();
@@ -60,7 +60,7 @@ namespace ArchaeaMod.Items
                 if (ArchaeaItem.Elapsed(10))
                 {
                     Vector2 start = NPCs.ArchaeaNPC.AngleBased(player.Center, angle, 45f);
-                    projs[index++] = Projectile.NewProjectileDirect(start, Vector2.Zero, ModContent.ProjectileType<Orbital>(), item.damage, item.knockBack, player.whoAmI, angle);
+                    projs[index++] = Projectile.NewProjectileDirect(Projectile.GetSource_None(), start, Vector2.Zero, ModContent.ProjectileType<Orbital>(), Item.damage, Item.knockBack, player.whoAmI, angle);
                     angle += (float)Math.PI / 3f;
                 }
             }

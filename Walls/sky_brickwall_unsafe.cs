@@ -6,10 +6,10 @@ namespace ArchaeaMod.Walls
 {
     public class sky_brickwall_unsafe : ModWall
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.wallHouse[Type] = false;
-            drop = ModContent.ItemType<Items.Walls.sky_brickwall>();
+            ItemDrop = ModContent.ItemType<Items.Walls.sky_brickwall>();
             AddMapEntry(new Color(80, 10, 10));
         }
     }

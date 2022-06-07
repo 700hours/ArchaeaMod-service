@@ -7,7 +7,7 @@ namespace ArchaeaMod.Buffs
 {
     public class flask_mercury : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Mercury Edge");
         }

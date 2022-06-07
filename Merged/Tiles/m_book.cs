@@ -12,7 +12,7 @@ namespace ArchaeaMod.Merged.Tiles
 {
     public class m_book : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             TileID.Sets.NotReallySolid[Type] = true;
             TileID.Sets.DrawsWalls[Type] = true;
@@ -25,8 +25,8 @@ namespace ArchaeaMod.Merged.Tiles
             Main.tileBlockLight[Type] = true;
             Main.tileNoSunLight[Type] = false;
 
-            dustType = 1;
-            drop = ItemID.Book;
+            //DustType = 1;
+            ItemDrop = ItemID.Book;
             //  UI map tile color
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Books");
@@ -35,7 +35,7 @@ namespace ArchaeaMod.Merged.Tiles
 
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
-            if (Main.tile[i, j].frameX == 90)
+            if (Main.tile[i, j].TileFrameX == 90)
                 noItem = true;
         }
         public override void PlaceInWorld(int i, int j, Item item)
@@ -46,38 +46,40 @@ namespace ArchaeaMod.Merged.Tiles
 
             Tile tile = Main.tile[i, j];
             int num = Main.rand.Next(4);
-            tile.frameX = (short)(18 * num);
+            tile.TileFrameX = (short)(18 * num);
         }
         public override bool Drop(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX == 90)
+            if (tile.TileFrameX == 90)
             {
-                int t = Item.NewItem(i * 16, j * 16, 8, 8, mod.ItemType("magno_book"), 1, false, -1, true, false);
+                int t = Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 8, 8, Mod.Find<ModItem>("magno_book").Type, 1, false, -1, true, false);
                 if (Main.netMode != 0)
                     NetHandler.Send(Packet.SpawnItem, -1, -1, t, i * 16, j * 16);
                 return false;
             }
             else return true;
         }
-        public override void RightClick(int i, int j)
+        public override bool RightClick(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX == 90)
+            if (tile.TileFrameX == 90)
             {
-                int t = Item.NewItem(i * 16, j * 16, 8, 8, mod.ItemType("magno_book"), 1, false, -1, true, false);
+                int t = Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 8, 8, Mod.Find<ModItem>("magno_book").Type, 1, false, -1, true, false);
                 if (Main.netMode != 0)
                     NetHandler.Send(Packet.SpawnItem, -1, -1, t, i * 16, j * 16);
                 WorldGen.KillTile(i, j, false, false, true);
+                return true;
             }
+            return false;
         }
         public override void MouseOver(int i, int j)
         {
             Player player = Main.LocalPlayer;
             Tile tile = Main.tile[i, j];
-            if (tile.frameX == 90)
+            if (tile.TileFrameX == 90)
             {
-                player.showItemIcon2 = mod.ItemType("magno_book");
+                player.cursorItemIconID = Mod.Find<ModItem>("magno_book").Type;
             }
         }
     }

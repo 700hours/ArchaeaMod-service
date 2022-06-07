@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 using System.Collections.Generic;
 using ArchaeaMod;
@@ -112,8 +112,9 @@ namespace ArchaeaMod.Gen
             {
                 int m = x + i;
                 int n = y + j;
-                Main.tile[m,n].type = tileType;
-                Main.tile[m,n].active(false);
+                Main.tile[m,n].TileType = tileType;
+                //Main.tile[m,n].HasTile = false;
+                Main.tile[m, n].ClearTile();
                 switch (type)
                 {
                     case -1:
@@ -121,8 +122,8 @@ namespace ArchaeaMod.Gen
                     case RoomID.Junction:
                         if ((idY != 0 && idY != scale - 1 && (i < 5 || i > 15)) && (idX != 0 && idX != scale - 1 &&(j < 5 || j > 15)))
                         {
-                            Main.tile[m,n].active(true);
-                            Main.tile[m,n].type = tileType;
+                            //Main.tile[m,n].HasTile = true;
+                            Main.tile[m,n].TileType = tileType;
                         }
                         break;
                     case RoomID.Large:
@@ -132,16 +133,16 @@ namespace ArchaeaMod.Gen
                             {
                                 if (((k == -1 && i < 5) || (k == 1 && i > 15)) && (j < 5 || j > 15))
                                 {
-                                    Main.tile[m,n].active(true);
-                                    Main.tile[m,n].type = tileType;
+                                    //Main.tile[m,n].HasTile = true;
+                                    Main.tile[m,n].TileType = tileType;
                                 }
                             }
                             if (sectors[idX, idY + k].roomType == RoomID.Large || sectors[idX, idY + k].roomType == RoomID.Junction)
                             {
                                 if ((i < 5 || i > 15) && ((k == -1 && j < 5) || (k == 1 && j > 15)))
                                 {
-                                    Main.tile[m,n].active(true);
-                                    Main.tile[m,n].type = tileType;
+                                    //Main.tile[m,n].HasTile = true;
+                                    Main.tile[m,n].TileType = tileType;
                                 }
                             }
                         }
@@ -167,8 +168,8 @@ namespace ArchaeaMod.Gen
             for (int i = x; i < x + size; i++)
             for (int j = y; j < y + size; j++)
             {
-                Main.tile[i, j].type = (ushort)tileType;
-                Main.tile[i, j].active(true);
+                Main.tile[i, j].TileType = (ushort)tileType;
+                //Main.tile[i, j].HasTile = true;
             }
             return origin;
         }

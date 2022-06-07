@@ -82,7 +82,7 @@ namespace ArchaeaMod.Items
                         return;
                     float angle = Main.rand.NextFloat(0f, (float)Math.PI);
                     start += NPCs.ArchaeaNPC.AngleToSpeed(angle, k);
-                    Projectile proj = Projectile.NewProjectileDirect(start, Vector2.Zero, ModContent.ProjectileType<Pixel>(), 20, 0f, owner.whoAmI, Pixel.Electric, Pixel.Active);
+                    Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_None(), start, Vector2.Zero, ModContent.ProjectileType<Pixel>(), 20, 0f, owner.whoAmI, Pixel.Electric, Pixel.Active);
                     proj.timeLeft = 3;
                 }
             }
@@ -93,7 +93,7 @@ namespace ArchaeaMod.Items
     {
         public override void HoldItem(Item item, Player player)
         {
-            if (player.releaseUseItem && player.controlUseItem && item.thrown)
+            if (player.releaseUseItem && player.controlUseItem && item.DamageType == DamageClass.Throwing)
             {
                 float range = 500f;
                 Target[] targets = Target.GetTargets(player, range).Where(t => t != null).ToArray();
@@ -159,7 +159,7 @@ namespace ArchaeaMod.Items
         public static bool HitByThrown(Player player, Target target)
         {
             foreach (Projectile proj in Main.projectile)
-                if (proj.owner == player.whoAmI && proj.thrown)
+                if (proj.owner == player.whoAmI && proj.DamageType == DamageClass.Throwing)
                     if (proj.Hitbox.Distance(target.npc.Center) < proj.width + target.npc.width / 2 + 16f)
                         return true;
             return false;

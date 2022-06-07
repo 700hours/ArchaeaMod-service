@@ -15,13 +15,13 @@ namespace ArchaeaMod.Merged.Items.Materials
         }
         public override void SetDefaults()
         {
-            item.width = 32;
-            item.height = 32;
-            item.scale = 1f;
-            item.value = 1000;
-            item.maxStack = 99;
-            item.rare = 2;
-            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.c_crystal_block>();
+            Item.width = 32;
+            Item.height = 32;
+            Item.scale = 1f;
+            Item.value = 1000;
+            Item.maxStack = 99;
+            Item.rare = 2;
+            Item.createTile = ModContent.TileType<ArchaeaMod.Tiles.c_crystal_block>();
         }
     }
 }

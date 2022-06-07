@@ -14,7 +14,7 @@ namespace ArchaeaMod.Tiles
 {
     public class m_ash : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
@@ -24,8 +24,8 @@ namespace ArchaeaMod.Tiles
             //drop = mod.ItemType("magno_brick");
             //  UI map tile color
             AddMapEntry(new Color(180, 180, 180));
-            soundStyle = 0;
-            soundType = 21;
+           // soundStyle = 0;
+            HitSound = SoundID.Tink;
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num)

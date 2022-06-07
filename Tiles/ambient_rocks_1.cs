@@ -17,7 +17,7 @@ namespace ArchaeaMod.Tiles
 {
     public class ambient_rocks_1 : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             TileID.Sets.NotReallySolid[Type] = true;
@@ -30,9 +30,9 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.WaterDeath = false;
             TileObjectData.addTile(Type);
             AddMapEntry(new Color(210, 110, 110));
-            disableSmartCursor = true;
-            mineResist = 1.2f;
-            minPick = 45;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            MineResist = 1.2f;
+            MinPick = 45;
         }
         public override void SetSpriteEffects(int i, int j, ref SpriteEffects spriteEffects)
         {

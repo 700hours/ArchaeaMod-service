@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using ArchaeaMod.Buffs;
@@ -18,17 +19,17 @@ namespace ArchaeaMod.Merged.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 10;
-            projectile.height = 10;
-            projectile.damage = 12;
-            projectile.timeLeft = 600;
-            projectile.friendly = true;
-            projectile.penetrate = 2;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = false;
-            projectile.scale = 1f;
-            projectile.ranged = true;
-            projectile.arrow = true;
+            Projectile.width = 10;
+            Projectile.height = 10;
+            Projectile.damage = 12;
+            Projectile.timeLeft = 600;
+            Projectile.friendly = true;
+            Projectile.penetrate = 2;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = false;
+            Projectile.scale = 1f;
+            Projectile.CountsAsClass(DamageClass.Ranged);
+            Projectile.arrow = true;
         }
         bool init = false;
         int ticks = 0;
@@ -40,55 +41,55 @@ namespace ArchaeaMod.Merged.Projectiles
         {
             if (!init)
             {
-                Player player = Main.player[projectile.owner];
+                Player player = Main.player[Projectile.owner];
                 Angle = (float)Math.Atan2(player.Center.Y - Main.MouseWorld.Y, player.Center.X - Main.MouseWorld.X);
 
-                if (projectile.velocity.X < 0f)
+                if (Projectile.velocity.X < 0f)
                 {
-                    projectile.spriteDirection = -1;
+                    Projectile.spriteDirection = -1;
                     Angle += radians * -90f;
                 }
                 else Angle += radians * -90f;
-                projectile.netUpdate = true;
+                Projectile.netUpdate = true;
                 init = true;
             }
 
             ticks++;
             if (ticks >= 20)
-                projectile.velocity.Y += 0.10f;
+                Projectile.velocity.Y += 0.10f;
 
-            projectile.rotation = projectile.velocity.ToRotation() + Draw.radian * 90f;
+            Projectile.rotation = Projectile.velocity.ToRotation() + Draw.radian * 90f;
 
-            if (projectile.velocity.X < 0f && projectile.oldVelocity.X >= 0f || projectile.velocity.X > 0f && projectile.oldVelocity.X <= 0f || projectile.velocity.Y < 0f && projectile.oldVelocity.Y >= 0f || projectile.velocity.Y > 0f && projectile.oldVelocity.Y <= 0f)
-                projectile.netUpdate = true;
+            if (Projectile.velocity.X < 0f && Projectile.oldVelocity.X >= 0f || Projectile.velocity.X > 0f && Projectile.oldVelocity.X <= 0f || Projectile.velocity.Y < 0f && Projectile.oldVelocity.Y >= 0f || Projectile.velocity.Y > 0f && Projectile.oldVelocity.Y <= 0f)
+                Projectile.netUpdate = true;
 
-            int dustType = mod.DustType("c_silver_dust");
-            int Dust1 = Dust.NewDust(projectile.Center + new Vector2(-4, -4), 1, 1, dustType, 0f, 0f, 0, Color.White, 1.4f); // old dust: 159, Color.OrangeRed
+            int DustType = Mod.Find<ModDust>("c_silver_dust").Type;
+            int Dust1 = Dust.NewDust(Projectile.Center + new Vector2(-4, -4), 1, 1, DustType, 0f, 0f, 0, Color.White, 1.4f); // old dust: 159, Color.OrangeRed
             Main.dust[Dust1].noGravity = true;
         }
         public override void Kill(int timeLeft)
         {
             for (int k = 0; k < 4; k++)
             {
-                int killDust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 4, 0f, 0f, 0, default(Color), 1f);
+                int killDust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 4, 0f, 0f, 0, default(Color), 1f);
             }
-            if (ArchaeaPlayer.IsEquipped(Main.player[projectile.owner], ModContent.ItemType<Items.Armors.magnoheadgear>(), ModContent.ItemType<Items.Armors.magnoplate>(), ModContent.ItemType<Items.Armors.magnogreaves>()))
+            if (ArchaeaPlayer.IsEquipped(Main.player[Projectile.owner], ModContent.ItemType<Items.Armors.magnoheadgear>(), ModContent.ItemType<Items.Armors.magnoplate>(), ModContent.ItemType<Items.Armors.magnogreaves>()))
             {
                 if (Main.rand.NextFloat() < 0.15f)
                 {
-                    ArchaeaProjectiles.Explode(projectile, ModContent.DustType<Dusts.cinnabar_dust>(), 30, projectile.damage, projectile.knockBack, true, ModContent.BuffType<mercury>(), 180, true, 10);
-                    ArchaeaProjectiles.Explode(projectile, DustID.Smoke, 36, projectile.damage, projectile.knockBack, false);
+                    ArchaeaProjectiles.Explode(Projectile, ModContent.DustType<Dusts.cinnabar_dust>(), 30, Projectile.damage, Projectile.knockBack, true, ModContent.BuffType<mercury>(), 180, true, 10);
+                    ArchaeaProjectiles.Explode(Projectile, DustID.Smoke, 36, Projectile.damage, Projectile.knockBack, false);
                 }
             }
-            Main.PlaySound(SoundID.Dig, projectile.position);
+            SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
         }
 
         public void SyncProj(int netID)
         {
             if (Main.netMode == netID)
             {
-                NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, projectile.whoAmI, projectile.position.X, projectile.position.Y, projectile.rotation);
-                projectile.netUpdate = true;
+                NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile.whoAmI, Projectile.position.X, Projectile.position.Y, Projectile.rotation);
+                Projectile.netUpdate = true;
             }
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,21 +13,21 @@ namespace ArchaeaMod.Merged.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Mango Yoyo");
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 8.5f;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 240f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 13.5f;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 8.5f;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 240f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 13.5f;
         }
         public override void SetDefaults()
         {
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.aiStyle = 99;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.ignoreWater = false;
-            projectile.scale = 1f;
-            projectile.melee = true;
-            projectile.extraUpdates = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.aiStyle = 99;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.ignoreWater = false;
+            Projectile.scale = 1f;
+            Projectile.CountsAsClass(DamageClass.Melee);
+            Projectile.extraUpdates = 0;
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
@@ -36,12 +37,12 @@ namespace ArchaeaMod.Merged.Projectiles
             {
                 for (float k = 0; k < MathHelper.ToRadians(360); k += 0.017f * 9)
                 {
-                    int Proj1 = Projectile.NewProjectile(projectile.position + new Vector2(projectile.width / 2, projectile.height / 2), Distance(null, k, 16f), mod.ProjectileType("dust_diffusion"), projectile.damage, 4f, projectile.owner, ModContent.DustType<Dusts.magno_dust>());
+                    int Proj1 = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), Distance(null, k, 16f), Mod.Find<ModProjectile>("dust_diffusion").Type, Projectile.damage, 4f, Projectile.owner, ModContent.DustType<Dusts.magno_dust>());
                     if (Main.netMode == 1) NetMessage.SendData(27, -1, -1, null, Proj1);
                     //custom sound
                     //Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/IceBeamChargeShot"), projectile.position);
                     //vanilla sound
-                    Main.PlaySound(2, projectile.position, 14);
+                    SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
                 }
             }
         }

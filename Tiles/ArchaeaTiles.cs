@@ -20,9 +20,9 @@ namespace ArchaeaMod.Tiles
                 for (int l = -1; l <= 1; l++)
                 {
                     Tile tile = Main.tile[i + k, j + l];
-                    if (tile.type == ArchaeaWorld.crystal ||
-                        tile.type == ArchaeaWorld.crystal2x1 ||
-                        tile.type == ArchaeaWorld.crystal2x2)
+                    if (tile.TileType == ArchaeaWorld.crystal ||
+                        tile.TileType == ArchaeaWorld.crystal2x1 ||
+                        tile.TileType == ArchaeaWorld.crystal2x2)
                         return ModContent.GetInstance<ArchaeaWorld>().downedMagno;
                 }
             return base.CanExplode(i, j, type);
@@ -33,9 +33,9 @@ namespace ArchaeaMod.Tiles
                 for (int l = -1; l <= 1; l++)
                 {
                     Tile tile = Main.tile[i + k, j + l];
-                    if (tile.type == ArchaeaWorld.crystal ||
-                        tile.type == ArchaeaWorld.crystal2x1 ||
-                        tile.type == ArchaeaWorld.crystal2x2)
+                    if (tile.TileType == ArchaeaWorld.crystal ||
+                        tile.TileType == ArchaeaWorld.crystal2x1 ||
+                        tile.TileType == ArchaeaWorld.crystal2x2)
                         return ModContent.GetInstance<ArchaeaWorld>().downedMagno;
                 }
             return base.CanKillTile(i, j, type, ref blockDamaged);
@@ -62,7 +62,7 @@ namespace ArchaeaMod.Tiles
                 {
                     foreach (ushort t in types)
                     {
-                        if (Main.tile[k, l].type == t)
+                        if (Main.tile[k, l].TileType == t)
                         {
                             count++;
                         }
@@ -76,24 +76,24 @@ namespace ArchaeaMod.Tiles
                     Tile left = Main.tile[i - 1, j];
                     if (type == ArchaeaWorld.magnoStone)
                     {
-                        if (!top.active())
+                        if (!top.HasTile)
                             WorldGen.PlaceTile(i, j - 1, (int)types[0], true, false, -1, 3);
-                        else if (!right.active())
+                        else if (!right.HasTile)
                             WorldGen.PlaceTile(i, j - 1, (int)types[0], true, false, -1, 1);
-                        else if (!bottom.active())
+                        else if (!bottom.HasTile)
                         {
                             if (Main.rand.NextBool())
                                 WorldGen.PlaceTile(i, j - 1, Main.rand.Next(new int[] { (int)types[0], (int)types[1], (int)types[2] }), true, false, -1, 0);
                             else if (Main.hardMode)
                                 WorldGen.PlaceTile(i, j - 1, types[3], true, false);
                         }
-                        else if (!left.active())
+                        else if (!left.HasTile)
                             WorldGen.PlaceTile(i, j - 1, (int)types[0], true, false, -1, 2);
                     }
                 }
                 if (count < 3 && type == ArchaeaWorld.Ash)
                 {
-                    if (!Main.tile[i, j - 1].active() && !Main.tile[i, j - 2].active())
+                    if (!Main.tile[i, j - 1].HasTile && !Main.tile[i, j - 2].HasTile)
                     {
                         if (Main.rand.NextBool())
                             WorldGen.PlaceTile(i, j - 1, types[4], true, false, -1, WorldGen.genRand.Next(4));

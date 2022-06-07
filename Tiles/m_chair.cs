@@ -16,7 +16,7 @@ namespace ArchaeaMod.Tiles
 {
     public class m_chair : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             TileID.Sets.NotReallySolid[Type] = true;
@@ -45,7 +45,7 @@ namespace ArchaeaMod.Tiles
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
-            drop = ModContent.ItemType<Items.Tiles.m_chair>();
+            ItemDrop = ModContent.ItemType<Items.Tiles.m_chair>();
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Chair");
             AddMapEntry(new Color(150, 50, 50), name);
@@ -57,7 +57,7 @@ namespace ArchaeaMod.Tiles
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.m_chair>());
+            Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.m_chair>());
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ArchaeaMod.Buffs
 {
     public class buff_catcher : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Rusty Catcher minion");
             Main.buffNoSave[Type] = true;

@@ -13,7 +13,7 @@ namespace ArchaeaMod.Merged.Tiles
 {
     public class m_trophy : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
@@ -23,8 +23,8 @@ namespace ArchaeaMod.Merged.Tiles
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleWrapLimit = 36;
             TileObjectData.addTile(Type);
-            dustType = 7;
-            disableSmartCursor = true;
+            DustType = 7;
+            TileID.Sets.DisableSmartCursor[Type] = true;
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Trophy");
             AddMapEntry(new Color(120, 85, 60), name);
@@ -32,7 +32,7 @@ namespace ArchaeaMod.Merged.Tiles
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(i * 16, j * 16, 48, 48, mod.ItemType("magno_trophy"));
+            Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 48, 48, Mod.Find<ModItem>("magno_trophy").Type);
         }
     }
 }

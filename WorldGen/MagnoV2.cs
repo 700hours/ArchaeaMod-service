@@ -13,7 +13,7 @@ using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 using ArchaeaMod.GenLegacy;
 using ArchaeaMod.Items;
@@ -119,10 +119,10 @@ namespace ArchaeaMod.Gen
                             float sin = start.Y + n * (float)Math.Sin(r);
                             if (cos > 0 && cos < Main.maxTilesX && sin > 0 && sin < Main.maxTilesY)
                             {
-                                Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.magnoStone;
+                                Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.magnoStone;
                                 if (ash && flag && r <= Math.PI && r >= 0f)
                                 {
-                                    Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.Ash;
+                                    Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.Ash;
                                 }
                             }
                         }
@@ -194,10 +194,10 @@ namespace ArchaeaMod.Gen
                             float sin = start.Y + n * (float)Math.Sin(r);
                             if (cos > 0 && cos < Main.maxTilesX && sin > 0 && sin < Main.maxTilesY)
                             {
-                                Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.magnoStone;
+                                Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.magnoStone;
                                 if (ash && flag && r <= Math.PI && r >= 0f)
                                 {
-                                    Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.Ash;
+                                    Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.Ash;
                                 }
                             }
                         }
@@ -265,10 +265,10 @@ namespace ArchaeaMod.Gen
                             float sin = branch.Y + n * (float)Math.Sin(r);
                             if (cos > 0 && cos < Main.maxTilesX && sin > 0 && sin < Main.maxTilesY)
                             {
-                                Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.magnoStone;
+                                Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.magnoStone;
                                 if (ash && flag && r <= Math.PI && r >= 0f)
                                 {
-                                    Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.Ash;
+                                    Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.Ash;
                                 }
                             }
                         }
@@ -332,10 +332,10 @@ namespace ArchaeaMod.Gen
                             float sin = branch.Y + n * (float)Math.Sin(r);
                             if (cos > 0 && cos < Main.maxTilesX && sin > 0 && sin < Main.maxTilesY)
                             {
-                                Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.magnoStone;
+                                Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.magnoStone;
                                 if (ash && flag && r <= Math.PI && r >= 0f)
                                 {
-                                    Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.Ash;
+                                    Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.Ash;
                                 }
                             }
                         }
@@ -402,10 +402,10 @@ namespace ArchaeaMod.Gen
                             float sin = start.Y + n * (float)Math.Sin(r);
                             if (cos > 0 && cos < Main.maxTilesX && sin > 0 && sin < Main.maxTilesY)
                             {
-                                Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.magnoStone;
+                                Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.magnoStone;
                                 if (ash && flag && r <= Math.PI && r >= 0f)
                                 {
-                                    Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.Ash;
+                                    Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.Ash;
                                 }
                             }
                         }
@@ -498,10 +498,10 @@ namespace ArchaeaMod.Gen
                             float sin = start.Y + n * (float)Math.Sin(r);
                             if (cos > 0 && cos < Main.maxTilesX && sin > 0 && sin < Main.maxTilesY)
                             {
-                                Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.magnoStone;
+                                Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.magnoStone;
                                 if (ash && flag && r <= Math.PI && r >= 0f)
                                 {
-                                    Main.tile[(int)cos + originX, (int)sin + originY].type = ArchaeaWorld.Ash;
+                                    Main.tile[(int)cos + originX, (int)sin + originY].TileType = ArchaeaWorld.Ash;
                                 }
                             }
                         }
@@ -571,9 +571,10 @@ namespace ArchaeaMod.Gen
                             //offset = (int)(radius * (vertical ? Math.Cos(i) : Math.Sin(i)));
                             if (cos > 0 && cos < Main.maxTilesX && sin > 0 && sin < Main.maxTilesY)
                             {
-                                Main.tile[(int)cos + originX + offset, (int)sin + originY + offset].active(false);
-                                Main.tile[(int)cos + originX + offset, (int)sin + originY + offset].wall = ArchaeaWorld.magnoCaveWall;
-                                if (rand.NextFloat() < emptyWallChance) Main.tile[(int)cos + originX + offset, (int)sin + originY + offset].wall = WallID.None;
+                                Tile tile = Main.tile[(int)cos + originX + offset, (int)sin + originY + offset];
+                                tile.HasTile = false;
+                                Main.tile[(int)cos + originX + offset, (int)sin + originY + offset].WallType = ArchaeaWorld.magnoCaveWall;
+                                if (rand.NextFloat() < emptyWallChance) Main.tile[(int)cos + originX + offset, (int)sin + originY + offset].WallType = WallID.None;
                             }
                         }
                     }
@@ -600,9 +601,10 @@ namespace ArchaeaMod.Gen
                             //offset = (int)(radius * (vertical ? Math.Cos(i) : Math.Sin(i)));
                             if (cos > 0 && cos < Main.maxTilesX && sin > 0 && sin < Main.maxTilesY)
                             {
-                                Main.tile[(int)cos + originX + offset, (int)sin + originY + offset].active(false);
-                                Main.tile[(int)cos + originX + offset, (int)sin + originY + offset].wall = ArchaeaWorld.magnoCaveWall;
-                                if (rand.NextFloat() < emptyWallChance) Main.tile[(int)cos + originX + offset, (int)sin + originY + offset].wall = WallID.None;
+                                Tile tile = Main.tile[(int)cos + originX + offset, (int)sin + originY + offset];
+                                tile.HasTile = false;
+                                Main.tile[(int)cos + originX + offset, (int)sin + originY + offset].WallType = ArchaeaWorld.magnoCaveWall;
+                                if (rand.NextFloat() < emptyWallChance) Main.tile[(int)cos + originX + offset, (int)sin + originY + offset].WallType = WallID.None;
                             }
                         }
                     }

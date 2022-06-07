@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,28 +13,28 @@ namespace ArchaeaMod.Merged.Projectiles
     {
         public override void SetDefaults()
         {
-            Main.projPet[projectile.type] = true;
-            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
+            Main.projPet[Projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
 
-            projectile.width = 26;
-            projectile.height = 26;
-            projectile.scale = 1f;
-            projectile.damage = 0;
-            projectile.aiStyle = -1;
-            projectile.timeLeft = 18000;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.minion = true;
-            projectile.minionSlots = 1f;
-            projectile.netImportant = true;
+            Projectile.width = 26;
+            Projectile.height = 26;
+            Projectile.scale = 1f;
+            Projectile.damage = 0;
+            Projectile.aiStyle = -1;
+            Projectile.timeLeft = 18000;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.minion = true;
+            Projectile.minionSlots = 1f;
+            Projectile.netImportant = true;
         }
 
         public void Initialize()
         {
-            projectile.netUpdate = true;
-            oldProj = projectile.whoAmI;
+            Projectile.netUpdate = true;
+            oldProj = Projectile.whoAmI;
         }
         bool init;
         bool target = false, targeted = false;
@@ -57,24 +58,24 @@ namespace ArchaeaMod.Merged.Projectiles
                 init = true;
             }
 
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
 
             ticks++;
-            projectile.damage = 0;
+            Projectile.damage = 0;
 
-            if (player.dead || !player.HasBuff(mod.BuffType("magno_summon")))
+            if (player.dead || !player.HasBuff(Mod.Find<ModBuff>("magno_summon").Type))
             {
-                projectile.active = false;
+                Projectile.active = false;
             }
-            if (player.HasBuff(mod.BuffType("magno_summon")))
+            if (player.HasBuff(Mod.Find<ModBuff>("magno_summon").Type))
             {
-                projectile.timeLeft = 2;
+                Projectile.timeLeft = 2;
             }
-            if (player.ownedProjectileCounts[projectile.type] > player.maxMinions)
+            if (player.ownedProjectileCounts[Projectile.type] > player.maxMinions)
             {
                 foreach(Projectile p in Main.projectile)
                 {
-                    if(p.type == projectile.type && p.active)
+                    if(p.type == Projectile.type && p.active)
                     {
                         p.Kill();
                         break;
@@ -85,25 +86,25 @@ namespace ArchaeaMod.Merged.Projectiles
             if (!flag3)
             {
                 Random = Main.rand.Next(-24, 24);
-                projectile.netUpdate = true;
+                Projectile.netUpdate = true;
                 flag3 = true;
             }
             orbitPosition = player.position + new Vector2(Random * 2f, -64f);
-            Angle = (float)Math.Atan2(orbitPosition.Y - projectile.position.Y, orbitPosition.X - projectile.position.X);
+            Angle = (float)Math.Atan2(orbitPosition.Y - Projectile.position.Y, orbitPosition.X - Projectile.position.X);
             if (!target)
             {
-                if (Vector2.Distance(orbitPosition - projectile.position, Vector2.Zero) > 32f && Vector2.Distance(orbitPosition - projectile.position, Vector2.Zero) <= 128f)
+                if (Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > 32f && Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) <= 128f)
                 {
-                    projectile.position += Distance(null, Angle, 4f);
-                    projectile.velocity = Vector2.Zero;
+                    Projectile.position += Distance(null, Angle, 4f);
+                    Projectile.velocity = Vector2.Zero;
                 }
-                else if (Vector2.Distance(orbitPosition - projectile.position, Vector2.Zero) > 128f)
+                else if (Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > 128f)
                 {
-                    projectile.velocity = Distance(null, Angle, 8f);
+                    Projectile.velocity = Distance(null, Angle, 8f);
                 }
-                if(Vector2.Distance(orbitPosition - projectile.position, Vector2.Zero) > 1024)
+                if(Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > 1024)
                 {
-                    projectile.position = player.Center - new Vector2(0, player.height);
+                    Projectile.position = player.Center - new Vector2(0, player.height);
                 }
                 #region float
                 float Revolution = 6.28308f;
@@ -113,7 +114,7 @@ namespace ArchaeaMod.Merged.Projectiles
                 float Cos = (float)Math.Cos(180);
                 float WaveOffset = (float)Math.Sin(WaveTimer) * 5f;
 
-                projectile.position.Y += Cos * WaveOffset;
+                Projectile.position.Y += Cos * WaveOffset;
                 #endregion
             }
             
@@ -126,40 +127,40 @@ namespace ArchaeaMod.Merged.Projectiles
                     {
                         oldNpcTarget = npcTarget;
                         npcTarget = n.whoAmI;
-                        projectile.netUpdate = true;
+                        Projectile.netUpdate = true;
                         targeted = true;
                     }
                     npcCenter = new Vector2(n.position.X + n.width / 2, n.position.Y + n.height / 2);
-                    if (conditions && Vector2.Distance(npcCenter - projectile.position, Vector2.Zero) < 384f)
+                    if (conditions && Vector2.Distance(npcCenter - Projectile.position, Vector2.Zero) < 384f)
                     {
                         oldNpcTarget = npcTarget;
                         npcTarget = n.whoAmI;
-                        projectile.netUpdate = true;
+                        Projectile.netUpdate = true;
                         targeted = true;
                     }
                 }
                 else
                 {
-                    projectile.spriteDirection = player.direction * -1;
-                    projectile.rotation = 0;
+                    Projectile.spriteDirection = player.direction * -1;
+                    Projectile.rotation = 0;
                 }
             }
             if (targeted)
             {
                 NPC n = Main.npc[npcTarget];
                 npcCenter = new Vector2(n.position.X + n.width / 2, n.position.Y + n.height / 2);
-                npcAngle = (float)Math.Atan2(npcCenter.Y - projectile.position.Y, npcCenter.X - projectile.position.X);
+                npcAngle = (float)Math.Atan2(npcCenter.Y - Projectile.position.Y, npcCenter.X - Projectile.position.X);
                 //  projectile.rotation = npcAngle;
-                if (projectile.Hitbox.Intersects(n.Hitbox))
-                    projectile.spriteDirection = n.spriteDirection;
-                if (Vector2.Distance(npcCenter - projectile.position, Vector2.Zero) < 384f)
+                if (Projectile.Hitbox.Intersects(n.Hitbox))
+                    Projectile.spriteDirection = n.spriteDirection;
+                if (Vector2.Distance(npcCenter - Projectile.position, Vector2.Zero) < 384f)
                 {
-                    if (!projectile.Hitbox.Intersects(n.Hitbox))
+                    if (!Projectile.Hitbox.Intersects(n.Hitbox))
                     {
                         if (!flag2)
                         {
-                            projectile.position += Distance(null, npcAngle, 16f);
-                            projectile.netUpdate = true;
+                            Projectile.position += Distance(null, npcAngle, 16f);
+                            Projectile.netUpdate = true;
                         }
                     }
                     else 
@@ -170,19 +171,19 @@ namespace ArchaeaMod.Merged.Projectiles
                             projectile.position.Y = n.Center.Y + (float)(radius * Math.Sin(degrees));
                         */
                         flag2 = true;
-                        projectile.position = n.position;
+                        Projectile.position = n.position;
                         if (ticks % 120 == 0)
                         {
                             for (float k = 0; k < MathHelper.ToRadians(360); k += 0.017f * 9)
                             {
-                                int d = Dust.NewDust(projectile.position + new Vector2(projectile.width / 2, projectile.height / 2), 4, 4, DustID.Fire, Distance(null, k, 2f).X, Distance(null, k, 8f).Y, 0, default(Color), 2f);
+                                int d = Dust.NewDust(Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), 4, 4, 6, Distance(null, k, 2f).X, Distance(null, k, 8f).Y, 0, default(Color), 2f);
                                 Main.dust[d].noGravity = true;
                             }
-                            Main.npc[npcTarget].StrikeNPC((int)(12f * player.minionDamage), 4f, 0);
-                            int Proj2 = Projectile.NewProjectile(projectile.position, Vector2.Zero, ModContent.ProjectileType<magno_minionexplosion>(), 0, 0f, projectile.owner, 0f, 0f);
-                            Main.projectile[Proj2].position = projectile.position - new Vector2(15, 15);
-                            Main.PlaySound(2, projectile.position, 14);
-                            projectile.netUpdate = true;
+                            Main.npc[npcTarget].StrikeNPC((int)(12f * player.GetDamage(DamageClass.Summon).Flat), 4f, 0);
+                            int Proj2 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<magno_minionexplosion>(), 0, 0f, Projectile.owner, 0f, 0f);
+                            Main.projectile[Proj2].position = Projectile.position - new Vector2(15, 15);
+                            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
+                            Projectile.netUpdate = true;
                         }
                     }
                     target = true;
@@ -195,8 +196,8 @@ namespace ArchaeaMod.Merged.Projectiles
                     targeted = false;
                 }
             }
-            if (projectile.velocity.X <= projectile.oldVelocity.X || projectile.velocity.X > projectile.oldVelocity.X || projectile.velocity.Y <= projectile.oldVelocity.Y || projectile.velocity.Y > projectile.oldVelocity.Y)
-                projectile.netUpdate = true;
+            if (Projectile.velocity.X <= Projectile.oldVelocity.X || Projectile.velocity.X > Projectile.oldVelocity.X || Projectile.velocity.Y <= Projectile.oldVelocity.Y || Projectile.velocity.Y > Projectile.oldVelocity.Y)
+                Projectile.netUpdate = true;
         }
 
         public override bool? CanCutTiles()

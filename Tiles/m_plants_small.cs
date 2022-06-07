@@ -17,7 +17,7 @@ namespace ArchaeaMod.Tiles
 {
     public class m_plants_small : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLighted[Type] = true;
@@ -33,11 +33,11 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.AnchorAlternateTiles = new int[] { TileID.ClayPot, TileID.PlanterBox };
             TileObjectData.addTile(Type);
             AddMapEntry(new Color(210, 110, 180));
-            disableSmartCursor = true;
-            mineResist = 1.2f;
-            minPick = 45;
-            soundStyle = 0;
-            soundType = SoundID.Grass;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            MineResist = 1.2f;
+            MinPick = 45;
+           // soundStyle = 0;
+            HitSound = SoundID.Grass;
         }
         public override void SetSpriteEffects(int i, int j, ref SpriteEffects spriteEffects)
         {
@@ -47,9 +47,9 @@ namespace ArchaeaMod.Tiles
         public override void RandomUpdate(int i, int j)
         {
             Tile tile = Framing.GetTileSafely(i ,j);
-            if (tile.frameX < 18 * 3 && WorldGen.genRand.NextBool() && ModContent.GetInstance<ArchaeaWorld>().downedMagno)
+            if (tile.TileFrameX < 18 * 3 && WorldGen.genRand.NextBool() && ModContent.GetInstance<ArchaeaWorld>().downedMagno)
             {
-                tile.frameX += 18;
+                tile.TileFrameX += 18;
             }
         }
         public override bool CreateDust(int i, int j, ref int type)
@@ -59,11 +59,11 @@ namespace ArchaeaMod.Tiles
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(new Vector2(i, j).ToWorldCoordinates(), ModContent.ItemType<Items.Materials.magno_plant>());
+            Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i, j).ToWorldCoordinates(), ModContent.ItemType<Items.Materials.magno_plant>());
         }
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            if (Main.tile[i, j].frameX != 18 * 3 || Main.tile[i, j].liquid > 0 || !ModContent.GetInstance<ArchaeaWorld>().downedMagno)
+            if (Main.tile[i, j].TileFrameX != 18 * 3 || Main.tile[i, j].LiquidAmount > 0 || !ModContent.GetInstance<ArchaeaWorld>().downedMagno)
                 return;
             r = 224f / 255f / 5f;
             g = 135f / 255f / 5f;

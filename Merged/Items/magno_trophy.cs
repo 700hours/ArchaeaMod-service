@@ -14,19 +14,19 @@ namespace ArchaeaMod.Merged.Items
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.scale = 1f;
-            item.useTime = 10;
-            item.useAnimation = 15;
-            item.useStyle = 1;
-            item.useTurn = true;
-            item.consumable = true;
-            item.autoReuse = true;
-            item.value = 5000;
-            item.rare = 3;
-            item.maxStack = 99;
-            item.createTile = mod.TileType("m_trophy");
+            Item.width = 48;
+            Item.height = 48;
+            Item.scale = 1f;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.useTurn = true;
+            Item.consumable = true;
+            Item.autoReuse = true;
+            Item.value = 5000;
+            Item.rare = 3;
+            Item.maxStack = 99;
+            Item.createTile = Mod.Find<ModTile>("m_trophy").Type;
         }
     }
 }

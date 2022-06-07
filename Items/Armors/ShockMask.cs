@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 namespace ArchaeaMod.Items.Armors
 {
     [AutoloadEquip(EquipType.Head)]
@@ -19,28 +17,24 @@ namespace ArchaeaMod.Items.Armors
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shock Mask");
+            ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
+            // drawHair = true;
+            // drawAltHair = false;
         }
         public override void SetDefaults()
         {
-            item.width = 16;
-            item.height = 12;
-            item.defense = 5;
-            item.value = 5000;
-            item.rare = ItemRarityID.Orange;
-        }
-
-        public override void DrawHair(ref bool drawHair, ref bool drawAltHair)
-        {
-            drawHair = true;
-            drawAltHair = false;
+            Item.width = 16;
+            Item.height = 12;
+            Item.defense = 5;
+            Item.value = 5000;
+            Item.rare = ItemRarityID.Orange;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddTile(TileID.Autohammer);
-            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 10);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe()
+                .AddTile(TileID.Autohammer)
+                .AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 10)
+                .Register();
         }
     }
 }

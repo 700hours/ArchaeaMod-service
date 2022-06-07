@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -19,32 +20,32 @@ namespace ArchaeaMod.NPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Mimic");
-            Main.npcFrameCount[npc.type] = 6;
+            Main.npcFrameCount[NPC.type] = 6;
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 48;
-            npc.height = 32;
-            npc.lifeMax = 650;
-            npc.defense = 10;
-            npc.damage = 20;
-            npc.knockBackResist = 1f;
-            npc.value = Item.sellPrice(0, 1, 50, 0);
-            npc.lavaImmune = true;
+            NPC.aiStyle = -1;
+            NPC.width = 48;
+            NPC.height = 32;
+            NPC.lifeMax = 650;
+            NPC.defense = 10;
+            NPC.damage = 20;
+            NPC.knockBackResist = 1f;
+            NPC.value = Item.sellPrice(0, 1, 50, 0);
+            NPC.lavaImmune = true;
         }
         private int count;
         private float compensateY;
         private bool preAI;
         public override bool PreAI()
         {
-            if (npc.wet)
-                npc.velocity.Y = 0.3f;
+            if (NPC.wet)
+                NPC.velocity.Y = 0.3f;
             preAI = SlimeAI();
             if (preAI)
             {
-                if (npc.velocity.Y != 0f)
-                    npc.velocity.X = velX;
+                if (NPC.velocity.Y != 0f)
+                    NPC.velocity.X = velX;
             }
             return preAI;
         }
@@ -54,7 +55,7 @@ namespace ArchaeaMod.NPCs
                 if (timer % interval / 4 == 0)
                     if (count++ > 3)
                     {
-                        oldLife = npc.life;
+                        oldLife = NPC.life;
                         pattern = Pattern.Active;
                         count = 0;
                     }
@@ -71,7 +72,7 @@ namespace ArchaeaMod.NPCs
                 SyncNPC();
                 init = true;
             }
-            if (npc.life < npc.lifeMax || (Main.mouseRight && npc.Hitbox.Contains(Main.MouseWorld.ToPoint()) && ArchaeaNPC.WithinRange(target.position, new Rectangle(npc.Hitbox.X - 75, npc.Hitbox.Y - 75, 150, 150))))
+            if (NPC.life < NPC.lifeMax || (Main.mouseRight && NPC.Hitbox.Contains(Main.MouseWorld.ToPoint()) && ArchaeaNPC.WithinRange(target.position, new Rectangle(NPC.Hitbox.X - 75, NPC.Hitbox.Y - 75, 150, 150))))
             {
                 pattern = Pattern.Attack;
                 activated = true;
@@ -102,11 +103,11 @@ namespace ArchaeaMod.NPCs
         public override void Attack()
         {
             if (timer % 120 == 0 && timer != 0)
-                SlimeJump(jumpHeight(FacingWall()), true, speedX(), target.position.X > npc.position.X);
+                SlimeJump(jumpHeight(FacingWall()), true, speedX(), target.position.X > NPC.position.X);
         }
         public override void SlimeJump(float speedY, bool horizontal = false, float speedX = 0, bool direction = true)
         {
-            npc.velocity.Y -= speedY * 1.2f;
+            NPC.velocity.Y -= speedY * 1.2f;
             if (horizontal)
             {
                 velX = direction ? speedX / 2f : speedX / 2f * -1;
@@ -116,21 +117,21 @@ namespace ArchaeaMod.NPCs
 
         public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
         {
-            float force = npc.knockBackResist * knockback;
-            velX = player.Center.X > npc.Center.X ? force * -1 : force;
+            float force = NPC.knockBackResist * knockback;
+            velX = player.Center.X > NPC.Center.X ? force * -1 : force;
             SyncNPC();
         }
         public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
         {
-            float force = npc.knockBackResist * knockback;
-            velX = projectile.position.X > npc.Center.X ? force * -1 : force;
+            float force = NPC.knockBackResist * knockback;
+            velX = projectile.position.X > NPC.Center.X ? force * -1 : force;
             SyncNPC();
         }
 
         public override void SyncNPC()
         {
             if (Main.netMode == 2)
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
         }
         public override void SendExtraAI(BinaryWriter writer)
         {
@@ -144,31 +145,31 @@ namespace ArchaeaMod.NPCs
             flip = reader.ReadBoolean();
             velX = reader.ReadSingle();
         }
-        public override void NPCLoot()
+        public override void OnKill()
         {
             int rand = Main.rand.Next(10);
             switch (rand)
             {
                 case 0:
                     if (Main.hardMode)
-                        Item.NewItem(npc.Center, ModContent.ItemType<Items.dream_catcher>());
+                        Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Items.dream_catcher>());
                     else 
-                        Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>());
+                        Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>());
                     break;
                 case 1:
                 case 2:
                 case 3:
-                    Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.magno_summonstaff>());
+                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.magno_summonstaff>());
                     break;
                 case 4:
                 case 5:
                 case 6:
-                    Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.magno_yoyo>());
+                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.magno_yoyo>());
                     break;
                 case 7:
                 case 8:
                 case 9:
-                    Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.magno_book>());
+                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.magno_book>());
                     break;
                 default:
                     goto case 0;
@@ -182,18 +183,18 @@ namespace ArchaeaMod.NPCs
             if (pattern == Pattern.JustSpawned)
                 frame = 0;
             if (!Main.dedServ)
-                frameHeight = Main.npcTexture[npc.type].Height / Main.npcFrameCount[npc.type];
+                frameHeight = TextureAssets.Npc[NPC.type].Value.Height / Main.npcFrameCount[NPC.type];
             if (frame < 5 && timer++ % 3 == 0)
             {
-                if (npc.velocity.Y < 0f)
+                if (NPC.velocity.Y < 0f)
                     frame++;
             }
-            if (npc.velocity.Y == 0f && frame > 1 && timer++ % 3 == 0)
+            if (NPC.velocity.Y == 0f && frame > 1 && timer++ % 3 == 0)
             {
-                npc.spriteDirection = npc.position.X < target.position.X ? 1 : -1;
+                NPC.spriteDirection = NPC.position.X < target.position.X ? 1 : -1;
                 frame--;
             }
-            npc.frame.Y = frame * frameHeight;
+            NPC.frame.Y = frame * frameHeight;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ArchaeaMod.Buffs
 {
     public class buff_cluster : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cluster Count");
             Main.buffNoSave[Type] = true;

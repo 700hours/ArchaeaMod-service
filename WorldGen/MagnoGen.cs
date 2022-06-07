@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.WorldBuilding;
 
 namespace ArchaeaMod
 {
@@ -115,38 +116,38 @@ namespace ArchaeaMod
         {
             int size = WorldGen.genRand.Next(1, 4);
             int rand = WorldGen.genRand.Next(1, 5);
-            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x + 1 + lookFurther, y].active())
+            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x + 1 + lookFurther, y].HasTile)
             {
                 center.X += 1f;
                 lookFurther = 0;
                 points++;
                 DigPlot(size);
             }
-            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x - 1 - lookFurther, y].active())
+            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x - 1 - lookFurther, y].HasTile)
             {
                 center.X -= 1f;
                 lookFurther = 0;
                 points++;
                 DigPlot(size);
             }
-            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x, y + 1 + lookFurther].active() && center.Y < maxY)
+            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x, y + 1 + lookFurther].HasTile && center.Y < maxY)
             {
                 center.Y += 1f;
                 lookFurther = 0;
                 points++;
                 DigPlot(size);
             }
-            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x, y - 1 - lookFurther].active() && center.Y > upperBounds)
+            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x, y - 1 - lookFurther].HasTile && center.Y > upperBounds)
             {
                 center.Y -= 1f;
                 lookFurther = 0;
                 points++;
                 DigPlot(size);
             }
-            if (!Main.tile[x + 1 + lookFurther, y].active() &&
-                !Main.tile[x - 1 - lookFurther, y].active() &&
-                !Main.tile[x, y + 1 + lookFurther].active() &&
-                !Main.tile[x, y - 1 - lookFurther].active())
+            if (!Main.tile[x + 1 + lookFurther, y].HasTile &&
+                !Main.tile[x - 1 - lookFurther, y].HasTile &&
+                !Main.tile[x, y + 1 + lookFurther].HasTile &&
+                !Main.tile[x, y - 1 - lookFurther].HasTile)
                 lookFurther++;
             if (!plots.ContainsKey(center))
                 plots.Add(center, size);
@@ -169,7 +170,7 @@ namespace ArchaeaMod
                         {
                             center.X += 1f;
                             lookFurther++;
-                        } while (!Main.tile[x + 1 + lookFurther, y].active()
+                        } while (!Main.tile[x + 1 + lookFurther, y].HasTile
                                 && x < Main.rightWorld / 16);
                         break;
                     case 2:
@@ -177,7 +178,7 @@ namespace ArchaeaMod
                         {
                             center.X -= 1f;
                             lookFurther++;
-                        } while (!Main.tile[x - 1 - lookFurther, y].active()
+                        } while (!Main.tile[x - 1 - lookFurther, y].HasTile
                                 && x > 50);
                         break;
                     case 3:
@@ -185,7 +186,7 @@ namespace ArchaeaMod
                         {
                             center.Y += 1f;
                             lookFurther++;
-                        } while (!Main.tile[x, y + 1 + lookFurther].active()
+                        } while (!Main.tile[x, y + 1 + lookFurther].HasTile
                                 && y < Main.bottomWorld / 16);
                         break;
                     case 4:
@@ -193,7 +194,7 @@ namespace ArchaeaMod
                         {
                             center.Y -= 1f;
                             lookFurther++;
-                        } while (!Main.tile[x, y - 1 - lookFurther].active()
+                        } while (!Main.tile[x, y - 1 - lookFurther].HasTile
                                 && y > maxY);
                         break;
                     default:
@@ -247,8 +248,9 @@ namespace ArchaeaMod
                     {
                         if (WorldGen.genRand.Next(60) == 0)
                             PlaceWater(new Vector2(i, j));
-                        Main.tile[i, j].type = TileID.PearlstoneBrick;
-                        Main.tile[i, j].active(true);
+                        Main.tile[i, j].TileType = TileID.PearlstoneBrick;
+                        var tile = Main.tile[i, j];
+                        tile.HasTile = true;
                         //  WorldGen.PlaceTile(i, j, TileID.PearlstoneBrick, false, true);
                     }
                 }
@@ -265,8 +267,9 @@ namespace ArchaeaMod
                 {
                     for (int j = y - s[k] * border; j < y + s[k] * border; j++)
                     {
-                        Main.tile[i, j].type = TileID.PearlstoneBrick;
-                        Main.tile[i, j].active(true);
+                        Main.tile[i, j].TileType = TileID.PearlstoneBrick;
+                        var tile = Main.tile[i, j];
+                        tile.HasTile = true;
                         //  WorldGen.PlaceTile(i, j, TileID.PearlstoneBrick, true, true);
                         //  WorldGen.KillWall(i, j);
                     }
@@ -281,8 +284,9 @@ namespace ArchaeaMod
                     {
                         if (WorldGen.genRand.Next(60) == 0)
                             PlaceWater(new Vector2(i, j));
-                        Main.tile[i, j].type = 0;
-                        Main.tile[i, j].active(false);
+                        Main.tile[i, j].TileType = 0;
+                        var tile = Main.tile[i, j];
+                        tile.HasTile = true;
                         //  WorldGen.KillTile(i, j, false, false, true);
                     }
             }
@@ -292,7 +296,10 @@ namespace ArchaeaMod
             int x = (int)position.X;
             int y = (int)position.Y;
             if (Inbounds(x, y))
-                Main.tile[x, y].liquid = 60;
+            {
+                var tile = Main.tile[x, y];
+                WorldGen.PlaceLiquid(x, y, LiquidID.Water, 60);
+            }
         }
         public void CheckComplete(int divisor = 2)
         {

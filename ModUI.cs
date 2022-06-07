@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
@@ -95,10 +96,10 @@ namespace ArchaeaMod.ModUI
             var modWorld = ModContent.GetInstance<ArchaeaWorld>();
             if (Main.playerInventory)
             { 
-                sb.Draw(mod.GetTexture("Gores/option"), toggle.bounds, null, Color.White);
+                sb.Draw(mod.Assets.Request<Texture2D>("Gores/option").Value, toggle.bounds, null, Color.White);
                 if (toggle.HoverOver())
                 {
-                    sb.DrawString(Main.fontMouseText, "Archaea Mod options", new Vector2(toggle.bounds.X, toggle.bounds.Bottom), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Archaea Mod options", new Vector2(toggle.bounds.X, toggle.bounds.Bottom), Color.White);
                 }
             }
             if (!Toggled) return;
@@ -116,12 +117,12 @@ namespace ArchaeaMod.ModUI
             {
                 for (int i = 0; i < categories.Length; i++)
                 {
-                    sb.Draw(mod.GetTexture("Gores/config_icons"), mainOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), mainOptions[i].color);
+                    sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, mainOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), mainOptions[i].color);
                     if (mainOptions[i].HoverOver())
                     {
                         if (i == 0 && mainOptions[i].LeftClick())
                             classSelect = true;
-                        sb.DrawString(Main.fontMouseText, categories[i], new Vector2(mainOptions[i].bounds.X, mainOptions[i].bounds.Bottom), Color.White);
+                        sb.DrawString(FontAssets.MouseText.Value, categories[i], new Vector2(mainOptions[i].bounds.X, mainOptions[i].bounds.Bottom), Color.White);
                     }
                 }
                 //currently without designation
@@ -142,9 +143,9 @@ namespace ArchaeaMod.ModUI
                     mainOptions[2].color = mainOptions[2].active ? Color.Blue : Color.White;
                 }
                 */
-                sb.Draw(mod.GetTexture("Gores/config_icons"), apply.bounds, new Rectangle(44 * 4, 0, 44, 44), apply.color = selected != null ? Color.White : Color.Gray);
+                sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, apply.bounds, new Rectangle(44 * 4, 0, 44, 44), apply.color = selected != null ? Color.White : Color.Gray);
                 if (apply.HoverOver())
-                    sb.DrawString(Main.fontMouseText, "Apply", new Vector2(apply.bounds.X, apply.bounds.Bottom), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Apply", new Vector2(apply.bounds.X, apply.bounds.Bottom), Color.White);
                 if (apply.LeftClick() && apply.color != Color.Gray)
                 {
                     modPlayer.classChoice = choice + 1;
@@ -163,7 +164,7 @@ namespace ArchaeaMod.ModUI
         {
             for (int i = 0; i < classes.Length; i++)
             {
-                sb.Draw(mod.GetTexture("Gores/class_icons"), classOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), classOptions[i].color);
+                sb.Draw(mod.Assets.Request<Texture2D>("Gores/class_icons").Value, classOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), classOptions[i].color);
                 if (classOptions[i].HoverOver())
                 {
                     if (classOptions[i].LeftClick())
@@ -172,12 +173,12 @@ namespace ArchaeaMod.ModUI
                         choiceName = classes[i];
                         choice = i;
                     }
-                    sb.DrawString(Main.fontMouseText, classes[i], new Vector2(classOptions[i].bounds.X, classOptions[i].bounds.Bottom), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, classes[i], new Vector2(classOptions[i].bounds.X, classOptions[i].bounds.Bottom), Color.White);
                 }
             }
-            sb.Draw(mod.GetTexture("Gores/config_icons"), back.bounds, new Rectangle(44 * 3, 0, 44, 44), selected != null ? Color.White : Color.Gray);
+            sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, back.bounds, new Rectangle(44 * 3, 0, 44, 44), selected != null ? Color.White : Color.Gray);
             if (back.HoverOver())
-                sb.DrawString(Main.fontMouseText, "Go Back", new Vector2(back.bounds.X, back.bounds.Bottom), Color.White);
+                sb.DrawString(FontAssets.MouseText.Value, "Go Back", new Vector2(back.bounds.X, back.bounds.Bottom), Color.White);
             if (selected != null)
             {
                 if (selected.LeftClick())
@@ -210,7 +211,7 @@ namespace ArchaeaMod.ModUI
             public Color color = Color.White;
             public Texture2D texture
             {
-                get { return Main.magicPixel; }
+                get { return TextureAssets.MagicPixel.Value; }
             }
             private SpriteBatch sb
             {
@@ -295,8 +296,8 @@ namespace ArchaeaMod.ModUI
         }
         public void DrawText()
         {
-            sb.Draw(Main.magicPixel, box, color);
-            sb.DrawString(Main.fontMouseText, text, new Vector2(box.X + 2, box.Y + 1), Color.White);
+            sb.Draw(TextureAssets.MagicPixel.Value, box, color);
+            sb.DrawString(FontAssets.MouseText.Value, text, new Vector2(box.X + 2, box.Y + 1), Color.White);
         }
     }
     public class Button
@@ -325,14 +326,14 @@ namespace ArchaeaMod.ModUI
         {
             this.texture = texture;
             if (texture == null)
-                this.texture = Main.magicPixel;
+                this.texture = TextureAssets.MagicPixel.Value;
             this.text = text;
             this.box = box;
         }
         public void Draw(bool select = true)
         {
             sb.Draw(texture, box, color(select));
-            sb.DrawString(Main.fontMouseText, text, new Vector2(box.X + 2, box.Y + 2), Color.White * 0.90f);
+            sb.DrawString(FontAssets.MouseText.Value, text, new Vector2(box.X + 2, box.Y + 2), Color.White * 0.90f);
         }
     }
 }

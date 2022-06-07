@@ -20,48 +20,48 @@ namespace ArchaeaMod.NPCs
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 28;
-            npc.height = 26;
-            npc.lifeMax = 50;
-            npc.defense = 10;
-            npc.damage = 10;
-            npc.value = 0;
-            npc.lavaImmune = true;
-            npc.noTileCollide = true;
-            npc.noGravity = true;
-            npc.knockBackResist = 0f;
+            NPC.aiStyle = -1;
+            NPC.width = 28;
+            NPC.height = 26;
+            NPC.lifeMax = 50;
+            NPC.defense = 10;
+            NPC.damage = 10;
+            NPC.value = 0;
+            NPC.lavaImmune = true;
+            NPC.noTileCollide = true;
+            NPC.noGravity = true;
+            NPC.knockBackResist = 0f;
         }
 
         private NPC leader
         {
-            get { return Main.npc[(int)npc.ai[0]]; }
+            get { return Main.npc[(int)NPC.ai[0]]; }
         }
         private NPC head
         {
-            get { return Main.npc[(int)npc.ai[1]]; }
+            get { return Main.npc[(int)NPC.ai[1]]; }
         }
         private int spacing = 4;
         private float chaseSpeed = 5f;
         public override void AI()
         {
-            npc.rotation = npc.AngleTo(leader.Center);
-            if (npc.Distance(leader.Center) >= npc.width - spacing)
+            NPC.rotation = NPC.AngleTo(leader.Center);
+            if (NPC.Distance(leader.Center) >= NPC.width - spacing)
             {
                 chaseSpeed += 0.2f;
-                float angle = npc.AngleTo(leader.Center);
+                float angle = NPC.AngleTo(leader.Center);
                 float cos = (float)(chaseSpeed * Math.Cos(angle));
                 float sine = (float)(chaseSpeed * Math.Sin(angle));
-                npc.velocity = new Vector2(cos, sine);
+                NPC.velocity = new Vector2(cos, sine);
             }
             else
             {
-                npc.velocity = Vector2.Zero;
+                NPC.velocity = Vector2.Zero;
                 chaseSpeed = 5f;
             }
             if ((!head.active || head.life <= 0) || !leader.active)
             {
-                npc.active = false;
+                NPC.active = false;
             }
         }
         public override bool CheckActive()

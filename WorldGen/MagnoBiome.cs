@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace ArchaeaMod.Biome
 {
@@ -68,7 +68,7 @@ namespace ArchaeaMod.Biome
                         {
                             float cos = start.X + n * (float)Math.Cos(r);
                             float sin = start.Y + n * (float)Math.Sin(r);
-                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.magnoStone;
+                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].TileType = ArchaeaWorld.magnoStone;
                             if (ash && flag && r <= Math.PI && r >= 0f)
                             {
                                 //Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.Ash;
@@ -140,7 +140,7 @@ namespace ArchaeaMod.Biome
                         {
                             float cos = start.X + n * (float)Math.Cos(r);
                             float sin = start.Y + n * (float)Math.Sin(r);
-                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.magnoStone;
+                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].TileType = ArchaeaWorld.magnoStone;
                             if (ash && flag && r <= Math.PI && r >= 0f)
                             {
                                 //Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.Ash;
@@ -208,7 +208,7 @@ namespace ArchaeaMod.Biome
                         {
                             float cos = branch.X + n * (float)Math.Cos(r);
                             float sin = branch.Y + n * (float)Math.Sin(r);
-                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.magnoStone;
+                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].TileType = ArchaeaWorld.magnoStone;
                             if (ash && flag && r <= Math.PI && r >= 0f)
                             {
                                 //Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.Ash;
@@ -272,7 +272,7 @@ namespace ArchaeaMod.Biome
                         {
                             float cos = branch.X + n * (float)Math.Cos(r);
                             float sin = branch.Y + n * (float)Math.Sin(r);
-                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.magnoStone;
+                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].TileType = ArchaeaWorld.magnoStone;
                             if (ash && flag && r <= Math.PI && r >= 0f)
                             {
                                 //Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.Ash;
@@ -339,7 +339,7 @@ namespace ArchaeaMod.Biome
                         {
                             float cos = start.X + n * (float)Math.Cos(r);
                             float sin = start.Y + n * (float)Math.Sin(r);
-                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.magnoStone;
+                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].TileType = ArchaeaWorld.magnoStone;
                             if (ash && flag && r <= Math.PI && r >= 0f)
                             {
                                 //Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.Ash;
@@ -432,7 +432,7 @@ namespace ArchaeaMod.Biome
                         {
                             float cos = start.X + n * (float)Math.Cos(r);
                             float sin = start.Y + n * (float)Math.Sin(r);
-                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.magnoStone;
+                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].TileType = ArchaeaWorld.magnoStone;
                             if (ash && flag && r <= Math.PI && r >= 0f)
                             {
                                 //Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = ArchaeaWorld.Ash;
@@ -496,8 +496,9 @@ namespace ArchaeaMod.Biome
                         {
                             float cos = loc.X + n * (float)Math.Cos(r);
                             float sin = loc.Y + n * (float)Math.Sin(r);
-                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = 0;
-                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].active(false);
+                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].TileType = 0;
+                            Tile tile = Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)];
+                            tile.HasTile = false;
                         }
                     }
                 }
@@ -515,8 +516,9 @@ namespace ArchaeaMod.Biome
                         {
                             float cos = loc.X + n * (float)Math.Cos(r);
                             float sin = loc.Y + n * (float)Math.Sin(r);
-                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].type = 0;
-                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].active(false); 
+                            Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)].TileType = 0;
+                            Tile tile = Main.tile[Math.Max((int)cos, 1), Math.Max((int)sin, 1)];
+                            tile.HasTile = false; 
                         }
                     }
                 }

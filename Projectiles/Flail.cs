@@ -23,16 +23,16 @@ namespace ArchaeaMod.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = false;
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = false;
         }
 
         private int ai = -1;
         private int style
         {
-            get { return (int)projectile.ai[0]; }
+            get { return (int)Projectile.ai[0]; }
         }
         public const int
             Fling = 1,
@@ -42,7 +42,7 @@ namespace ArchaeaMod.Projectiles
         private Vector2 velocity;
         private Player owner
         {
-            get { return Main.player[projectile.owner]; }
+            get { return Main.player[Projectile.owner]; }
         }
         public override bool PreAI()
         {
@@ -51,18 +51,18 @@ namespace ArchaeaMod.Projectiles
                 case -1:
                     int maxParts = 400 / 12;
                     int[] parts = new int[maxParts];
-                    parts[0] = Projectile.NewProjectile(projectile.position, Vector2.Zero, ModContent.ProjectileType<Chain>(), 0, 0f, projectile.owner, projectile.whoAmI, projectile.whoAmI);
+                    parts[0] = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<Chain>(), 0, 0f, Projectile.owner, Projectile.whoAmI, Projectile.whoAmI);
                     Main.npc[parts[0]].whoAmI = parts[0];
                     for (int i = 1; i < maxParts; i++)
                     {
-                        parts[i] = Projectile.NewProjectile(projectile.position, Vector2.Zero, ModContent.ProjectileType<Chain>(), 0, 0f, projectile.owner, parts[i - 1], projectile.whoAmI);
+                        parts[i] = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<Chain>(), 0, 0f, Projectile.owner, parts[i - 1], Projectile.whoAmI);
                         Main.npc[parts[i]].whoAmI = parts[i];
                     }
                     goto case 0;
                 case 0:
                     ai = 0;
                     if (ArchaeaItem.Elapsed(5))
-                        Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Fire);
+                        Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 6);
                     break;
             }
             return true;
@@ -77,7 +77,7 @@ namespace ArchaeaMod.Projectiles
         private float distance;
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.StrikeNPC(projectile.damage, projectile.knockBack, target.position.X < projectile.position.X ? -1 : 1, Main.rand.NextBool());
+            target.StrikeNPC(Projectile.damage, Projectile.knockBack, target.position.X < Projectile.position.X ? -1 : 1, Main.rand.NextBool());
         }
         public override bool? CanHitNPC(NPC target)
         {
@@ -88,7 +88,7 @@ namespace ArchaeaMod.Projectiles
             switch (style)
             {
                 case Fling:
-                    if (projectile.Distance(owner.Center) > range)
+                    if (Projectile.Distance(owner.Center) > range)
                         collide = true;
                     break;
                 case Swing:
@@ -96,39 +96,39 @@ namespace ArchaeaMod.Projectiles
                         collide = true;
                     FloatyAI();
                     if (owner.controlUseItem)
-                        projectile.timeLeft = 50;
-                    if (projectile.Distance(owner.Center) > range)
+                        Projectile.timeLeft = 50;
+                    if (Projectile.Distance(owner.Center) > range)
                     {
                         velocity = Vector2.Zero;
-                        angle = NPCs.ArchaeaNPC.AngleTo(projectile.Center, owner.Center);
+                        angle = NPCs.ArchaeaNPC.AngleTo(Projectile.Center, owner.Center);
                         Vector2 reverse = NPCs.ArchaeaNPC.AngleToSpeed(angle, 4f);
-                        Vector2.Add(ref projectile.velocity, ref reverse, out projectile.velocity);
+                        Vector2.Add(ref Projectile.velocity, ref reverse, out Projectile.velocity);
                         if (reach)
                         {
                             velocity = NPCs.ArchaeaNPC.AngleToSpeed(angle + (float)Math.PI, 8f);
                             for (int i = 0; i < 8; i++)
-                                Projectile.NewProjectileDirect(projectile.position + new Vector2(Main.rand.NextFloat(projectile.width), Main.rand.NextFloat(projectile.height)), velocity, ModContent.ProjectileType<Pixel>(), projectile.damage, projectile.knockBack, owner.whoAmI, Pixel.Fire, Pixel.Sword);
+                                Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.position + new Vector2(Main.rand.NextFloat(Projectile.width), Main.rand.NextFloat(Projectile.height)), velocity, ModContent.ProjectileType<Pixel>(), Projectile.damage, Projectile.knockBack, owner.whoAmI, Pixel.Fire, Pixel.Sword);
                             for (int j = 0; j < 6; j++)
-                                Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Fire);
+                                Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 6);
                             reach = false;
                         }
                         break;
                     }
-                    else angle = NPCs.ArchaeaNPC.AngleTo(projectile.Center, Main.MouseWorld);
-                    if (projectile.Center.Y < owner.Center.Y && !HitTile())
-                        projectile.velocity.Y += 0.665f * 3f;
-                    else projectile.velocity = Vector2.Zero;
+                    else angle = NPCs.ArchaeaNPC.AngleTo(Projectile.Center, Main.MouseWorld);
+                    if (Projectile.Center.Y < owner.Center.Y && !HitTile())
+                        Projectile.velocity.Y += 0.665f * 3f;
+                    else Projectile.velocity = Vector2.Zero;
                     velocity += NPCs.ArchaeaNPC.AngleToSpeed(angle, 0.5f);
                     NPCs.ArchaeaNPC.VelocityClamp(ref velocity, -6f, 6f);
-                    projectile.Center += velocity;
+                    Projectile.Center += velocity;
                     break;
             }
             if (collide)
             {
-                angle = NPCs.ArchaeaNPC.AngleTo(projectile.Center, owner.Center);
-                projectile.Center += NPCs.ArchaeaNPC.AngleToSpeed(angle, 2f * (speed += 0.25f));
-                if (projectile.Hitbox.Intersects(owner.Hitbox))
-                    projectile.active = false;
+                angle = NPCs.ArchaeaNPC.AngleTo(Projectile.Center, owner.Center);
+                Projectile.Center += NPCs.ArchaeaNPC.AngleToSpeed(angle, 2f * (speed += 0.25f));
+                if (Projectile.Hitbox.Intersects(owner.Hitbox))
+                    Projectile.active = false;
             }
             if (!reach)
             {
@@ -141,9 +141,9 @@ namespace ArchaeaMod.Projectiles
         }
         public Texture2D chain
         {
-            get { return mod.GetTexture("Gores/chain"); }
+            get { return Mod.Assets.Request<Texture2D>("Gores/chain").Value; }
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
             
             return true;
@@ -155,16 +155,16 @@ namespace ArchaeaMod.Projectiles
             switch (TileCollide())
             {
                 case Collide.Bottom:
-                    projectile.velocity.Y = 0f;
+                    Projectile.velocity.Y = 0f;
                     goto default;
                 case Collide.Left:
-                    projectile.velocity.X = 0f;
+                    Projectile.velocity.X = 0f;
                     goto default;
                 case Collide.Right:
-                    projectile.velocity.X = 0f;
+                    Projectile.velocity.X = 0f;
                     goto default;
                 case Collide.Top:
-                    projectile.velocity.Y = 0f;
+                    Projectile.velocity.Y = 0f;
                     goto default;
                 default:
                     collision = true;
@@ -174,21 +174,21 @@ namespace ArchaeaMod.Projectiles
             {
                 if (TileCollide() != Collide.Bottom)
                 {
-                    projectile.velocity.Y += 0.655f;
+                    Projectile.velocity.Y += 0.655f;
                 }
             }
-            NPCs.ArchaeaNPC.VelocityClamp(projectile, -6f, 6f);
+            NPCs.ArchaeaNPC.VelocityClamp(Projectile, -6f, 6f);
         }
         protected bool HitTile()
         {
-            for (int l = -8; l < projectile.height + 8; l++)
+            for (int l = -8; l < Projectile.height + 8; l++)
             {
-                for (int k = -8; k < projectile.width + 8; k++)
+                for (int k = -8; k < Projectile.width + 8; k++)
                 {
-                    int i = (int)projectile.position.X / 16 + k;
-                    int j = (int)projectile.position.Y / 16 + l;
+                    int i = (int)Projectile.position.X / 16 + k;
+                    int j = (int)Projectile.position.Y / 16 + l;
                     Tile tile = Main.tile[i, j];
-                    if (tile.active() && Main.tileSolid[tile.type])
+                    if (tile.HasTile && Main.tileSolid[tile.TileType])
                         return true;
                 }
             }
@@ -196,19 +196,19 @@ namespace ArchaeaMod.Projectiles
         }
         protected Collide TileCollide()
         {
-            int i = (int)projectile.Center.X / 16;
-            int j = (int)projectile.Center.Y / 16;
+            int i = (int)Projectile.Center.X / 16;
+            int j = (int)Projectile.Center.Y / 16;
             Tile top = Main.tile[i, j - 1];
             Tile left = Main.tile[i - 1, j];
             Tile bottom = Main.tile[i, j + 1];
             Tile right = Main.tile[i + 1, j];
-            if (top.active() && Main.tileSolid[top.type])
+            if (top.HasTile && Main.tileSolid[top.TileType])
                 return Collide.Top;
-            if (left.active() && Main.tileSolid[left.type])
+            if (left.HasTile && Main.tileSolid[left.TileType])
                 return Collide.Left;
-            if (bottom.active() && Main.tileSolid[bottom.type])
+            if (bottom.HasTile && Main.tileSolid[bottom.TileType])
                 return Collide.Bottom;
-            if (right.active() && Main.tileSolid[right.type])
+            if (right.HasTile && Main.tileSolid[right.TileType])
                 return Collide.Right;
             return Collide.None;
         }

@@ -21,11 +21,11 @@ namespace ArchaeaMod.Items.Tiles
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.rare = 2;
-            item.value = 10000;
-            item.consumable = false;
+            Item.width = 48;
+            Item.height = 48;
+            Item.rare = 2;
+            Item.value = 10000;
+            Item.consumable = false;
         }
     }
 }

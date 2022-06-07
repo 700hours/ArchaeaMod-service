@@ -13,7 +13,7 @@ using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 using ArchaeaMod.GenLegacy;
 using ArchaeaMod.Items;
@@ -211,8 +211,9 @@ namespace ArchaeaMod
                         flag = true;
                     if (n < j + height - 10 || n > j + height - 2)
                     {
-                        Main.tile[m, n].type = ArchaeaWorld.skyBrick;
-                        Main.tile[m, n].active(true);
+                        Main.tile[m, n].TileType = ArchaeaWorld.skyBrick;
+                        Tile tile = Main.tile[m, n];
+                        tile.HasTile = false;
                     }
                     else if (m == j + 3)
                         WorldGen.PlaceTile(m, n, TileID.TallGateClosed, true, false);
@@ -225,8 +226,9 @@ namespace ArchaeaMod
                     {
                         if (num++ < 5)
                         {
-                            Main.tile[m, n].type = 0;
-                            Main.tile[m, n].active(false);
+                            Main.tile[m, n].TileType = 0;
+                            Tile tile = Main.tile[m, n];
+                            tile.HasTile = false;
                         }
                         else flag = false;
                     }
@@ -236,6 +238,7 @@ namespace ArchaeaMod
         {
             bool flag = false, flag2 = false, flag3 = false, flag4 = false, flag5 = false;
             int num = 2;
+            Tile t;
             for (int m = i; m < i + width; m++)
             {
                 if (m < i + 30)
@@ -272,14 +275,16 @@ namespace ArchaeaMod
                 {
                     if (n < j + height / 3)
                         n += (int)(WorldGen.genRand.Next(0, 2) * sine);
-                    Main.tile[m, n].type = tileType;
-                    Main.tile[m, n].active(true);
+                    Main.tile[m, n].TileType = tileType;
+                    t = Main.tile[m, n];
+                    t.HasTile = true;
                     if (danger && n == j + num - 1)
                     {
                         if (flag4)
                         {
-                            Main.tile[m, n].type = flag5 ? TileID.Spikes : TileID.Chain;
-                            Main.tile[m, n].active(true);
+                            Main.tile[m, n].TileType = flag5 ? TileID.Spikes : TileID.Chain;
+                            t = Main.tile[m, n];
+                            t.HasTile = true;
                         }
                         if (m % 80 == 0)
                         {
@@ -290,32 +295,33 @@ namespace ArchaeaMod
                                     switch (cage[l, k])
                                     {
                                         case 10:
-                                            tile.active(true);
+                                            tile.HasTile = true;
                                             break;
                                         case TILE_None:
-                                            tile.type = 0;
-                                            tile.active(false);
+                                            tile.TileType = 0;
+                                            tile.HasTile = false;
                                             break;
                                         case TILE_Chain:
                                             for (int x = 0; x < 6; x++)
                                             {
-                                                if (!Main.tile[m + k, n + l - x].active())
+                                                if (!Main.tile[m + k, n + l - x].HasTile)
                                                 {
-                                                    Main.tile[m + k, n + l - x].type = TileID.Chain;
-                                                    Main.tile[m + k, n + l - x].active(true);
+                                                    Main.tile[m + k, n + l - x].TileType = TileID.Chain;
+                                                    t = Main.tile[m + k, n + l - x];
+                                                    t.HasTile = true;
                                                 }
                                             }
-                                            tile.type = TileID.Chain;
+                                            tile.TileType = TileID.Chain;
                                             goto case 10;
                                         case TILE_Brick:
-                                            tile.type = ArchaeaWorld.skyBrick;
+                                            tile.TileType = ArchaeaWorld.skyBrick;
                                             goto case 10;
                                         case TILE_WoodBeams:
-                                            tile.type = TileID.WoodenBeam;
+                                            tile.TileType = TileID.WoodenBeam;
                                             goto case 10;
                                         case TILE_IronFence:
                                             //  TODO iron fence
-                                            tile.type = TileID.Chain;
+                                            tile.TileType = TileID.Chain;
                                             break;
                                         case TILE_Extra:
                                             //  TODO 3x3 dungeon tiles
@@ -338,8 +344,9 @@ namespace ArchaeaMod
                 n += (float)height / width;
                 for (int j = (int)n; j < y + height; j++)
                 {
-                    Main.tile[i, j].active(true);
-                    Main.tile[i, j].type = tileID;
+                    Tile tile = Main.tile[i, j];
+                    tile.HasTile = true;
+                    Main.tile[i, j].TileType = tileID;
                 }
             }
         }
@@ -348,8 +355,9 @@ namespace ArchaeaMod
             for (int i = x; i < x + width; i++)
                 for (int j = y; j < y + height; j++)
                 {
-                    Main.tile[i, j].active(false);
-                    Main.tile[i, j].wall = wallID;
+                    Tile tile = Main.tile[i, j];
+                    tile.HasTile = true;
+                    Main.tile[i, j].WallType = wallID;
                 }
         }
         internal int[,] Chamber(int w, int height)
@@ -444,16 +452,16 @@ namespace ArchaeaMod
                             WorldGen.PlaceWall(m, n, wallType, true);
                             break;
                         case ID.Dirt:
-                            tile.active(true);
-                            tile.type = TileID.Dirt;
+                            tile.HasTile = true;
+                            tile.TileType = TileID.Dirt;
                             break;
                         case ID.Grass:
-                            tile.active(true);
-                            tile.type = TileID.Grass;
+                            tile.HasTile = true;
+                            tile.TileType = TileID.Grass;
                             break;
                         case ID.Cloud:
-                            tile.active(true);
-                            tile.type = TileID.Cloud;
+                            tile.HasTile = true;
+                            tile.TileType = TileID.Cloud;
                             break;
                         case ID.Portal:
                             WorldGen.Place3x3Wall(m, n, (ushort)ModContent.TileType<ArchaeaMod.Tiles.sky_portal>(), 0);
@@ -575,7 +583,7 @@ namespace ArchaeaMod
         }
         internal bool IsPlaced(int i, int j, ushort tile)
         {
-            return Main.tile[i, j].type == tile && Main.tile[i, j].active();
+            return Main.tile[i, j].TileType == tile && Main.tile[i, j].HasTile;
         }
         public void DesignateRoom(int i, int j, int roomX, int roomY, int index)
         {
@@ -717,8 +725,9 @@ namespace ArchaeaMod
                             {
                                 int cos = (int)(i + m + k * Math.Cos(r));
                                 int sine = (int)(j + n + k / 2f * Math.Sin(r));
-                                Main.tile[cos, sine].active(true);
-                                Main.tile[cos, sine].type = TileID.Cloud;
+                                Tile tile = Main.tile[cos, sine];
+                                tile.HasTile = true;
+                                Main.tile[cos, sine].TileType = TileID.Cloud;
                             }
                 }
         }
@@ -911,8 +920,8 @@ namespace ArchaeaMod
                     Tile tile = Main.tile[m, n];
                     if (house[k][i, j] == ID.Wall)
                     {
-                        tile.active(true);
-                        tile.type = tileID;
+                        tile.HasTile = true;
+                        tile.TileType = tileID;
                     }
                     if (house[k][i, j] != ID.Wall && house[k][i, j] != ID.Door && house[k][i, j] != ID.Window)
                         WorldGen.PlaceWall(m, n, wallID);
@@ -926,19 +935,19 @@ namespace ArchaeaMod
                     switch (house[k][i, j])
                     {
                         case -2:
-                            tile.active(false);
+                            tile.HasTile = false;
                             break;
                         case -1:
-                            tile.active(true);
+                            tile.HasTile = true;
                             break;
                         case ID.Cloud:
-                            tile.type = TileID.Cloud;
+                            tile.TileType = TileID.Cloud;
                             goto case -1;
                         case ID.Floor:
-                            tile.type = tileID;
+                            tile.TileType = tileID;
                             goto case -1;
                         case ID.Platform:
-                            tile.type = TileID.Platforms;
+                            tile.TileType = TileID.Platforms;
                             goto case -1;
                         case ID.Chest:
                             WorldGen.PlaceChest(m, n);
@@ -961,8 +970,8 @@ namespace ArchaeaMod
                             WorldGen.PlaceTile(m, n, TileID.HangingLanterns);
                             break;
                         case ID.Door:
-                            tile.active(false);
-                            tile.type = 0;
+                            tile.HasTile = false;
+                            tile.TileType = 0;
                             WorldGen.PlaceWall(m, n, wallID);
                             WorldGen.PlaceDoor(m, n, TileID.ClosedDoor);
                             break;
@@ -970,10 +979,10 @@ namespace ArchaeaMod
                             WorldGen.PlaceWall(m, n, (ushort)WorldGen.genRand.Next(88, 93));
                             break;
                         case ID.Light:
-                            tile.type = ArchaeaWorld.skyBrick;
+                            tile.TileType = ArchaeaWorld.skyBrick;
                             goto case -1;
                         case ID.Dark:
-                            tile.type = ArchaeaWorld.skyBrick;
+                            tile.TileType = ArchaeaWorld.skyBrick;
                             goto case -1;
                         case ID.WallHanging:
                             WorldGen.Place3x2Wall(m, n, TileID.WeaponsRack, 0);
@@ -1108,38 +1117,38 @@ namespace ArchaeaMod
                             m = i + x;
                             n = j + y + height;
                             Tile tile = Main.tile[m, n];
-                            if (tile.wall == wallID || tile.type == tileID)
+                            if (tile.WallType == wallID || tile.TileType == tileID)
                                 return false;
                             if (i >= 0 && i < lengthX && j >= 0 && j < lengthY)
                                 if (WorldGen.genRand.NextFloat() < 0.50f)
                                 {
-                                    tile.wall = wallID;
+                                    tile.WallType = wallID;
                                     WorldGen.PlaceWall(m, n, wallID, true);
                                 }
                             if (house[k][i, j] == tileID)
                             {
-                                tile.active(true);
-                                tile.type = tileID;
+                                tile.HasTile = true;
+                                tile.TileType = tileID;
                             }
-                            else tile.active(false);
-                            if (tile.type == tileID && tile.active())
+                            else tile.HasTile = false;
+                            if (tile.TileType == tileID && tile.HasTile)
                                 success = true;
                             if (i > 6 && i < 14)
                             {
                                 if (k == 0 && (j == 0 || j == lengthY - 1))
                                 {
-                                    tile.type = TileID.Platforms;
+                                    tile.TileType = TileID.Platforms;
                                     WorldGen.SquareTileFrame(m, n, true);
                                 }
                                 if (k == max - 1 && j == 0)
                                 {
-                                    tile.type = TileID.Platforms;
+                                    tile.TileType = TileID.Platforms;
                                     WorldGen.SquareTileFrame(m, n, true);
                                 }
                                 if (direction[k] && i == 7)
-                                    tile.slope(1);
+                                    tile.Slope = (SlopeType)1;
                                 else if (!direction[k] && i == 13)
-                                    tile.slope(2);
+                                    tile.Slope = (SlopeType)2;
                             }
                         }
                     for (int i = 0; i < lengthX; i++)
@@ -1157,15 +1166,17 @@ namespace ArchaeaMod
                                     {
                                         for (int t = -1; t <= 1; t++)
                                         {
-                                            Main.tile[m, n + t].active(true);
-                                            Main.tile[m, n + t].type = tileID;
+                                            Tile tile = Main.tile[m, n + t];
+                                            tile.HasTile = true;
+                                            Main.tile[m, n + t].TileType = tileID;
                                         }
                                     }
                                     break;
                                 case ID.Stairs:
                                     WorldGen.KillTile(m, n, false, false, true);
                                     WorldGen.PlaceTile(m, n, TileID.Platforms);
-                                    Main.tile[m, n].slope((byte)(direction[k] ? 1 : 2));
+                                    Tile t0 = Main.tile[m, n];
+                                    t0.Slope = (SlopeType)(direction[k] ? 1 : 2);
                                     WorldGen.SquareTileFrame(m, n, true);
                                     break;
                                 case ID.Lamp:
@@ -1211,10 +1222,10 @@ namespace ArchaeaMod
                 int m = i + WorldGen.genRand.Next(width - 1);
                 Tile floor = Main.tile[m, j];
                 Tile ground = Main.tile[m, j + 1];
-                if (!floor.active() && ground.type == groundID)
+                if (!floor.HasTile && ground.TileType == groundID)
                 {
                     WorldGen.PlaceChest(m, j);
-                    if (floor.type == ArchaeaWorld.magnoChest)
+                    if (floor.TileType == ArchaeaWorld.magnoChest)
                         chest = true;
                 }
                 if (count < total)

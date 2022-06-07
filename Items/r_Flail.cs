@@ -24,18 +24,18 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.damage = 10;
-            item.knockBack = 2f;
-            item.value = 3500;
-            item.rare = 2;
-            item.useTime = 40;
-            item.useAnimation = 40;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.shootSpeed = 8f;
-            item.channel = true;
-            item.noUseGraphic = true;
+            Item.width = 48;
+            Item.height = 48;
+            Item.damage = 10;
+            Item.knockBack = 2f;
+            Item.value = 3500;
+            Item.rare = 2;
+            Item.useTime = 40;
+            Item.useAnimation = 40;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.shootSpeed = 8f;
+            Item.channel = true;
+            Item.noUseGraphic = true;
         }
 
         private Projectile proj;
@@ -44,7 +44,7 @@ namespace ArchaeaMod.Items
             if (proj != null && proj.active)
                 player.controlUseItem = true;
         }
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             if (proj == null || !proj.active)
             {
@@ -65,8 +65,8 @@ namespace ArchaeaMod.Items
         protected Projectile Throw(Player player, int ai)
         {
             float angle = NPCs.ArchaeaNPC.AngleTo(player.Center, Main.MouseWorld);
-            Vector2 velocity = NPCs.ArchaeaNPC.AngleToSpeed(angle, item.shootSpeed);
-            return Projectile.NewProjectileDirect(new Vector2(ArchaeaItem.StartThrowX(player), player.Center.Y - 24f), velocity, ModContent.ProjectileType<Flail>(), item.damage, item.knockBack, player.whoAmI, ai);
+            Vector2 velocity = NPCs.ArchaeaNPC.AngleToSpeed(angle, Item.shootSpeed);
+            return Projectile.NewProjectileDirect(Projectile.GetSource_None(), new Vector2(ArchaeaItem.StartThrowX(player), player.Center.Y - 24f), velocity, ModContent.ProjectileType<Flail>(), Item.damage, Item.knockBack, player.whoAmI, ai);
         }
     }
 }

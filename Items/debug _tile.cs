@@ -19,16 +19,16 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            item.width = 16;
-            item.height = 16;
-            item.useTime = 10;
-            item.useAnimation = 15;
-            item.useStyle = 1;
-            item.value = 0;
-            item.rare = 1;
-            item.maxStack = 1;
-            item.noMelee = true;
-            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.m_plants_small>();
+            Item.width = 16;
+            Item.height = 16;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.value = 0;
+            Item.rare = 1;
+            Item.maxStack = 1;
+            Item.noMelee = true;
+            Item.createTile = ModContent.TileType<ArchaeaMod.Tiles.m_plants_small>();
         }
     }
 }

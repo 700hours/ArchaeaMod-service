@@ -19,18 +19,18 @@ namespace ArchaeaMod.Items.Tiles
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.useTime = 10;
-            item.useAnimation = 15;
-            item.useStyle = 1;
-            item.value = 1000;
-            item.maxStack = 99;
-            item.rare = 2;
-            item.autoReuse = true;
-            item.noMelee = true;
-            item.consumable = true;
-            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.banners>();
+            Item.width = 48;
+            Item.height = 48;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.value = 1000;
+            Item.maxStack = 99;
+            Item.rare = 2;
+            Item.autoReuse = true;
+            Item.noMelee = true;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<ArchaeaMod.Tiles.banners>();
         }
     }
 }

@@ -18,35 +18,35 @@ namespace ArchaeaMod.Merged.Items
         }
         public override void SetDefaults()
         {
-            item.width = 24;
-            item.height = 32;
-            item.useTime = 24;
-            item.useAnimation = 18;
-            item.useStyle = 1;
-            item.mana = 10;
-            item.damage = 12;
-            item.knockBack = 3f;
-            item.value = 4000;
-            item.rare = 2;
-            item.autoReuse = false;
-            item.consumable = false;
-            item.noMelee = true;
-            item.summon = true;
-            item.buffType = ModContent.BuffType<magno_summon>();
-            item.buffTime = 18000;
+            Item.width = 24;
+            Item.height = 32;
+            Item.useTime = 24;
+            Item.useAnimation = 18;
+            Item.useStyle = 1;
+            Item.mana = 10;
+            Item.damage = 12;
+            Item.knockBack = 3f;
+            Item.value = 4000;
+            Item.rare = 2;
+            Item.autoReuse = false;
+            Item.consumable = false;
+            Item.noMelee = true;
+            Item.CountsAsClass(DamageClass.Summon);
+            Item.buffType = ModContent.BuffType<magno_summon>();
+            Item.buffTime = 18000;
         }
 
         public override bool CanUseItem(Player player)
         {
-            if (player.ownedProjectileCounts[mod.ProjectileType("magno_minion")] < player.maxMinions && player.numMinions < player.maxMinions)
+            if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("magno_minion").Type] < player.maxMinions && player.numMinions < player.maxMinions)
             {
                 return true;
             }
             else return false;
         }
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
-            int projMinion = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType("magno_minion"), 5, 3f, player.whoAmI, 0f, 0f);
+            int projMinion = Projectile.NewProjectile(Projectile.GetSource_None(), player.position, Vector2.Zero, Mod.Find<ModProjectile>("magno_minion").Type, 5, 3f, player.whoAmI, 0f, 0f);
             Main.projectile[projMinion].netUpdate = true;
             return true;
         }

@@ -20,14 +20,14 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.rare = 2;
-            item.value = 500;
-            item.maxStack = 999;
-            item.ammo = AmmoID.Solution;
-            item.shoot = ModContent.ProjectileType<GraySolution>() - ProjectileID.PureSpray;
-            item.consumable = true;
+            Item.width = 48;
+            Item.height = 48;
+            Item.rare = 2;
+            Item.value = 500;
+            Item.maxStack = 999;
+            Item.ammo = AmmoID.Solution;
+            Item.shoot = ModContent.ProjectileType<GraySolution>() - ProjectileID.PureSpray;
+            Item.consumable = true;
         }
     }
     sealed class GraySolution : ModProjectile
@@ -38,29 +38,29 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.scale = 0.67f;
-            projectile.timeLeft = 80;
-            projectile.alpha = 255;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.scale = 0.67f;
+            Projectile.timeLeft = 80;
+            Projectile.alpha = 255;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            for (int n = 0; n < projectile.width; n++)
+            for (int n = 0; n < Projectile.width; n++)
             {
-                int i = (int)projectile.position.X + n;
-                int j = (int)projectile.position.Y + n;
+                int i = (int)Projectile.position.X + n;
+                int j = (int)Projectile.position.Y + n;
                 Tile tile = Framing.GetTileSafely(new Vector2(i, j));
-                if (tile.type == TileID.Stone && tile.active())
+                if (tile.TileType == TileID.Stone && tile.HasTile)
                 {
-                    tile.type = (ushort)ModContent.TileType<Merged.Tiles.m_stone>();
+                    tile.TileType = (ushort)ModContent.TileType<Merged.Tiles.m_stone>();
                     WorldGen.SquareTileFrame(i / 16, j / 16, true);
                 }
             }
-            int t = Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Merged.Dusts.magno_dust>(), 0f, 0f, 0, default(Color), 1.2f);
+            int t = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Merged.Dusts.magno_dust>(), 0f, 0f, 0, default(Color), 1.2f);
             Main.dust[t].noGravity = true;
             Main.dust[t].noLight = true;
         }

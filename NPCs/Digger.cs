@@ -15,20 +15,15 @@ namespace ArchaeaMod.NPCs
 {
     public class Digger : ModNPC
     {
-        public override bool Autoload(ref string name)
-        {
-            if (name == "Digger")
-                return false;
-            return true;
-        }
-
+        public override bool IsLoadingEnabled(Mod mod) => false;
+        
         internal bool chaseThroughAir = true;
         private bool maxRange = true;
         internal const int maxTime = 600;
         internal int timer
         {
-            get { return (int)npc.ai[0]; }
-            set { npc.ai[0] = value; }
+            get { return (int)NPC.ai[0]; }
+            set { NPC.ai[0] = value; }
         }
         internal int bodyType;
         internal int tailType;
@@ -47,13 +42,13 @@ namespace ArchaeaMod.NPCs
         }
         internal Player target()
         {
-            Player player = ArchaeaNPC.FindClosest(npc, maxRange, 2048);
+            Player player = ArchaeaNPC.FindClosest(NPC, maxRange, 2048);
             if (player != null)
             {
                 maxRange = false;
                 return player;
             }
-            else return Main.player[npc.target];
+            else return Main.player[NPC.target];
         }
         private bool init;
         private bool attack = true;
@@ -63,26 +58,26 @@ namespace ArchaeaMod.NPCs
         {
             if (!init)
             {
-                int x = (int)npc.position.X;
-                int y = (int)npc.position.Y;
+                int x = (int)NPC.position.X;
+                int y = (int)NPC.position.Y;
                 int type = bodyType;
                 int[] parts = new int[maxParts];
-                parts[0] = NPC.NewNPC(x, y, type, 0, npc.whoAmI);
+                parts[0] = NPC.NewNPC(NPC.GetSource_FromAI(), x, y, type, 0, NPC.whoAmI);
                 Main.npc[parts[0]].whoAmI = parts[0];
-                Main.npc[parts[0]].realLife = npc.whoAmI;
-                Main.npc[parts[0]].defense = npc.defense;
-                Main.npc[parts[0]].lifeMax = npc.lifeMax;
-                Main.npc[parts[0]].life = npc.lifeMax;
+                Main.npc[parts[0]].realLife = NPC.whoAmI;
+                Main.npc[parts[0]].defense = NPC.defense;
+                Main.npc[parts[0]].lifeMax = NPC.lifeMax;
+                Main.npc[parts[0]].life = NPC.lifeMax;
                 neck = Main.npc[parts[0]];
                 for (int i = 1; i < maxParts; i++)
                 {
                     type = i == maxParts - 1 ? tailType : bodyType;
-                    parts[i] = NPC.NewNPC(x, y, type, 0, parts[i - 1], npc.whoAmI);
+                    parts[i] = NPC.NewNPC(NPC.GetSource_FromAI(), x, y, type, 0, parts[i - 1], NPC.whoAmI);
                     Main.npc[parts[i]].whoAmI = parts[i];
-                    Main.npc[parts[i]].realLife = npc.whoAmI;
-                    Main.npc[parts[i]].defense = npc.defense;
-                    Main.npc[parts[i]].lifeMax = npc.lifeMax;
-                    Main.npc[parts[i]].life = npc.lifeMax;
+                    Main.npc[parts[i]].realLife = NPC.whoAmI;
+                    Main.npc[parts[i]].defense = NPC.defense;
+                    Main.npc[parts[i]].lifeMax = NPC.lifeMax;
+                    Main.npc[parts[i]].life = NPC.lifeMax;
                 }
                 foreach (int part in parts)
                 {
@@ -102,12 +97,12 @@ namespace ArchaeaMod.NPCs
                 timer = 0;
             if (timer % 300 == 0)
                 SyncNPC(true);
-            npc.rotation = npc.velocity.ToRotation();
-            npc.noGravity = chaseThroughAir;
+            NPC.rotation = NPC.velocity.ToRotation();
+            NPC.noGravity = chaseThroughAir;
             if (attack && PreAttack())
             {
                 Attacking();
-                if (npc.Hitbox.Intersects(target().Hitbox) || target().dead || !target().active)
+                if (NPC.Hitbox.Intersects(target().Hitbox) || target().dead || !target().active)
                     attack = false;
                 chase = target().Center;
                 if (timer % 30 == 0)
@@ -117,13 +112,13 @@ namespace ArchaeaMod.NPCs
             {
                 if (timer % 120 == 0)
                 {
-                    chase = ArchaeaNPC.FindAny(npc, 400);
+                    chase = ArchaeaNPC.FindAny(NPC, 400);
                     SyncNPC(chase.X, chase.Y);
                 }
             }
-            if (npc.Hitbox.Intersects(target().Hitbox))
+            if (NPC.Hitbox.Intersects(target().Hitbox))
             {
-                chase = ArchaeaNPC.FindAny(npc, 400);
+                chase = ArchaeaNPC.FindAny(NPC, 400);
                 SyncNPC(chase.X, chase.Y);
                 attack = false;
             }
@@ -131,32 +126,32 @@ namespace ArchaeaMod.NPCs
             {
                 Digging();
                 float acceleration = attack ? this.acceleration : 0.1f;
-                float angle = npc.AngleTo(chase);
+                float angle = NPC.AngleTo(chase);
                 float cos = (float)(acceleration * Math.Cos(angle));
                 float sine = (float)(acceleration * Math.Sin(angle));
-                npc.velocity += new Vector2(cos, sine);
-                ArchaeaNPC.VelocityClamp(ref npc.velocity, speedClamp * -1, speedClamp);
+                NPC.velocity += new Vector2(cos, sine);
+                ArchaeaNPC.VelocityClamp(ref NPC.velocity, speedClamp * -1, speedClamp);
             }
-            if (npc.velocity.X < 0f && npc.oldVelocity.X >= 0f || npc.velocity.X > 0f && npc.oldVelocity.X <= 0f || npc.velocity.Y < 0f && npc.oldVelocity.Y >= 0f || npc.velocity.Y > 0f && npc.oldVelocity.Y <= 0f)
+            if (NPC.velocity.X < 0f && NPC.oldVelocity.X >= 0f || NPC.velocity.X > 0f && NPC.oldVelocity.X <= 0f || NPC.velocity.Y < 0f && NPC.oldVelocity.Y >= 0f || NPC.velocity.Y > 0f && NPC.oldVelocity.Y <= 0f)
                 SyncNPC();
         }
 
         private void SyncNPC()
         {
             if (Main.netMode == 2)
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
         }
         private void SyncNPC(float x, float y)
         {
             chase = new Vector2(x, y);
             if (Main.netMode == 2)
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
         }
         private void SyncNPC(bool attack)
         {
             this.attack = attack;
             if (Main.netMode == 2)
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
         }
         public override void SendExtraAI(BinaryWriter writer)
         {

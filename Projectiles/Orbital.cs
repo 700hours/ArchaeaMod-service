@@ -20,16 +20,16 @@ namespace ArchaeaMod.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Orb");
-            Main.projFrames[projectile.type] = 7;
+            Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()
         {
-            projectile.width = 38;
-            projectile.height = 44;
-            projectile.damage = 20;
-            projectile.friendly = true;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = false;
+            Projectile.width = 38;
+            Projectile.height = 44;
+            Projectile.damage = 20;
+            Projectile.friendly = true;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
         }
         private bool update = true;
         private int ai = -1;
@@ -37,12 +37,12 @@ namespace ArchaeaMod.Projectiles
         private Vector2 center;
         private Player owner
         {
-            get { return Main.player[projectile.owner]; }
+            get { return Main.player[Projectile.owner]; }
         }
         private Target target;
         public override bool PreAI()
         {
-            return PreAI(update && projectile.timeLeft > 30);
+            return PreAI(update && Projectile.timeLeft > 30);
         }
         public bool PreAI(bool update)
         {
@@ -55,19 +55,19 @@ namespace ArchaeaMod.Projectiles
                         goto case 0;
                     case 0:
                         ai = 0;
-                        angle = projectile.ai[0];
-                        projectile.penetrate = -1;
+                        angle = Projectile.ai[0];
+                        Projectile.penetrate = -1;
                         float a = NPCs.ArchaeaNPC.AngleTo(center, Main.MouseWorld);
-                        if (projectile.Distance(Main.MouseWorld) > projectile.width)
+                        if (Projectile.Distance(Main.MouseWorld) > Projectile.width)
                             center += NPCs.ArchaeaNPC.AngleToSpeed(a, 10f);
                         else center = Main.MouseWorld;
-                        projectile.Center = NPCs.ArchaeaNPC.AngleBased(center, angle, 45f);
-                        if (owner.ownedProjectileCounts[projectile.type] == 6)
+                        Projectile.Center = NPCs.ArchaeaNPC.AngleBased(center, angle, 45f);
+                        if (owner.ownedProjectileCounts[Projectile.type] == 6)
                             goto case 1;
                         return false;
                     case 1:
                         ai = 1;
-                        projectile.penetrate = 1;
+                        Projectile.penetrate = 1;
                         return true;
                     default:
                         return false;
@@ -79,22 +79,22 @@ namespace ArchaeaMod.Projectiles
         public override void AI()
         {
             if (owner.inventory[owner.selectedItem].type != ModContent.ItemType<n_Staff>())
-                projectile.Kill();
+                Projectile.Kill();
             if (ArchaeaItem.Elapsed(30))
             {
-                target = Target.GetClosest(owner, Target.GetTargets(projectile, 300f).Where(t => t != null).ToArray());
-                projectile.netUpdate = true;
+                target = Target.GetClosest(owner, Target.GetTargets(Projectile, 300f).Where(t => t != null).ToArray());
+                Projectile.netUpdate = true;
             }
 
-            projectile.frameCounter++;
-            if (projectile.frameCounter == 4)
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter == 4)
             {
-                projectile.frame++;
-                projectile.frameCounter = 0;
+                Projectile.frame++;
+                Projectile.frameCounter = 0;
             }
-            if (projectile.frame > 6)
+            if (Projectile.frame > 6)
             {
-                projectile.frame = 0;
+                Projectile.frame = 0;
             }
 
             switch (type)
@@ -104,7 +104,7 @@ namespace ArchaeaMod.Projectiles
                     {
                         center = Main.MouseWorld;
                         angle += Draw.radian * 4f;
-                        projectile.Center = NPCs.ArchaeaNPC.AngleBased(center, angle, 45f);
+                        Projectile.Center = NPCs.ArchaeaNPC.AngleBased(center, angle, 45f);
                         return;
                     }
                     else type = 1;
@@ -112,16 +112,16 @@ namespace ArchaeaMod.Projectiles
                 case 1:
                     if (target == null || !target.npc.active || target.npc.life <= 0)
                         goto case 2;
-                    float a = NPCs.ArchaeaNPC.AngleTo(projectile.Center, target.npc.Center);
-                    projectile.velocity += Speed(a, target.npc.Center);
-                    NPCs.ArchaeaNPC.VelocityClamp(projectile, -8f, 8f);
+                    float a = NPCs.ArchaeaNPC.AngleTo(Projectile.Center, target.npc.Center);
+                    Projectile.velocity += Speed(a, target.npc.Center);
+                    NPCs.ArchaeaNPC.VelocityClamp(Projectile, -8f, 8f);
                     break;
                 case 2:
-                    float a2 = NPCs.ArchaeaNPC.AngleTo(projectile.Center, center);
+                    float a2 = NPCs.ArchaeaNPC.AngleTo(Projectile.Center, center);
                     center = Main.MouseWorld;
-                    projectile.velocity += Speed(a2, center);
-                    NPCs.ArchaeaNPC.VelocityClamp(projectile, -5f, 5f);
-                    if (projectile.Distance(Main.MouseWorld) < 90f)
+                    Projectile.velocity += Speed(a2, center);
+                    NPCs.ArchaeaNPC.VelocityClamp(Projectile, -5f, 5f);
+                    if (Projectile.Distance(Main.MouseWorld) < 90f)
                         type = 0;
                     break;
                 default:
@@ -130,11 +130,11 @@ namespace ArchaeaMod.Projectiles
         }
         public override void Kill(int timeLeft)
         {
-            NPCs.ArchaeaNPC.DustSpread(projectile.Center, projectile.width, projectile.height, 6, 4, 2f);
+            NPCs.ArchaeaNPC.DustSpread(Projectile.Center, Projectile.width, Projectile.height, 6, 4, 2f);
         }
         public Vector2 Speed(float angle, Vector2 target)
         {
-            return NPCs.ArchaeaNPC.AngleToSpeed(angle, projectile.Distance(target) * 0.5f);
+            return NPCs.ArchaeaNPC.AngleToSpeed(angle, Projectile.Distance(target) * 0.5f);
         }
     }
 }

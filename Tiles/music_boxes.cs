@@ -16,7 +16,7 @@ namespace ArchaeaMod.Tiles
 {
     public class music_boxes : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             TileObjectData.newTile.Width = 2;
@@ -32,8 +32,8 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, 2, 0);
             TileObjectData.addAlternate(0);
             TileObjectData.addTile(Type);
-            disableSmartCursor = true;
-            dustType = 1;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            DustType = 1;
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Music Box");
             AddMapEntry(Color.White, name);
@@ -46,17 +46,17 @@ namespace ArchaeaMod.Tiles
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameY == 0)
-                Item.NewItem(new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.mbox_magno_boss>());
-            else Item.NewItem(new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.mbox_magno_1>());
+            if (tile.TileFrameY == 0)
+                Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.mbox_magno_boss>());
+            else Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.mbox_magno_1>());
         }
 
         public override void MouseOver(int i, int j)
         {
             Player player = Main.LocalPlayer;
             player.noThrow = 2;
-            player.showItemIcon = true;
-            player.showItemIcon2 = Main.tile[i, j].frameY == 0 ? ModContent.ItemType<Items.Tiles.mbox_magno_boss>() : ModContent.ItemType<Items.Tiles.mbox_magno_1>();
+            player.cursorItemIconEnabled = true;
+            player.cursorItemIconID = Main.tile[i, j].TileFrameY == 0 ? ModContent.ItemType<Items.Tiles.mbox_magno_boss>() : ModContent.ItemType<Items.Tiles.mbox_magno_1>();
         }
     }
 }

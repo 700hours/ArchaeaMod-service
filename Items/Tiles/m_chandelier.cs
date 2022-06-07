@@ -1,16 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 using ArchaeaMod.Merged;
-
 namespace ArchaeaMod.Items.Tiles
 {
     public class m_chandelier : ModItem
@@ -21,30 +18,29 @@ namespace ArchaeaMod.Items.Tiles
         }
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 28;
-            item.useTime = 10;
-            item.useAnimation = 15;
-            item.useStyle = 1;
-            item.value = 1000;
-            item.rare = 1;
-            item.maxStack = 99;
-            item.autoReuse = true;
-            item.noMelee = true;
-            item.consumable = true;
-            item.createTile = ModContent.TileType<ArchaeaMod.Tiles.m_chandelier>();
+            Item.width = 30;
+            Item.height = 28;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.value = 1000;
+            Item.rare = 1;
+            Item.maxStack = 99;
+            Item.autoReuse = true;
+            Item.noMelee = true;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<ArchaeaMod.Tiles.m_chandelier>();
         }
-
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.magno_bar>(), 3);
-            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Tiles.magno_brick>(), 4);
-            recipe.AddIngredient(TileID.Torches, 4);
-            recipe.AddIngredient(TileID.Chain, 1);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(item.type);
-            recipe.AddRecipe();
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Merged.Items.Materials.magno_bar>(), 3)
+                .AddIngredient(ModContent.ItemType<Merged.Items.Tiles.magno_brick>(), 4)
+                .AddIngredient(TileID.Torches, 4)
+                .AddIngredient(TileID.Chain, 1)
+                .AddTile(TileID.Anvils)
+//            recipe.SetResult(Item.type);
+                .Register();
         }
     }
 }

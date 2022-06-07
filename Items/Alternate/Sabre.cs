@@ -24,21 +24,21 @@ namespace ArchaeaMod.Items.Alternate
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.damage = 10;
-            item.knockBack = 3f;
-            item.value = 3000;
-            item.rare = ItemRarityID.Green;
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.useTurn = true;
+            Item.width = 48;
+            Item.height = 48;
+            Item.damage = 10;
+            Item.knockBack = 3f;
+            Item.value = 3000;
+            Item.rare = ItemRarityID.Green;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useTurn = true;
         }
 
         private int count;
         private float upward = 0.5f;
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             count = 0;
             if (Main.MouseWorld.X > player.position.X)
@@ -49,7 +49,7 @@ namespace ArchaeaMod.Items.Alternate
         public override void UseItemHitbox(Player player, ref Rectangle hitbox, ref bool noHitbox)
         {
             if (count++ % 4 == 0)
-                Projectile.NewProjectileDirect(player.direction == 1 ? hitbox.TopRight() : hitbox.TopLeft(), NPCs.ArchaeaNPC.AngleToSpeed(player.direction == 1 ? upward * -1 : (float)Math.PI + upward, 6f), ModContent.ProjectileType<Pixel>(), item.damage, item.knockBack, player.whoAmI, Pixel.Fire, Pixel.Sword);
+                Projectile.NewProjectileDirect(Projectile.GetSource_None(), player.direction == 1 ? hitbox.TopRight() : hitbox.TopLeft(), NPCs.ArchaeaNPC.AngleToSpeed(player.direction == 1 ? upward * -1 : (float)Math.PI + upward, 6f), ModContent.ProjectileType<Pixel>(), Item.damage, Item.knockBack, player.whoAmI, Pixel.Fire, Pixel.Sword);
         }
     }
 }

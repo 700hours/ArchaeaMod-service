@@ -7,7 +7,7 @@ namespace ArchaeaMod.Merged.Walls
 {
     public class magno_stoneunsafe : ModWall
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             AddMapEntry(new Color(10, 10, 110));
         }

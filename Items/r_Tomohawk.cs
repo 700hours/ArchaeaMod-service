@@ -1,18 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 using ArchaeaMod.Projectiles;
-
 namespace ArchaeaMod.Items
 {
     public class r_Tomohawk : ModItem
@@ -24,29 +21,29 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.damage = 10;
-            item.knockBack = 2f;
-            item.value = 100;
-            item.rare = 2;
-            item.maxStack = 250;
-            item.useTime = 30;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.shoot = ModContent.ProjectileType<Tomohawk>();
-            item.shootSpeed = 7f;
-            item.thrown = true;
-            item.consumable = true;
-            item.noUseGraphic = true;
+            Item.width = 48;
+            Item.height = 48;
+            Item.damage = 10;
+            Item.knockBack = 2f;
+            Item.value = 100;
+            Item.rare = 2;
+            Item.maxStack = 250;
+            Item.useTime = 30;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.shoot = ModContent.ProjectileType<Tomohawk>();
+            Item.shootSpeed = 7f;
+            Item.DamageType = DamageClass.Throwing;
+            Item.consumable = true;
+            Item.noUseGraphic = true;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddTile(TileID.MythrilAnvil);
-            recipe.AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 1);
-            recipe.SetResult(this, 7);
-            recipe.AddRecipe();
+            var r = CreateRecipe()
+                .AddTile(TileID.MythrilAnvil)
+                .AddIngredient(ModContent.ItemType<Items.Materials.r_plate>(), 1);
+            r.ReplaceResult(Type, 7);
+            r.Register();
         }
     }
 }

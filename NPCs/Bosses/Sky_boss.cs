@@ -22,40 +22,40 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         public override void SetDefaults()
         {
-            npc.width = 176;
-            npc.height = 192;
-            npc.lifeMax = 150000;
-            npc.defense = 10;
-            npc.damage = 20;
-            npc.value = 45000;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.knockBackResist = 0f;
-            npc.alpha = 255;
+            NPC.width = 176;
+            NPC.height = 192;
+            NPC.lifeMax = 150000;
+            NPC.defense = 10;
+            NPC.damage = 20;
+            NPC.value = 45000;
+            NPC.boss = true;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.knockBackResist = 0f;
+            NPC.alpha = 255;
         }
 
         public bool Hurt()
         {
-            bool hurt = npc.life < npc.lifeMax && npc.life > 0 && oldLife != npc.life;
-            oldLife = npc.life;
+            bool hurt = NPC.life < NPC.lifeMax && NPC.life > 0 && oldLife != NPC.life;
+            oldLife = NPC.life;
             return hurt;
         }
         private int timer
         {
-            get { return (int)npc.ai[0]; }
-            set { npc.ai[0] = value; }
+            get { return (int)NPC.ai[0]; }
+            set { NPC.ai[0] = value; }
         }
         private int npcCounter
         {
-            get { return (int)npc.ai[1]; }
-            set { npc.ai[1] = value; }
+            get { return (int)NPC.ai[1]; }
+            set { NPC.ai[1] = value; }
         }
         private int counter
         {
-            get { return (int)npc.ai[2]; }
-            set { npc.ai[2] = value; }
+            get { return (int)NPC.ai[2]; }
+            set { NPC.ai[2] = value; }
         }
         private bool fade;
         private bool firstTarget = true;
@@ -63,13 +63,13 @@ namespace ArchaeaMod.NPCs.Bosses
         private Vector2 move;
         private Player target()
         {
-            Player player = ArchaeaNPC.FindClosest(npc, true);
+            Player player = ArchaeaNPC.FindClosest(NPC, true);
             if (player != null && player.active && !player.dead)
             {
-                npc.target = player.whoAmI;
+                NPC.target = player.whoAmI;
                 return player;
             }
-            return Main.player[npc.target];
+            return Main.player[NPC.target];
         }
         private bool init;
         private bool attack;
@@ -86,7 +86,7 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         public override void AI()
         {
-            npc.spriteDirection = 1;
+            NPC.spriteDirection = 1;
             if (timer++ > 900)
             {
                 npcCounter++;
@@ -112,8 +112,8 @@ namespace ArchaeaMod.NPCs.Bosses
             }
             if (npcCounter > 1)
             {
-                Vector2 newPosition = ArchaeaNPC.FindAny(npc, target(), false, 300);
-                int n = NPC.NewNPC((int)newPosition.X, (int)newPosition.Y, ModContent.NPCType<Sky_1>(), 0, 0f, 0f, 0f, 0f, npc.target);
+                Vector2 newPosition = ArchaeaNPC.FindAny(NPC, target(), false, 300);
+                int n = NPC.NewNPC(NPC.GetSource_FromAI(), (int)newPosition.X, (int)newPosition.Y, ModContent.NPCType<Sky_1>(), 0, 0f, 0f, 0f, 0f, NPC.target);
                 if (Main.netMode == 2)
                     NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, n);
                 npcCounter = 0;
@@ -121,35 +121,35 @@ namespace ArchaeaMod.NPCs.Bosses
             }
             if (fade)
             {
-                npc.velocity = Vector2.Zero;
-                if (npc.alpha < 255)
+                NPC.velocity = Vector2.Zero;
+                if (NPC.alpha < 255)
                 {
-                    npc.scale -= 1f / 90f;
-                    npc.alpha += 255 / 15;
+                    NPC.scale -= 1f / 90f;
+                    NPC.alpha += 255 / 15;
                 }
                 else 
                 {
-                    npc.position = move;
+                    NPC.position = move;
                     if (FlameBurst())
                     {
-                        npc.scale = 1f;
+                        NPC.scale = 1f;
                         fade = false;
                     }
                 }
             }
             else
             {
-                if (npc.alpha > 0)
-                    npc.alpha -= 255 / 60;
+                if (NPC.alpha > 0)
+                    NPC.alpha -= 255 / 60;
                 if (timer < 600)
                 {
                     if (timer % 150 == 0)
-                        move = ArchaeaNPC.FindAny(npc, target(), false);
-                    float angle = npc.AngleTo(move);
+                        move = ArchaeaNPC.FindAny(NPC, target(), false);
+                    float angle = NPC.AngleTo(move);
                     float cos = (float)(0.2f * Math.Cos(angle));
                     float sine = (float)(0.2f * Math.Sin(angle));
-                    npc.velocity += new Vector2(cos, sine);
-                    ArchaeaNPC.VelocityClamp(ref npc.velocity, -4f, 4f);
+                    NPC.velocity += new Vector2(cos, sine);
+                    ArchaeaNPC.VelocityClamp(ref NPC.velocity, -4f, 4f);
                 }
             }
             if (attack)
@@ -157,9 +157,9 @@ namespace ArchaeaMod.NPCs.Bosses
                 if (counter++ % 90 == 0)
                 {
                     angle += (float)Math.PI / 3f;
-                    float cos = (float)(npc.Center.X + npc.width * 3f * Math.Cos(angle));
-                    float sine = (float)(npc.Center.Y + npc.height * 3f * Math.Sin(angle));
-                    int t = Projectile.NewProjectile(new Vector2(cos, sine), Vector2.Zero, ModContent.ProjectileType<Orb>(), 12, 2f, 255, 0f, target().whoAmI);
+                    float cos = (float)(NPC.Center.X + NPC.width * 3f * Math.Cos(angle));
+                    float sine = (float)(NPC.Center.Y + NPC.height * 3f * Math.Sin(angle));
+                    int t = Projectile.NewProjectile(Projectile.GetSource_None(), new Vector2(cos, sine), Vector2.Zero, ModContent.ProjectileType<Orb>(), 12, 2f, 255, 0f, target().whoAmI);
                     Main.projectile[t].whoAmI = t;
                     if (Main.netMode == 2)
                         NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, t);
@@ -175,7 +175,7 @@ namespace ArchaeaMod.NPCs.Bosses
                 SyncNPC(false, false);
             }
             
-            if (fade && npc.position != npc.oldPosition || npc.velocity.X < 0f && npc.oldVelocity.X >= 0f || npc.velocity.X > 0f && npc.oldVelocity.X <= 0f || npc.velocity.Y < 0f && npc.oldVelocity.Y >= 0f || npc.velocity.Y > 0f && npc.oldVelocity.Y <= 0f)
+            if (fade && NPC.position != NPC.oldPosition || NPC.velocity.X < 0f && NPC.oldVelocity.X >= 0f || NPC.velocity.X > 0f && NPC.oldVelocity.X <= 0f || NPC.velocity.Y < 0f && NPC.oldVelocity.Y >= 0f || NPC.velocity.Y > 0f && NPC.oldVelocity.Y <= 0f)
                 SyncNPC();
         }
         public override void BossHeadSlot(ref int index)
@@ -188,7 +188,7 @@ namespace ArchaeaMod.NPCs.Bosses
             float angle = ArchaeaNPC.RandAngle();
             for (int i = 0; i < flames.Length; i++)
             {
-                flames[i] = Projectile.NewProjectileDirect(npc.Center, ArchaeaNPC.AngleToSpeed(angle), ModContent.ProjectileType<Flame>(), 20, 3f, 255, 1f, npc.target);
+                flames[i] = Projectile.NewProjectileDirect(Projectile.GetSource_None(), NPC.Center, ArchaeaNPC.AngleToSpeed(angle), ModContent.ProjectileType<Flame>(), 20, 3f, 255, 1f, NPC.target);
                 angle += (float)Math.PI / 3f;
                 if (Main.netMode == 2)
                     NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, flames[i].whoAmI);
@@ -199,46 +199,46 @@ namespace ArchaeaMod.NPCs.Bosses
         Vector2 lastHit = Vector2.Zero;
         public override void HitEffect(int hitDirection, double damage)
         {
-            lastHit = npc.Center;
+            lastHit = NPC.Center;
         }
-        public override void NPCLoot()
+        public override void OnKill()
         {
-            Item.NewItem(lastHit, ModContent.ItemType<Items.n_Staff>());
+            Item.NewItem(Item.GetSource_NaturalSpawn(), lastHit, ModContent.ItemType<Items.n_Staff>());
         }
 
         private void SyncNPC()
         {
             if (Main.netMode == 2)
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
         }
         private void SyncNPC(float x, float y)
         {
             move = new Vector2(x, y);
             if (Main.netMode == 2)
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
         }
         private void SyncNPC(bool attack, bool immortal)
         {
             this.attack = attack;
-            npc.immortal = immortal;
+            NPC.immortal = immortal;
             if (Main.netMode == 2)
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
         }
         public override void SendExtraAI(BinaryWriter writer)
         {
             writer.WriteVector2(move);
             writer.Write(attack);
-            writer.Write(npc.immortal);
+            writer.Write(NPC.immortal);
         }
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             move = reader.ReadVector2();
             attack = reader.ReadBoolean();
-            npc.immortal = reader.ReadBoolean();
+            NPC.immortal = reader.ReadBoolean();
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            spriteBatch.Draw(mod.GetTexture("NPCs/Bosses/Sky_boss"), npc.Hitbox, Lighting.GetColor((int)npc.Center.X, (int)npc.Center.Y, drawColor));
+            spriteBatch.Draw(Mod.Assets.Request<Texture2D>("NPCs/Bosses/Sky_boss").Value, NPC.Hitbox, Lighting.GetColor((int)NPC.Center.X, (int)NPC.Center.Y, drawColor));
         }
     }
 
@@ -247,76 +247,76 @@ namespace ArchaeaMod.NPCs.Bosses
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Orb");
-            Main.projFrames[projectile.type] = 7;
+            Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()
         {
-            projectile.width = 48;
-            projectile.height = 48;
-            projectile.damage = 10;
-            projectile.knockBack = 2f;
-            projectile.timeLeft = 360;
-            projectile.alpha = 255;
-            projectile.tileCollide = false;
-            projectile.friendly = false;
-            projectile.hostile = true;
-            projectile.ignoreWater = true;
+            Projectile.width = 48;
+            Projectile.height = 48;
+            Projectile.damage = 10;
+            Projectile.knockBack = 2f;
+            Projectile.timeLeft = 360;
+            Projectile.alpha = 255;
+            Projectile.tileCollide = false;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.ignoreWater = true;
         }
         private int timer
         {
-            get { return (int)projectile.ai[0]; }
-            set { projectile.ai[0] = value; }
+            get { return (int)Projectile.ai[0]; }
+            set { Projectile.ai[0] = value; }
         }
         private Player target
         {
-            get { return Main.player[(int)projectile.ai[1]]; }
+            get { return Main.player[(int)Projectile.ai[1]]; }
         }
         private NPC boss
         {
-            get { return Main.npc[(int)projectile.localAI[0]]; }
+            get { return Main.npc[(int)Projectile.localAI[0]]; }
         }
         private bool init;
         public override void AI()
         {
-            if (projectile.alpha > 0)
-                projectile.alpha -= 255 / 60;
-            else projectile.alpha = 0;
+            if (Projectile.alpha > 0)
+                Projectile.alpha -= 255 / 60;
+            else Projectile.alpha = 0;
             float maxSpeed = Math.Max(((boss.lifeMax + 1 - boss.life) / boss.lifeMax) * 5f, 2f);
             float angle;
             if (timer++ > 90)
             {
                 if (target.active && !target.dead)
-                    angle = projectile.AngleTo(target.Center);
-                else angle = projectile.AngleFrom(target.Center);
-                projectile.velocity += ArchaeaNPC.AngleToSpeed(angle, 0.5f);
-                ArchaeaNPC.VelocityClamp(ref projectile.velocity, maxSpeed * -1, maxSpeed);
+                    angle = Projectile.AngleTo(target.Center);
+                else angle = Projectile.AngleFrom(target.Center);
+                Projectile.velocity += ArchaeaNPC.AngleToSpeed(angle, 0.5f);
+                ArchaeaNPC.VelocityClamp(ref Projectile.velocity, maxSpeed * -1, maxSpeed);
             }
-            projectile.rotation = projectile.velocity.ToRotation();
-            if (Main.netMode == 2 && (projectile.velocity.X < 0f && projectile.oldVelocity.X >= 0f || projectile.velocity.X > 0f && projectile.oldVelocity.X <= 0f || projectile.velocity.Y < 0f && projectile.oldVelocity.Y >= 0f || projectile.velocity.Y > 0f && projectile.oldVelocity.Y <= 0f))
-                projectile.netUpdate = true;
-            if (projectile.scale == 1f)
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            if (Main.netMode == 2 && (Projectile.velocity.X < 0f && Projectile.oldVelocity.X >= 0f || Projectile.velocity.X > 0f && Projectile.oldVelocity.X <= 0f || Projectile.velocity.Y < 0f && Projectile.oldVelocity.Y >= 0f || Projectile.velocity.Y > 0f && Projectile.oldVelocity.Y <= 0f))
+                Projectile.netUpdate = true;
+            if (Projectile.scale == 1f)
             {
                 for (int k = 0; k < 4; k++)
                 {
-                    int t = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Fire, 0f, 0f, 0, default(Color), 2f);
+                    int t = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 6, 0f, 0f, 0, default(Color), 2f);
                     Main.dust[t].noGravity = true;
                 }
             }
 
-            projectile.frameCounter++;
-            if (projectile.frameCounter == 4)
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter == 4)
             {
-                projectile.frame++;
-                projectile.frameCounter = 0;
+                Projectile.frame++;
+                Projectile.frameCounter = 0;
             }
-            if (projectile.frame > 6)
+            if (Projectile.frame > 6)
             {
-                projectile.frame = 0;
+                Projectile.frame = 0;
             }
         }
         public override void Kill(int timeLeft)
         {
-            ArchaeaNPC.DustSpread(projectile.position, projectile.width, projectile.height, 6, 6, 2f);
+            ArchaeaNPC.DustSpread(Projectile.position, Projectile.width, Projectile.height, 6, 6, 2f);
         }
     }
 
@@ -329,40 +329,40 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         public override void SetDefaults()
         {
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.damage = 20;
-            projectile.knockBack = 2f;
-            projectile.timeLeft = 450;
-            projectile.tileCollide = false;
-            projectile.friendly = false;
-            projectile.hostile = true;
-            projectile.ignoreWater = true;
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.damage = 20;
+            Projectile.knockBack = 2f;
+            Projectile.timeLeft = 450;
+            Projectile.tileCollide = false;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.ignoreWater = true;
         }
         private int i;
         private int j;
         private Player player
         {
-            get { return Main.player[(int)projectile.ai[1]]; }
+            get { return Main.player[(int)Projectile.ai[1]]; }
         }
         public override void AI()
         {
-            if (projectile.Distance(player.Center) > 2048)
-                projectile.active = false;
-            if (projectile.ai[0] != 1f)
-                projectile.timeLeft = 90;
-            i = (int)projectile.position.X / 16;
-            j = (int)projectile.position.Y / 16;
-            projectile.rotation = projectile.velocity.ToRotation();
+            if (Projectile.Distance(player.Center) > 2048)
+                Projectile.active = false;
+            if (Projectile.ai[0] != 1f)
+                Projectile.timeLeft = 90;
+            i = (int)Projectile.position.X / 16;
+            j = (int)Projectile.position.Y / 16;
+            Projectile.rotation = Projectile.velocity.ToRotation();
             if (TileLeft() || TileRight())
-                projectile.velocity.X *= -1;
+                Projectile.velocity.X *= -1;
             if (TileTop() || TileBottom())
-                projectile.velocity.Y *= -1;
+                Projectile.velocity.Y *= -1;
             for (int k = 0; k < 3; k++)
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Shadowflame);
-            if (Main.netMode == 2 && (projectile.velocity.X < 0f && projectile.oldVelocity.X >= 0f || projectile.velocity.X > 0f && projectile.oldVelocity.X <= 0f || projectile.velocity.Y < 0f && projectile.oldVelocity.Y >= 0f || projectile.velocity.Y > 0f && projectile.oldVelocity.Y <= 0f))
-                projectile.netUpdate = true;
-            projectile.velocity.Y += 0.0917f;
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Shadowflame);
+            if (Main.netMode == 2 && (Projectile.velocity.X < 0f && Projectile.oldVelocity.X >= 0f || Projectile.velocity.X > 0f && Projectile.oldVelocity.X <= 0f || Projectile.velocity.Y < 0f && Projectile.oldVelocity.Y >= 0f || Projectile.velocity.Y > 0f && Projectile.oldVelocity.Y <= 0f))
+                Projectile.netUpdate = true;
+            Projectile.velocity.Y += 0.0917f;
         }
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
@@ -372,49 +372,49 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         public override bool PreKill(int timeLeft)
         {
-            if (projectile.scale > 0.1f)
+            if (Projectile.scale > 0.1f)
             {
-                projectile.scale -= 1f / 60f;
+                Projectile.scale -= 1f / 60f;
                 return false;
             }
             return true;
         }
         public override void Kill(int timeLeft)
         {
-            ArchaeaNPC.DustSpread(projectile.position, projectile.width, projectile.height, DustID.Shadowflame, 10, 2f);
+            ArchaeaNPC.DustSpread(Projectile.position, Projectile.width, Projectile.height, DustID.Shadowflame, 10, 2f);
         }
         private bool TileLeft()
         {
-            if (Main.tile[i - 1, j].active() && Main.tileSolid[Main.tile[i - 1, j].type])
+            if (Main.tile[i - 1, j].HasTile && Main.tileSolid[Main.tile[i - 1, j].TileType])
             {
-                projectile.position.X += 18f;
+                Projectile.position.X += 18f;
                 return true;
             }
             return false;
         }
         private bool TileRight()
         {
-            if (Main.tile[i + 1, j].active() && Main.tileSolid[Main.tile[i + 1, j].type])
+            if (Main.tile[i + 1, j].HasTile && Main.tileSolid[Main.tile[i + 1, j].TileType])
             {
-                projectile.position.X -= 18f;
+                Projectile.position.X -= 18f;
                 return true;
             }
             return false;
         }
         private bool TileTop()
         {
-            if (Main.tile[i, j - 1].active() && Main.tileSolid[Main.tile[i, j - 1].type])
+            if (Main.tile[i, j - 1].HasTile && Main.tileSolid[Main.tile[i, j - 1].TileType])
             {
-                projectile.position.Y += 18f;
+                Projectile.position.Y += 18f;
                 return true;
             }
             return false;
         }
         private bool TileBottom()
         {
-            if (Main.tile[i, j + 1].active() && Main.tileSolid[Main.tile[i, j + 1].type])
+            if (Main.tile[i, j + 1].HasTile && Main.tileSolid[Main.tile[i, j + 1].TileType])
             {
-                projectile.position.X -= 18f;
+                Projectile.position.X -= 18f;
                 return true;
             }
             return false;
@@ -461,7 +461,7 @@ namespace ArchaeaMod.NPCs.Bosses
             if (time % elapsed * 5 * rotate == 0)
             {
                 center = ArchaeaNPC.AngleBased(npc.Center, rotation + variance, range);
-                dust[total] = Dust.NewDustDirect(center, 1, 1, DustID.Fire, 0f, 0f, 0, color, scale);
+                dust[total] = Dust.NewDustDirect(center, 1, 1, 6, 0f, 0f, 0, color, scale);
                 dust[total].noGravity = true;
                 total++;
             }

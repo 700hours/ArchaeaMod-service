@@ -15,16 +15,16 @@ namespace ArchaeaMod.Merged.Items
         }
         public override void SetDefaults()
         {
-            item.width = 32;
-            item.height = 32;
-            item.rare = 11;
-            item.maxStack = 250;
-            item.consumable = true;
-            item.expert = true;
+            Item.width = 32;
+            Item.height = 32;
+            Item.rare = 11;
+            Item.maxStack = 250;
+            Item.consumable = true;
+            Item.expert = true;
         }
         public override int BossBagNPC
         {
-            get { return mod.NPCType("boss_magnohead");}
+            get { return Mod.Find<ModNPC>("boss_magnohead").Type;}
         }
         public override bool CanRightClick()
         {
@@ -32,10 +32,10 @@ namespace ArchaeaMod.Merged.Items
         }
         public override void OpenBossBag(Player player)
         {
-            player.QuickSpawnItem(ItemID.GoldCoin, 5);
+            player.QuickSpawnItem(Item.GetSource_Loot(), ItemID.GoldCoin, 5);
             //  player.QuickSpawnItem(ModContent.ItemType<magno_shieldacc>(), 1);
-            player.QuickSpawnItem(ModContent.ItemType<Vanity.magno_mask>(), 1);
-            player.QuickSpawnItem(ModContent.ItemType<Tiles.magno_ore>(), Main.rand.Next(34, 68));
+            player.QuickSpawnItem(Item.GetSource_Loot(), ModContent.ItemType<Vanity.magno_mask>(), 1);
+            player.QuickSpawnItem(Item.GetSource_Loot(), ModContent.ItemType<Tiles.magno_ore>(), Main.rand.Next(34, 68));
             //  player.QuickSpawnItem(ModContent.ItemType<magno_fragment>(), Main.rand.Next(12, 24));
         }
     }

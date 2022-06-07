@@ -1,20 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 using ArchaeaMod.NPCs;
 using ArchaeaMod.Projectiles;
-
-
 namespace ArchaeaMod.Items
 {
     public class c_Staff : ModItem
@@ -26,37 +22,35 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.damage = 10;
-            item.knockBack = 2f;
-            item.mana = 10;
-            item.value = 3500;
-            item.rare = 2;
-            item.useTime = 30;
-            item.useAnimation = 30;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.magic = true;
+            Item.width = 48;
+            Item.height = 48;
+            Item.damage = 10;
+            Item.knockBack = 2f;
+            Item.mana = 10;
+            Item.value = 3500;
+            Item.rare = 2;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.DamageType = DamageClass.Magic;
         }
-
         public override void UseItemHitbox(Player player, ref Rectangle hitbox, ref bool noHitbox)
         {
             if (ArchaeaItem.Elapsed(10))
-                Projectile.NewProjectileDirect(hitbox.Center(), NPCs.ArchaeaNPC.AngleToSpeed(player.AngleTo(Main.MouseWorld), VelocityWeight(player, 4f)), ModContent.ProjectileType<Pixel>(), item.damage, item.knockBack, player.whoAmI, Pixel.Mercury, Pixel.Sword);
+                Projectile.NewProjectileDirect(Projectile.GetSource_None(), hitbox.Center(), NPCs.ArchaeaNPC.AngleToSpeed(player.AngleTo(Main.MouseWorld), VelocityWeight(player, 4f)), ModContent.ProjectileType<Pixel>(), Item.damage, Item.knockBack, player.whoAmI, Pixel.Mercury, Pixel.Sword);
         }
         public static float VelocityWeight(Player player, float strength, float multiplier = 0.01f)
         {
             return player.Distance(Main.MouseWorld) * multiplier * strength;
         }
-
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddTile(TileID.Anvils);
-            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_bar>(), 8);
-            recipe.AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), 8);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe()
+                .AddTile(TileID.Anvils)
+                .AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_bar>(), 8)
+                .AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), 8)
+//            recipe.SetResult(this, 1);
+                .Register();
         }
     }
 }

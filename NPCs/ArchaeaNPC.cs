@@ -96,17 +96,25 @@ namespace ArchaeaMod.NPCs
     {
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
-            bool MagnoBiome = spawnInfo.player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
+            bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
             bool downedMagno = ModContent.GetInstance<ArchaeaWorld>().downedMagno;
-            pool.Add(ModNPCID.Fanatic,          MagnoBiome ? 0.2f : 0f);
-            pool.Add(ModNPCID.Hatchling,        MagnoBiome ? 0.2f : 0f);
-            pool.Add(ModNPCID.ItchySlime,       MagnoBiome ? 0.4f : 0f);
-            pool.Add(ModNPCID.MercurialSlime,   MagnoBiome && downedMagno ? 0.4f : 0f);
-            pool.Add(ModNPCID.Mimic,            MagnoBiome && Main.hardMode ? 0.1f : 0f);
-            bool SkyFort = spawnInfo.player.GetModPlayer<ArchaeaPlayer>().SkyFort;
-            pool.Add(ModNPCID.Observer,         SkyFort ? 0.6f : 0f);
-            //pool.Add(ModNPCID.Marauder,         SkyFort ? 0.4f : 0f);
-            pool.Add(ModNPCID.Gargoyle,         SkyFort ? 0.4f : 0f);
+            if (ModNPCID.Fanatic != 0)
+                pool.Add(ModNPCID.Fanatic,          MagnoBiome ? 0.2f : 0f);
+            if (ModNPCID.Hatchling != 0)
+                pool.Add(ModNPCID.Hatchling,        MagnoBiome ? 0.2f : 0f);
+            if (ModNPCID.ItchySlime != 0)
+                pool.Add(ModNPCID.ItchySlime,       MagnoBiome ? 0.4f : 0f);
+            if (ModNPCID.MercurialSlime != 0)
+                pool.Add(ModNPCID.MercurialSlime,   MagnoBiome && downedMagno ? 0.4f : 0f);
+            if (ModNPCID.Mimic != 0)
+                pool.Add(ModNPCID.Mimic,            MagnoBiome && Main.hardMode ? 0.1f : 0f);
+            bool SkyFort = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().SkyFort;
+            if (ModNPCID.Observer != 0)
+                pool.Add(ModNPCID.Observer,         SkyFort ? 0.6f : 0f);
+            //if (ModNPCID.Marauder != 0)
+            //  pool.Add(ModNPCID.Marauder,         SkyFort ? 0.4f : 0f);
+            if (ModNPCID.Gargoyle != 0)
+                pool.Add(ModNPCID.Gargoyle,         SkyFort ? 0.4f : 0f);
         }
         public override bool CheckActive(NPC npc)
         {
@@ -172,7 +180,7 @@ namespace ArchaeaMod.NPCs
         }
         public static bool NoSolidTileCollision(Tile tile)
         {
-            return (tile.active() && !Main.tileSolid[tile.type]) || !tile.active();
+            return (tile.HasTile && !Main.tileSolid[tile.TileType]) || !tile.HasTile;
         }
         public static Vector2 FindGround(NPC npc, Rectangle bounds)
         {
@@ -210,7 +218,7 @@ namespace ArchaeaMod.NPCs
                 for (int l = 0; l < player.width / 16; l++)
                 {
                     Tile ground = Main.tile[i + l, j + 1];
-                    if (ground.active() && Main.tileSolid[ground.type])
+                    if (ground.HasTile && Main.tileSolid[ground.TileType])
                         count++;
                 }
                 while (vector.Y + player.height < j * 16)
@@ -271,7 +279,7 @@ namespace ArchaeaMod.NPCs
                 return Vector2.Zero;
             if (findGround)
             {
-                if (!Main.tile[x, y + npc.height / 16 + 1].active() || !Main.tileSolid[Main.tile[x, y + npc.height / 16 + 1].type] || !Main.tileSolid[Main.tile[x + 1, y + npc.height / 16 + 1].type] || Main.tile[x, y + (npc.height - 4) / 16].active())
+                if (!Main.tile[x, y + npc.height / 16 + 1].HasTile || !Main.tileSolid[Main.tile[x, y + npc.height / 16 + 1].TileType] || !Main.tileSolid[Main.tile[x + 1, y + npc.height / 16 + 1].TileType] || Main.tile[x, y + (npc.height - 4) / 16].HasTile)
                     return Vector2.Zero;
             }
             return new Vector2(x * 16, y * 16);
@@ -363,13 +371,13 @@ namespace ArchaeaMod.NPCs
         {
             return (float)Math.Atan2(to.Y - from.Y, to.X - from.X);
         }
-        public static Dust[] DustSpread(Vector2 v, int width = 1, int height = 1, int dustType = 6, int total = 10, float scale = 1f, Color color = default(Color), bool noGravity = false, float spreadSpeed = 8f)
+        public static Dust[] DustSpread(Vector2 v, int width = 1, int height = 1, int DustType = 6, int total = 10, float scale = 1f, Color color = default(Color), bool noGravity = false, float spreadSpeed = 8f)
         {
             Dust[] dusts = new Dust[total];
             for (int k = 0; k < total; k++)
             {
                 Vector2 speed = ArchaeaNPC.AngleToSpeed(ArchaeaNPC.RandAngle(), spreadSpeed);
-                dusts[k] = Dust.NewDustDirect(v + speed, width, height, dustType, speed.X, speed.Y, 0, color, scale);
+                dusts[k] = Dust.NewDustDirect(v + speed, width, height, DustType, speed.X, speed.Y, 0, color, scale);
                 dusts[k].noGravity = noGravity;
             }
             return dusts;
@@ -473,11 +481,11 @@ namespace ArchaeaMod.NPCs
         }
         protected static bool NotActiveOrSolid(int i, int j)
         {
-            return (!Main.tile[i, j].active() && Main.tileSolid[Main.tile[i, j].type]) || (Main.tile[i, j].active() && !Main.tileSolid[Main.tile[i, j].type]);
+            return (!Main.tile[i, j].HasTile && Main.tileSolid[Main.tile[i, j].TileType]) || (Main.tile[i, j].HasTile && !Main.tileSolid[Main.tile[i, j].TileType]);
         }
         protected static bool NotActiveOrSolid(Tile tile)
         {
-            return (!tile.active() && Main.tileSolid[tile.type]) || (tile.active() && !Main.tileSolid[tile.type]);
+            return (!tile.HasTile && Main.tileSolid[tile.TileType]) || (tile.HasTile && !Main.tileSolid[tile.TileType]);
         }
 
         #region out of view

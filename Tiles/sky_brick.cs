@@ -14,20 +14,20 @@ namespace ArchaeaMod.Tiles
 {
     public class sky_brick : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
-            drop = mod.ItemType("sky_brick");
+            ItemDrop = Mod.Find<ModItem>("sky_brick").Type;
             AddMapEntry(Color.LightSlateGray);
-            soundStyle = 0;
-            soundType = 21;
+           // soundStyle = 0;
+            HitSound = SoundID.Tink;
         }
-        public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
+        public override void WalkDust(ref int DustType, ref bool makeDust, ref Color color)
         {
-            dustType = ModContent.DustType<Merged.Dusts.c_silver_dust>();
+            DustType = ModContent.DustType<Merged.Dusts.c_silver_dust>();
             makeDust = true;
             color = Color.LightGray;
         }

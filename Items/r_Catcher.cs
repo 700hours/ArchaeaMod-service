@@ -25,15 +25,15 @@ namespace ArchaeaMod.Items
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.damage = 10;
-            item.knockBack = 2f;
-            item.value = 3500;
-            item.rare = 2;
-            item.useTime = 30;
-            item.useAnimation = 30;
-            item.useStyle = ItemUseStyleID.SwingThrow;
+            Item.width = 48;
+            Item.height = 48;
+            Item.damage = 10;
+            Item.knockBack = 2f;
+            Item.value = 3500;
+            Item.rare = 2;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
+            Item.useStyle = ItemUseStyleID.Swing;
         }
         private int count;
         private int minions;
@@ -42,21 +42,21 @@ namespace ArchaeaMod.Items
             get { return ModContent.BuffType<buff_catcher>(); }
         }
         private Projectile minion;
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             minions = count + player.numMinions;
             if (minions == player.maxMinions || player.HasBuff(buffType))
             {
                 if (minion != null)
                     minion.active = false;
-                minion = Projectile.NewProjectileDirect(player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<CatcherMinion>(), item.damage, item.knockBack, player.whoAmI);
+                minion = Projectile.NewProjectileDirect(Projectile.GetSource_None(), player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<CatcherMinion>(), Item.damage, Item.knockBack, player.whoAmI);
                 if (Main.netMode == 2)
                     NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, minion.whoAmI);
             }
             if (!player.HasBuff(buffType))
             {
                 player.AddBuff(buffType, 36000);
-                minion = Projectile.NewProjectileDirect(player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<CatcherMinion>(), item.damage, item.knockBack, player.whoAmI);
+                minion = Projectile.NewProjectileDirect(Projectile.GetSource_None(), player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<CatcherMinion>(), Item.damage, Item.knockBack, player.whoAmI);
                 count = player.ownedProjectileCounts[minion.type];
                 if (Main.netMode == 2)
                     NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, minion.whoAmI);

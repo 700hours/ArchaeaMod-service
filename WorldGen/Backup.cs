@@ -13,7 +13,7 @@
 //using Terraria.ID;
 //using Terraria.ModLoader;
 //using Terraria.ModLoader.IO;
-//using Terraria.World.Generation;
+//using Terraria.WorldBuilding;
 
 //using ArchaeaMod.GenLegacy;
 //using ArchaeaMod.Items;

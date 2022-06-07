@@ -21,17 +21,17 @@ namespace ArchaeaMod.NPCs
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.width = 34;
-            npc.height = 30;
-            npc.lifeMax = 50;
-            npc.defense = 10;
-            npc.damage = 10;
-            npc.value = 0;
-            npc.lavaImmune = true;
-            npc.noTileCollide = true;
-            npc.noGravity = true;
-            npc.knockBackResist = 0f;
+            NPC.aiStyle = -1;
+            NPC.width = 34;
+            NPC.height = 30;
+            NPC.lifeMax = 50;
+            NPC.defense = 10;
+            NPC.damage = 10;
+            NPC.value = 0;
+            NPC.lavaImmune = true;
+            NPC.noTileCollide = true;
+            NPC.noGravity = true;
+            NPC.knockBackResist = 0f;
             bodyType = ModContent.NPCType<Hatchling_body>();
             tailType = ModContent.NPCType<Hatchling_tail>();
         }
@@ -41,7 +41,7 @@ namespace ArchaeaMod.NPCs
             WormAI();
         }
 
-        public override void NPCLoot()
+        public override void OnKill()
         {
             int rand = Main.rand.Next(10);
             switch (rand)
@@ -50,7 +50,7 @@ namespace ArchaeaMod.NPCs
                 case 1:
                 case 2:
                 case 3:
-                    Item.NewItem(npc.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>(), Main.rand.Next(1, 4));
+                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>(), Main.rand.Next(1, 4));
                     break;
             }
         }

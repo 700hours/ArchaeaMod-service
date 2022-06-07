@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using ArchaeaMod.Buffs;
@@ -16,32 +17,32 @@ namespace ArchaeaMod.Merged.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.timeLeft = 300;
-            projectile.friendly = true;
-            projectile.penetrate = 1;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = false;
-            projectile.scale = 1f;
-            projectile.melee = true;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.timeLeft = 300;
+            Projectile.friendly = true;
+            Projectile.penetrate = 1;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = false;
+            Projectile.scale = 1f;
+            Projectile.CountsAsClass(DamageClass.Melee);
         }
 
         public void Initialize()
         {
-            Player player = Main.player[projectile.owner];
-            Angle = (float)Math.Atan2(projectile.position.Y - Main.MouseWorld.Y, projectile.position.X - Main.MouseWorld.X);
+            Player player = Main.player[Projectile.owner];
+            Angle = (float)Math.Atan2(Projectile.position.Y - Main.MouseWorld.Y, Projectile.position.X - Main.MouseWorld.X);
 
-            if (projectile.velocity.X < 0f)
+            if (Projectile.velocity.X < 0f)
             {
-                projectile.spriteDirection = -1;
+                Projectile.spriteDirection = -1;
                 Angle += radians * -90f;
-                projectile.rotation = Angle + radians;
+                Projectile.rotation = Angle + radians;
             }
             else
             {
                 Angle += radians * -90f;
-                projectile.rotation = Angle + radians;
+                Projectile.rotation = Angle + radians;
             }
         }
         bool init = false;
@@ -61,18 +62,18 @@ namespace ArchaeaMod.Merged.Projectiles
             ticks++;
             if (ticks >= 20)
             {
-                projectile.velocity.X *= 0.98f;
-                projectile.velocity.Y += 0.35f;
+                Projectile.velocity.X *= 0.98f;
+                Projectile.velocity.Y += 0.35f;
 
-                if (projectile.velocity.X < 0f)
+                if (Projectile.velocity.X < 0f)
                 {
                     degrees = radians * 15f;
-                    projectile.rotation -= degrees;
+                    Projectile.rotation -= degrees;
                 }
                 else
                 {
                     degrees = radians * 15f;
-                    projectile.rotation += degrees;
+                    Projectile.rotation += degrees;
                 }
             }
         }
@@ -80,13 +81,13 @@ namespace ArchaeaMod.Merged.Projectiles
         {
             if (Main.rand.NextFloat() >= 0.75f)
             {
-                int daggerDrop = Item.NewItem(projectile.Center, mod.ItemType("cinnabar_dagger"), 1, true, 0, false, false);
+                int daggerDrop = Item.NewItem(Item.GetSource_None(), Projectile.Center, Mod.Find<ModItem>("cinnabar_dagger").Type, 1, true, 0, false, false);
             }
             for (int k = 0; k < 8; k++)
             {
-                int killDust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 4, 0f, 0f, 0, default(Color), 1f);
+                int killDust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 4, 0f, 0f, 0, default(Color), 1f);
             }
-            Main.PlaySound(SoundID.Dig, projectile.position);
+            SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)

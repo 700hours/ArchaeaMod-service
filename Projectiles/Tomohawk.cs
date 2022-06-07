@@ -23,12 +23,12 @@ namespace ArchaeaMod.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.timeLeft = 50;
-            projectile.friendly = true;
-            projectile.thrown = true;
-            projectile.damage = 24;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.timeLeft = 50;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Throwing;
+            Projectile.damage = 24;
         }
 
         private int ai = -1;
@@ -36,14 +36,14 @@ namespace ArchaeaMod.Projectiles
         private float yOffset = 16f;
         private Player owner
         {
-            get { return Main.player[projectile.owner]; }
+            get { return Main.player[Projectile.owner]; }
         }
         public override bool PreAI()
         {
             switch (ai)
             {
                 case -1:
-                    projectile.position.Y -= yOffset;
+                    Projectile.position.Y -= yOffset;
                     direction = owner.direction;
                     goto case 0;
                 case 0:
@@ -55,12 +55,12 @@ namespace ArchaeaMod.Projectiles
 
         public override void AI()
         {
-            projectile.rotation -= -Draw.radian * 5f * direction;
+            Projectile.rotation -= -Draw.radian * 5f * direction;
             Dusts(3);
-            if (projectile.timeLeft < 10)
+            if (Projectile.timeLeft < 10)
             {
-                if ((projectile.alpha += 20) < 200)
-                    projectile.timeLeft = 10;
+                if ((Projectile.alpha += 20) < 200)
+                    Projectile.timeLeft = 10;
             }
         }
         public override void Kill(int timeLeft)
@@ -69,7 +69,7 @@ namespace ArchaeaMod.Projectiles
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.StrikeNPC(projectile.damage, projectile.knockBack, target.position.X < projectile.position.X ? -1 : 1, Main.rand.NextBool());
+            target.StrikeNPC(Projectile.damage, Projectile.knockBack, target.position.X < Projectile.position.X ? -1 : 1, Main.rand.NextBool());
         }
         public override bool? CanHitNPC(NPC target)
         {
@@ -79,7 +79,7 @@ namespace ArchaeaMod.Projectiles
         {
             for (int i = 0; i < amount; i++)
             {
-                Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Fire, projectile.velocity.X, projectile.velocity.Y);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 6, Projectile.velocity.X, Projectile.velocity.Y);
                 dust.noGravity = noGravity;
             }
         }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -21,14 +22,14 @@ namespace ArchaeaMod.Items.Alternate
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.damage = 0;
-            item.value = 3500;
-            item.useTime = 60;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.rare = ItemRarityID.Green;
+            Item.width = 48;
+            Item.height = 48;
+            Item.damage = 0;
+            Item.value = 3500;
+            Item.useTime = 60;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.rare = ItemRarityID.Green;
         }
         private int count;
         private int minions;
@@ -37,19 +38,19 @@ namespace ArchaeaMod.Items.Alternate
             get { return (ModContent.BuffType<Minion.CallMinionBuff>()); }
         }
         private Projectile minion;
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             minions = count + player.numMinions;
             if (minions == player.maxMinions || player.HasBuff(buffType))
             {
                 if (minion != null)
                     minion.active = false;
-                minion = Projectile.NewProjectileDirect(player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<Minion>(), 0, 0f, player.whoAmI);
+                minion = Projectile.NewProjectileDirect(Projectile.GetSource_None(), player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<Minion>(), 0, 0f, player.whoAmI);
             }
             if (!player.HasBuff(buffType))
             {
                 player.AddBuff(buffType, 36000);
-                minion = Projectile.NewProjectileDirect(player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<Minion>(), 0, 0f, player.whoAmI);
+                minion = Projectile.NewProjectileDirect(Projectile.GetSource_None(), player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<Minion>(), 0, 0f, player.whoAmI);
                 count = player.ownedProjectileCounts[minion.type];
             }
             return true;
@@ -60,8 +61,8 @@ namespace ArchaeaMod.Items.Alternate
     {
         private int time
         {
-            get { return (int)projectile.localAI[0]; }
-            set { projectile.localAI[0] = value; }
+            get { return (int)Projectile.localAI[0]; }
+            set { Projectile.localAI[0] = value; }
         }
         private int ai = -1;
         private int coolDown;
@@ -79,7 +80,7 @@ namespace ArchaeaMod.Items.Alternate
         public Vector2 moveTo;
         public Player owner
         {
-            get { return Main.player[projectile.owner]; }
+            get { return Main.player[Projectile.owner]; }
         }
         public Target follow;
         public Target target;
@@ -91,20 +92,20 @@ namespace ArchaeaMod.Items.Alternate
         }
         public override void SetDefaults()
         {
-            projectile.width = 48;
-            projectile.height = 48;
-            projectile.damage = 0;
-            projectile.knockBack = 0f;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.friendly = true;
+            Projectile.width = 48;
+            Projectile.height = 48;
+            Projectile.damage = 0;
+            Projectile.knockBack = 0f;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.friendly = true;
         }
         public override bool PreAI()
         {
             if (!owner.HasBuff(ModContent.BuffType<CallMinionBuff>()))
             {
-                owner.numMinions -= owner.ownedProjectileCounts[projectile.type];
-                projectile.active = false;
+                owner.numMinions -= owner.ownedProjectileCounts[Projectile.type];
+                Projectile.active = false;
                 return false;
             }
             if (targets == null)
@@ -121,8 +122,8 @@ namespace ArchaeaMod.Items.Alternate
                     break;
                 case Start:
                     draw = new Draw();
-                    projectile.Center = Main.MouseWorld;
-                    moveTo = projectile.Center;
+                    Projectile.Center = Main.MouseWorld;
+                    moveTo = Projectile.Center;
                     ai = Move;
                     goto case Move;
                 case Move:
@@ -133,9 +134,9 @@ namespace ArchaeaMod.Items.Alternate
                         angle = 0f;
                         if (LeftClick())
                             moveTo = Main.MouseWorld;
-                        if (!projectile.Hitbox.Contains(moveTo.ToPoint()))
+                        if (!Projectile.Hitbox.Contains(moveTo.ToPoint()))
                         {
-                            projectile.velocity += NPCs.ArchaeaNPC.AngleToSpeed(NPCs.ArchaeaNPC.AngleTo(projectile.Center, moveTo), moveSpeed);
+                            Projectile.velocity += NPCs.ArchaeaNPC.AngleToSpeed(NPCs.ArchaeaNPC.AngleTo(Projectile.Center, moveTo), moveSpeed);
                             distance = 0f;
                         }
                         if (target != null && time-- < 0)
@@ -147,15 +148,15 @@ namespace ArchaeaMod.Items.Alternate
                     else
                     {
                         moveTo = NPCs.ArchaeaNPC.AngleBased(owner.Center, angle += Draw.radian * 5f, 135f);
-                        projectile.Center += NPCs.ArchaeaNPC.AngleToSpeed(NPCs.ArchaeaNPC.AngleTo(projectile.Center, moveTo), moveSpeed);
+                        Projectile.Center += NPCs.ArchaeaNPC.AngleToSpeed(NPCs.ArchaeaNPC.AngleTo(Projectile.Center, moveTo), moveSpeed);
                         if (coolDown > 0)
                             coolDown--;
                     }
-                    NPCs.ArchaeaNPC.VelocityClamp(projectile, -5f, 5f);
+                    NPCs.ArchaeaNPC.VelocityClamp(Projectile, -5f, 5f);
                     break;
                 case Active:
                     ai = Active;
-                    projectile.velocity = Vector2.Zero;
+                    Projectile.velocity = Vector2.Zero;
                     if (RightClick())
                     {
                         coolDown = time;
@@ -172,10 +173,10 @@ namespace ArchaeaMod.Items.Alternate
                         if (distance < maxDistance)
                             distance += 10f;
                         Color color = Color.DodgerBlue;
-                        Lighting.AddLight(projectile.Center, color.R / 255f, color.G / 255f, color.B / 255f);
+                        Lighting.AddLight(Projectile.Center, color.R / 255f, color.G / 255f, color.B / 255f);
                     }
                     foreach (Target t in targets)
-                        if (t.npc.Distance(projectile.Center) < distance)
+                        if (t.npc.Distance(Projectile.Center) < distance)
                             t.AttackEffect(Target.Frozen);
                     break;
 
@@ -189,7 +190,7 @@ namespace ArchaeaMod.Items.Alternate
         {
             if (ArchaeaItem.Elapsed(60))
             {
-                targets = Target.GetTargets(projectile, range).Where(t => t != null).ToArray();
+                targets = Target.GetTargets(Projectile, range).Where(t => t != null).ToArray();
                 target = Target.GetClosest(owner, targets);
             }
             if (targets == null)
@@ -207,19 +208,19 @@ namespace ArchaeaMod.Items.Alternate
             if (follow != null && ai != Attack)
             {
                 moveTo = follow.npc.Center;
-                if (!projectile.Hitbox.Contains(moveTo.ToPoint()))
-                    projectile.velocity += NPCs.ArchaeaNPC.AngleToSpeed(NPCs.ArchaeaNPC.AngleTo(projectile.Center, moveTo), moveSpeed);
+                if (!Projectile.Hitbox.Contains(moveTo.ToPoint()))
+                    Projectile.velocity += NPCs.ArchaeaNPC.AngleToSpeed(NPCs.ArchaeaNPC.AngleTo(Projectile.Center, moveTo), moveSpeed);
             }
-            NPCs.ArchaeaNPC.VelocityClamp(projectile, -5f, 5f);
+            NPCs.ArchaeaNPC.VelocityClamp(Projectile, -5f, 5f);
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(Color lightColor)
         {
             if (distance != 0f)
             {
                 for (float r = 0f; r < distance; r += draw.radians(distance))
                 {
-                    Vector2 c = NPCs.ArchaeaNPC.AngleBased(projectile.Center, r, distance) - Main.screenPosition;
-                    spriteBatch.Draw(Main.magicPixel, new Rectangle((int)c.X, (int)c.Y, 1, 1), Color.DodgerBlue * 0.50f);
+                    Vector2 c = NPCs.ArchaeaNPC.AngleBased(Projectile.Center, r, distance) - Main.screenPosition;
+                    Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X, (int)c.Y, 1, 1), Color.DodgerBlue * 0.50f);
                 }
             }
         }
@@ -240,7 +241,7 @@ namespace ArchaeaMod.Items.Alternate
 
         public class CallMinionBuff : ModBuff
         {
-            public override void SetDefaults()
+            public override void SetStaticDefaults()
             {
                 DisplayName.SetDefault("Minion Helper");
             }

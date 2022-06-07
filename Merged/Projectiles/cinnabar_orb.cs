@@ -15,47 +15,47 @@ namespace ArchaeaMod.Merged.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.scale = 1f;
-            projectile.aiStyle = -1;
-            projectile.timeLeft = 600;
-            projectile.damage = 10;
-            projectile.knockBack = 7.5f;
-            projectile.penetrate = 1;
-            projectile.friendly = true;
-            projectile.ownerHitCheck = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.magic = true;
-            projectile.netImportant = true;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.scale = 1f;
+            Projectile.aiStyle = -1;
+            Projectile.timeLeft = 600;
+            Projectile.damage = 10;
+            Projectile.knockBack = 7.5f;
+            Projectile.penetrate = 1;
+            Projectile.friendly = true;
+            Projectile.ownerHitCheck = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.CountsAsClass(DamageClass.Magic);
+            Projectile.netImportant = true;
         }
 
         public float degrees
         {
-            get { return projectile.ai[0]; }
-            set { projectile.ai[0] = value; }
+            get { return Projectile.ai[0]; }
+            set { Projectile.ai[0] = value; }
         }
 
         public void Initialize()
         {
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
 
-            center = new Vector2((player.position.X - projectile.width / 2) + player.width / 2, (player.position.Y - projectile.height / 2) + player.height / 2);
+            center = new Vector2((player.position.X - Projectile.width / 2) + player.width / 2, (player.position.Y - Projectile.height / 2) + player.height / 2);
 
-            ProjX = center.X + (float)(radius * Math.Cos(projectile.ai[0]));
-            ProjY = center.Y + (float)(radius * Math.Sin(projectile.ai[0]));
+            ProjX = center.X + (float)(radius * Math.Cos(Projectile.ai[0]));
+            ProjY = center.Y + (float)(radius * Math.Sin(Projectile.ai[0]));
 
             startAngle = (float)Math.Atan2(center.Y - ProjY, center.X - ProjX);
 
-            projectile.position = center;
+            Projectile.position = center;
         }
         bool init = false;
         bool target = false;
         int npcTarget = 0, oldNpcTarget;
         int ticks = 15;
         int timer;
-        int dustType;
+        int DustType;
         float ProjX, ProjY;
         float startAngle, npcAngle;
         float radius = 16f;
@@ -68,33 +68,33 @@ namespace ArchaeaMod.Merged.Projectiles
                 Initialize();
                 init = true;
             }
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
 
-            float Angle2 = (float)Math.Atan2(player.position.Y - projectile.position.Y, player.position.X - projectile.position.X);
-            projectile.rotation = Angle2 + (radians * -90f);
+            float Angle2 = (float)Math.Atan2(player.position.Y - Projectile.position.Y, player.position.X - Projectile.position.X);
+            Projectile.rotation = Angle2 + (radians * -90f);
 
             if (ticks > 0)
             {
                 ticks--;
-                projectile.position += Distance(null, startAngle, 8f);
+                Projectile.position += Distance(null, startAngle, 8f);
             }
 
             if (ticks == 0)
             {
                 if (!target)
                 {
-                    center = new Vector2((player.position.X - projectile.width / 2) + player.width / 2, (player.position.Y - projectile.height / 2) + player.height / 2);
+                    center = new Vector2((player.position.X - Projectile.width / 2) + player.width / 2, (player.position.Y - Projectile.height / 2) + player.height / 2);
                     radius = 128f;
 
                     degrees += radians * 3f;
-                    projectile.position.X = center.X + (float)(radius * Math.Cos(degrees));
-                    projectile.position.Y = center.Y + (float)(radius * Math.Sin(degrees));
+                    Projectile.position.X = center.X + (float)(radius * Math.Cos(degrees));
+                    Projectile.position.Y = center.Y + (float)(radius * Math.Sin(degrees));
                 }
                 foreach (NPC n in Main.npc)
                 {
                     if((!target && npcTarget == 0f) && n.active && !n.friendly && !n.dontTakeDamage && !n.immortal && n.target == player.whoAmI && ((n.lifeMax >= 50 && (Main.expertMode || Main.hardMode)) || (n.lifeMax >= 15 && !Main.expertMode && !Main.hardMode)))
                     {
-                        if (Vector2.Distance(n.position - projectile.position, Vector2.Zero) < 256f)
+                        if (Vector2.Distance(n.position - Projectile.position, Vector2.Zero) < 256f)
                         {
                             oldNpcTarget = npcTarget;
                             npcTarget = n.whoAmI;
@@ -105,18 +105,18 @@ namespace ArchaeaMod.Merged.Projectiles
                 if (target)
                 {
                     NPC nme = Main.npc[npcTarget];
-                    float npcAngle = (float)Math.Atan2(nme.position.Y - projectile.position.Y, nme.position.X - projectile.position.X);
+                    float npcAngle = (float)Math.Atan2(nme.position.Y - Projectile.position.Y, nme.position.X - Projectile.position.X);
 
-                    projectile.velocity = Distance(null, npcAngle, 16f);
+                    Projectile.velocity = Distance(null, npcAngle, 16f);
 
                     int direction = 0;
-                    if (projectile.velocity.X < 0)
+                    if (Projectile.velocity.X < 0)
                         direction = -1;
                     else direction = 1;
-                    if(projectile.Hitbox.Intersects(nme.Hitbox))
+                    if(Projectile.Hitbox.Intersects(nme.Hitbox))
                     {
-                        nme.StrikeNPC(projectile.damage, projectile.knockBack, direction, false, false, false);
-                        projectile.Kill();
+                        nme.StrikeNPC(Projectile.damage, Projectile.knockBack, direction, false, false, false);
+                        Projectile.Kill();
                     }
 
                     if (!nme.active || nme.life <= 0)
@@ -126,20 +126,20 @@ namespace ArchaeaMod.Merged.Projectiles
                 }
             }
             timer++;
-            dustType = mod.DustType("cinnabar_dust");
+            DustType = Mod.Find<ModDust>("cinnabar_dust").Type;
             if (timer % 6 == 0)
             {
-                int orbDust = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType, 0f, 0f, 0, Color.White, 1f);
+                int orbDust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType, 0f, 0f, 0, Color.White, 1f);
                 Main.dust[orbDust].noGravity = true;
             }
         }
         public override void Kill(int timeLeft)
         {
-            dustType = mod.DustType("cinnabar_dust");
+            DustType = Mod.Find<ModDust>("cinnabar_dust").Type;
             for (int k = 0; k < 6; k++)
             {
-                int Dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType, 0f, 0f, 0, Color.White, 2f);
-                int Dust2 = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType, projectile.velocity.X, projectile.velocity.Y, 0, Color.White, 2f);
+                int Dust1 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType, 0f, 0f, 0, Color.White, 2f);
+                int Dust2 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType, Projectile.velocity.X, Projectile.velocity.Y, 0, Color.White, 2f);
             }
         }
 

@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -18,24 +19,21 @@ using ArchaeaMod.ModUI;
 
 namespace ArchaeaMod.Mode
 {
-    public class ModeToggle : ModWorld
+    public class ModeToggle : ModSystem
     {
         public static bool archaeaMode;
         public bool progress;
         public static float healthScale;
         public static float damageScale;
-        public override TagCompound Save()
+        public override void SaveWorldData(TagCompound tag)/* Edit tag parameter rather than returning new TagCompound */
         {
-            return new TagCompound
-            {
-                { "ArchaeaMode", archaeaMode },
-                { "HealthScale", healthScale },
-                { "DamageScale", damageScale },
-                { "DayCount", dayCount },
-                { "TotalTime", totalTime }
-            };
+            tag.Set("ArchaeaMode", archaeaMode, true);
+            tag.Set("HealthScale", healthScale, true);
+            tag.Set("DamageScale", damageScale, true);
+            tag.Set("DayCount", dayCount, true);
+            tag.Set("TotalTime", totalTime, true);
         }
-        public override void Load(TagCompound tag)
+        public override void LoadWorldData(TagCompound tag)
         {
             archaeaMode = tag.GetBool("ArchaeaMode");
             healthScale = tag.GetFloat("HealthScale");
@@ -57,23 +55,20 @@ namespace ArchaeaMod.Mode
         }
         private bool init;
         private Button objectiveButton;
-        public override void PreUpdate()
+        public override void PostUpdateEverything()
         {
             if (!init)
             {
                 objectiveButton = new Button("Mode Status", new Rectangle(20, 284, 10 * 11, 24));
                 init = true;
             }
-        }
-        public static float dayCount;
-        public float totalTime;
-        public override void PostUpdate()
-        {
             totalTime += (float)Main.frameRate / 60f;
             dayCount = totalTime / (float)Main.dayLength;
             if (objectiveButton.LeftClick() && Main.playerInventory)
                 progress = !progress;
         }
+        public static float dayCount;
+        public float totalTime;
         public override void PostDrawTiles()
         {
             SpriteBatch sb = Main.spriteBatch;
@@ -83,11 +78,11 @@ namespace ArchaeaMod.Mode
                 if (progress)
                 {
                     Rectangle panel = new Rectangle(306 - 160, 255, 180, 100);
-                    sb.Draw(Main.magicPixel, panel, Color.DodgerBlue * 0.33f);
-                    sb.DrawString(Main.fontMouseText, "Life scale: " + new ModeNPC().ModeChecksLifeScale(), new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
-                    sb.DrawString(Main.fontMouseText, "Damage scale: " + new ModeNPC().ModeChecksDamageScale(), new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
-                    sb.DrawString(Main.fontMouseText, "Day: " + Math.Round(dayCount + 1, 0), new Vector2(panel.Left + 4, panel.Top + 44), Color.White);
-                    sb.DrawString(Main.fontMouseText, "World time: " + Math.Round(totalTime / 60d / 60d, 1), new Vector2(panel.Left + 4, panel.Top + 64), Color.White);
+                    sb.Draw(TextureAssets.MagicPixel.Value, panel, Color.DodgerBlue * 0.33f);
+                    sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + new ModeNPC().ModeChecksLifeScale(), new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + new ModeNPC().ModeChecksDamageScale(), new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Day: " + Math.Round(dayCount + 1, 0), new Vector2(panel.Left + 4, panel.Top + 44), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "World time: " + Math.Round(totalTime / 60d / 60d, 1), new Vector2(panel.Left + 4, panel.Top + 64), Color.White);
                 }
                 if (archaeaMode)
                     objectiveButton.Draw();
@@ -228,9 +223,8 @@ namespace ArchaeaMod.Mode
     {
         public static bool tileProgress;
         private int[,] playerCrafting = new int[5,3];
-        public override void PlaceInWorld(int i, int j, Item item)
+        public override void PlaceInWorld(int i, int j, int type, Item item)
         {
-            int type = 0;
             int[] crafting = new int[] 
             { 
                 TileID.Anvils, 
@@ -293,16 +287,6 @@ namespace ArchaeaMod.Mode
                         }
                     }
                 }
-            }
-        }
-    }
-    public class ModePlayer : ModPlayer
-    {
-        public override void ModifyDrawInfo(ref PlayerDrawInfo drawInfo)
-        {
-            if (Main.playerInventory)
-            {
-
             }
         }
     }

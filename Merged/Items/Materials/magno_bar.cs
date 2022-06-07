@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 using ArchaeaMod.Merged;
-
 namespace ArchaeaMod.Merged.Items.Materials
 {
     public class magno_bar : ModItem
@@ -16,26 +14,26 @@ namespace ArchaeaMod.Merged.Items.Materials
         }
         public override void SetDefaults()
         {
-            item.width = 32;
-            item.height = 32;
-            item.scale = 1f;
-            item.value = 3500;
-            item.maxStack = 99;
-            item.rare = 2;
-            item.useTime = 10;
-            item.useAnimation = 15;
-            item.useStyle = 1;
-            item.consumable = true;
-            item.autoReuse = true;
-            item.createTile = mod.TileType("m_bar");
+            Item.width = 32;
+            Item.height = 32;
+            Item.scale = 1f;
+            Item.value = 3500;
+            Item.maxStack = 99;
+            Item.rare = 2;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.consumable = true;
+            Item.autoReuse = true;
+            Item.createTile = Mod.Find<ModTile>("m_bar").Type;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<Tiles.magno_ore>(), 4);
-            recipe.AddTile(TileID.Furnaces);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Tiles.magno_ore>(), 4)
+                .AddTile(TileID.Furnaces)
+//            recipe.SetResult(this, 1);
+                .Register();
         }
     }
 }

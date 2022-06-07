@@ -11,7 +11,7 @@ using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace ArchaeaMod.Unused
 {
@@ -48,7 +48,7 @@ namespace ArchaeaMod.Unused
 
 namespace ArchaeaMod.GenLegacy
 {
-    public class MagnoCave : ArchaeaWorld
+    public class MagnoCave_legacy : ArchaeaWorld
     {
         private static int x
         {
@@ -197,38 +197,38 @@ namespace ArchaeaMod.GenLegacy
         {
             int size = WorldGen.genRand.Next(1, 4);
             int rand = WorldGen.genRand.Next(1, 5);
-            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x + 1 + lookFurther, y].active())
+            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x + 1 + lookFurther, y].HasTile)
             {
                 center.X += 1f;
                 lookFurther = 0;
                 points++;
                 DigPlot(size);
             }
-            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x - 1 - lookFurther, y].active())
+            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x - 1 - lookFurther, y].HasTile)
             {
                 center.X -= 1f;
                 lookFurther = 0;
                 points++;
                 DigPlot(size);
             }
-            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x, y + 1 + lookFurther].active() && center.Y < maxY)
+            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x, y + 1 + lookFurther].HasTile && center.Y < maxY)
             {
                 center.Y += 1f;
                 lookFurther = 0;
                 points++;
                 DigPlot(size);
             }
-            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x, y - 1 - lookFurther].active() && center.Y > upperBounds)
+            if (WorldGen.genRand.Next(1, 4) == 1 && Main.tile[x, y - 1 - lookFurther].HasTile && center.Y > upperBounds)
             {
                 center.Y -= 1f;
                 lookFurther = 0;
                 points++;
                 DigPlot(size);
             }
-            if (!Main.tile[x + 1 + lookFurther, y].active() &&
-                !Main.tile[x - 1 - lookFurther, y].active() &&
-                !Main.tile[x, y + 1 + lookFurther].active() &&
-                !Main.tile[x, y - 1 - lookFurther].active())
+            if (!Main.tile[x + 1 + lookFurther, y].HasTile &&
+                !Main.tile[x - 1 - lookFurther, y].HasTile &&
+                !Main.tile[x, y + 1 + lookFurther].HasTile &&
+                !Main.tile[x, y - 1 - lookFurther].HasTile)
                 lookFurther++;
             if (!plots.ContainsKey(center))
                 plots.Add(center, size);
@@ -251,7 +251,7 @@ namespace ArchaeaMod.GenLegacy
                         {
                             center.X += 1f;
                             lookFurther++;
-                        } while (!Main.tile[x + 1 + lookFurther, y].active()
+                        } while (!Main.tile[x + 1 + lookFurther, y].HasTile
                                 && x < Main.rightWorld / 16);
                         break;
                     case 2:
@@ -259,7 +259,7 @@ namespace ArchaeaMod.GenLegacy
                         {
                             center.X -= 1f;
                             lookFurther++;
-                        } while (!Main.tile[x - 1 - lookFurther, y].active()
+                        } while (!Main.tile[x - 1 - lookFurther, y].HasTile
                                 && x > 50);
                         break;
                     case 3:
@@ -267,7 +267,7 @@ namespace ArchaeaMod.GenLegacy
                         {
                             center.Y += 1f;
                             lookFurther++;
-                        } while (!Main.tile[x, y + 1 + lookFurther].active()
+                        } while (!Main.tile[x, y + 1 + lookFurther].HasTile
                                 && y < Main.bottomWorld / 16);
                         break;
                     case 4:
@@ -275,7 +275,7 @@ namespace ArchaeaMod.GenLegacy
                         {
                             center.Y -= 1f;
                             lookFurther++;
-                        } while (!Main.tile[x, y - 1 - lookFurther].active()
+                        } while (!Main.tile[x, y - 1 - lookFurther].HasTile
                                 && y > maxY);
                         break;
                     default:
@@ -329,8 +329,9 @@ namespace ArchaeaMod.GenLegacy
                     {
                         if (WorldGen.genRand.Next(60) == 0)
                             PlaceWater(new Vector2(i, j));
-                        Main.tile[i, j].type = TileID.PearlstoneBrick;
-                        Main.tile[i, j].active(true);
+                        Main.tile[i, j].TileType = TileID.PearlstoneBrick;
+                        Tile tile = Main.tile[i, j];
+                        tile.HasTile = true;
                         //  WorldGen.PlaceTile(i, j, TileID.PearlstoneBrick, false, true);
                     }
                 }
@@ -347,8 +348,9 @@ namespace ArchaeaMod.GenLegacy
                 {
                     for (int j = y - s[k] * border; j < y + s[k] * border; j++)
                     {
-                        Main.tile[i, j].type = TileID.PearlstoneBrick;
-                        Main.tile[i, j].active(true);
+                        Main.tile[i, j].TileType = TileID.PearlstoneBrick;
+                        Tile tile = Main.tile[i, j];
+                        tile.HasTile = true;
                         //  WorldGen.PlaceTile(i, j, TileID.PearlstoneBrick, true, true);
                         //  WorldGen.KillWall(i, j);
                     }
@@ -363,8 +365,9 @@ namespace ArchaeaMod.GenLegacy
                     {
                         if (WorldGen.genRand.Next(60) == 0)
                             PlaceWater(new Vector2(i, j));
-                        Main.tile[i, j].type = 0;
-                        Main.tile[i, j].active(false);
+                        Main.tile[i, j].TileType = 0;
+                        Tile tile = Main.tile[i, j];
+                        tile.HasTile = false;
                         //  WorldGen.KillTile(i, j, false, false, true);
                     }
             }
@@ -374,7 +377,9 @@ namespace ArchaeaMod.GenLegacy
             int x = (int)position.X;
             int y = (int)position.Y;
             if (Inbounds(x, y))
-                Main.tile[x, y].liquid = 60;
+            { 
+                WorldGen.PlaceLiquid(x, y, LiquidID.Water, 60);
+            }
         }
         public void CheckComplete(int divisor = 2)
         {
@@ -481,20 +486,20 @@ namespace ArchaeaMod.GenLegacy
                         switch (rooms[i][m, n])
                         {
                             case 0:
-                                tile.wall = (ushort)ModContent.WallType<Merged.Walls.magno_brick>();
-                                tile.type = 0;
-                                tile.active(false);
+                                tile.WallType = (ushort)ModContent.WallType<Merged.Walls.magno_brick>();
+                                tile.TileType = 0;
+                                tile.HasTile = false;
                                 break;
                             case 1:
                                 if (WorldGen.genRand.Next(2) == 1)
-                                    tile.type = (ushort)ModContent.TileType<Merged.Tiles.m_stone>();
+                                    tile.TileType = (ushort)ModContent.TileType<Merged.Tiles.m_stone>();
                                 else
-                                    tile.type = TileID.RainCloud;
-                                tile.active(true);
+                                    tile.TileType = TileID.RainCloud;
+                                tile.HasTile = true;
                                 break;
                             case 2:
-                                tile.type = TileID.Bubble;
-                                tile.active(true);
+                                tile.TileType = TileID.Bubble;
+                                tile.HasTile = true;
                                 break;
                             case 3:
                                 Vector2 center = new Vector2(centers[i].X, centers[i].Y + randY / 2);
@@ -510,10 +515,10 @@ namespace ArchaeaMod.GenLegacy
                                         Vector2 placement = Vector2.Lerp(center, point, l);
                                         Tile cloud = Main.tile[(int)placement.X, (int)placement.Y];
                                         if (WorldGen.genRand.Next(2) == 0)
-                                            cloud.type = TileID.Cloud;
+                                            cloud.TileType = TileID.Cloud;
                                         else
-                                            cloud.type = TileID.RainCloud;
-                                        cloud.active(true);
+                                            cloud.TileType = TileID.RainCloud;
+                                        cloud.HasTile = true;
                                     }
                                 }
                                 break;
@@ -532,10 +537,10 @@ namespace ArchaeaMod.GenLegacy
                                         int placeX = (int)placement.X + l;
                                         int placeY = (int)placement.Y + q;
                                         Tile hall = Main.tile[placeX, placeY];
-                                        if (hall.wall == 0)
+                                        if (hall.WallType == 0)
                                         {
-                                            hall.type = (ushort)ModContent.TileType<Merged.Tiles.m_stone>();
-                                            hall.active(true);
+                                            hall.TileType = (ushort)ModContent.TileType<Merged.Tiles.m_stone>();
+                                            hall.HasTile = true;
                                         }
                                     }
                                 }
@@ -550,9 +555,9 @@ namespace ArchaeaMod.GenLegacy
                                         int wallX = (int)placement.X + p;
                                         int wallY = (int)placement.Y + q;
                                         Tile wall = Main.tile[wallX, wallY];
-                                        wall.wall = (ushort)ModContent.WallType<Merged.Walls.magno_brick>();
-                                        wall.type = 0;
-                                        wall.active(false);
+                                        wall.WallType = (ushort)ModContent.WallType<Merged.Walls.magno_brick>();
+                                        wall.TileType = 0;
+                                        wall.HasTile = false;
                                     }
                                 }
                             }

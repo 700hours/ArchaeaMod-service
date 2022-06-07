@@ -12,7 +12,7 @@ namespace ArchaeaMod.Merged.Tiles
 {
 	public class c_ore : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
             Main.tileSpelunker[Type] = true;
             Main.tileShine2[Type] = true;
@@ -22,14 +22,14 @@ namespace ArchaeaMod.Merged.Tiles
 			Main.tileMergeDirt[Type] = false;
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = false;
-            dustType = 1;
-			drop = mod.ItemType("cinnabar_ore");
+            DustType = 1;
+			ItemDrop = Mod.Find<ModItem>("cinnabar_ore").Type;
             //  UI map tile color
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Cinnabar Ore");
             AddMapEntry(new Color(201, 152, 115), name);
-            mineResist = 1.8f;
-            minPick = 35;
+            MineResist = 1.8f;
+            MinPick = 35;
         }
         public override void NumDust(int i, int j, bool fail, ref int num)
         {

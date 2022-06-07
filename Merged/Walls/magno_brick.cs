@@ -7,11 +7,11 @@ namespace ArchaeaMod.Merged.Walls
 {
     public class magno_brick : ModWall
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.wallHouse[Type] = true;
             TileID.Sets.HousingWalls[Type] = true;
-            drop = mod.ItemType("magno_brickwall");
+            ItemDrop = Mod.Find<ModItem>("magno_brickwall").Type;
             AddMapEntry(new Color(80, 10, 10));
         }
     }

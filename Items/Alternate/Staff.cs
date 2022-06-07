@@ -23,18 +23,18 @@ namespace ArchaeaMod.Items.Alternate
         }
         public override void SetDefaults()
         {
-            item.width = 48;
-            item.height = 48;
-            item.damage = 0;
-            item.mana = 0;
-            item.value = 5000;
-            item.rare = ItemRarityID.Green;
-            item.useTime = 60;
-            item.useAnimation = 5;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.autoReuse = true;
-            item.channel = true;
-            item.magic = true;
+            Item.width = 48;
+            Item.height = 48;
+            Item.damage = 0;
+            Item.mana = 0;
+            Item.value = 5000;
+            Item.rare = ItemRarityID.Green;
+            Item.useTime = 60;
+            Item.useAnimation = 5;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.autoReuse = true;
+            Item.channel = true;
+            Item.DamageType = DamageClass.Magic;
         }
 
         private int time;
@@ -49,7 +49,7 @@ namespace ArchaeaMod.Items.Alternate
         }
         private int manaCost
         {
-            get { return second / item.useTime; }
+            get { return second / Item.useTime; }
         }
         private bool update = true;
         private int index;
@@ -63,7 +63,7 @@ namespace ArchaeaMod.Items.Alternate
         private float alpha;
         private Dust[] dust = new Dust[5];
         public Target[] targets;
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             if (player.statMana <= 0)
                 return false;
@@ -90,7 +90,7 @@ namespace ArchaeaMod.Items.Alternate
             {
                 if (i < 5)
                 {
-                    dust[i] = Dust.NewDustDirect(player.Center - new Vector2(25f, 32f) + new Vector2(i * 12f, 0f), 1, 1, DustID.Fire, 0f, 0f, 0, default(Color), 2f);
+                    dust[i] = Dust.NewDustDirect(player.Center - new Vector2(25f, 32f) + new Vector2(i * 12f, 0f), 1, 1, 6, 0f, 0f, 0, default(Color), 2f);
                     dust[i].noGravity = true;
                 }
             }
@@ -104,7 +104,7 @@ namespace ArchaeaMod.Items.Alternate
                 index = 0;
             }
         }
-        public override void UseStyle(Player player)
+        public override void UseStyle(Player player, Rectangle heldItemFrame)
         {
             ArchaeaItem.ActiveChannelStyle(player);
         }
@@ -113,7 +113,7 @@ namespace ArchaeaMod.Items.Alternate
             for (float r = 0f; r < Math.PI * 2f; r += 0.017f * (45f / 15f))
             {
                 Vector2 velocity = NPCs.ArchaeaNPC.AngleToSpeed(r, 15f);
-                Projectile pixel = Projectile.NewProjectileDirect(player.Center, velocity, ModContent.ProjectileType<Pixel>(), 0, 0f, player.whoAmI, Pixel.Fire, Pixel.Default);
+                Projectile pixel = Projectile.NewProjectileDirect(Projectile.GetSource_None(), player.Center, velocity, ModContent.ProjectileType<Pixel>(), 0, 0f, player.whoAmI, Pixel.Fire, Pixel.Default);
                 pixel.tileCollide = false;
                 pixel.timeLeft = 15;
             }

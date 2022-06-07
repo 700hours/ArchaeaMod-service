@@ -17,7 +17,7 @@ namespace ArchaeaMod.Tiles
 {
     public class m_plants_large : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
@@ -32,11 +32,11 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.addTile(Type);
             AddMapEntry(new Color(210, 110, 210));
-            disableSmartCursor = true;
-            mineResist = 1.2f;
-            minPick = 45;
-            soundStyle = 0;
-            soundType = SoundID.Grass;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            MineResist = 1.2f;
+            MinPick = 45;
+           // soundStyle = 0;
+            HitSound = SoundID.Grass;
         }
         public override bool CreateDust(int i, int j, ref int type)
         {

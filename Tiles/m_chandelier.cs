@@ -16,7 +16,7 @@ namespace ArchaeaMod.Tiles
 {
     public class m_chandelier : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLighted[Type] = true;
@@ -33,7 +33,7 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 2, 0);
             TileObjectData.addTile(Type);
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
-            drop = ModContent.ItemType<Items.Tiles.m_chandelier>();
+            ItemDrop = ModContent.ItemType<Items.Tiles.m_chandelier>();
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Chandelier");
             AddMapEntry(Color.MediumVioletRed, name);
@@ -42,15 +42,15 @@ namespace ArchaeaMod.Tiles
         public override void HitWire(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX == 0)
-                tile.frameX = 18 * 3;
-            else tile.frameX = 0;
+            if (tile.TileFrameX == 0)
+                tile.TileFrameX = 18 * 3;
+            else tile.TileFrameX = 0;
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX <= 18 * 3)
+            if (tile.TileFrameX <= 18 * 3)
             {
                 r = 1f;
                 g = 0.557f;
@@ -64,7 +64,7 @@ namespace ArchaeaMod.Tiles
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.m_chandelier>());
+            Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<Items.Tiles.m_chandelier>());
         }
     }
 }
