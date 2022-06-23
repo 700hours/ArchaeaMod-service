@@ -120,3 +120,11 @@ version 0.2.1417.10 -> 0.2.1830.11
 # Changed 
 - Porting from 1.3.5.3 to 1.4 constitutes most of the changes
 - Auto-converted armor spritesheets
+
+# Fixed
+- Missing Soul Cluster buff texture
+
+version 0.2.1830.11 -> 0.2.1831.11
+============================
+# Changed
+- Description modified

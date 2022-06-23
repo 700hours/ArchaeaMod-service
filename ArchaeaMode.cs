@@ -57,6 +57,8 @@ namespace ArchaeaMod.Mode
         private Button objectiveButton;
         public override void PostUpdateEverything()
         {
+            if (Main.dedServ)
+                return;
             if (!init)
             {
                 objectiveButton = new Button("Mode Status", new Rectangle(20, 284, 10 * 11, 24));

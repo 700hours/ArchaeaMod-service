@@ -1,1 +1,15 @@
-Archaea Mod is work done to compliment the game progression with both early and late game content.
+# Archaea Mod
+## Basics
+This is a Terraria mod designed to provide new elements that are both pre-hardmode and hardmode.
+
+## Hint
+We have added some complex elements.
+
+## Team
+> WarrenMark, lead
+> TerrorPenguin, artist
+> iggysaur, artist
+> RJ, composer
+> Fristo, composer
+> A44, composer
+> Duze, programmer
