@@ -188,5 +188,10 @@ namespace ArchaeaMod.NPCs
                     break;
             }
         }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
+            return MagnoBiome ? 0.2f : 0f;
+        }
     }
 }

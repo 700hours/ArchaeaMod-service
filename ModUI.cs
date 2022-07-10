@@ -78,6 +78,7 @@ namespace ArchaeaMod.ModUI
         private static Mod mod;
         private static ArchaeaPlayer modPlayer;
         internal static bool Toggled = false;
+        static bool flag = false;
         public static void MainOptions(Player player)
         {
             if (reset)
@@ -88,7 +89,7 @@ namespace ArchaeaMod.ModUI
             }
             if (toggle.LeftClick())
             {
-                Toggled = !Toggled;
+                Toggled = true;
                 classSelect = false;
             }
             mod = ModLoader.GetMod("ArchaeaMod");
@@ -102,6 +103,11 @@ namespace ArchaeaMod.ModUI
                     sb.DrawString(FontAssets.MouseText.Value, "Archaea Mod options", new Vector2(toggle.bounds.X, toggle.bounds.Bottom), Color.White);
                 }
             }
+            else
+            { 
+                Toggled = false;
+                return;
+            }
             if (!Toggled) return;
             if (classOptions != null && (oldWidth != Main.screenWidth || oldHeight != Main.screenHeight))
             {
@@ -109,9 +115,15 @@ namespace ArchaeaMod.ModUI
                 oldHeight = Main.screenHeight;
                 UpdateLocation();
             }
+            if (flag)
+            {
+                flag = false;
+                return;
+            }
             if (classSelect)
             {
                 ClassSelect(player);
+                return;
             }
             else
             {
@@ -120,19 +132,25 @@ namespace ArchaeaMod.ModUI
                     sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, mainOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), mainOptions[i].color);
                     if (mainOptions[i].HoverOver())
                     {
-                        if (i == 0 && mainOptions[i].LeftClick())
+                        if (i == 0 && mainOptions[0].LeftClick())
+                        {
+                            flag = true;
                             classSelect = true;
+                            break;
+                        }
                         sb.DrawString(FontAssets.MouseText.Value, categories[i], new Vector2(mainOptions[i].bounds.X, mainOptions[i].bounds.Bottom), Color.White);
                     }
                 }
                 //currently without designation
                 foreach (Element opt in mainOptions)
                 {
-                    if (opt.LeftClick())
+                    if (opt.LeftClick() && opt.ticks++ == 0)
                     {
                         opt.active = !opt.active;
                         opt.color = opt.active ? Color.Blue : Color.White;
+                        break;
                     }
+                    opt.ticks = 0;
                 }
                 //first player joined code
                 /*
@@ -146,7 +164,7 @@ namespace ArchaeaMod.ModUI
                 sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, apply.bounds, new Rectangle(44 * 4, 0, 44, 44), apply.color = selected != null ? Color.White : Color.Gray);
                 if (apply.HoverOver())
                     sb.DrawString(FontAssets.MouseText.Value, "Apply", new Vector2(apply.bounds.X, apply.bounds.Bottom), Color.White);
-                if (apply.LeftClick() && apply.color != Color.Gray)
+                if (apply.LeftClick() && apply.color != Color.Gray && back.ticks == 0)
                 {
                     modPlayer.classChoice = choice + 1;
                     if (Main.netMode != 0)
@@ -158,6 +176,7 @@ namespace ArchaeaMod.ModUI
                     }
                     Toggled = false;
                 }
+                back.ticks = 0;
             }
         }
         public static void ClassSelect(Player player)
@@ -195,10 +214,12 @@ namespace ArchaeaMod.ModUI
                     selected.color = Color.Blue;
                 }
             }
-            if (selected != null && back.LeftClick())
+            if (selected != null && back.LeftClick() && back.ticks++ == 0)
             {
                 classSelect = false;
+                return;
             }
+            back.ticks = 0;
         }
         public class Element
         {
@@ -209,6 +230,7 @@ namespace ArchaeaMod.ModUI
             public bool active;
             public Rectangle bounds;
             public Color color = Color.White;
+            public int ticks;
             public Texture2D texture
             {
                 get { return TextureAssets.MagicPixel.Value; }
@@ -223,6 +245,7 @@ namespace ArchaeaMod.ModUI
             }
             public bool LeftClick()
             {
+                Main.isMouseLeftConsumedByUI = true;
                 return HoverOver() && ArchaeaPlayer.LeftClick();
             }
             public void Draw()

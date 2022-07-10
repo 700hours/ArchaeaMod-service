@@ -15,6 +15,7 @@ using ArchaeaMod.Projectiles;
 
 namespace ArchaeaMod.Items
 {
+    [CloneByReference]
     public class n_Staff : ModItem
     {
         public override void SetStaticDefaults()
@@ -39,6 +40,7 @@ namespace ArchaeaMod.Items
 
         private int index = -1;
         private float angle;
+        [CloneByReference]
         private Projectile[] projs = new Projectile[6];
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {

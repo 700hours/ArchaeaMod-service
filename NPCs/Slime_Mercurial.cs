@@ -184,5 +184,11 @@ namespace ArchaeaMod.NPCs
             }
             NPC.frame.Y = frame * frameHeight;
         }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
+            bool downedMagno = ModContent.GetInstance<ArchaeaWorld>().downedMagno;
+            return MagnoBiome && downedMagno ? 0.4f : 0f;
+        }
     }
 }

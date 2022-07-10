@@ -15,6 +15,7 @@ using ArchaeaMod.Projectiles;
 
 namespace ArchaeaMod.Items
 {
+    [CloneByReference]
     public class r_Flail : ModItem
     {
         public override void SetStaticDefaults()
@@ -38,6 +39,7 @@ namespace ArchaeaMod.Items
             Item.noUseGraphic = true;
         }
 
+        [CloneByReference]
         private Projectile proj;
         public override void HoldItem(Player player)
         {

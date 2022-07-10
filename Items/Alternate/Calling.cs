@@ -37,6 +37,7 @@ namespace ArchaeaMod.Items.Alternate
         {
             get { return (ModContent.BuffType<Minion.CallMinionBuff>()); }
         }
+        [CloneByReference]
         private Projectile minion;
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {

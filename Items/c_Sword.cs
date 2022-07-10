@@ -12,6 +12,7 @@ using Terraria.ModLoader;
 using ArchaeaMod.Projectiles;
 namespace ArchaeaMod.Items
 {
+    [CloneByReference]
     public class c_Sword : ModItem
     {
         public override void SetStaticDefaults()
@@ -34,6 +35,7 @@ namespace ArchaeaMod.Items
         }
         private int time;
         private int index;
+        [CloneByReference]
         private Vector2[] ground;
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {

@@ -44,6 +44,7 @@ namespace ArchaeaMod.Items.Alternate
         private const int max = 4;
         private Vector2 move;
         private Vector2 start;
+        [CloneByReference]
         private Shield[] shield = new Shield[4];
         public override void UpdateAccessory(Player player, bool hideVisual)
         {

@@ -221,5 +221,10 @@ namespace ArchaeaMod.NPCs
             newPosition = reader.ReadVector2();
             tracking = reader.ReadVector2();
         }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            bool SkyFort = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().SkyFort;
+            return SkyFort ? 0.4f : 0f;
+        }
     }
 }

@@ -16,6 +16,7 @@ using ArchaeaMod.Projectiles;
 
 namespace ArchaeaMod.Items
 {
+    [CloneByReference]
     public class r_Catcher : ModItem
     {
         public override void SetStaticDefaults()
@@ -41,6 +42,7 @@ namespace ArchaeaMod.Items
         {
             get { return ModContent.BuffType<buff_catcher>(); }
         }
+        [CloneByReference]
         private Projectile minion;
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {

@@ -48,6 +48,7 @@ namespace ArchaeaMod.Items.Alternate
                 SetAltFunction();
             return true;
         }
+        [CloneByReference]
         private Target target;
         public override void UseItemHitbox(Player player, ref Rectangle hitbox, ref bool noHitbox)
         {

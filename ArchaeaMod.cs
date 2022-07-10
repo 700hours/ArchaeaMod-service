@@ -84,6 +84,7 @@ namespace ArchaeaMod
     {
         private bool swapTracks;
         private bool triggerSwap;
+        public override string MapBackground => "Backgrounds/MapBGMagno";
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetModUndergroundBackgroundStyle(Backgrounds.bg_style.Style);
         public override int Music => UpdateMusic();

@@ -61,7 +61,9 @@ namespace ArchaeaMod.Items.Alternate
             Hover = 2,
             Launch = 3;
         private float alpha;
+        [CloneByReference]
         private Dust[] dust = new Dust[5];
+        [CloneByReference]
         public Target[] targets;
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {

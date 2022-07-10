@@ -573,6 +573,11 @@ namespace ArchaeaMod
                 DebugMenu();
             if (spawnMenu)
                 SpawnMenu();
+            //var tex = ModContent.GetInstance<Items.Alternate.MagnoCannon>().tex;
+            if (Items.Alternate.MagnoCannon.tex != null && Player.controlUseItem)
+            {
+                sb.Draw(Items.Alternate.MagnoCannon.tex, Player.Center - Main.screenPosition, null, Color.White, Items.Alternate.MagnoCannon.angle, default(Vector2), 1f, SpriteEffects.None, 0f);
+            }
         }
         private bool init;
         private List<string> name = new List<string>();
@@ -724,12 +729,6 @@ namespace ArchaeaMod
                 }
                 b.Draw();
             }
-        }
-        public override Texture2D GetMapBackgroundImage()
-        {
-            if (MagnoBiome)
-                return Mod.Assets.Request<Texture2D>("Backgrounds/MapBGMagno").Value;
-            return base.GetMapBackgroundImage();
         }
         sealed class BiomeID
         {

@@ -189,5 +189,10 @@ namespace ArchaeaMod.NPCs
             Texture2D t = Mod.Assets.Request<Texture2D>("Gores/m_slimeglow").Value;
             spriteBatch.Draw(t, NPC.position - Main.screenPosition + new Vector2(5, 8), new Rectangle(0, frame * height, t.Width, height), Color.White);
         }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
+            return MagnoBiome ? 0.4f : 0f;
+        }
     }
 }

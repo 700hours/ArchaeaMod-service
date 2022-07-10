@@ -207,5 +207,10 @@ namespace ArchaeaMod.NPCs
             move = reader.ReadVector2();
             attack = reader.ReadBoolean();
         }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            bool SkyFort = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().SkyFort;
+            return SkyFort ? 0.6f : 0f;
+        }
     }
 }
