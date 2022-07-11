@@ -348,7 +348,7 @@ namespace ArchaeaMod.ModUI
         public Button(string text, Rectangle box, Texture2D texture = null)
         {
             this.texture = texture;
-            if (texture == null)
+            if (texture == null && !Main.dedServ)
                 this.texture = TextureAssets.MagicPixel.Value;
             this.text = text;
             this.box = box;

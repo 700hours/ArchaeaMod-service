@@ -1,5 +1,7 @@
-version 0.2.1831.11 -> 0.2.1833.12
-============================
+version 0.2.1847.14 -> 0.2.1851.19
+================================
 # Fixed
-- ModPlayer GetMapBackground properly ported to ModBiome
-- Class and mode UI selection and logic
+-> Cinnabar arrow effect
+	applying projectile and item damage added
+	networking fixed
+	cinnabar projectile hostile set to true

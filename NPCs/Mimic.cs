@@ -12,6 +12,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Utilities;
 
 namespace ArchaeaMod.NPCs
 {
@@ -200,7 +201,7 @@ namespace ArchaeaMod.NPCs
         {
             bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
             bool downedMagno = ModContent.GetInstance<ArchaeaWorld>().downedMagno;
-            return MagnoBiome && Main.hardMode ? 0.1f : 0f;
+            return MagnoBiome && Main.hardMode ? SpawnCondition.Cavern.Chance * 0.1f : 0f;
         }
     }
     

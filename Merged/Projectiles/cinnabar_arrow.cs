@@ -24,10 +24,12 @@ namespace ArchaeaMod.Merged.Projectiles
             Projectile.damage = 12;
             Projectile.timeLeft = 600;
             Projectile.friendly = true;
+            Projectile.hostile  = false;
             Projectile.penetrate = 2;
             Projectile.tileCollide = true;
             Projectile.ignoreWater = false;
             Projectile.scale = 1f;
+            Projectile.DamageType = DamageClass.Default;
             Projectile.CountsAsClass(DamageClass.Ranged);
             Projectile.arrow = true;
         }
@@ -90,6 +92,21 @@ namespace ArchaeaMod.Merged.Projectiles
             {
                 NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile.whoAmI, Projectile.position.X, Projectile.position.Y, Projectile.rotation);
                 Projectile.netUpdate = true;
+            }
+        }
+        public static void SyncProj(int netID, Projectile Projectile)
+        {
+            if (Main.netMode == netID)
+            {
+                NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile.whoAmI, Projectile.position.X, Projectile.position.Y, Projectile.rotation);
+                Projectile.netUpdate = true;
+            }
+        }
+        public static void SyncProj(Projectile Projectile)
+        {
+            if (Main.netMode == 1)
+            {
+                NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile.whoAmI);
             }
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)

@@ -20,6 +20,7 @@ namespace ArchaeaMod.Items
         {
             DisplayName.SetDefault("Scorched Fossil");
             Tooltip.SetDefault("");
+            ItemID.Sets.SortingPriorityBossSpawns[Type] = 12;
         }
         public override void SetDefaults()
         {
@@ -33,26 +34,30 @@ namespace ArchaeaMod.Items
             Item.autoReuse = false;
             Item.consumable = true;
             Item.noMelee = true;
-            bossType = ModContent.NPCType<Magnoliac_head>();
         }
         private int bossType;
         public override bool CanUseItem(Player player)
         {
-            for (int i = 0; i < Main.npc.Length; i++)
-            {
-                NPC npc = Main.npc[i];
-                if (npc.type == bossType && (npc.active || npc.life > 0))
-                    return false;
-            }
-            if (!player.GetModPlayer<ArchaeaPlayer>().MagnoBiome)
-                return false;
-            return true;
+            bossType = ModContent.NPCType<Magnoliac_head>();
+            return player.GetModPlayer<ArchaeaPlayer>().MagnoBiome && !NPC.AnyNPCs(bossType);
         }
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
-            NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<Magnoliac_head>());
-            SoundEngine.PlaySound(SoundID.Roar, player.Center);
-            return true;
+            if (player.whoAmI == Main.myPlayer)
+            {
+                bossType = ModContent.NPCType<Magnoliac_head>();
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    NPC.SpawnOnPlayer(player.whoAmI, bossType);
+                }
+                else
+                {
+                    NetMessage.SendData(MessageID.SpawnBoss, number: player.whoAmI, number2: bossType);
+                }
+                SoundEngine.PlaySound(SoundID.Roar, player.Center);
+                return true;
+            }
+            return false;
         }
         public override void AddRecipes()
         {

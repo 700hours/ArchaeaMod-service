@@ -94,28 +94,6 @@ namespace ArchaeaMod.NPCs
     }
     public class _GlobalNPC : GlobalNPC
     {
-        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
-        {
-            bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
-            bool downedMagno = ModContent.GetInstance<ArchaeaWorld>().downedMagno;
-            if (ModNPCID.Fanatic != 0)
-                pool.Add(ModNPCID.Fanatic,          MagnoBiome ? 0.2f : 0f);
-            if (ModNPCID.Hatchling != 0)
-                pool.Add(ModNPCID.Hatchling,        MagnoBiome ? 0.2f : 0f);
-            if (ModNPCID.ItchySlime != 0)
-                pool.Add(ModNPCID.ItchySlime,       MagnoBiome ? 0.4f : 0f);
-            if (ModNPCID.MercurialSlime != 0)
-                pool.Add(ModNPCID.MercurialSlime,   MagnoBiome && downedMagno ? 0.4f : 0f);
-            if (ModNPCID.Mimic != 0)
-                pool.Add(ModNPCID.Mimic,            MagnoBiome && Main.hardMode ? 0.1f : 0f);
-            bool SkyFort = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().SkyFort;
-            if (ModNPCID.Observer != 0)
-                pool.Add(ModNPCID.Observer,         SkyFort ? 0.6f : 0f);
-            //if (ModNPCID.Marauder != 0)
-            //  pool.Add(ModNPCID.Marauder,         SkyFort ? 0.4f : 0f);
-            if (ModNPCID.Gargoyle != 0)
-                pool.Add(ModNPCID.Gargoyle,         SkyFort ? 0.4f : 0f);
-        }
         public override bool CheckActive(NPC npc)
         {
             if (npc.TypeName.Contains("Sky"))

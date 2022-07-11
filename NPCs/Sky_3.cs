@@ -13,6 +13,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 using ArchaeaMod.NPCs;
+using Terraria.ModLoader.Utilities;
 
 namespace ArchaeaMod.NPCs
 {
@@ -224,7 +225,7 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool SkyFort = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().SkyFort;
-            return SkyFort ? 0.4f : 0f;
+            return SkyFort ? SpawnCondition.Sky.Chance * 0.4f : 0f;
         }
     }
 }

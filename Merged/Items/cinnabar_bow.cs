@@ -50,6 +50,11 @@ namespace ArchaeaMod.Merged.Items
             if (type == ProjectileID.WoodenArrowFriendly)
             {
                 type = ModContent.ProjectileType<Projectiles.cinnabar_arrow>();
+                var proj = ModContent.GetModProjectile(type);
+                int i = Projectile.NewProjectile(Projectile.GetSource_None(), position, velocity, type, (int)(proj.Projectile.damage + Item.damage * player.GetDamage(DamageClass.Ranged).Multiplicative), knockback, player.whoAmI);
+                if (Main.netMode != NetmodeID.SinglePlayer)
+                    Projectiles.cinnabar_arrow.SyncProj(Main.projectile[i]);
+                return false;
             }
             return true;
         }

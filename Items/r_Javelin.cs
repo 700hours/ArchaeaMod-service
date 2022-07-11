@@ -23,14 +23,14 @@ namespace ArchaeaMod.Items
         {
             Item.width = 48;
             Item.height = 48;
-            Item.damage = 0;
+            Item.damage = 38;
             Item.knockBack = 0f;
             Item.value = 100;
             Item.rare = 1;
             Item.useTime = 30;
             Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Swing;
-            Item.maxStack = 250;
+            Item.maxStack = 999;
             Item.consumable = true;
             Item.shoot = ModContent.ProjectileType<Javelin>();
             Item.shootSpeed = 6f;

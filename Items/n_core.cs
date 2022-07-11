@@ -33,20 +33,20 @@ namespace ArchaeaMod.Items
         private int bossType;
         public override bool CanUseItem(Player player)
         {
-            for (int i = 0; i < Main.npc.Length; i++)
-            {
-                NPC npc = Main.npc[i];
-                if (npc.type == bossType && (npc.active || npc.life > 0))
-                    return false;
-            }
-            ArchaeaPlayer modPlayer = player.GetModPlayer<ArchaeaPlayer>();
-            if (!modPlayer.SkyFort && !modPlayer.SkyPortal)
-                return false;
-            return true;
+            bossType = ModContent.NPCType<Sky_boss>();
+            return player.GetModPlayer<ArchaeaPlayer>().MagnoBiome && !NPC.AnyNPCs(bossType);
         }
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
-            NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<Sky_boss>());
+            bossType = ModContent.NPCType<Sky_boss>();
+            if (Main.netMode != 2)
+            {
+                NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<Magnoliac_head>());
+            }
+            else
+            {
+                NetMessage.SendData(MessageID.SpawnBoss, number: player.whoAmI, number2: bossType);
+            }
             SoundEngine.PlaySound(SoundID.Roar, player.Center);
             return true;
         }

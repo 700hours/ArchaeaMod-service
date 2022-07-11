@@ -23,9 +23,12 @@ namespace ArchaeaMod.Merged.Tiles
             Main.tileContainer[Type] = true;
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
+
+            TileID.Sets.BasicChest[Type] = true;
             TileID.Sets.NotReallySolid[Type] = true;
             TileID.Sets.DrawsWalls[Type] = true;
             TileID.Sets.HasOutlines[Type] = true;
+            
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Origin = new Point16(0, 1);
             TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16 };
@@ -36,6 +39,7 @@ namespace ArchaeaMod.Merged.Tiles
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
             TileObjectData.addTile(Type);
+            
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Magnoliac Chest");
             AddMapEntry(new Color(110, 110, 210), name);
@@ -66,6 +70,8 @@ namespace ArchaeaMod.Merged.Tiles
             Main.mouseRightRelease = false;
             int left = i;
             int top = j;
+            player.CloseSign();
+            player.SetTalkNPC(-1);
             if (tile.TileFrameX % 36 != 0)
             {
                 left--;
@@ -74,9 +80,9 @@ namespace ArchaeaMod.Merged.Tiles
             {
                 top--;
             }
-            if(Main.netMode == 1)
+            if (Main.netMode == 1) 
             {
-                if(left == player.chestX && top == player.chestY && player.chest >= 0)
+                if (left == player.chestX && top == player.chestY && player.chest >= 0)
                 {
                     player.chest = -1;
                     Recipe.FindRecipes();
@@ -102,18 +108,18 @@ namespace ArchaeaMod.Merged.Tiles
                     }
                     else
                     {
-                        player.chest = chest;
-                        Main.playerInventory = true;
-                        Main.recBigList = false;
-                        player.chestX = left;
-                        player.chestY = top;
+                        //player.chest = chest;
+                        //Main.playerInventory = true;
+                        //Main.recBigList = false;
+                        //player.chestX = left;
+                        //player.chestY = top;
+                        player.OpenChest(left, top, chest);
                         SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
                     }
                     Recipe.FindRecipes();
                 }
                 return true;
             }
-            return false;
         }
         public override void MouseOver(int i, int j)
         {

@@ -577,6 +577,10 @@ namespace ArchaeaMod
                             case 0:
                                 type = s0[Main.rand.Next(s0.Length)]; 
                                 chest.item[j].SetDefaults(type);
+                                if (type == ModContent.ItemType<r_Javelin>())
+                                    chest.item[j].stack = Main.rand.Next(12, 24);
+                                else if (type == ModContent.ItemType<r_Tomohawk>())
+                                    chest.item[j].stack = Main.rand.Next(15, 24);
                                 break;
                             case 1:
                                 type = s1[Main.rand.Next(s1.Length)]; 

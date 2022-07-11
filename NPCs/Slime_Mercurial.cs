@@ -12,6 +12,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.ModLoader.Utilities;
 
 namespace ArchaeaMod.NPCs
 {
@@ -186,9 +187,9 @@ namespace ArchaeaMod.NPCs
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
+            bool magnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
             bool downedMagno = ModContent.GetInstance<ArchaeaWorld>().downedMagno;
-            return MagnoBiome && downedMagno ? 0.4f : 0f;
+            return magnoBiome && downedMagno ? SpawnCondition.Cavern.Chance * 0.4f : 0f;
         }
     }
 }

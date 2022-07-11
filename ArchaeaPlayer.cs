@@ -28,9 +28,9 @@ namespace ArchaeaMod
     public class ArchaeaPlayer : ModPlayer
     {
         #region biome
-        public bool MagnoBiome;
-        public bool SkyFort;
-        public bool SkyPortal;
+        public bool MagnoBiome  => Player.InModBiome<MagnoBiome>();
+        public bool SkyFort     => Player.InModBiome<SkyFortBiome>();
+        public bool SkyPortal   => Player.InModBiome<SkyFortPortalBiome>();
         #endregion
         public static class ClassID
         {

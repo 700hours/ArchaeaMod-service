@@ -14,6 +14,8 @@ namespace ArchaeaMod.NPCs.Bosses
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Magno");
+            NPCID.Sets.MPAllowedEnemies[Type] = true;
+            NPCID.Sets.BossBestiaryPriority.Add(Type);
         }
         public override void SetDefaults()
         {
@@ -28,11 +30,13 @@ namespace ArchaeaMod.NPCs.Bosses
             NPC.lavaImmune = true;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
+            NPC.SpawnWithHigherTime(30);
             NPC.boss = true;
-            NPC.npcSlots = maxParts;
-            bodyType = ModContent.NPCType<Magnoliac_body>();
-            tailType = ModContent.NPCType<Magnoliac_tail>();
+            NPC.npcSlots = 10f;
             //bossBag = ModContent.ItemType<Merged.Items.magno_treasurebag>();
+            if (!Main.dedServ) {
+                Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Muics/The_Undying_Flare");
+            }
         }
         public override int maxParts
         {
@@ -50,6 +54,8 @@ namespace ArchaeaMod.NPCs.Bosses
             switch (ai)
             {
                 case -1:
+                    bodyType = ModContent.NPCType<Magnoliac_body>();
+                    tailType = ModContent.NPCType<Magnoliac_tail>();
                     NPC.lifeMax = maxParts / 2 * NPC.life;
                     NPC.life = NPC.lifeMax;
                     goto case 0;

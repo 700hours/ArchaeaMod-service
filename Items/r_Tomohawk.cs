@@ -23,11 +23,11 @@ namespace ArchaeaMod.Items
         {
             Item.width = 48;
             Item.height = 48;
-            Item.damage = 10;
+            Item.damage = 30;
             Item.knockBack = 2f;
             Item.value = 100;
             Item.rare = 2;
-            Item.maxStack = 250;
+            Item.maxStack = 999;
             Item.useTime = 30;
             Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Swing;

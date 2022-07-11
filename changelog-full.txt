@@ -134,3 +134,51 @@ version 0.2.1831.11 -> 0.2.1833.12
 # Fixed
 - ModPlayer GetMapBackground properly ported to ModBiome
 - Class and mode UI selection and logic
+
+version 0.2.1833.12 -> 0.2.1845.13
+============================
+# Fixed
+-> Tomohawk and Javelin natural chest stacks increased from 1 to >10
+-> Magno biome
+	chests unopenable
+	music not playing
+	detection changed to InModBiome
+	backgrounds not loading
+	npcs not spawning
+# Changed
+-> Tomohawk 
+	damage 10 -> 30
+	stack 250 -> 999
+-> Javelin 
+	damage 0 -> 38
+	stack 250 -> 999
+-> Rusty Catcher
+	mana 0 -> 10
+	DamageType -> Summoner
+
+version 0.2.1833.12 -> 0.2.1845.13
+================================
+# Fixed
+-> Tomohawk and Javelin natural chest stacks increased from 1 to >10
+-> Magno biome
+	chests unopenable
+	music not playing
+	detection changed to InModBiome
+	backgrounds not loading
+	npcs not spawning
+# Changed
+-> Tomohawk 
+	damage 10 -> 30
+	stack 250 -> 999
+-> Javelin 
+	damage 0 -> 38
+	stack 250 -> 999
+-> Rusty Catcher
+	mana 0 -> 10
+	DamageType -> Summoner
+
+version 0.2.1845.13 -> 0.2.1847.14
+================================
+# Fixed
+-> Boss summons
+-> Cinnabar bow effect

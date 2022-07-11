@@ -53,15 +53,7 @@ namespace ArchaeaMod
         public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
         public override bool IsBiomeActive(Player player)
         {
-            return Main.SceneMetrics.GetTileCount((ushort)ModContent.TileType<Tiles.sky_portal>()) != 0;
-        }
-        public override void OnEnter(Player player)
-        {
-            player.GetModPlayer<ArchaeaPlayer>().SkyPortal = true;
-        }
-        public override void OnLeave(Player player)
-        {
-            player.GetModPlayer<ArchaeaPlayer>().SkyPortal = false;
+            return Main.SceneMetrics.GetTileCount((ushort)ModContent.TileType<Tiles.sky_portal>()) > 0;
         }
     }
     public class SkyFortBiome : ModBiome
@@ -70,14 +62,6 @@ namespace ArchaeaMod
         public override bool IsBiomeActive(Player player)
         {
             return Main.SceneMetrics.GetTileCount(ArchaeaWorld.skyBrick) >= 80;
-        }
-        public override void OnEnter(Player player)
-        {
-            player.GetModPlayer<ArchaeaPlayer>().SkyFort = true;
-        }
-        public override void OnLeave(Player player)
-        {
-            player.GetModPlayer<ArchaeaPlayer>().SkyFort = false;
         }
     }
     public class MagnoBiome : ModBiome
@@ -90,28 +74,18 @@ namespace ArchaeaMod
         public override int Music => UpdateMusic();
         public override bool IsBiomeActive(Player player)
         {
-            return Main.SceneMetrics.GetTileCount(ArchaeaWorld.magnoStone) >= 80 || Main.SceneMetrics.GetTileCount(ArchaeaWorld.Ash) >= 30;
+            return Main.SceneMetrics.GetTileCount(ArchaeaWorld.magnoStone) >= 80;
         }
         public int UpdateMusic()
         {
-            Player player = Main.LocalPlayer;
-            if ((int)Main.time == Main.dayLength / 2)
+            if ((int)Main.time == (int)Main.dayLength / 2)
                 triggerSwap = true;
-            if (Main.netMode != 2 && player.active && !Main.gameMenu)
+            if (triggerSwap)
             {
-                if (player.GetModPlayer<ArchaeaPlayer>().MagnoBiome)
-                {
-                    if (!swapTracks)
-                        return MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Magno_Biome");
-                    else return MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma");
-                }
-                else if (triggerSwap)
-                {
-                    swapTracks = !swapTracks;
-                    triggerSwap = false;
-                }
+                swapTracks = !swapTracks;
+                triggerSwap = false;
             }
-            return 0;
+            return swapTracks ? MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma") : MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Magno_Biome");
         }
     }
     public class NetHandler

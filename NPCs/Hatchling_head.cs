@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Utilities;
 
 namespace ArchaeaMod.NPCs
 {
@@ -57,7 +58,7 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
-            return MagnoBiome ? 0.2f : 0f;
+            return MagnoBiome ? SpawnCondition.Cavern.Chance * 0.3f : 0f;
         }
     }
 }

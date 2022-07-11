@@ -9,8 +9,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Utilities;
 
 namespace ArchaeaMod.NPCs
 {
@@ -161,8 +163,10 @@ namespace ArchaeaMod.NPCs
             else frame = 0;
         }
 
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Materials.magno_core>(), 10));
+            npcLoot.Add(ItemDropRule.ByCondition())
             int rand = Main.rand.Next(12);
             switch (rand)
             {
@@ -191,7 +195,7 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
-            return MagnoBiome ? 0.2f : 0f;
+            return MagnoBiome ? SpawnCondition.Cavern.Chance * 0.2f : 0f;
         }
     }
 }

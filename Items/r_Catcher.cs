@@ -34,7 +34,9 @@ namespace ArchaeaMod.Items
             Item.rare = 2;
             Item.useTime = 30;
             Item.useAnimation = 30;
+            Item.mana = 10;
             Item.useStyle = ItemUseStyleID.Swing;
+            Item.DamageType = DamageClass.Summon;
         }
         private int count;
         private int minions;

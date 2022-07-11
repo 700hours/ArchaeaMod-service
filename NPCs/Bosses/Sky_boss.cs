@@ -19,6 +19,8 @@ namespace ArchaeaMod.NPCs.Bosses
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Necrosis");
+            NPCID.Sets.MPAllowedEnemies[Type] = true;
+            NPCID.Sets.BossBestiaryPriority.Add(Type);
         }
         public override void SetDefaults()
         {
@@ -34,6 +36,7 @@ namespace ArchaeaMod.NPCs.Bosses
             NPC.noTileCollide = true;
             NPC.knockBackResist = 0f;
             NPC.alpha = 255;
+            NPC.npcSlots = 10f;
         }
 
         public bool Hurt()
