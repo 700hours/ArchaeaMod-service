@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
@@ -146,8 +147,14 @@ namespace ArchaeaMod.NPCs
             flip = reader.ReadBoolean();
             velX = reader.ReadSingle();
         }
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.ByCondition(new Items.HardModeDrop(), ModContent.ItemType<Items.dream_catcher>(), 10));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Materials.magno_core>(), 10));
+        }
         public override void OnKill()
         {
+            return;
             int rand = Main.rand.Next(10);
             switch (rand)
             {
@@ -200,7 +207,6 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
-            bool downedMagno = ModContent.GetInstance<ArchaeaWorld>().downedMagno;
             return MagnoBiome && Main.hardMode ? SpawnCondition.Cavern.Chance * 0.1f : 0f;
         }
     }

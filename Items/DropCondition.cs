@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terraria;
 using Terraria.GameContent.ItemDropRules;
 
 namespace ArchaeaMod.Items
@@ -22,24 +23,24 @@ namespace ArchaeaMod.Items
 
         public string GetConditionDescription()
         {
-            return "";
+            return "Archaea mode";
         }
     }
-    public class Drop : IItemDropRuleCondition
+    public class HardModeDrop : IItemDropRuleCondition
     {
         public bool CanDrop(DropAttemptInfo info)
         {
-            throw new NotImplementedException();
+            return Main.hardMode;
         }
 
         public bool CanShowItemDropInUI()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public string GetConditionDescription()
         {
-            throw new NotImplementedException();
+            return "Hard mode";
         }
     }
 }

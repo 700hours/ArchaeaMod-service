@@ -1,7 +1,15 @@
-version 0.2.1847.14 -> 0.2.1851.19
+version 0.2.1847.14 -> 0.2.1854.20
 ================================
+# Added
+-> Two drop conditions
+	Vanilla hardmode
+	Archaea Mode
+# Changed
+-> NPC drop tables modified to match their progression
+-> BossBag loot
 # Fixed
 -> Cinnabar arrow effect
 	applying projectile and item damage added
 	networking fixed
-	cinnabar projectile hostile set to true
+-> NPC loot drops updated
+-> Some NPCs not spawning

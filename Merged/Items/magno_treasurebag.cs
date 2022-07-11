@@ -36,6 +36,8 @@ namespace ArchaeaMod.Merged.Items
             //  player.QuickSpawnItem(ModContent.ItemType<magno_shieldacc>(), 1);
             player.QuickSpawnItem(Item.GetSource_Loot(), ModContent.ItemType<Vanity.magno_mask>(), 1);
             player.QuickSpawnItem(Item.GetSource_Loot(), ModContent.ItemType<Tiles.magno_ore>(), Main.rand.Next(34, 68));
+            if (Main.expertMode || Main.masterMode)
+                player.QuickSpawnItem(Item.GetSource_Loot(), ModContent.ItemType<ArchaeaMod.Items.m_shield>());
             //  player.QuickSpawnItem(ModContent.ItemType<magno_fragment>(), Main.rand.Next(12, 24));
         }
     }

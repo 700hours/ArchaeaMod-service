@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
@@ -113,19 +114,9 @@ namespace ArchaeaMod.NPCs
         {
             SkyAI();
         }
-
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            int rand = Main.rand.Next(10);
-            switch (rand)
-            {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Items.Materials.r_plate>(), Main.rand.Next(1, 4));
-                    break;
-            }
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.r_plate>(), 3, 1, 4));
         }
 
         private bool BeginActive()

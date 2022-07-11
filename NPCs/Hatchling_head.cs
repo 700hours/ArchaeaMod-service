@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
@@ -42,18 +43,9 @@ namespace ArchaeaMod.NPCs
             WormAI();
         }
 
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            int rand = Main.rand.Next(10);
-            switch (rand)
-            {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>(), Main.rand.Next(1, 4));
-                    break;
-            }
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Materials.magno_core>(), 3));
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {

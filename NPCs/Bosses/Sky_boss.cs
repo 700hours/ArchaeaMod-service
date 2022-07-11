@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -204,11 +205,11 @@ namespace ArchaeaMod.NPCs.Bosses
         {
             lastHit = NPC.Center;
         }
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            Item.NewItem(Item.GetSource_NaturalSpawn(), lastHit, ModContent.ItemType<Items.n_Staff>());
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.n_Staff>()));
         }
-
+        
         private void SyncNPC()
         {
             if (Main.netMode == 2)

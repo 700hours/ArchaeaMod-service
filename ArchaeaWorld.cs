@@ -118,6 +118,10 @@ namespace ArchaeaMod
         {
             get { return (ushort)ModContent.TileType<Tiles.m_ash>(); }
         }
+        public static ushort magnoBook
+        {
+            get { return (ushort)ModContent.TileType<m_book>(); }
+        }
         public class ColorID
         {
             public static byte
@@ -489,7 +493,6 @@ namespace ArchaeaMod
             int[] t1 = new int[]
             {
                 ModContent.ItemType<cinnabar_dagger>(),
-                ModContent.ItemType<magno_book>(),
                 ModContent.ItemType<magno_yoyo>(),
                 ModContent.ItemType<m_fossil>()
             };

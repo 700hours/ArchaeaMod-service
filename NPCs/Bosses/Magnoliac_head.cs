@@ -166,13 +166,8 @@ namespace ArchaeaMod.NPCs.Bosses
         {
             lastHit = NPC.Center;
         }
-        public override void OnKill()
+        public override void BossLoot(ref string name, ref int potionType)
         {
-            if (lastHit == Vector2.Zero)
-                lastHit = NPC.position;
-            if (Main.expertMode)
-                Item.NewItem(Item.GetSource_NaturalSpawn(), lastHit, ModContent.ItemType<Items.m_shield>());
-
             if (Main.netMode == 0)
                 ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
             else
@@ -183,7 +178,6 @@ namespace ArchaeaMod.NPCs.Bosses
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<Merged.Items.magno_treasurebag>()));
-            npcLoot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<Items.m_shield>(), 1, 1));
         }
     }
 

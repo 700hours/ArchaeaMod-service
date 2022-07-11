@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
@@ -157,32 +158,13 @@ namespace ArchaeaMod.NPCs
             NPC.frame.Y = frame * frameHeight;
         }
 
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            int rand = Main.rand.Next(15);
-            switch (rand)
-            {
-                case 0:
-                case 1:
-                case 2:
-                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>());
-                    break;
-                case 10:
-                    int rand2 = Main.rand.Next(3);
-                    switch (rand2)
-                    {
-                        case 0:
-                            Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>());
-                            break;
-                        case 1:
-                            Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>());
-                            break;
-                        case 2:
-                            Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Armors.ancient_shockgreaves>());
-                            break;
-                    }
-                    break;
-            }
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.magno_summonstaff>(), 10));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Materials.magno_core>(), 3));
+            npcLoot.Add(ItemDropRule.ByCondition(new Items.ArchaeaModeDrop(), ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>(), 13));
+            npcLoot.Add(ItemDropRule.ByCondition(new Items.ArchaeaModeDrop(), ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>(), 13));
+            npcLoot.Add(ItemDropRule.ByCondition(new Items.ArchaeaModeDrop(), ModContent.ItemType<Merged.Items.Armors.ancient_shockgreaves>(), 13));
         }
 
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

@@ -14,6 +14,7 @@ using Terraria.ModLoader;
 
 using ArchaeaMod.NPCs;
 using Terraria.ModLoader.Utilities;
+using Terraria.GameContent.ItemDropRules;
 
 namespace ArchaeaMod.NPCs
 {
@@ -157,19 +158,9 @@ namespace ArchaeaMod.NPCs
                 else NPC.rotation += rotateSpeed;
             }
         }
-
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            int rand = Main.rand.Next(10);
-            switch (rand)
-            {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                    Item.NewItem(Item.GetSource_None(), NPC.Center, ModContent.ItemType<Items.Materials.r_plate>(), Main.rand.Next(1, 4));
-                    break;
-            }
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.r_plate>(), 3, 1, 4));
         }
 
         public override void OnHitPlayer(Player target, int damage, bool crit)
