@@ -46,6 +46,7 @@ namespace ArchaeaMod.Merged.Projectiles
         int DustType;
         float oldAngle;
         Player player;
+        float speed = 10f;
         public override void AI()
         {
             if (!init)
@@ -61,7 +62,7 @@ namespace ArchaeaMod.Merged.Projectiles
                 Projectile.rotation = Angle;
                 Rectangle mouseBox = new Rectangle((int)Main.MouseWorld.X - 8, (int)Main.MouseWorld.Y - 8, 16, 16);
                 if (!mouseBox.Intersects(Projectile.Hitbox))
-                    Projectile.velocity = Distance(null, Angle, 8f);
+                    Projectile.velocity = Distance(null, Angle, speed);
                 else Projectile.velocity = Vector2.Zero;
 
                 oldAngle = (float)Math.Atan2(Main.MouseWorld.Y - Projectile.Center.Y, Main.MouseWorld.X - Projectile.Center.X);

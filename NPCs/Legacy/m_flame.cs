@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace ArchaeaMod.NPCs
+namespace ArchaeaMod.NPCs.Legacy
 {
     public class m_flame : ModNPC
     {

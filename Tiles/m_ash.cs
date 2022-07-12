@@ -28,6 +28,15 @@ namespace ArchaeaMod.Tiles
             HitSound = SoundID.Tink;
         }
 
+        public override bool HasWalkDust()
+        {
+            return true;
+        }
+        public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
+        {
+            dustType = ModContent.DustType<Merged.Dusts.cinnabar_dust>();
+            makeDust = true;
+        }
         public override void NumDust(int i, int j, bool fail, ref int num)
         {
             num = fail ? 1 : 3;

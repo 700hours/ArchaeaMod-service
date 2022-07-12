@@ -125,7 +125,8 @@ namespace ArchaeaMod.NPCs
             if (StartDigging())
             {
                 Digging();
-                float acceleration = attack ? this.acceleration : 0.1f;
+                float lerpVel = Vector2.Lerp(new Vector2(0f, 0f), new Vector2(4f, 0f), Math.Abs(timer - maxTime / 2) / 50f).X;
+                float acceleration = attack ? this.acceleration + lerpVel : 0.1f;
                 float angle = NPC.AngleTo(chase);
                 float cos = (float)(acceleration * Math.Cos(angle));
                 float sine = (float)(acceleration * Math.Sin(angle));

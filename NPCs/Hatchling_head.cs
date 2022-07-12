@@ -17,6 +17,7 @@ namespace ArchaeaMod.NPCs
 {
     public class Hatchling_head : Digger
     {
+        public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Hatchling");
@@ -36,6 +37,7 @@ namespace ArchaeaMod.NPCs
             NPC.knockBackResist = 0f;
             bodyType = ModContent.NPCType<Hatchling_body>();
             tailType = ModContent.NPCType<Hatchling_tail>();
+            NPC.DeathSound = SoundID.NPCDeath1;
         }
         
         public override void AI()
@@ -50,7 +52,7 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
-            return MagnoBiome ? SpawnCondition.Cavern.Chance * 0.3f : 0f;
+            return MagnoBiome ? 0.3f : 0f;
         }
     }
 }

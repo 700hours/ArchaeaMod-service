@@ -26,6 +26,7 @@ namespace ArchaeaMod.Items
             Item.height = 48;
             Item.damage = 10;
             Item.knockBack = 2f;
+            Item.crit = 7;
             Item.mana = 10;
             Item.value = 3500;
             Item.rare = 2;

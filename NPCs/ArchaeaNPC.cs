@@ -444,6 +444,13 @@ namespace ArchaeaMod.NPCs
             if (npc.velocity.X > max)
                 npc.velocity.X = max;
         }
+        public static void VelClampY(NPC npc, float min, float max)
+        {
+            if (npc.velocity.Y < min)
+                npc.velocity.Y = min;
+            if (npc.velocity.Y > max)
+                npc.velocity.Y = max;
+        }
 
         protected static bool SolidGround(Tile[] tiles)
         {

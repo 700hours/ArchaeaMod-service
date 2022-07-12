@@ -22,7 +22,7 @@ namespace ArchaeaMod.Items.Armors
         {
             Item.width = 22;
             Item.height = 18;
-            Item.defense = 5;
+            Item.defense = 8;
             Item.rare = ItemRarityID.Orange;
             Item.value = 5000;
         }

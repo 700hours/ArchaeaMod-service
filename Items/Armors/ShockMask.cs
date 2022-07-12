@@ -25,7 +25,7 @@ namespace ArchaeaMod.Items.Armors
         {
             Item.width = 16;
             Item.height = 12;
-            Item.defense = 5;
+            Item.defense = 7;
             Item.value = 5000;
             Item.rare = ItemRarityID.Orange;
         }

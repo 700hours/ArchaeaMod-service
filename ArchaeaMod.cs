@@ -11,10 +11,7 @@ namespace ArchaeaMod
 {
     public class ArchaeaMain : Mod
     {
-        public static Mod getMod
-        {
-            get { return ModLoader.GetMod("ArchaeaMod"); }
-        }
+        public static Mod getMod => ModLoader.GetMod("ArchaeaMod");
         
         public static string magnoHead = "ArchaeaMod/Gores/magno_head";
         public static string skyHead = "ArchaeaMod/Gores/sky_head";
@@ -187,8 +184,9 @@ namespace ArchaeaMod
                         if (ArchaeaEntity.entity[t] != null)
                         {
                             ArchaeaEntity.entity[t].active = b;
-                            ArchaeaEntity.entity[t].Center = new Vector2(f, f2);
-                            ArchaeaEntity.entity[t].rotation = f3;
+                            ArchaeaEntity.entity[t].owner = (int)f3;
+                            if (f != 0f)
+                                ArchaeaEntity.entity[t].rotation = f;
                         }
                     }
                     break;
@@ -217,15 +215,7 @@ namespace ArchaeaMod
                         ArchaeaMod.Merged.Tiles.m_ore.TileExplode(t, i);
                     break;
                 case Packet.DownedMagno:
-                    if (Main.netMode == 2)
-                    {
-                        Send(Packet.DownedMagno, -1, -1);
-                        ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
-                    }
-                    else
-                    {
-                        ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
-                    }
+                    ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
                     break;
             }
         }

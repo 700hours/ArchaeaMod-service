@@ -25,7 +25,7 @@ namespace ArchaeaMod.Merged.Items.Materials
             Item.useStyle = 1;
             Item.consumable = true;
             Item.autoReuse = true;
-            Item.createTile = Mod.Find<ModTile>("m_bar").Type;
+            Item.createTile = ModContent.TileType<ArchaeaMod.Merged.Tiles.m_bar>();
         }
         public override void AddRecipes()
         {

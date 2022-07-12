@@ -11,6 +11,7 @@ namespace ArchaeaMod.NPCs.Bosses
 {
     public class Magnoliac_head : Digger
     {
+        public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Magno");
@@ -22,7 +23,7 @@ namespace ArchaeaMod.NPCs.Bosses
             NPC.aiStyle = -1;
             NPC.width = 32;
             NPC.height = 32;
-            NPC.lifeMax = 5000;
+            NPC.lifeMax = 2000;
             NPC.defense = 10;
             NPC.knockBackResist = 0.5f;
             NPC.damage = 20;
@@ -35,7 +36,7 @@ namespace ArchaeaMod.NPCs.Bosses
             NPC.npcSlots = 10f;
             //bossBag = ModContent.ItemType<Merged.Items.magno_treasurebag>();
             if (!Main.dedServ) {
-                Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Muics/The_Undying_Flare");
+                Music = MusicLoader.GetMusicSlot(Mod, "ArchaeaMod/Sounds/Muics/The_Undying_Flare");
             }
         }
         public override int maxParts
@@ -168,12 +169,7 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         public override void BossLoot(ref string name, ref int potionType)
         {
-            if (Main.netMode == 0)
-                ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
-            else
-            {
-                NetHandler.Send(Packet.DownedMagno, -1, -1);
-            }
+            ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {

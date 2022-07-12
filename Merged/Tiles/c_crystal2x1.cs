@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
@@ -33,6 +34,7 @@ namespace ArchaeaMod.Merged.Tiles
             TileObjectData.addAlternate(0);
             TileObjectData.addTile(Type);
             ModTranslation name = CreateMapEntryName();
+            ItemDrop = Mod.Find<ModItem>("cinnabar_crystal").Type;
             name.SetDefault("Cinnabar Crystal");
             AddMapEntry(new Color(210, 110, 110), name);
             TileID.Sets.DisableSmartCursor[Type] = true;
@@ -46,7 +48,17 @@ namespace ArchaeaMod.Merged.Tiles
             g = 0.161f; // original 0.361f
             b = 0.161f;
         }
+        public override void NearbyEffects(int i, int j, bool closer)
+        {
+            int x = i * 16;
+            int y = j * 16;
+            if (Main.rand.NextBool(60))
+            {
+                Dust.NewDust(new Vector2(x, y), 16, 16, Main.rand.NextBool(2) ? ModContent.DustType<ArchaeaMod.Dusts.Shimmer_1>() : ModContent.DustType<ArchaeaMod.Dusts.Shimmer_2>());
+            }
+        }
 
+        private bool fail;
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
             noItem = true;
@@ -56,8 +68,26 @@ namespace ArchaeaMod.Merged.Tiles
             int random = Main.rand.Next(1, 3);
             for (int k = 0; k < random; k++)
             {
-                Item.NewItem(Item.GetSource_None(), new Vector2(i * 16, j * 16), Mod.Find<ModItem>("cinnabar_crystal").Type, random, true, 0, true, false);
+                Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), Mod.Find<ModItem>("cinnabar_crystal").Type, random, true, 0, true, false);
             }
+        }
+        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+        {
+            return ModContent.GetInstance<ArchaeaWorld>().downedMagno;
+        }
+        public override bool Slope(int i, int j)
+        {
+            return false;
+        }
+        public override bool KillSound(int i, int j, bool fail)
+        {
+            SoundEngine.PlaySound(SoundID.Item27, new Vector2(i * 16, j * 16));
+            return false;
+        }
+        public override bool CreateDust(int i, int j, ref int type)
+        {
+            type = ModContent.DustType<Dusts.cinnabar_dust>();
+            return true;
         }
         public override bool CanKillTile(int i, int j, ref bool blockDamaged)
         {

@@ -23,15 +23,30 @@ namespace ArchaeaMod.Merged.Tiles
             MinPick = 35;
         }
 
+        public override bool CreateDust(int i, int j, ref int type)
+        {
+            type = ModContent.DustType<Dusts.magno_dust>();
+            return true;
+        }
+        public override bool HasWalkDust()
+        {
+            return true;
+        }
+        public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
+        {
+            dustType = ModContent.DustType<Merged.Dusts.magno_dust>();
+            makeDust = true;
+            color = Color.White;
+        }
         public override void NumDust(int i, int j, bool fail, ref int num)
         {
             num = fail ? 1 : 3;
         }
-        //  need to add waters namespace
-        /*      public override void ChangeWaterfallStyle(ref int style)
-                {
-                    style = mod.GetWaterfallStyleSlot("MagnoWaterfall");
-                }   */
+        //  need to add custom waters namespace
+        public override void ChangeWaterfallStyle(ref int style)
+        {
+            style = WaterStyleID.Cavern;
+        }   
         public override void RandomUpdate(int i, int j)
         {
         /*  Tile tile = Main.tile[i, j - 1];

@@ -37,6 +37,11 @@ namespace ArchaeaMod.Merged.Tiles
             MinPick = 35;
         }
 
+        public override bool CreateDust(int i, int j, ref int type)
+        {
+            type = ModContent.DustType<Dusts.magno_dust>();
+            return true;
+        }
         public override void NumDust(int i, int j, bool fail, ref int num)
         {
             num = fail ? 1 : 3;

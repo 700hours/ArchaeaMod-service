@@ -19,6 +19,7 @@ namespace ArchaeaMod.NPCs
 {
     public class Slime_Mercurial : Slime
     {
+        public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Mercurial Slime");
@@ -33,6 +34,7 @@ namespace ArchaeaMod.NPCs
             NPC.defense = 10;
             NPC.damage = 10;
             NPC.lavaImmune = true;
+            NPC.DeathSound = SoundID.NPCDeath1;
         }
         private int count;
         private float compensateY;
@@ -170,7 +172,7 @@ namespace ArchaeaMod.NPCs
         {
             bool magnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
             bool downedMagno = ModContent.GetInstance<ArchaeaWorld>().downedMagno;
-            return magnoBiome && downedMagno ? SpawnCondition.Cavern.Chance * 0.4f : 0f;
+            return magnoBiome && downedMagno ? 0.4f : 0f;
         }
     }
 }

@@ -27,6 +27,7 @@ namespace ArchaeaMod.Items
             Item.knockBack = 2f;
             Item.value = 100;
             Item.rare = 2;
+            Item.crit = 14;
             Item.maxStack = 999;
             Item.useTime = 30;
             Item.useAnimation = 20;

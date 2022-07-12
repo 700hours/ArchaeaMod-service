@@ -182,3 +182,93 @@ version 0.2.1845.13 -> 0.2.1847.14
 # Fixed
 -> Boss summons
 -> Cinnabar bow effect
+
+version 0.2.1847.14 -> 0.2.1854.20
+================================
+# Added
+-> Two drop conditions
+	Vanilla hardmode
+	Archaea Mode
+# Changed
+-> NPC drop tables modified to match their progression
+-> BossBag loot
+# Fixed
+-> Cinnabar arrow effect
+	applying projectile and item damage added
+	networking fixed
+-> NPC loot drops updated
+-> Some NPCs not spawning
+
+version 0.2.1854.20 -> 0.2.1855.21
+============================
+# Fixed
+-> NPCs not mod-loading and therefore not spawning
+
+version 0.2.1855.21 -> 0.2.1857.23
+============================
+# Changed
+-> NPC boss health reduced by 60%
+-> AI attack follows boss instead of stationary and NPC boss movement more 
+	dynamic
+
+version 0.2.1857.23 -> 0.2.1858.24
+============================
+# Fixed
+-> Null exception in Boss AI
+
+version 0.2.1858.24 -> 0.2.1859.26
+============================
+# Fixed
+-> Boss body despawning 
+
+version 0.2.1859.27 -> 0.2.1860.28
+============================
+# Fixed
+-> Boss bag NPC type was wrong
+
+version 0.2.1860.28 -> 0.2.1885.29
+================================
+# Note
+Results of the first round of public testing and the corresponding fixes 
+suggested by the tester, or just a general observation.
+
+Status		Tester		Action
+# NPCs
+?			none		Appropriate NPC added to Life Form Analyzer rarity
+?			general		Itchy Slimes slide around on platforms
+x			Sock		Enemy death sounds added
+x			Sock		Mod biome boss maxLife lowered by 60%
+x			Sock		"	"	  " movement more dynamic
+x			general		"	"	  " despawn fix
+?			general		Fixed Certain NPCs following players after player death
+# Tiles
+x			none		Walk dust for Magno ash and stone
+x			general		Fix for tiles breaking with tile replacing
+x			general		Dust particles on mod biome tiles
+x			none		Certain tile now properly placeable
+			none		Waterfall effect changed to Cavern in mod biome
+# Entities
+?			none		netcode updated with player index send
+x			none		rotation based on player index and updated client-side
+?			Sock		blocks PvP projectiles
+# Items
+x			general		Rubidium Staff added proper DamageType
+x			Sock		Magno book projectile speed increased by 25%
+x			general		Fixed Magno fragments were not attainable
+?			none		Particular item damage increased by 70
+?			none		Items in general now have defined crit chance values
+# WorldGen
+x			general		Fix for certain tiles not being mine-able
+x			none		Networking for important flags
+# Dusts
+x			none		Two shimmer dusts added
+x			none		Dust hit effects added to proper tiles
+x			none		Walk dust fixed
+
+version 0.2.1885.29 -> 0.2.1889.30
+================================
+# Fixed
+-> Accessory not properly updating angle data
+-> Certain item deleting other player's minions
+-> Certain item's maxStack being only 1
+-> An armor set bonus networking

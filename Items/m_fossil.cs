@@ -28,6 +28,7 @@ namespace ArchaeaMod.Items
             Item.height = 48;
             Item.rare = 2;
             Item.value = 2000;
+            Item.maxStack = 99;
             Item.useTime = 45;
             Item.useAnimation = 45;
             Item.useStyle = 4;

@@ -30,11 +30,13 @@ namespace ArchaeaMod.Merged.Items
             Item.useAnimation = 20;
             Item.damage = 15;
             Item.mana = 8;
+            Item.crit = 7;
             Item.useStyle = 1;
             Item.value = 2500;
             Item.rare = 2;
             Item.noMelee = true;
             Item.DamageType = DamageClass.Magic;
+            Item.CountsAsClass(DamageClass.Magic);
         }
 
         public override bool CanUseItem(Player player)

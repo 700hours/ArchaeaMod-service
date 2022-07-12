@@ -28,8 +28,9 @@ namespace ArchaeaMod.Items
         {
             Item.width = 48;
             Item.height = 48;
-            Item.damage = 10;
+            Item.damage = 80;
             Item.knockBack = 0f;
+            Item.crit = 20;
             Item.mana = 10;
             Item.value = 3500;
             Item.useTime = 100;

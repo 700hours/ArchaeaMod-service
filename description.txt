@@ -3,7 +3,7 @@
 This is a Terraria mod designed to provide new elements that are both pre-hardmode and hardmode.
 
 ## Hint
-We have added some complex elements.
+We have added some complex elements. 
 
 ## Team
 > WarrenMark, lead

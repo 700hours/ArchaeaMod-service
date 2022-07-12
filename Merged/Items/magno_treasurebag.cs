@@ -22,10 +22,7 @@ namespace ArchaeaMod.Merged.Items
             Item.consumable = true;
             Item.expert = true;
         }
-        public override int BossBagNPC
-        {
-            get { return Mod.Find<ModNPC>("boss_magnohead").Type;}
-        }
+        public override int BossBagNPC => ModContent.NPCType<ArchaeaMod.NPCs.Bosses.Magnoliac_head>();
         public override bool CanRightClick()
         {
             return true;
@@ -38,7 +35,7 @@ namespace ArchaeaMod.Merged.Items
             player.QuickSpawnItem(Item.GetSource_Loot(), ModContent.ItemType<Tiles.magno_ore>(), Main.rand.Next(34, 68));
             if (Main.expertMode || Main.masterMode)
                 player.QuickSpawnItem(Item.GetSource_Loot(), ModContent.ItemType<ArchaeaMod.Items.m_shield>());
-            //  player.QuickSpawnItem(ModContent.ItemType<magno_fragment>(), Main.rand.Next(12, 24));
+            player.QuickSpawnItem(Item.GetSource_Loot(), ModContent.ItemType<Merged.Items.Materials.magno_fragment>(), Main.rand.Next(18, 32));
         }
     }
 }

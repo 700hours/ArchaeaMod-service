@@ -17,7 +17,10 @@ namespace ArchaeaMod.Items.Armors
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shock Plate");
-            Tooltip.SetDefault("Throwing weapons create bolts of lightning");
+        }
+        public override void UpdateArmorSet(Player player)
+        {
+            player.setBonus = "Throwing weapons create bolts of lightning";
         }
         public override void SetDefaults()
         {

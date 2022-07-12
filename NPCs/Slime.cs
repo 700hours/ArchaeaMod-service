@@ -76,8 +76,17 @@ namespace ArchaeaMod.NPCs
                 timer = 0;
             
             if (NPC.velocity.Y == 0f && !NPC.wet && Collision.SolidCollision(NPC.position, NPC.width, NPC.height + 8))
+            { 
                 NPC.velocity = Vector2.Zero;
+                if (Main.tile[(int)NPC.position.X / 16, (int)(NPC.position.Y + NPC.height - 15) / 16 + 1].TileType == TileID.Platforms)
+                    NPC.velocity.X = 0f;
+            }
             target = ArchaeaNPC.FindClosest(NPC, true);
+            if (NPC.wet)
+            {
+                NPC.velocity.Y -= 0.3f;
+                ArchaeaNPC.VelClampY(NPC, 0f, 2f);
+            }
             if (target == null)
             {
                 DefaultActions();

@@ -25,13 +25,12 @@ namespace ArchaeaMod.Merged.Items
             Item.knockBack = 6f;
             Item.value = 2500;
             Item.rare = 1;
-
+            Item.crit = 7;
             //  custom sound?
             //  item.UseSound = mod.GetLegacySoundSlot(SoundType.Item, "Sounds/Item/*");
             //  default usesound
             Item.UseSound = SoundID.Item1;
             Item.channel = true;
-
             Item.autoReuse = false;
             Item.consumable = false;
             Item.noMelee = true;

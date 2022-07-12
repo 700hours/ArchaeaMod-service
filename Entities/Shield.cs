@@ -22,14 +22,15 @@ namespace ArchaeaMod.Entities
         {
             width = 18;
             height = 40;
+            type = ArchaeaEntity.ID.Shield;
         }
         public override void Update()
         {
             netUpdate = true;
             Player player = Main.player[owner];
             rotation = ArchaeaNPC.AngleTo(player.Center, Center);
-            orbit += radian * Math.Min(player.statLifeMax / Math.Max(player.statLife, 1) + 2f, 6f);
-            if (orbit > Math.PI * 2f)
+            orbit = (float)Math.Round(orbit + (radian * Math.Min(player.statLifeMax / Math.Max(player.statLife, 1) + 2f, 6f)), 2);
+            if (orbit >= Math.Round(Math.PI * 2f, 2))
                 orbit = 0f;
             float cos = player.Center.X + (float)(radius * Math.Cos(start + orbit));
             float sine = player.Center.Y + (float)(radius * Math.Sin(start + orbit));

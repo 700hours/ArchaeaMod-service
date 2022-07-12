@@ -18,6 +18,7 @@ namespace ArchaeaMod.NPCs
 {
     public class Sky_1 : Sky_air
     {
+        public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Resentful Spirit");
@@ -202,7 +203,7 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool SkyFort = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().SkyFort;
-            return SkyFort ? SpawnCondition.Sky.Chance * 0.6f : 0f;
+            return SkyFort ? 0.6f : 0f;
         }
     }
 }

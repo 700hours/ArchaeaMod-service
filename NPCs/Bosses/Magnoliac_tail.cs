@@ -14,6 +14,7 @@ namespace ArchaeaMod.NPCs.Bosses
 {
     public class Magnoliac_tail : Hatchling_tail
     {
+        public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Magno");
@@ -65,7 +66,7 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         public override bool CheckActive()
         {
-            return head.active;
+            return !head.active;
         }
     }
 }

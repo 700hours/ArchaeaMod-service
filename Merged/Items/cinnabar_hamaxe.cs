@@ -21,6 +21,7 @@ namespace ArchaeaMod.Merged.Items
             Item.useAnimation = 24;
             Item.useStyle = 1;
             Item.axe = 20;
+            Item.crit = 5;
             Item.hammer = 50;
             Item.damage = 16;
             Item.knockBack = 7.5f;

@@ -1,15 +1,4 @@
-version 0.2.1847.14 -> 0.2.1854.20
-================================
-# Added
--> Two drop conditions
-	Vanilla hardmode
-	Archaea Mode
-# Changed
--> NPC drop tables modified to match their progression
--> BossBag loot
+version 0.2.1889.30 -> 0.2.1890.31
+==================================
 # Fixed
--> Cinnabar arrow effect
-	applying projectile and item damage added
-	networking fixed
--> NPC loot drops updated
--> Some NPCs not spawning
+-> Worldgen structure coordinate error

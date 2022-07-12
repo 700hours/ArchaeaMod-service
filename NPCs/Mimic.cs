@@ -33,6 +33,7 @@ namespace ArchaeaMod.NPCs
             NPC.defense = 10;
             NPC.damage = 20;
             NPC.knockBackResist = 1f;
+            NPC.rarity = 4;
             NPC.value = Item.sellPrice(0, 1, 50, 0);
             NPC.lavaImmune = true;
         }
@@ -149,7 +150,7 @@ namespace ArchaeaMod.NPCs
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            npcLoot.Add(ItemDropRule.ByCondition(new Items.HardModeDrop(), ModContent.ItemType<Items.dream_catcher>(), 10));
+            npcLoot.Add(ItemDropRule.ByCondition(new Items.HardModeDrop(), ModContent.ItemType<Items.dream_catcher>()));
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Materials.magno_core>(), 10));
         }
         public override void OnKill()
@@ -207,7 +208,7 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
-            return MagnoBiome && Main.hardMode ? SpawnCondition.Cavern.Chance * 0.1f : 0f;
+            return MagnoBiome && Main.hardMode ? 0.1f : 0f;
         }
     }
     

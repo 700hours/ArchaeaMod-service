@@ -43,7 +43,7 @@ namespace ArchaeaMod
         private ushort[] useful = new ushort[] { TileID.Loom, TileID.SharpeningStation, TileID.Anvils, TileID.CookingPots };
         private Vector2 origin;
         private List<Vector2> path;
-        public const int YCoord = 30;
+        public const int YCoord = 60;
         private const ushort
             TILE_None = 0,
             TILE_Chain = 1,
@@ -966,8 +966,11 @@ namespace ArchaeaMod
                             WorldGen.PlaceTile(m, n, type);
                             break;
                         case ID.Lamp:
-                            WorldGen.PlaceWall(m, n, wallID);
-                            WorldGen.PlaceTile(m, n, TileID.HangingLanterns);
+                            if (Main.rand.NextBool(4))
+                            { 
+                                WorldGen.PlaceWall(m, n, wallID);
+                                WorldGen.PlaceTile(m, n, TileID.HangingLanterns);
+                            }
                             break;
                         case ID.Door:
                             tile.HasTile = false;
@@ -1180,7 +1183,10 @@ namespace ArchaeaMod
                                     WorldGen.SquareTileFrame(m, n, true);
                                     break;
                                 case ID.Lamp:
-                                    WorldGen.PlaceTile(m, n, TileID.HangingLanterns);
+                                    if (Main.rand.NextBool(4))
+                                    { 
+                                        WorldGen.PlaceTile(m, n, TileID.HangingLanterns);
+                                    }
                                     break;
                                 case ID.Chest:
                                     WorldGen.PlaceChest(m, n, ArchaeaWorld.magnoChest);

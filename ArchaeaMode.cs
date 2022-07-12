@@ -27,11 +27,11 @@ namespace ArchaeaMod.Mode
         public static float damageScale;
         public override void SaveWorldData(TagCompound tag)/* Edit tag parameter rather than returning new TagCompound */
         {
-            tag.Set("ArchaeaMode", archaeaMode, true);
-            tag.Set("HealthScale", healthScale, true);
-            tag.Set("DamageScale", damageScale, true);
-            tag.Set("DayCount", dayCount, true);
-            tag.Set("TotalTime", totalTime, true);
+            tag.Add("ArchaeaMode", archaeaMode);
+            tag.Add("HealthScale", healthScale);
+            tag.Add("DamageScale", damageScale);
+            tag.Add("DayCount", dayCount);
+            tag.Add("TotalTime", totalTime);
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -102,10 +102,6 @@ namespace ArchaeaMod.Mode
         private readonly int 
             start = 0, health = 1, mana = 2, bosses = 3, bottom = 4, npcs = 5, week= 6, crafting = 7, downedMagno = 8;
         private readonly float[] scaling = new float[] { 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f };
-        private Mod Mod
-        {
-            get { return ModLoader.GetMod("ArchaeaMod"); }
-        }
         public override void AI(NPC n)
         {
             if (!init)

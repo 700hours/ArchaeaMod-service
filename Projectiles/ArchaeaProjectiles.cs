@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -29,6 +30,7 @@ namespace ArchaeaMod.Projectiles
         public static void Explode(Projectile projectile, int type, int size, int damage, float knockBack, bool hurtNpc = true, int debuffType = -1, int debuffTime = 300, bool debuff = false, int count = 20)
         {
             int num = size * 3;
+            SoundEngine.PlaySound(SoundID.Item14, projectile.Center);
             for (int i = 0; i < count; i++)
             {
                 Dust.NewDust(projectile.Center - new Vector2(num / 2, num / 2), num, num, type, 0, 0, 0, default, 2);
@@ -40,9 +42,11 @@ namespace ArchaeaMod.Projectiles
                     if (npc.active && !npc.friendly && npc.Distance(projectile.Center) < num)
                     {
                         npc.StrikeNPC(damage, knockBack, npc.position.X < projectile.position.X ? -1 : 1, Main.rand.NextBool());
+                        NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, npc.whoAmI, damage, knockBack, 0, 0);
                         if (debuff)
                         {
                             npc.AddBuff(debuffType, debuffTime);
+                            NetMessage.SendData(MessageID.AddNPCBuff, -1, -1, null, npc.whoAmI, debuffType, debuffTime);
                         }
                     }
                 }

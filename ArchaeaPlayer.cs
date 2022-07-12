@@ -65,6 +65,8 @@ namespace ArchaeaMod
         {
             Color textColor = Color.Yellow;
             return;
+
+            //ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
             //  ITEM TEXT and SKY FORT DEBUG GEN
             //if (!start && !Main.dedServ && KeyPress(Keys.F1) && KeyHold(Keys.Up))
             //{

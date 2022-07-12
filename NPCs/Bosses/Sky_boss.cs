@@ -17,6 +17,7 @@ namespace ArchaeaMod.NPCs.Bosses
 {
     public class Sky_boss : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Necrosis");

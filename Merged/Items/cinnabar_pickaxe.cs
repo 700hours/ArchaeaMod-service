@@ -22,6 +22,7 @@ namespace ArchaeaMod.Merged.Items
             Item.useStyle = 1;
             //  item % power
             Item.pick = 95;
+            Item.crit = 5;
             Item.damage = 13;
             Item.knockBack = 7f;
             Item.value = 1500;

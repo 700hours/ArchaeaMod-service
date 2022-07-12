@@ -27,6 +27,7 @@ namespace ArchaeaMod.Items
             Item.knockBack = 0f;
             Item.value = 100;
             Item.rare = 1;
+            Item.crit = 14;
             Item.useTime = 30;
             Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Swing;

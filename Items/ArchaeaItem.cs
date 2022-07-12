@@ -71,6 +71,12 @@ namespace ArchaeaMod.Items
                    player.armor[1].Name == body &&
                    player.armor[2].Name == legs;
         }
+        public static bool ArmorSet(Player player, int head, int body, int legs)
+        {
+            return player.armor[0].type == head &&
+                   player.armor[1].type == body &&
+                   player.armor[2].type == legs;
+        }
         public static void Bolt(Player owner, NPC target, ref Vector2 start)
         {
             float max = target.Distance(start);
@@ -99,7 +105,7 @@ namespace ArchaeaMod.Items
                 Target[] targets = Target.GetTargets(player, range).Where(t => t != null).ToArray();
                 if (targets == null)
                     return;
-                if (ArchaeaItem.ArmorSet(player, "Shock Mask", "Shock Plate", "Shock Greaves") || ArchaeaItem.ArmorSet(player, "Ancient Shock Mask", "Ancient Shock Plate", "Ancient Shock Greaves"))
+                if (ArchaeaItem.ArmorSet(player, ModContent.ItemType<Items.Armors.ShockMask>(), ModContent.ItemType<Items.Armors.ShockPlate>(), ModContent.ItemType<Items.Armors.ShockLegs>()) || ArchaeaItem.ArmorSet(player, ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>(), ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>(), ModContent.ItemType<Merged.Items.Armors.ancient_shockgreaves>()))
                     foreach (Target target in targets)
                     {
                         if (Target.HitByThrown(player, target))
@@ -159,8 +165,8 @@ namespace ArchaeaMod.Items
         public static bool HitByThrown(Player player, Target target)
         {
             foreach (Projectile proj in Main.projectile)
-                if (proj.owner == player.whoAmI && proj.DamageType == DamageClass.Throwing)
-                    if (proj.Hitbox.Distance(target.npc.Center) < proj.width + target.npc.width / 2 + 16f)
+                if (proj.owner == player.whoAmI && (proj.DamageType == DamageClass.Throwing || proj.DamageType == DamageClass.Ranged))
+                    if (proj.Hitbox.Distance(target.npc.Center) < proj.width + target.npc.width / 2 + 18f)
                         return true;
             return false;
         }

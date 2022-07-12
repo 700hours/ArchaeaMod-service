@@ -27,10 +27,12 @@ namespace ArchaeaMod.Merged.Items
             Item.damage = 12;
             Item.knockBack = 3f;
             Item.value = 4000;
+            Item.crit = 9;
             Item.rare = 2;
             Item.autoReuse = false;
             Item.consumable = false;
             Item.noMelee = true;
+            Item.DamageType = DamageClass.Summon;
             Item.CountsAsClass(DamageClass.Summon);
             Item.buffType = ModContent.BuffType<magno_summon>();
             Item.buffTime = 18000;

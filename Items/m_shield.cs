@@ -52,7 +52,8 @@ namespace ArchaeaMod.Items
                 }
                 for (int i = 0; i < 4; i++)
                 {
-                    var entity = ArchaeaEntity.NewEntity(player.Center, Vector2.Zero, 0, player.whoAmI, i * 90f * 0.017f);
+                    var entity = ArchaeaEntity.NewEntity(player.Center, Vector2.Zero, 0, player.whoAmI, (i + 1) * 90f * 0.017f);
+                    entity.netUpdate2 = true;
                 }
                 time = 0;
                 generate = false;

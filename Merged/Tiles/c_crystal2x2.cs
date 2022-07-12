@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
@@ -47,7 +48,33 @@ namespace ArchaeaMod.Merged.Tiles
             g = 0.161f;
             b = 0.161f;
         }
-
+        public override void NearbyEffects(int i, int j, bool closer)
+        {
+            int x = i * 16;
+            int y = j * 16;
+            if (Main.rand.NextBool(60))
+            {
+                Dust.NewDust(new Vector2(x, y), 16, 16, Main.rand.NextBool(2) ? ModContent.DustType<ArchaeaMod.Dusts.Shimmer_1>() : ModContent.DustType<ArchaeaMod.Dusts.Shimmer_2>());
+            }
+        }
+        public override bool KillSound(int i, int j, bool fail)
+        {
+            SoundEngine.PlaySound(SoundID.Item27, new Vector2(i * 16, j * 16));
+            return false;
+        }
+        public override bool Slope(int i, int j)
+        {
+            return false;
+        }
+        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+        {
+            return ModContent.GetInstance<ArchaeaWorld>().downedMagno;
+        }
+        public override bool CreateDust(int i, int j, ref int type)
+        {
+            type = ModContent.DustType<Dusts.cinnabar_dust>();
+            return true;
+        }
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
             noItem = true;

@@ -47,7 +47,10 @@ namespace ArchaeaMod.Tiles
             g = 0.161f;
             b = 0.161f;
         }
-
+        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+        {
+            return ModContent.GetInstance<ArchaeaWorld>().downedMagno;
+        }
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
             noItem = true;

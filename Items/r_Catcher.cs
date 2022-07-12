@@ -30,6 +30,7 @@ namespace ArchaeaMod.Items
             Item.height = 48;
             Item.damage = 10;
             Item.knockBack = 2f;
+            Item.crit = 5;
             Item.value = 3500;
             Item.rare = 2;
             Item.useTime = 30;

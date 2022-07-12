@@ -1,3 +1,4 @@
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -14,6 +15,7 @@ namespace ArchaeaMod.Entities
                 Shield = 0;
         }
         public bool netUpdate;
+        public bool netUpdate2;
         public int type;
         public int owner;
         public float rotation;
@@ -75,11 +77,25 @@ namespace ArchaeaMod.Entities
                 if (e != null && e.active)
                 {
                     e.Update();
-                    if (Main.netMode == 2 && e.netUpdate)
-                    {
-                        NetHandler.Send(Packet.SyncEntity, -1, -1, e.whoAmI, e.Center.X, e.Center.Y, 0, e.active, e.rotation);
-                        if (e.type != 0)
-                            e.netUpdate = false;
+                    switch (e.type)
+                    { 
+                        case ArchaeaEntity.ID.Shield:
+                            e.rotation = ArchaeaNPC.AngleTo(Main.player[e.owner].Center, e.Center); 
+                            break;
+                    }
+                    if (Main.netMode == 2)
+                    { 
+                        if (e.netUpdate)
+                        {
+                            NetHandler.Send(Packet.SyncEntity, -1, -1, e.whoAmI, 0f, 0f, 0, e.active, e.owner);
+                            if (e.type != 0)
+                                e.netUpdate = false;
+                        }
+                        if (e.netUpdate2)
+                        {
+                            NetHandler.Send(Packet.SyncEntity, -1, -1, e.whoAmI, e.rotation, 0f, 0, e.active, e.owner);
+                            e.netUpdate2 = false;
+                        }
                     }
                 }
             }
@@ -106,16 +122,19 @@ namespace ArchaeaMod.Entities
         public override void AI(Projectile projectile)
         {
             Projectile p = projectile;
-            if (p.active && !p.friendly)
+            if (p.active)
             {
                 foreach (var e in ArchaeaEntity.entity)
                 {
                     if (e != null && e.active && e.type == 0)
                     {
-                        if (p.Hitbox.Intersects(e.Hitbox))
-                        {
-                            p.Kill();
-                            e.Kill(true);
+                        if ((e.owner != p.owner && Main.player[p.owner].hostile && Main.player[e.owner].hostile) || (!p.friendly && !p.minion && p.hostile))
+                        { 
+                            if (p.Hitbox.Intersects(e.Hitbox))
+                            {
+                                p.Kill();
+                                e.Kill(true);
+                            }
                         }
                     }
                 }

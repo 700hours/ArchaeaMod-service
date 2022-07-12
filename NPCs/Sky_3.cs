@@ -20,6 +20,7 @@ namespace ArchaeaMod.NPCs
 {
     public class Sky_3 : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Gargoyle");
@@ -43,7 +44,6 @@ namespace ArchaeaMod.NPCs
         private bool attack;
         private bool init;
         private bool firstTarget;
-        
         private const float rushSpeed = 12f;
         private const float slowRate = 0.1f;
         private const float rotateSpeed = 0.05f;
@@ -69,7 +69,7 @@ namespace ArchaeaMod.NPCs
         }
         public Player target()
         {
-            Player player = ArchaeaNPC.FindClosest(NPC, firstTarget, 800);
+            Player player = ArchaeaNPC.FindClosest(NPC, false, 800);
             firstTarget = false;
             if (player != null && player.active && !player.dead)
             {
@@ -113,13 +113,13 @@ namespace ArchaeaMod.NPCs
             }
             if (NPC.life < NPC.lifeMax)
             {
-                NPC.TargetClosest();
+                NPC.target = ArchaeaNPC.FindClosest(NPC, range: 800f).whoAmI;
                 ai = Activated;
             }
             if (ai == Idle && Main.player.Where(t => t.Distance(NPC.Center) < 64f).Count() > 0f)
             {
                 ArchaeaNPC.DustSpread(NPC.position, NPC.width, NPC.height, DustID.Stone, 5, 1.2f);
-                NPC.TargetClosest();
+                NPC.target = ArchaeaNPC.FindClosest(NPC, range: 800f).whoAmI;
                 ai = Activated;
                 NPC.netUpdate = true;
             }
@@ -216,7 +216,7 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool SkyFort = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().SkyFort;
-            return SkyFort ? SpawnCondition.Sky.Chance * 0.4f : 0f;
+            return SkyFort ? 0.4f : 0f;
         }
     }
 }

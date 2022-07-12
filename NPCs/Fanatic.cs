@@ -34,6 +34,7 @@ namespace ArchaeaMod.NPCs
             NPC.damage = 10;
             NPC.value = 1000;
             NPC.lavaImmune = true;
+            NPC.DeathSound = SoundID.NPCDeath1;
         }
         public int timer
         {
@@ -56,6 +57,18 @@ namespace ArchaeaMod.NPCs
             get { return (float)(npcTarget.velocity.Y * (0.017d * 2.5d)); }
         }
         private bool fade;
+        public override bool PreAI()
+        {
+            if (npcTarget != null)
+            { 
+                if (npcTarget.active && !npcTarget.InModBiome<MagnoBiome>())
+                {
+                    NPC.target = ArchaeaNPC.FindClosest(NPC, false, 1000f).whoAmI;
+                    return false;
+                }
+            }
+            return true;
+        }
         public override void AI()
         {
             int attackTime = 180 + 90 * maxAttacks;
@@ -174,7 +187,7 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
-            return MagnoBiome ? SpawnCondition.Cavern.Chance * 0.2f : 0f;
+            return MagnoBiome ? 0.2f : 0f;
         }
     }
 }

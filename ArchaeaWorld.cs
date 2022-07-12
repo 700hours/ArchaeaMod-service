@@ -25,15 +25,12 @@ using ArchaeaMod.Merged;
 using ArchaeaMod.Merged.Items;
 using ArchaeaMod.Merged.Tiles;
 using ArchaeaMod.Merged.Walls;
+using System.IO;
 
 namespace ArchaeaMod
 {
     public class ArchaeaWorld : ModSystem
     {
-        public static Mod getMod
-        {
-            get { return ModLoader.GetMod("ArchaeaMod"); }
-        }
         public static ushort magnoStone
         {
             get { return (ushort)ModContent.TileType<m_stone>(); }
@@ -130,6 +127,11 @@ namespace ArchaeaMod
                 Ore = 2,
                 Stone = 3,
                 Plant = 4;
+        }
+        public override void OnWorldLoad()
+        {
+            downedMagno = false;
+            downedNecrosis = false;
         }
         //public static System.Drawing.Color[] type = new System.Drawing.Color[]
         //{
@@ -746,12 +748,12 @@ namespace ArchaeaMod
         public static List<int> playerIDs = new List<int>();
         public override void SaveWorldData(TagCompound tag)/* Edit tag parameter rather than returning new TagCompound */
         {
-            tag.Set("m_downed", downedMagno, true);
-            tag.Set("n_downed", downedNecrosis, true);
-            tag.Set("First", first, true);
-            tag.Set("Classes", classes, true);
-            tag.Set("IDs", playerIDs, true);
-            tag.Set("Crystals", spawnedCrystals, true);
+            tag.Add("m_downed", downedMagno);
+            tag.Add("n_downed", downedNecrosis);
+            tag.Add("First", first);
+            tag.Add("Classes", classes);
+            tag.Add("IDs", playerIDs);
+            tag.Add("Crystals", spawnedCrystals);
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -761,6 +763,16 @@ namespace ArchaeaMod
             classes = tag.Get<List<int>>("Classes");
             playerIDs = tag.Get<List<int>>("IDs");
             spawnedCrystals = tag.GetBool("Crystals");
+        }
+        public override void NetSend(BinaryWriter writer)
+        {
+            writer.Write(downedMagno);
+            writer.Write(downedNecrosis);
+        }
+        public override void NetReceive(BinaryReader reader)
+        {
+            downedMagno = reader.ReadBoolean();
+            downedNecrosis = reader.ReadBoolean();
         }
         private bool begin;
         private bool first;

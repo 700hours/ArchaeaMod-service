@@ -18,6 +18,7 @@ namespace ArchaeaMod.NPCs
 {
     public class Slime_Itchy : Slime
     {
+        public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Itchy Slime");
@@ -32,14 +33,13 @@ namespace ArchaeaMod.NPCs
             NPC.defense = 10;
             NPC.damage = 10;
             NPC.lavaImmune = true;
+            NPC.DeathSound = SoundID.NPCDeath1;
         }
         private int count;
         private float compensateY;
         private bool preAI;
         public override bool PreAI()
         {
-            if (NPC.wet)
-                NPC.velocity.Y = 0.3f;
             preAI = SlimeAI();
             if (preAI)
             {
@@ -69,7 +69,7 @@ namespace ArchaeaMod.NPCs
         public override bool JustSpawned()
         {
             flip = Main.rand.Next(2) == 0;
-            SyncNPC();
+            SyncNPC(NPC.position.X, NPC.position.Y);
             return true;
         }
         public override void DefaultActions(int interval = 180, bool moveX = false)
@@ -116,6 +116,15 @@ namespace ArchaeaMod.NPCs
         {
             if (Main.netMode == 2)
                 NPC.netUpdate = true;
+        }
+        public void SyncNPC(float x, float y)
+        {
+            if (Main.netMode != 0)
+                NPC.netUpdate = true;
+            else
+            {
+                NPC.position = new Vector2(x, y);
+            }
         }
         public override void SendExtraAI(BinaryWriter writer)
         {
@@ -175,7 +184,7 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
-            return MagnoBiome ? SpawnCondition.Cavern.Chance * 0.4f : 0f;
+            return MagnoBiome ? 0.4f : 0f;
         }
     }
 }

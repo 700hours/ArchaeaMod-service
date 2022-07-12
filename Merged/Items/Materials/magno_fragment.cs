@@ -18,7 +18,7 @@ namespace ArchaeaMod.Merged.Items.Materials
             Item.height = 30;
             Item.scale = 0.85f;
             Item.value = 2500;
-            Item.maxStack = 99;
+            Item.maxStack = 999;
             Item.rare = 1;
         }
     }

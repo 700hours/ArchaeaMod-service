@@ -19,7 +19,12 @@ namespace ArchaeaMod.Merged.Items.Materials
             Item.height = 32;
             Item.scale = 1f;
             Item.value = 1000;
-            Item.maxStack = 99;
+            Item.maxStack = 999;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.consumable = true;
+            Item.autoReuse = true;
             Item.rare = 2;
             Item.createTile = ModContent.TileType<ArchaeaMod.Tiles.c_crystal_block>();
         }
