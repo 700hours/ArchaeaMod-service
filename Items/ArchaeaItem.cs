@@ -77,7 +77,7 @@ namespace ArchaeaMod.Items
                    player.armor[1].type == body &&
                    player.armor[2].type == legs;
         }
-        public static void Bolt(Player owner, NPC target, ref Vector2 start)
+        public static void Bolt(Player owner, NPC target, ref Vector2 start, int damage = 20)
         {
             float max = target.Distance(start);
             for (int k = 0; k < max; k++)
@@ -88,7 +88,7 @@ namespace ArchaeaMod.Items
                         return;
                     float angle = Main.rand.NextFloat(0f, (float)Math.PI);
                     start += NPCs.ArchaeaNPC.AngleToSpeed(angle, k);
-                    Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_None(), start, Vector2.Zero, ModContent.ProjectileType<Pixel>(), 20, 0f, owner.whoAmI, Pixel.Electric, Pixel.Active);
+                    Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_None(), start, Vector2.Zero, ModContent.ProjectileType<Pixel>(), damage, 0f, owner.whoAmI, Pixel.Electric, Pixel.Active);
                     proj.timeLeft = 3;
                 }
             }
@@ -105,16 +105,32 @@ namespace ArchaeaMod.Items
                 Target[] targets = Target.GetTargets(player, range).Where(t => t != null).ToArray();
                 if (targets == null)
                     return;
-                if (ArchaeaItem.ArmorSet(player, ModContent.ItemType<Items.Armors.ShockMask>(), ModContent.ItemType<Items.Armors.ShockPlate>(), ModContent.ItemType<Items.Armors.ShockLegs>()) || ArchaeaItem.ArmorSet(player, ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>(), ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>(), ModContent.ItemType<Merged.Items.Armors.ancient_shockgreaves>()))
+                //  Non-ancient
+                if (ArchaeaItem.ArmorSet(player, ModContent.ItemType<Items.Armors.ShockMask>(), ModContent.ItemType<Items.Armors.ShockPlate>(), ModContent.ItemType<Items.Armors.ShockLegs>()))
+                { 
                     foreach (Target target in targets)
                     {
                         if (Target.HitByThrown(player, target))
                         {
                             Vector2 start = target.npc.Center - new Vector2(0f, 500f);
-                            ArchaeaItem.Bolt(player, target.npc, ref start);
+                            ArchaeaItem.Bolt(player, target.npc, ref start, 80);
                         }
                         break;
                     }
+                }
+                //  Ancient
+                if (ArchaeaItem.ArmorSet(player, ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>(), ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>(), ModContent.ItemType<Merged.Items.Armors.ancient_shockgreaves>()))
+                {
+                    foreach (Target target in targets)
+                    {
+                        if (Target.HitByThrown(player, target))
+                        {
+                            Vector2 start = target.npc.Center - new Vector2(0f, 500f);
+                            ArchaeaItem.Bolt(player, target.npc, ref start, 20);
+                        }
+                        break;
+                    }
+                }
             }
         }
     }
@@ -166,7 +182,7 @@ namespace ArchaeaMod.Items
         {
             foreach (Projectile proj in Main.projectile)
                 if (proj.owner == player.whoAmI && (proj.DamageType == DamageClass.Throwing || proj.DamageType == DamageClass.Ranged))
-                    if (proj.Hitbox.Distance(target.npc.Center) < proj.width + target.npc.width / 2 + 18f)
+                    if (proj.Center.Distance(target.npc.Center) < proj.width + target.npc.width / 2 + 18f)
                         return true;
             return false;
         }

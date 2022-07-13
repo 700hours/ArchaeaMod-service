@@ -21,11 +21,18 @@ namespace ArchaeaMod.Items.Tiles
         }
         public override void SetDefaults()
         {
-            Item.width = 48;
-            Item.height = 48;
+            Item.width = 16;
+            Item.height = 16;
             Item.rare = 2;
-            Item.value = 10000;
-            Item.consumable = false;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
+            Item.useStyle = 1;
+            Item.autoReuse = true;
+            Item.noMelee = true;
+            Item.value = 2500;
+            Item.maxStack = 999;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<ArchaeaMod.Tiles.purple_haze>();
         }
     }
 }

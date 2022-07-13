@@ -25,12 +25,20 @@ namespace ArchaeaMod.Merged.Items.Armors
             Item.defense = 5;
         }
 
+        public override void UpdateArmorSet(Player player)
+        {
+            player.setBonus = "Ranged weapons create weak bolts of lightning";
+        }
+        public override bool IsArmorSet(Item head, Item body, Item legs)
+        {
+            return
+            head == ModContent.GetInstance<ancient_shockhelmet>().Item &&
+            body == Item &&
+            legs == ModContent.GetInstance<ancient_shockgreaves>().Item;
+        }
+
         int Proj1;
         int ticks = 0;
         int d = 0;
-        public override bool IsArmorSet(Item head, Item body, Item legs)
-        {
-            return body == Item && head.type == Mod.Find<ModItem>("ancient_shockhelmet").Type && legs.type == Mod.Find<ModItem>("ancient_shockgreaves").Type;
-        }
     }
 }

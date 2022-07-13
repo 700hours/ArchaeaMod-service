@@ -272,3 +272,32 @@ version 0.2.1885.29 -> 0.2.1889.30
 -> Certain item deleting other player's minions
 -> Certain item's maxStack being only 1
 -> An armor set bonus networking
+
+version 0.2.1889.30 -> 0.2.1890.31
+==================================
+# Fixed
+-> Worldgen structure coordinate error
+
+version 0.2.1890.31 -> 0.2.1891.32
+============================
+# Change
+-> Armor effect hit check radius
+
+version 0.2.1891.32 -> 0.2.1893.35
+============================
+# Fixed
+-> One hardmode biome NPC not spawning
+# Remove
+-> Chest mimic using golden key
+
+version 0.2.1893.35 -> 0.2.1900.36
+============================
+# Changed
+-> Halved particular Magno NPC spawn chance by 50%
+-> Purple haze now place-able
+-> Expert accessory drop added to a mod boss
+-> Increased shock damage from 20 to 80
+-> Two armors recieve same similar, strong vs. weak, set bonuses
+-> Armor defenses modified
+# Fixed
+-> Boss summon

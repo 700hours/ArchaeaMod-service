@@ -63,9 +63,13 @@ namespace ArchaeaMod
         public bool spawnMenu;
         public override void PreUpdate()
         {
+            
             Color textColor = Color.Yellow;
             return;
-
+            if (Player.chest != -1 && Main.chest[Player.chest] != null)
+            {
+                Merged.Tiles.m_chest.ChestSummon(Main.chest[Player.chest].x / 16, Main.chest[Player.chest].y / 16);
+            }
             //ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
             //  ITEM TEXT and SKY FORT DEBUG GEN
             //if (!start && !Main.dedServ && KeyPress(Keys.F1) && KeyHold(Keys.Up))

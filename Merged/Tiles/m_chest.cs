@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ArchaeaMod.NPCs;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -61,6 +63,40 @@ namespace ArchaeaMod.Merged.Tiles
         {
             Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 16, 16, ChestDrop);
             Chest.DestroyChest(i, j);
+        }
+        public static void ChestSummon(int i, int j)
+        {
+            if (Main.netMode == 1 || !Main.hardMode || Main.tile[i, j].TileType != ArchaeaWorld.magnoChest)
+                return;
+            Tile tile = Main.tile[i, j];
+            int left = i;
+            int top = j;
+            int x = i * 16;
+            int y = j * 16;
+            if (tile.TileFrameX % 36 != 0)
+            {
+                left--;
+            }
+            if (tile.TileFrameY != 0)
+            {
+                top--;
+            }
+            int chest = Chest.FindChest(left, top);
+            
+            if (Main.chest[chest].item.Count(t => t.active && !t.IsAir) == 1 && Main.chest[chest].item.Count(t => !t.IsAir && t.type == ItemID.GoldenKey) == 1)
+            {
+                var key = Main.chest[chest].item.First(t => !t.IsAir && t.type == ItemID.GoldenKey);
+                key.TurnToAir();
+                WorldGen.KillTile(i, j, noItem: true);
+                int n = NPC.NewNPC(NPC.GetSource_NaturalSpawn(), x, y, ModNPCID.Mimic);
+                Chest.DestroyChest(i, j);
+                if (Main.netMode == 2)
+                { 
+                    NetMessage.SendData(MessageID.ChestUpdates, -1, -1, null, 1, x, y, 0f, chest);
+                    NetMessage.SendTileSquare(-1, x, y, 3);
+                    NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, n);
+                }
+            }
         }
 
         public override bool RightClick(int i, int j)

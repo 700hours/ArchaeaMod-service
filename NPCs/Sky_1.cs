@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using ArchaeaMod.Items;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -118,6 +118,9 @@ namespace ArchaeaMod.NPCs
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.r_plate>(), 3, 1, 4));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>(), 13));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>(), 13));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Armors.ancient_shockgreaves>(), 13));        
         }
 
         private bool BeginActive()

@@ -19,6 +19,7 @@ namespace ArchaeaMod.NPCs
 {
     public class Mimic : Slime
     {
+        public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Mimic");
@@ -153,37 +154,6 @@ namespace ArchaeaMod.NPCs
             npcLoot.Add(ItemDropRule.ByCondition(new Items.HardModeDrop(), ModContent.ItemType<Items.dream_catcher>()));
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Materials.magno_core>(), 10));
         }
-        public override void OnKill()
-        {
-            return;
-            int rand = Main.rand.Next(10);
-            switch (rand)
-            {
-                case 0:
-                    if (Main.hardMode)
-                        Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Items.dream_catcher>());
-                    else 
-                        Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.Materials.magno_core>());
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.magno_summonstaff>());
-                    break;
-                case 4:
-                case 5:
-                case 6:
-                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.magno_yoyo>());
-                    break;
-                case 7:
-                case 8:
-                case 9:
-                    Item.NewItem(Item.GetSource_NaturalSpawn(), NPC.Center, ModContent.ItemType<Merged.Items.magno_book>());
-                    break;
-                default:
-                    goto case 0;
-            }
-        }
 
         private int time;
         private int frame;
@@ -208,7 +178,7 @@ namespace ArchaeaMod.NPCs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             bool MagnoBiome = spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().MagnoBiome;
-            return MagnoBiome && Main.hardMode ? 0.1f : 0f;
+            return MagnoBiome && Main.hardMode ? 0.06f : 0f;
         }
     }
     

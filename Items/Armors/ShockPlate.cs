@@ -20,13 +20,13 @@ namespace ArchaeaMod.Items.Armors
         }
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "Throwing weapons create bolts of lightning";
+            player.setBonus = "Ranged weapons create strong bolts of lightning";
         }
         public override void SetDefaults()
         {
             Item.width = 30;
             Item.height = 18;
-            Item.defense = 10;
+            Item.defense = 15;
             Item.value = 5000;
             Item.rare = ItemRarityID.Orange;
         }
@@ -79,6 +79,7 @@ namespace ArchaeaMod.Items.Armors
             {
                 case -1:
                     Projectile.Center = target.Center - new Vector2(0f, spawnY);
+                    Projectile.netUpdate = true;
                     goto case 0;
                 case 0:
                     ai = 0;

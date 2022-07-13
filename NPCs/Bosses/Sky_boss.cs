@@ -209,6 +209,7 @@ namespace ArchaeaMod.NPCs.Bosses
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.n_Staff>()));
+            npcLoot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<Items.acc_cluster>(), 2, 2));
         }
         
         private void SyncNPC()

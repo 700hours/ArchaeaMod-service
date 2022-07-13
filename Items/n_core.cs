@@ -34,21 +34,25 @@ namespace ArchaeaMod.Items
         public override bool CanUseItem(Player player)
         {
             bossType = ModContent.NPCType<Sky_boss>();
-            return player.GetModPlayer<ArchaeaPlayer>().MagnoBiome && !NPC.AnyNPCs(bossType);
+            return player.GetModPlayer<ArchaeaPlayer>().SkyPortal && !NPC.AnyNPCs(bossType);
         }
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
-            bossType = ModContent.NPCType<Sky_boss>();
-            if (Main.netMode != 2)
+            if (player.whoAmI == Main.myPlayer)
             {
-                NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<Magnoliac_head>());
+                bossType = ModContent.NPCType<Sky_boss>();
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    NPC.SpawnOnPlayer(player.whoAmI, bossType);
+                }
+                else
+                {
+                    NetMessage.SendData(MessageID.SpawnBoss, number: player.whoAmI, number2: bossType);
+                }
+                SoundEngine.PlaySound(SoundID.Roar, player.Center);
+                return true;
             }
-            else
-            {
-                NetMessage.SendData(MessageID.SpawnBoss, number: player.whoAmI, number2: bossType);
-            }
-            SoundEngine.PlaySound(SoundID.Roar, player.Center);
-            return true;
+            return false;
         }
         public override void AddRecipes()
         {

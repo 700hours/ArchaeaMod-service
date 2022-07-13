@@ -1,4 +1,11 @@
-version 0.2.1889.30 -> 0.2.1890.31
-==================================
+version 0.2.1893.35 -> 0.2.1900.36
+============================
+# Changed
+-> Halved particular Magno NPC spawn chance by 50%
+-> Purple haze now place-able
+-> Expert accessory drop added to a mod boss
+-> Increased shock damage from 20 to 80
+-> Two armors recieve same similar, strong vs. weak, set bonuses
+-> Armor defenses modified
 # Fixed
--> Worldgen structure coordinate error
+-> Boss summon
