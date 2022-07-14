@@ -565,6 +565,7 @@ namespace ArchaeaMod
         }
         private Action<float, float> method;
         public bool classChecked;
+        Effects.Polygon polygon = new Effects.Polygon();
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
             if (/*classChoice == ClassID.None &&*/ drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI && !drawInfo.drawPlayer.dead)
@@ -584,6 +585,26 @@ namespace ArchaeaMod
             {
                 sb.Draw(Items.Alternate.MagnoCannon.tex, Player.Center - Main.screenPosition, null, Color.White, Items.Alternate.MagnoCannon.angle, default(Vector2), 1f, SpriteEffects.None, 0f);
             }
+            #region innactive draw testing
+            return;
+            //  START
+            float x = drawInfo.drawPlayer.Center.X;
+            float y = drawInfo.drawPlayer.Center.Y;
+            int width = 32 * 3;
+            int height = 32 * 3;
+            System.Drawing.Pen pen = new System.Drawing.Pen(System.Drawing.Brushes.Purple);
+            pen.Width = 2;
+            var mem = Effects.Fx.GenerateImage(polygon, width * 2, height * 2, pen, System.Drawing.Color.Green);
+            Texture2D tex = Effects.Fx.FromStream(mem);
+
+            Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
+            if (Main.drawToScreen)
+            {
+                zero = Vector2.Zero;
+            }
+            sb.Draw(tex, new Vector2(x - width, y - height) - Main.screenPosition, Color.White);
+            //  END
+            #endregion
         }
         private bool init;
         private List<string> name = new List<string>();
