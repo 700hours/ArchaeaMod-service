@@ -16,6 +16,7 @@ using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
 using ArchaeaMod.Mode;
+using Terraria.ID;
 
 namespace ArchaeaMod.ModUI
 {
@@ -167,13 +168,14 @@ namespace ArchaeaMod.ModUI
                 if (apply.LeftClick() && apply.color != Color.Gray && back.ticks == 0)
                 {
                     modPlayer.classChoice = choice + 1;
-                    if (Main.netMode != 0)
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
                         NetHandler.Send(Packet.SyncClass, 256, -1, player.whoAmI, choice + 1, player.GetModPlayer<ArchaeaPlayer>().playerUID);
                     //if (player == ArchaeaWorld.firstPlayer)
                     //{
                     modWorld.cordonBounds = mainOptions[1].active;
                     ModContent.GetInstance<ModeToggle>().archaeaMode = mainOptions[2].active;
-                    NetHandler.Send(Packet.ArchaeaMode, 256);
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                        NetHandler.Send(Packet.ArchaeaMode, 256);
                     //}
                     Toggled = false;
                 }

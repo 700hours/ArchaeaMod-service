@@ -51,6 +51,7 @@ namespace ArchaeaMod.Mode
             float quotient = 400f / 9999f;
             //int vanilla = 20;
             int result = (int)(add / quotient);
+            result += result % 2;
             return result;
         }
         public static int ManaCrystal(int add = 20)
@@ -58,6 +59,7 @@ namespace ArchaeaMod.Mode
             float quotient = 200f / 999f;
             //int vanilla = 20;
             int result = (int)(add / quotient);
+            result += result % 2;
             return result;
         }
         public static int ModeScaling(Stat stat, int value, float scale)
@@ -145,8 +147,8 @@ namespace ArchaeaMod.Mode
                 {
                     Rectangle panel = new Rectangle(306 - 160, 255, 180, 100);
                     sb.Draw(TextureAssets.MagicPixel.Value, panel, Color.DodgerBlue * 0.33f);
-                    sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + ModeNPC.ModeChecksLifeScale(), new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
-                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + ModeNPC.ModeChecksDamageScale(), new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + Math.Abs(ModeNPC.ModeChecksLifeScale() - 2f), new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + Math.Abs(ModeNPC.ModeChecksDamageScale() - 2f), new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "Day: " + Math.Round(dayCount + 1, 0), new Vector2(panel.Left + 4, panel.Top + 44), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "World time: " + Math.Round(totalTime / 60d / 60d, 1), new Vector2(panel.Left + 4, panel.Top + 64), Color.White);
                 }
@@ -187,7 +189,7 @@ namespace ArchaeaMod.Mode
             float multiplier = 1f;
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return multiplier;
-            multiplier *= scaling[start];
+            multiplier -= scaling[start];
             foreach (Player player in Main.player)
             {
                 if (player != null)
@@ -234,7 +236,8 @@ namespace ArchaeaMod.Mode
                 multiplier -= scaling[downedMagno];
             }
             ModContent.GetInstance<ModeToggle>().healthScale = Math.Max(multiplier, 0.4f);
-            NetHandler.Send(Packet.ModeScaling, 256);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                NetHandler.Send(Packet.ModeScaling, 256);
             return Math.Max(multiplier, 0.4f);
         }
         public static float ModeChecksDamageScale()
@@ -289,7 +292,8 @@ namespace ArchaeaMod.Mode
                 multiplier -= scaling[downedMagno];
             }
             ModContent.GetInstance<ModeToggle>().damageScale = Math.Max(multiplier, 0.4f);
-            NetHandler.Send(Packet.ModeScaling, 256);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                NetHandler.Send(Packet.ModeScaling, 256);
             return Math.Max(multiplier, 0.4f);
         }
     }
@@ -346,13 +350,15 @@ namespace ArchaeaMod.Mode
                 {
                     index = k;
                     tileProgress = false;
-                    NetHandler.Send(Packet.TileProgress, 256, b: false);
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                        NetHandler.Send(Packet.TileProgress, 256, b: false);
                     break;
                 }
                 else if (k == 4)
                 {
                     tileProgress = true;
-                    NetHandler.Send(Packet.TileProgress, 256, b: true);
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                        NetHandler.Send(Packet.TileProgress, 256, b: true);
                     return;
                 }
             }

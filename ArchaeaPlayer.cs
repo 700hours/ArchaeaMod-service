@@ -64,24 +64,38 @@ namespace ArchaeaMod
         public bool spawnMenu;
         public override bool CanUseItem(Item item)
         {
+            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
+                return true;
             switch (item.type)
             {
                 case ItemID.LifeCrystal:
-                    Player.statLifeMax += ArchaeaMode.LifeCrystal();
+                    if (Player.statLifeMax < 9999)
+                    {
+                        Player.statLifeMax += ArchaeaMode.LifeCrystal();
+                        Player.statLifeMax = Math.Min(Player.statLifeMax, 9999);
+                        item.stack--;
+                    }
                     Player.ApplyItemAnimation(item);
-                    item.stack--;
                     SoundEngine.PlaySound(SoundID.Item4, Player.Center);
                     return false;
                 case ItemID.LifeFruit:
-                    Player.statLifeMax += ArchaeaMode.LifeCrystal(5);
+                    if (Player.statLifeMax < 9999)
+                    { 
+                        Player.statLifeMax += ArchaeaMode.LifeCrystal(5);
+                        Player.statLifeMax = Math.Min(Player.statLifeMax, 9999);
+                        item.stack--;
+                    }
                     Player.ApplyItemAnimation(item);
-                    item.stack--;
                     SoundEngine.PlaySound(SoundID.Item4, Player.Center);
                     return false;
                 case ItemID.ManaCrystal:
-                    Player.statManaMax += ArchaeaMode.ManaCrystal();
+                    if (Player.statManaMax < 999)
+                    {
+                        Player.statManaMax += ArchaeaMode.ManaCrystal();
+                        Player.statManaMax = Math.Min(Player.statManaMax, 999);
+                        item.stack--;
+                    }
                     Player.ApplyItemAnimation(item);
-                    item.stack--;
                     SoundEngine.PlaySound(SoundID.Item29, Player.Center);
                     return false;
                 case ItemID.LesserHealingPotion:
@@ -107,36 +121,44 @@ namespace ArchaeaMod
         }
         public override void PreSavePlayer()
         {
-            if (Player.statLifeMax != 100)
+            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
+                return;
+            if (Player.statLifeMax2 != 100 && Player.statLifeMax2 > 500)
             { 
-                int extra = (Player.statLifeMax - 100) / 25;
-                Player.statLifeMax = 100 + extra;
-                Player.statLife = Player.statLifeMax;
+                int extra = (Player.statLifeMax2 - 100) / 25;
+                Player.statLifeMax2 = (100 + extra) % 2;
+                Player.statLife = Player.statLifeMax2;
             }
             if (Player.statManaMax != 20)
             {
-                int extra = (Player.statManaMax - 20) / 5;
-                Player.statManaMax = 20 + extra;
-                Player.statMana = Player.statManaMax;
+                int extra = (Player.statManaMax2 - 20) / 5;
+                Player.statManaMax2 = (20 + extra) % 2;
+                Player.statMana = Player.statManaMax2;
             }
         }
         public override void PostSavePlayer()
         {
-            if (Player.statLifeMax != 100)
+            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
+                return;
+            if (Player.statLifeMax2 != 100)
             {
-                int extra = Player.statLifeMax - 100;
-                Player.statLifeMax = 100 + ArchaeaMode.LifeCrystal(extra);
+                int extra = Player.statLifeMax2 - 100;
+                Player.statLifeMax2 = Math.Min(9999, Math.Max(100, 100 + ArchaeaMode.LifeCrystal(extra)));
+                Player.statLifeMax = Player.statLifeMax2;
                 Player.statLife = Player.statLifeMax;
             }
             if (Player.statManaMax != 20)
             {
-                int extra = Player.statManaMax - 20;
-                Player.statManaMax = 20 + ArchaeaMode.ManaCrystal(extra);
+                int extra = Player.statManaMax2 - 20;
+                Player.statManaMax2 = Math.Min(999, Math.Max(20, 20 + ArchaeaMode.ManaCrystal(extra)));
+                Player.statManaMax = Player.statManaMax2;
                 Player.statMana = Player.statManaMax;
             }
         }
         public override void OnEnterWorld(Player player)
         {
+            if (Main.player.Count(t => t.active) == 1)
+                ModContent.GetInstance<ModeToggle>().archaeaMode = true;
             PostSavePlayer();
         }
         public override void PreUpdate()

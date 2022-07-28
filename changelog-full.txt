@@ -319,3 +319,16 @@ version 1.0.1 -> 1.0.1.3
 # Notes
 ?-> Archaea mode network change
 ?-> Darkness doesn't apply to everyone
+
+version 1.0.1.3 -> 1.0.2.4
+==========================
+# Changed
+-> Archaea mode flag is exchanged between all MP clients
+-> Drop condition variable from static to instance
+# Added
+-> Archaea mode has dynamic life and damage scaling through progression
+	* Several new packets for networking
+	* Player save and load for life and mana
+	* Item properties give more life and mana
+# Fixed
+-> Archaea mode flag not setting based on player enabling
