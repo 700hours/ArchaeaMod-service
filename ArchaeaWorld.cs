@@ -525,7 +525,7 @@ namespace ArchaeaMod
             };
             int[] s3 = t3;
             
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < Main.chest.Length; i++)
             {
                 Chest chest = Main.chest[i];
                 if (chest == null)
@@ -552,9 +552,9 @@ namespace ArchaeaMod
                                 }
                                 if (fossils < 2)
                                 {
-                                    if (type == t1[3])
+                                    if (type == t1[2])
                                     {
-                                        chest.item[j].SetDefaults(t1[3]);
+                                        chest.item[j].SetDefaults(t1[2]);
                                         fossils++;
                                     }
                                 }

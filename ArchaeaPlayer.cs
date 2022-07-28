@@ -22,6 +22,7 @@ using ArchaeaMod.GenLegacy;
 using ArchaeaMod.Mode;
 using ArchaeaMod.ModUI;
 using Terraria.DataStructures;
+using Terraria.Audio;
 
 namespace ArchaeaMod
 {
@@ -61,11 +62,92 @@ namespace ArchaeaMod
         private bool start;
         public bool debugMenu;
         public bool spawnMenu;
+        public override bool CanUseItem(Item item)
+        {
+            switch (item.type)
+            {
+                case ItemID.LifeCrystal:
+                    Player.statLifeMax += ArchaeaMode.LifeCrystal();
+                    Player.ApplyItemAnimation(item);
+                    item.stack--;
+                    SoundEngine.PlaySound(SoundID.Item4, Player.Center);
+                    return false;
+                case ItemID.LifeFruit:
+                    Player.statLifeMax += ArchaeaMode.LifeCrystal(5);
+                    Player.ApplyItemAnimation(item);
+                    item.stack--;
+                    SoundEngine.PlaySound(SoundID.Item4, Player.Center);
+                    return false;
+                case ItemID.ManaCrystal:
+                    Player.statManaMax += ArchaeaMode.ManaCrystal();
+                    Player.ApplyItemAnimation(item);
+                    item.stack--;
+                    SoundEngine.PlaySound(SoundID.Item29, Player.Center);
+                    return false;
+                case ItemID.LesserHealingPotion:
+                case ItemID.HealingPotion: 
+                case ItemID.GreaterHealingPotion:
+                case ItemID.SuperHealingPotion:
+                    Player.statLife += ArchaeaMode.HealPotion(item.healLife);
+                    Player.ApplyItemAnimation(item);
+                    item.stack--;
+                    SoundEngine.PlaySound(SoundID.Item3, Player.Center);
+                    return false;
+                case ItemID.LesserManaPotion:
+                case ItemID.ManaPotion:
+                case ItemID.GreaterManaPotion:
+                case ItemID.SuperManaPotion:
+                    Player.statMana += ArchaeaMode.ManaPotion(item.healMana);
+                    Player.ApplyItemAnimation(item);
+                    item.stack--;
+                    SoundEngine.PlaySound(SoundID.Item3, Player.Center);
+                    return false;
+            }
+            return true;
+        }
+        public override void PreSavePlayer()
+        {
+            if (Player.statLifeMax != 100)
+            { 
+                int extra = (Player.statLifeMax - 100) / 25;
+                Player.statLifeMax = 100 + extra;
+                Player.statLife = Player.statLifeMax;
+            }
+            if (Player.statManaMax != 20)
+            {
+                int extra = (Player.statManaMax - 20) / 5;
+                Player.statManaMax = 20 + extra;
+                Player.statMana = Player.statManaMax;
+            }
+        }
+        public override void PostSavePlayer()
+        {
+            if (Player.statLifeMax != 100)
+            {
+                int extra = Player.statLifeMax - 100;
+                Player.statLifeMax = 100 + ArchaeaMode.LifeCrystal(extra);
+                Player.statLife = Player.statLifeMax;
+            }
+            if (Player.statManaMax != 20)
+            {
+                int extra = Player.statManaMax - 20;
+                Player.statManaMax = 20 + ArchaeaMode.ManaCrystal(extra);
+                Player.statMana = Player.statManaMax;
+            }
+        }
+        public override void OnEnterWorld(Player player)
+        {
+            PostSavePlayer();
+        }
         public override void PreUpdate()
         {
-            
             Color textColor = Color.Yellow;
             return;
+            if (!init)
+            {
+                NPC.NewNPC(NPC.GetBossSpawnSource(Player.whoAmI), (int)Player.position.X, (int)Player.position.Y, ModNPCID.SkyBoss);
+                init = true;
+            }
             if (Player.chest != -1 && Main.chest[Player.chest] != null)
             {
                 Merged.Tiles.m_chest.ChestSummon(Main.chest[Player.chest].x / 16, Main.chest[Player.chest].y / 16);
@@ -574,19 +656,22 @@ namespace ArchaeaMod
                     classChoice = ArchaeaWorld.classes[ArchaeaWorld.playerIDs.IndexOf(playerUID)];
                 OptionsUI.MainOptions(drawInfo.drawPlayer);
             }
-            if (!Main.hardMode)
-                DarkenedVision();
+            if (drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI)
+            { 
+                if (!Main.hardMode)
+                    DarkenedVision();
+            }
             if (debugMenu)
                 DebugMenu();
             if (spawnMenu)
                 SpawnMenu();
+            #region innactive draw testing
+            return;
             //var tex = ModContent.GetInstance<Items.Alternate.MagnoCannon>().tex;
             if (Items.Alternate.MagnoCannon.tex != null && Player.controlUseItem)
             {
                 sb.Draw(Items.Alternate.MagnoCannon.tex, Player.Center - Main.screenPosition, null, Color.White, Items.Alternate.MagnoCannon.angle, default(Vector2), 1f, SpriteEffects.None, 0f);
             }
-            #region innactive draw testing
-            return;
             //  START
             float x = drawInfo.drawPlayer.Center.X;
             float y = drawInfo.drawPlayer.Center.Y;

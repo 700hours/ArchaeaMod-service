@@ -19,12 +19,73 @@ using ArchaeaMod.ModUI;
 
 namespace ArchaeaMod.Mode
 {
+    public sealed class ArchaeaMode
+    {
+        public enum Stat
+        {
+            Life,
+            Damage
+        }
+        private static float LifeRegen(int statMax)
+        {
+            return statMax / 9999f + 1f;
+        }
+        private static float ManaRegen(int statMax)
+        {
+            return statMax / 999f + 1f;
+        }
+        public static int HealPotion(int amount)
+        {
+            float quotient = 400f / 9999f;
+            int result = (int)(amount / quotient);
+            return result;
+        }
+        public static int ManaPotion(int amount)
+        {
+            float quotient = 200f / 999f;
+            int result = (int)(amount / quotient);
+            return result;
+        }
+        public static int LifeCrystal(int add = 20)
+        {
+            float quotient = 400f / 9999f;
+            //int vanilla = 20;
+            int result = (int)(add / quotient);
+            return result;
+        }
+        public static int ManaCrystal(int add = 20)
+        {
+            float quotient = 200f / 999f;
+            //int vanilla = 20;
+            int result = (int)(add / quotient);
+            return result;
+        }
+        public static int ModeScaling(Stat stat, int value, float scale)
+        {
+            /* 
+             * Ratio
+            float ratio = h / w;
+            float result = h / ratio;
+            */
+            float result = value / scale;
+            switch (stat)
+            {
+                case Stat.Life:
+                    result *= 1.2f;
+                    break;
+                case Stat.Damage:
+                    result *= 1.1f;
+                    break;
+            }
+            return (int)result;
+        }
+    }
     public class ModeToggle : ModSystem
     {
-        public static bool archaeaMode;
+        public bool archaeaMode;
         public bool progress;
-        public static float healthScale;
-        public static float damageScale;
+        public float healthScale;
+        public float damageScale;
         public override void SaveWorldData(TagCompound tag)/* Edit tag parameter rather than returning new TagCompound */
         {
             tag.Add("ArchaeaMode", archaeaMode);
@@ -43,20 +104,25 @@ namespace ArchaeaMod.Mode
         }
         public override void NetSend(BinaryWriter writer)
         {
-            writer.Write(archaeaMode);
-            writer.Write(totalTime);
-            writer.Write(dayCount);
+            //writer.Write(archaeaMode);
+            //writer.Write(totalTime);
+            //writer.Write(dayCount);
         }
         public override void NetReceive(BinaryReader reader)
         {
-            archaeaMode = reader.ReadBoolean();
-            totalTime = reader.ReadSingle();
-            dayCount = reader.ReadSingle();
+            //archaeaMode = reader.ReadBoolean();
+            //totalTime = reader.ReadSingle();
+            //dayCount = reader.ReadSingle();
         }
         private bool init;
         private Button objectiveButton;
         public override void PostUpdateEverything()
         {
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            { 
+                totalTime += (float)Main.frameRate / 60f;
+                dayCount = totalTime / (float)Main.dayLength;
+            }
             if (Main.dedServ)
                 return;
             if (!init)
@@ -64,12 +130,10 @@ namespace ArchaeaMod.Mode
                 objectiveButton = new Button("Mode Status", new Rectangle(20, 284, 10 * 11, 24));
                 init = true;
             }
-            totalTime += (float)Main.frameRate / 60f;
-            dayCount = totalTime / (float)Main.dayLength;
             if (objectiveButton.LeftClick() && Main.playerInventory)
                 progress = !progress;
         }
-        public static float dayCount;
+        public float dayCount;
         public float totalTime;
         public override void PostDrawTiles()
         {
@@ -81,8 +145,8 @@ namespace ArchaeaMod.Mode
                 {
                     Rectangle panel = new Rectangle(306 - 160, 255, 180, 100);
                     sb.Draw(TextureAssets.MagicPixel.Value, panel, Color.DodgerBlue * 0.33f);
-                    sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + new ModeNPC().ModeChecksLifeScale(), new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
-                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + new ModeNPC().ModeChecksDamageScale(), new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + ModeNPC.ModeChecksLifeScale(), new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + ModeNPC.ModeChecksDamageScale(), new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "Day: " + Math.Round(dayCount + 1, 0), new Vector2(panel.Left + 4, panel.Top + 44), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "World time: " + Math.Round(totalTime / 60d / 60d, 1), new Vector2(panel.Left + 4, panel.Top + 64), Color.White);
                 }
@@ -99,43 +163,49 @@ namespace ArchaeaMod.Mode
             get { return true; }
         }
         private bool init;
-        private readonly int 
+        
+        private static readonly int 
             start = 0, health = 1, mana = 2, bosses = 3, bottom = 4, npcs = 5, week= 6, crafting = 7, downedMagno = 8;
-        private readonly float[] scaling = new float[] { 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f };
+        private static readonly float[] scaling = new float[] { 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f };
         public override void AI(NPC n)
         {
             if (!init)
             {
-                if (ModeToggle.archaeaMode)
+                if (ModContent.GetInstance<ModeToggle>().archaeaMode)
                 {
-                    n.lifeMax = (int)(n.lifeMax * (ModeToggle.healthScale = ModeChecksLifeScale()));
-                    n.damage = (int)(n.damage * (ModeToggle.damageScale = ModeChecksDamageScale()));
+                    n.lifeMax = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Life, n.lifeMax, ModeChecksLifeScale());
+                    n.damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, n.damage, ModeChecksDamageScale());
                     n.life = n.lifeMax;
+                    if (Main.netMode == NetmodeID.Server)
+                        NetMessage.SendData(MessageID.SyncNPC, number: n.whoAmI);
                 }
                 init = true;
             }
         }
-        public float ModeChecksLifeScale()
+        public static float ModeChecksLifeScale()
         {
             float multiplier = 1f;
-            if (!ModeToggle.archaeaMode)
+            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return multiplier;
             multiplier *= scaling[start];
             foreach (Player player in Main.player)
             {
                 if (player != null)
                 {
-                    if (player.statLifeMax >= 200)
+                    if (player.statLifeMax >= ArchaeaMode.LifeCrystal(100))
                     {
-                        multiplier *= scaling[health];
+                        multiplier -= scaling[health];
+                        break;
                     }
-                    if (player.statManaMax >= 100)
+                    if (player.statManaMax >= ArchaeaMode.ManaCrystal(80))
                     {
-                        multiplier *= scaling[mana];
+                        multiplier -= scaling[mana];
+                        break;
                     }
                     if (player.position.Y > Main.bottomWorld * 0.75f)
                     {
-                        multiplier *= scaling[bottom];
+                        multiplier -= scaling[bottom];
+                        break;
                     }
                 }
             }
@@ -146,46 +216,51 @@ namespace ArchaeaMod.Mode
                 {
                     if (count++ > 4)
                     {
-                        multiplier *= scaling[npcs];
+                        multiplier -= scaling[npcs];
                         break;
                     }
                 }
             }
-            if (ModeToggle.dayCount > 6)
+            if (ModContent.GetInstance<ModeToggle>().dayCount > 6)
             {
-                multiplier *= scaling[week];
+                multiplier -= scaling[week];
             }
-            if (ModeTile.tileProgress)
+            if (ModContent.GetInstance<ModeTile>().tileProgress)
             {
-                multiplier *= scaling[crafting];
+                multiplier -= scaling[crafting];
             }
             if (ModContent.GetInstance<ArchaeaWorld>().downedMagno)
             {
-                multiplier *= scaling[downedMagno];
+                multiplier -= scaling[downedMagno];
             }
-            return multiplier;
+            ModContent.GetInstance<ModeToggle>().healthScale = Math.Max(multiplier, 0.4f);
+            NetHandler.Send(Packet.ModeScaling, 256);
+            return Math.Max(multiplier, 0.4f);
         }
-        public float ModeChecksDamageScale()
+        public static float ModeChecksDamageScale()
         {
             float multiplier = 1f;
-            if (!ModeToggle.archaeaMode)
+            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return multiplier;
-            multiplier *= scaling[start];
+            multiplier -= scaling[start];
             foreach (Player player in Main.player)
             {
-                if (player != null)
+                if (player != null && player.active)
                 {
-                    if (player.statLifeMax >= 200)
+                    if (player.statLifeMax >= ArchaeaMode.LifeCrystal(100))
                     {
-                        multiplier *= scaling[health];
+                        multiplier -= scaling[health];
+                        break;
                     }
-                    if (player.statManaMax >= 100)
+                    if (player.statManaMax >= ArchaeaMode.ManaCrystal(80))
                     {
-                        multiplier *= scaling[mana];
+                        multiplier -= scaling[mana];
+                        break;
                     }
                     if (player.position.Y > Main.bottomWorld * 0.75f)
                     {
-                        multiplier *= scaling[bottom];
+                        multiplier -= scaling[bottom];
+                        break;
                     }
                 }
             }
@@ -196,30 +271,51 @@ namespace ArchaeaMod.Mode
                 {
                     if (count++ > 4)
                     {
-                        multiplier *= scaling[npcs];
+                        multiplier -= scaling[npcs];
                         break;
                     }
                 }
             }
-            if (ModeToggle.dayCount > 6)
+            if (ModContent.GetInstance<ModeToggle>().dayCount > 6)
             {
-                multiplier *= scaling[week];
+                multiplier -= scaling[week];
             }
-            if (ModeTile.tileProgress)
+            if (ModContent.GetInstance<ModeTile>().tileProgress)
             {
-                multiplier *= scaling[crafting];
+                multiplier -= scaling[crafting];
             }
             if (ModContent.GetInstance<ArchaeaWorld>().downedMagno)
             {
-                multiplier *= scaling[downedMagno];
+                multiplier -= scaling[downedMagno];
             }
-            return multiplier;
+            ModContent.GetInstance<ModeToggle>().damageScale = Math.Max(multiplier, 0.4f);
+            NetHandler.Send(Packet.ModeScaling, 256);
+            return Math.Max(multiplier, 0.4f);
         }
     }
-
+    public class ModeItem : GlobalItem
+    {
+        public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
+        {
+            if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+            {
+                damage = new StatModifier(1f, Math.Abs(ModContent.GetInstance<ModeToggle>().damageScale - 2f));
+            }
+        }
+    }        
+    public class ModeProjectile : GlobalProjectile
+    {
+        public override void ModifyDamageScaling(Projectile projectile, ref float damageScale)
+        {
+            if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+            {
+                damageScale *= Math.Abs(ModContent.GetInstance<ModeToggle>().damageScale - 2f);
+            }
+        }
+    }
     public class ModeTile : GlobalTile
     {
-        public static bool tileProgress;
+        public bool tileProgress;
         private int[,] playerCrafting = new int[5,3];
         public override void PlaceInWorld(int i, int j, int type, Item item)
         {
@@ -250,11 +346,13 @@ namespace ArchaeaMod.Mode
                 {
                     index = k;
                     tileProgress = false;
+                    NetHandler.Send(Packet.TileProgress, 256, b: false);
                     break;
                 }
                 else if (k == 4)
                 {
                     tileProgress = true;
+                    NetHandler.Send(Packet.TileProgress, 256, b: true);
                     return;
                 }
             }

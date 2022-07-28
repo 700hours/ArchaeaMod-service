@@ -21,6 +21,7 @@ namespace ArchaeaMod.Items.Alternate
 
     public class MagnoCannon : ModItem
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Magno Cannon");

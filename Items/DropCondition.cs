@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
+using Terraria.ModLoader;
 
 namespace ArchaeaMod.Items
 {
@@ -13,7 +14,7 @@ namespace ArchaeaMod.Items
     {
         public bool CanDrop(DropAttemptInfo info)
         {
-            return ModeToggle.archaeaMode;
+            return ModContent.GetInstance<ModeToggle>().archaeaMode;
         }
 
         public bool CanShowItemDropInUI()

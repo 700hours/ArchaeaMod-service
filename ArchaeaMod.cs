@@ -6,6 +6,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 
 using ArchaeaMod.Entities;
+using Terraria.ID;
 
 namespace ArchaeaMod
 {
@@ -164,6 +165,9 @@ namespace ArchaeaMod
                     NetMessage.SendData(28, -1, -1, null, t);
                     break;
                 case Packet.ArchaeaMode:
+                    ModContent.GetInstance<Mode.ModeToggle>().archaeaMode = b;
+                    if (Main.netMode == NetmodeID.Server)
+                        Send(Packet.ArchaeaMode, b: b);
                     break;
                 case Packet.SyncClass:
                     break;
@@ -217,6 +221,17 @@ namespace ArchaeaMod
                 case Packet.DownedMagno:
                     ModContent.GetInstance<ArchaeaWorld>().downedMagno = true;
                     break;
+                case Packet.ModeScaling:
+                    ModContent.GetInstance<Mode.ModeToggle>().damageScale = f;
+                    ModContent.GetInstance<Mode.ModeToggle>().healthScale = f2;
+                    if (Main.netMode == NetmodeID.Server)
+                        NetHandler.Send(Packet.ModeScaling, f: f, f2: f2);
+                    break;
+                case Packet.TileProgress:
+                    ModContent.GetInstance<Mode.ModeTile>().tileProgress = b;
+                    if (Main.netMode == NetmodeID.Server)
+                        NetHandler.Send(Packet.TileProgress, b: b);
+                    break;
             }
         }
     }
@@ -235,6 +250,8 @@ namespace ArchaeaMod
             Debug = 10,
             TileExplode = 11,
             DownedMagno = 12,
-            ModOptions = 13;
+            ModOptions = 13,
+            ModeScaling = 14,
+            TileProgress = 15;
     }
 }

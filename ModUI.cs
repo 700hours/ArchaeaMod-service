@@ -169,11 +169,12 @@ namespace ArchaeaMod.ModUI
                     modPlayer.classChoice = choice + 1;
                     if (Main.netMode != 0)
                         NetHandler.Send(Packet.SyncClass, 256, -1, player.whoAmI, choice + 1, player.GetModPlayer<ArchaeaPlayer>().playerUID);
-                    if (player == ArchaeaWorld.firstPlayer)
-                    {
-                        modWorld.cordonBounds = mainOptions[1].active;
-                        ModeToggle.archaeaMode = mainOptions[2].active;
-                    }
+                    //if (player == ArchaeaWorld.firstPlayer)
+                    //{
+                    modWorld.cordonBounds = mainOptions[1].active;
+                    ModContent.GetInstance<ModeToggle>().archaeaMode = mainOptions[2].active;
+                    NetHandler.Send(Packet.ArchaeaMode, 256);
+                    //}
                     Toggled = false;
                 }
                 back.ticks = 0;

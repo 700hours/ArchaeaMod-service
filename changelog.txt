@@ -1,11 +1,12 @@
-version 0.2.1893.35 -> 0.2.1900.36
-============================
+version 1.0.1.3 -> 1.0.2.4
+==========================
 # Changed
--> Halved particular Magno NPC spawn chance by 50%
--> Purple haze now place-able
--> Expert accessory drop added to a mod boss
--> Increased shock damage from 20 to 80
--> Two armors recieve same similar, strong vs. weak, set bonuses
--> Armor defenses modified
+-> Archaea mode flag is exchanged between all MP clients
+-> Drop condition variable from static to instance
+# Added
+-> Archaea mode has dynamic life and damage scaling through progression
+	* Several new packets for networking
+	* Player save and load for life and mana
+	* Item properties give more life and mana
 # Fixed
--> Boss summon
+-> Archaea mode flag not setting based on player enabling

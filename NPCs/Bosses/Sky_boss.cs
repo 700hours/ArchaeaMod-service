@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -81,6 +82,7 @@ namespace ArchaeaMod.NPCs.Bosses
         private int index;
         private int sendIndex;
         private float angle;
+        private const int maxTimer = 900;
         private Projectile[] orbs = new Projectile[7];
         private Projectile[] flames = new Projectile[6];
         public override bool PreAI()
@@ -92,7 +94,7 @@ namespace ArchaeaMod.NPCs.Bosses
         public override void AI()
         {
             NPC.spriteDirection = 1;
-            if (timer++ > 900)
+            if (timer++ > maxTimer)
             {
                 npcCounter++;
                 timer = 0;
@@ -245,6 +247,112 @@ namespace ArchaeaMod.NPCs.Bosses
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             spriteBatch.Draw(Mod.Assets.Request<Texture2D>("NPCs/Bosses/Sky_boss").Value, NPC.Hitbox, Lighting.GetColor((int)NPC.Center.X, (int)NPC.Center.Y, drawColor));
+        }
+        private Effects.Polygon polygon = new Effects.Polygon();
+        public override bool PreDraw(SpriteBatch sb, Vector2 screenPos, Color drawColor)
+        {
+            float x = NPC.Center.X;
+            float y = NPC.Center.Y;
+
+            //  Polygon background effect
+            //  START
+            int width = 32 * 3;
+            int height = 32 * 3;
+            System.Drawing.Pen pen = new System.Drawing.Pen(System.Drawing.Brushes.Purple);
+            pen.Width = 2;
+            var mem = Effects.Fx.GenerateImage(polygon, width * 2, height * 2, pen, System.Drawing.Color.Green);
+            Texture2D tex = Effects.Fx.FromStream(mem);
+
+            Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
+            if (Main.drawToScreen)
+            {
+                zero = Vector2.Zero;
+            }
+            sb.Draw(tex, new Vector2(x - width, y - height) - Main.screenPosition, Color.Lerp(Color.White, Color.Black, Math.Abs((float)timer / maxTimer - 0.5f)));
+            //  END
+            return true;
+
+            //  NPC Visible timer clock
+            //  START
+            float radius = (float)NPC.life / NPC.lifeMax * 120f;
+            double O = (float)timer / maxTimer * (Math.PI * 2);
+            double cos = x + radius * Math.Cos(O);
+            double sine = y + radius * Math.Sin(O);
+            Vector2 orbit = new Vector2((float)cos, (float)sine);
+            MagicPixel.NewEffect(orbit, (float)O, Color.SkyBlue * 0.5f);
+            for (int k = 0; k < MagicPixel.magicPixel.Length; k++)
+            {
+                if (MagicPixel.magicPixel[k] != null && MagicPixel.magicPixel[k].active)
+                {
+                    MagicPixel.magicPixel[k].Draw(sb);
+                    MagicPixel.magicPixel[k].Update(radius);
+                }
+            }
+            //  END
+        }
+    }
+
+    internal class MagicPixel
+    {
+        public MagicPixel(Vector2 position, Color color)
+        {
+            active = true;
+            timeLeft = MaxTimeLeft;
+            this.position = position;
+            this.color = color;
+        }
+        //  DONE: might swap this for an array
+        public static MagicPixel[] magicPixel = new MagicPixel[10001];
+        private const int MaxTimeLeft = 180;
+        public bool active;
+        public int timeLeft;
+        public int whoAmI;
+        public float x, y;
+        public float alpha;
+        public float angle;
+        public Vector2 position;
+        public Color color;
+        public static int NewEffect(Vector2 position, float angle, Color color)
+        { 
+            int num = 10000;
+            for (int i = 0; i < magicPixel.Length; i++)
+            {
+                if (magicPixel[i] == null || !magicPixel[i].active)
+                {
+                    num = i;
+                    break;
+                }
+                if (i == num)
+                {
+                    break;
+                }
+            }
+            magicPixel[num] = new MagicPixel(position, color);
+            magicPixel[num].x = position.X;
+            magicPixel[num].y = position.Y;
+            magicPixel[num].angle = angle;
+            magicPixel[num].whoAmI = num;
+            return num;
+        }
+        public void Update(float radius)
+        {
+            if (timeLeft-- <= 0)
+            { 
+                active = false;
+                magicPixel[whoAmI] = null;
+            }
+            
+            x = position.X;
+            y = position.Y;
+            double cos = x + radius * Math.Cos(angle);
+            double sine = y + radius * Math.Sin(angle);
+            position = new Vector2((float)cos, (float)sine);
+
+            alpha = (float)timeLeft / MaxTimeLeft;
+        }
+        public void Draw(SpriteBatch sb)
+        {
+            sb.Draw(TextureAssets.MagicPixel.Value, position - Main.screenPosition, new Rectangle(0, 0, 1, 1), color * alpha);
         }
     }
 

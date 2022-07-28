@@ -301,3 +301,21 @@ version 0.2.1893.35 -> 0.2.1900.36
 -> Armor defenses modified
 # Fixed
 -> Boss summon
+
+version 0.2.1900.36 -> 0.2.1903.37 [-> 1.0.1]
+============================
+# Added
+-> Background effect to one of the bosses
+# Fixed 
+-> Index out of bounds exception in PostWorldGen preventing successful worldgen
+# Removed
+-> Magno Cannon test item
+# Revert
+## 1.0 -> 0.2.1903.37
+-> Bugs found that inhibit mod operations and require further testing
+
+version 1.0.1 -> 1.0.1.3
+==========================
+# Notes
+?-> Archaea mode network change
+?-> Darkness doesn't apply to everyone
