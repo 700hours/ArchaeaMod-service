@@ -66,7 +66,7 @@ namespace ArchaeaMod.Mode
         }
         public static int ModeScaling(Stat stat, int value, float scale, int defense, DamageClass damage)
         {
-            float quotient = Math.Min(defense / 500f, 0.9f);
+            float quotient = Math.Min(defense / 999f, 0.9f);
             float mitigate = Math.Abs(quotient - 1f);
             float bonus = 1f;
             switch (damage)
@@ -88,8 +88,8 @@ namespace ArchaeaMod.Mode
             }
             
             // Ratio
-            float ratio = 100f / 500f;
-            float result = value / ratio * scale;
+            float ratio = 500f / 9999f;
+            float result = value / ratio / scale;
             switch (stat)
             {
                 case Stat.Life:
