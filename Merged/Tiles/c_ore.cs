@@ -12,7 +12,8 @@ namespace ArchaeaMod.Merged.Tiles
 {
 	public class c_ore : ModTile
 	{
-		public override void SetStaticDefaults()
+        public override bool IsLoadingEnabled(Mod mod) => false;
+        public override void SetStaticDefaults()
 		{
             Main.tileSpelunker[Type] = true;
             Main.tileShine2[Type] = true;

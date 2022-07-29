@@ -132,7 +132,6 @@ namespace ArchaeaMod.NPCs
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Tiles.cinnabar_ore>(), 10, 4, 10));
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Materials.magno_core>(), 3));
             npcLoot.Add(ItemDropRule.ByCondition(new Items.ArchaeaModeDrop(), ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>(), 13));
             npcLoot.Add(ItemDropRule.ByCondition(new Items.ArchaeaModeDrop(), ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>(), 13));

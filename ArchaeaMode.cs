@@ -89,7 +89,7 @@ namespace ArchaeaMod.Mode
             
             // Ratio
             float ratio = 500f / 9999f;
-            float result = value / ratio / scale;
+            float result = value / ratio * scale;
             switch (stat)
             {
                 case Stat.Life:
@@ -413,7 +413,7 @@ namespace ArchaeaMod.Mode
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                damage = new StatModifier(1f, Math.Abs(ModContent.GetInstance<ModeToggle>().damageScale - 2f));
+                damage = new StatModifier(1f, Math.Abs(ModContent.GetInstance<ModeToggle>().damageScale));
             }
         }
     }        
@@ -423,7 +423,7 @@ namespace ArchaeaMod.Mode
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                damageScale *= Math.Abs(ModContent.GetInstance<ModeToggle>().damageScale - 2f);
+                damageScale *= Math.Abs(ModContent.GetInstance<ModeToggle>().damageScale);
             }
         }
     }
