@@ -331,11 +331,8 @@ namespace ArchaeaMod.Mode
         private Button objectiveButton;
         public override void PostUpdateEverything()
         {
-            if (Main.netMode != NetmodeID.MultiplayerClient)
-            { 
-                totalTime += (float)Main.frameRate / 60f;
-                dayCount = totalTime / (float)Main.dayLength;
-            }
+            totalTime += Main.frameRate / 60f;
+            dayCount = totalTime / (float)Main.dayLength;
             if (Main.dedServ)
                 return;
             if (!init)
@@ -400,11 +397,11 @@ namespace ArchaeaMod.Mode
         }
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
         {
-            damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, item.DamageType);
+            damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense * 100, item.DamageType);
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, projectile.DamageType);
+            damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense * 100, projectile.DamageType);
         }
     }
     public class ModeItem : GlobalItem
@@ -413,7 +410,7 @@ namespace ArchaeaMod.Mode
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                damage = new StatModifier(1f, Math.Abs(ModContent.GetInstance<ModeToggle>().damageScale));
+                damage = new StatModifier(1f, (float)Math.Abs(Math.Tan(ModContent.GetInstance<ModeToggle>().damageScale) / 10f) + 1f);
             }
         }
     }        
@@ -423,7 +420,7 @@ namespace ArchaeaMod.Mode
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                damageScale *= Math.Abs(ModContent.GetInstance<ModeToggle>().damageScale);
+                damageScale = ModContent.GetInstance<ModeToggle>().damageScale;
             }
         }
     }

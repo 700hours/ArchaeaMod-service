@@ -412,8 +412,7 @@ namespace ArchaeaMod.NPCs.Bosses
             {
                 for (int k = 0; k < 4; k++)
                 {
-                    int t = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 6, 0f, 0f, 0, default(Color), 2f);
-                    Main.dust[t].noGravity = true;
+                    Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3());
                 }
             }
 

@@ -484,6 +484,12 @@ namespace ArchaeaMod
             return Main.keyState.IsKeyDown(key);
         }
 
+        public override void PostUpdateEquips()
+        {
+            float ratio = 100f / 500f;
+            float result = Player.statDefense / ratio;
+            Player.statDefense = (int)result;
+        }
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)

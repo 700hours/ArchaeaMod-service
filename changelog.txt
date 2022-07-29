@@ -2,3 +2,5 @@ version 1.1.4.6 -> 1.1.4.7
 ==========================
 # Changed
 -> Damage and life scaling
+-> Boss orb projectile casts light instead of dust effect
+-> Cinnabar sword and staff have cinnabar bar replaced with magno bar recipe material

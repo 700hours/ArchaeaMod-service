@@ -13,6 +13,7 @@ namespace ArchaeaMod.Items
 {
     public class debug_tile : ModItem
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Debug Tile");

@@ -24,7 +24,7 @@ namespace ArchaeaMod.Items
         {
             Item.width = 48;
             Item.height = 48;
-            Item.damage = 10;
+            Item.damage = 40;
             Item.knockBack = 2f;
             Item.crit = 7;
             Item.mana = 10;
@@ -48,7 +48,7 @@ namespace ArchaeaMod.Items
         {
             CreateRecipe()
                 .AddTile(TileID.Anvils)
-                .AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_bar>(), 8)
+                .AddIngredient(ModContent.ItemType<Merged.Items.Materials.magno_bar>(), 8)
                 .AddIngredient(ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), 8)
 //            recipe.SetResult(this, 1);
                 .Register();
