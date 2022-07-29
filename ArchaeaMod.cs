@@ -7,6 +7,8 @@ using Terraria.ModLoader;
 
 using ArchaeaMod.Entities;
 using Terraria.ID;
+using ArchaeaMod.Mode;
+using Microsoft.Xna.Framework.Input;
 
 namespace ArchaeaMod
 {
@@ -17,6 +19,7 @@ namespace ArchaeaMod
         public static string magnoHead = "ArchaeaMod/Gores/magno_head";
         public static string skyHead = "ArchaeaMod/Gores/sky_head";
         //public static ModHotKey[] macro = new ModHotKey[5];
+        public static ModKeybind progressKey; 
         public override void Load()
         {
             AddBossHeadTexture(magnoHead, ModNPCID.MagnoliacHead);
@@ -27,6 +30,7 @@ namespace ArchaeaMod
                 MusicLoader.AddMusicBox(this, MusicLoader.GetMusicSlot(this, "Sounds/Music/Magno_Biome"), ModContent.ItemType<Items.Tiles.mbox_magno_1>(), ModContent.TileType<Tiles.music_boxes>(), 36);
                 MusicLoader.AddMusicBox(this, MusicLoader.GetMusicSlot(this, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma"), ModContent.ItemType<Items.Tiles.mbox_magno_2>(), ModContent.TileType<Tiles.music_boxes_alt>(), 36);
             }
+            progressKey = KeybindLoader.RegisterKeybind(this, "Progress diaglog visible", Keys.None);
             //for (int i = 0; i < macro.Length; i++)
             //{
             //    macro[i] = RegisterHotKey($"Macro {i + 1}", "");
@@ -165,9 +169,13 @@ namespace ArchaeaMod
                     NetMessage.SendData(28, -1, -1, null, t);
                     break;
                 case Packet.ArchaeaMode:
+                    ModContent.GetInstance<Mode.ModeToggle>().healthScale = f;
+                    ModContent.GetInstance<Mode.ModeToggle>().damageScale = f2;
                     ModContent.GetInstance<Mode.ModeToggle>().archaeaMode = b;
+                    ModContent.GetInstance<Mode.ModeToggle>().dayCount = f3;
+                    ModContent.GetInstance<Mode.ModeToggle>().totalTime = f4;
                     if (Main.netMode == NetmodeID.Server)
-                        Send(Packet.ArchaeaMode, b: b);
+                        NetHandler.Send(Packet.ArchaeaMode, -1, -1, 0, f, f2, 0, b, f3, f4);
                     break;
                 case Packet.SyncClass:
                     break;
@@ -232,6 +240,11 @@ namespace ArchaeaMod
                     if (Main.netMode == NetmodeID.Server)
                         NetHandler.Send(Packet.TileProgress, b: b);
                     break;
+                case Packet.CordonedBiomes:
+                    ModContent.GetInstance<ArchaeaWorld>().cordonBounds = b;
+                    if (Main.netMode == NetmodeID.Server)
+                        NetHandler.Send(Packet.CordonedBiomes, b: b);
+                    break;
             }
         }
     }
@@ -252,6 +265,7 @@ namespace ArchaeaMod
             DownedMagno = 12,
             ModOptions = 13,
             ModeScaling = 14,
-            TileProgress = 15;
+            TileProgress = 15,
+            CordonedBiomes = 16;
     }
 }

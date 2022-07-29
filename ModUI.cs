@@ -17,9 +17,17 @@ using Terraria.UI.Chat;
 
 using ArchaeaMod.Mode;
 using Terraria.ID;
+using System.Timers;
 
 namespace ArchaeaMod.ModUI
 {
+    public sealed class OptionsID
+    {
+        public const int
+            ClassSelect = 0,
+            CordonedBiomes = 1,
+            ArchaeaMode = 2;
+    }
     public class OptionsUI
     {
         private static string choiceName = "";
@@ -30,7 +38,7 @@ namespace ArchaeaMod.ModUI
         private const int offset = 32;
         private static int oldWidth, oldHeight;
         private static Element[] classOptions;
-        private static Element[] mainOptions;
+        public static Element[] mainOptions;
         private static Element apply;
         private static Element back;
         private static Element selected;
@@ -80,7 +88,7 @@ namespace ArchaeaMod.ModUI
         private static ArchaeaPlayer modPlayer;
         internal static bool Toggled = false;
         static bool flag = false;
-        public static void MainOptions(Player player)
+        public static bool MainOptions(Player player, bool forceDraw = false)
         {
             if (reset)
             {
@@ -104,12 +112,12 @@ namespace ArchaeaMod.ModUI
                     sb.DrawString(FontAssets.MouseText.Value, "Archaea Mod options", new Vector2(toggle.bounds.X, toggle.bounds.Bottom), Color.White);
                 }
             }
-            else
+            else if (!forceDraw)
             { 
                 Toggled = false;
-                return;
+                return false;
             }
-            if (!Toggled) return;
+            if (!Toggled && !forceDraw) return false;
             if (classOptions != null && (oldWidth != Main.screenWidth || oldHeight != Main.screenHeight))
             {
                 oldWidth = Main.screenWidth;
@@ -119,12 +127,12 @@ namespace ArchaeaMod.ModUI
             if (flag)
             {
                 flag = false;
-                return;
+                return false;
             }
             if (classSelect)
             {
                 ClassSelect(player);
-                return;
+                return false;
             }
             else
             {
@@ -167,20 +175,40 @@ namespace ArchaeaMod.ModUI
                     sb.DrawString(FontAssets.MouseText.Value, "Apply", new Vector2(apply.bounds.X, apply.bounds.Bottom), Color.White);
                 if (apply.LeftClick() && apply.color != Color.Gray && back.ticks == 0)
                 {
-                    modPlayer.classChoice = choice + 1;
+                    Timer timer = new Timer((float)player.HeldItem.useTime / Main.frameRate * 1000f);
+                    timer.AutoReset = false;
+                    timer.Enabled = true;
+                    timer.Elapsed += (object sender, ElapsedEventArgs e) =>
+                    {
+                        modPlayer.classChoice = choice + 1;
+                        timer.Dispose();
+                    };
                     if (Main.netMode == NetmodeID.MultiplayerClient)
                         NetHandler.Send(Packet.SyncClass, 256, -1, player.whoAmI, choice + 1, player.GetModPlayer<ArchaeaPlayer>().playerUID);
                     //if (player == ArchaeaWorld.firstPlayer)
                     //{
-                    modWorld.cordonBounds = mainOptions[1].active;
-                    ModContent.GetInstance<ModeToggle>().archaeaMode = mainOptions[2].active;
-                    if (Main.netMode == NetmodeID.MultiplayerClient)
-                        NetHandler.Send(Packet.ArchaeaMode, 256);
+                    ModContent.GetInstance<ModeToggle>().SetCordonedBiomes(mainOptions[1].active);
+                    ModContent.GetInstance<ModeToggle>().SetArchaeaMode(mainOptions[2].active);
                     //}
+                    for (int i = 0; i < Main.player.Length; i++)
+                    {
+                        if (Main.player[i].active && i < 256)
+                        {
+                            Main.player[i].GetModPlayer<ArchaeaPlayer>()
+                                .SetModeStats(ModContent.GetInstance<ModeToggle>().archaeaMode);
+                        }
+                    }
                     Toggled = false;
+                    return true;
                 }
                 back.ticks = 0;
             }
+            return false;
+        }
+        public static void SetMainOption(Element opt, bool flag)
+        {
+            opt.active = flag;
+            opt.color = opt.active ? Color.Blue : Color.White;
         }
         public static void ClassSelect(Player player)
         {

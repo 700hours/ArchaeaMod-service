@@ -1,7 +1,4 @@
-version 1.0.2.4 -> 1.0.2.5
+version 1.1.4.6 -> 1.1.4.7
 ==========================
 # Changed
--> Set clamps on player max life and mana
-# Fixed
--> Archaea mode scaling information
--> NetmodeID set to MP client in ModUI
+-> Damage and life scaling

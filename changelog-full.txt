@@ -332,3 +332,29 @@ version 1.0.1.3 -> 1.0.2.4
 	* Item properties give more life and mana
 # Fixed
 -> Archaea mode flag not setting based on player enabling
+
+version 1.0.2.4 -> 1.1.4.6
+==========================
+# Added
+-> Networking of Life Crystal custom value
+-> MainOptions provides feedback if Apply is clicked
+-> Cordoned biomes boolean value networking
+-> Progress-based biome limiter
+?> Well re-added
+-> Arrow texture
+-> Dynamic difficulty progress dialog
+-> Keybind to show/hide progress dialog
+# Changed
+-> Set clamps on player max life and mana
+-> MainOptions menu opens at the start of entering a world
+-> Mode health multiplier caps at 85%
+-> Mode damage multiplier caps at 65%
+-> Progess scaling values
+# Fixed
+-> Archaea mode scaling information
+-> NetmodeID set to MP client in ModUI
+-> Class choice item use soft lock
+-> Mode swapping total life values from custom to vanilla
+-> Day count and mode scaling resets and saves properly
+# Removed
+-> Player mana scaling from mode

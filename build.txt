@@ -1,7 +1,8 @@
 author = Archaea devs
-version = 1.0.1.3
+version = 1.1.4.6
 displayName = Archaea Mod
 homepage = http://www.circleprefect.com/modpage
+dllReferences = tUserInterface
 hideCode = true
 hideResources = true
 includeSource = false

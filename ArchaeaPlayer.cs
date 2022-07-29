@@ -62,6 +62,8 @@ namespace ArchaeaMod
         private bool start;
         public bool debugMenu;
         public bool spawnMenu;
+        private bool setInitMode = true;
+        private bool setModeStats = true;
         public override bool CanUseItem(Item item)
         {
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
@@ -77,6 +79,8 @@ namespace ArchaeaMod
                     }
                     Player.ApplyItemAnimation(item);
                     SoundEngine.PlaySound(SoundID.Item4, Player.Center);
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                        NetMessage.SendData(MessageID.PlayerLifeMana);
                     return false;
                 case ItemID.LifeFruit:
                     if (Player.statLifeMax < 9999)
@@ -87,8 +91,12 @@ namespace ArchaeaMod
                     }
                     Player.ApplyItemAnimation(item);
                     SoundEngine.PlaySound(SoundID.Item4, Player.Center);
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                        NetMessage.SendData(MessageID.PlayerLifeMana);
                     return false;
                 case ItemID.ManaCrystal:
+                    break;
+                    #region Mana capped at 400
                     if (Player.statManaMax < 999)
                     {
                         Player.statManaMax += ArchaeaMode.ManaCrystal();
@@ -97,7 +105,10 @@ namespace ArchaeaMod
                     }
                     Player.ApplyItemAnimation(item);
                     SoundEngine.PlaySound(SoundID.Item29, Player.Center);
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                        NetMessage.SendData(MessageID.PlayerLifeMana);
                     return false;
+                    #endregion
                 case ItemID.LesserHealingPotion:
                 case ItemID.HealingPotion: 
                 case ItemID.GreaterHealingPotion:
@@ -111,30 +122,40 @@ namespace ArchaeaMod
                 case ItemID.ManaPotion:
                 case ItemID.GreaterManaPotion:
                 case ItemID.SuperManaPotion:
+                    break;
+                    #region Mana capped at 400
                     Player.statMana += ArchaeaMode.ManaPotion(item.healMana);
                     Player.ApplyItemAnimation(item);
                     item.stack--;
                     SoundEngine.PlaySound(SoundID.Item3, Player.Center);
                     return false;
+                    #endregion
             }
             return true;
+        }
+        public void ModeOffResetStats()
+        {
+            if (Player.statLifeMax2 != 100 && Player.statLifeMax2 > 500)
+            {
+                int offset = 0;
+                if (Player.statLifeMax2 == 9999)
+                {
+                    offset = 5;
+                }
+                int extra = (Player.statLifeMax2 - 100) / 25;
+                extra += offset;
+                Player.statLifeMax2 = 100 + extra;
+                Player.statLifeMax = Player.statLifeMax2;
+                Player.statLife = Player.statLifeMax2;
+            }
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                NetMessage.SendData(MessageID.PlayerLifeMana);
         }
         public override void PreSavePlayer()
         {
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return;
-            if (Player.statLifeMax2 != 100 && Player.statLifeMax2 > 500)
-            { 
-                int extra = (Player.statLifeMax2 - 100) / 25;
-                Player.statLifeMax2 = (100 + extra) % 2;
-                Player.statLife = Player.statLifeMax2;
-            }
-            if (Player.statManaMax != 20)
-            {
-                int extra = (Player.statManaMax2 - 20) / 5;
-                Player.statManaMax2 = (20 + extra) % 2;
-                Player.statMana = Player.statManaMax2;
-            }
+            ModeOffResetStats();
         }
         public override void PostSavePlayer()
         {
@@ -147,24 +168,32 @@ namespace ArchaeaMod
                 Player.statLifeMax = Player.statLifeMax2;
                 Player.statLife = Player.statLifeMax;
             }
-            if (Player.statManaMax != 20)
-            {
-                int extra = Player.statManaMax2 - 20;
-                Player.statManaMax2 = Math.Min(999, Math.Max(20, 20 + ArchaeaMode.ManaCrystal(extra)));
-                Player.statManaMax = Player.statManaMax2;
-                Player.statMana = Player.statManaMax;
-            }
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                NetMessage.SendData(MessageID.PlayerLifeMana);
         }
         public override void OnEnterWorld(Player player)
         {
-            if (Main.player.Count(t => t.active) == 1)
-                ModContent.GetInstance<ModeToggle>().archaeaMode = true;
             PostSavePlayer();
+            if (Effects.Barrier.barrier == null)
+            {
+                Effects.Barrier.Initialize();
+            }
+        }
+        public void SetModeStats(bool modeFlag)
+        {
+            if (modeFlag)
+                PostSavePlayer();
+            else ModeOffResetStats();
         }
         public override void PreUpdate()
         {
             Color textColor = Color.Yellow;
+            if (Main.dedServ || Effects.Barrier.barrier == null)
+                return;
+            for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
+                Effects.Barrier.barrier[i]?.Update(Player);
             return;
+            #region debug
             if (!init)
             {
                 NPC.NewNPC(NPC.GetBossSpawnSource(Player.whoAmI), (int)Player.position.X, (int)Player.position.Y, ModNPCID.SkyBoss);
@@ -436,6 +465,7 @@ namespace ArchaeaMod
                     NetHandler.Send(Packet.Debug, 256, -1, Player.whoAmI, 1f);
                 else spawnMenu = !spawnMenu;
             }
+            #endregion
         }
         public static bool LeftClick()
         {
@@ -454,6 +484,13 @@ namespace ArchaeaMod
             return Main.keyState.IsKeyDown(key);
         }
 
+        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        {
+            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
+                return true;
+            damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, Player.statDefense, DamageClass.Default);
+            return true;
+        }
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
             if (item.CountsAsClass(DamageClass.Melee))
@@ -676,10 +713,16 @@ namespace ArchaeaMod
             {
                 if (ArchaeaWorld.playerIDs.Contains(playerUID))
                     classChoice = ArchaeaWorld.classes[ArchaeaWorld.playerIDs.IndexOf(playerUID)];
-                OptionsUI.MainOptions(drawInfo.drawPlayer);
+                if (OptionsUI.MainOptions(drawInfo.drawPlayer, setInitMode))
+                    setInitMode = false;
             }
             if (drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI)
-            { 
+            {
+                if (!Main.dedServ || Effects.Barrier.barrier != null)
+                { 
+                    for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
+                        Effects.Barrier.barrier[i]?.Draw(sb, Player);
+                }
                 if (!Main.hardMode)
                     DarkenedVision();
             }

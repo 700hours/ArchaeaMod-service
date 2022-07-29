@@ -143,6 +143,7 @@ namespace ArchaeaMod
         //};
         public bool downedMagno;
         public bool downedNecrosis;
+        public int MagnoBiomeOriginX;
         public static Miner miner;
         public static List<Vector2> origins = new List<Vector2>();
         private Treasures t;
@@ -212,6 +213,8 @@ namespace ArchaeaMod
                 {
                     originX = WorldGen.genRand.Next(200, Main.maxTilesX - 1000);
                     originY = Main.maxTilesY - 650;
+                    //  Getting hint 
+                    MagnoBiomeOriginX = originX;
                     MagnoV2 magno = MagnoV2.NewBiome(ref originX, ref originY);
                     magno.tGenerate(progress);
                     //  Legacy Magno gen
@@ -424,45 +427,48 @@ namespace ArchaeaMod
                 progress.End();
             }, 1f));
 
-            //float PositionX;
-            //const int TileSize = 16;
-            //int buffer = 16, wellBuffer = 96, surfaceBuffer = 0;
-            //int WellIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Smooth World"));
-            //if (WellIndex != -1)
-            //{
-            //    tasks.Insert(WellIndex + 1, new PassLegacy("Digging Well", delegate (GenerationProgress progress)
-            //    {
-            //        progress.Message = "Digging Well";
-            //        Vector2 Center = new Vector2((Main.maxTilesX / 2) * 16, (Main.maxTilesY / 2) * 16);
-            //        //MINER Legacy gen
-            //        //if ((miner.genPos[0].X + wellBuffer / 3) / TileSize > miner.baseCenter.X / TileSize)
-            //        //{
-            //        //    PositionX = miner.genPos[1].X / 16;
-            //        //}
-            //        //else PositionX = miner.genPos[0].X / 16;
-            //        PositionX = WorldGen.genRand.Next(originX, originX + mWidth);
+            float PositionX;
+            const int TileSize = 16;
+            int buffer = 16, wellBuffer = 96, surfaceBuffer = 0;
+            int WellIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Smooth World"));
+            if (WellIndex != -1)
+            {
+                tasks.Insert(WellIndex + 1, new PassLegacy("Digging Well", delegate (GenerationProgress progress, GameConfiguration c)
+                {
+                    progress.Message = "Digging Well";
+                    Vector2 Center = new Vector2((Main.maxTilesX / 2) * 16, (Main.maxTilesY / 2) * 16);
+                    //MINER Legacy gen
+                    //if ((miner.genPos[0].X + wellBuffer / 3) / TileSize > miner.baseCenter.X / TileSize)
+                    //{
+                    //    PositionX = miner.genPos[1].X / 16;
+                    //}
+                    //else PositionX = miner.genPos[0].X / 16;
+                    int tries = 0;
+                    do { 
+                        PositionX = WorldGen.genRand.Next(originX, originX + mWidth);
+                    } while (PositionX < Main.rightWorld - mWidth && tries++ < 100);
 
-            //        int gap = 5;
-            //        int MaxTries = 128;
-            //        bool dirtWall = Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe1 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe2 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe3 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].wall == WallID.DirtUnsafe4;
-            //        for (int i = 0; i < MaxTries; i++)
-            //        {
-            //            if (Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].active() && Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].wall != 0)
-            //            {
-            //                surfaceBuffer++;
-            //            }
-            //            if (!Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].active() && Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].wall == 0)
-            //            {
-            //                surfaceBuffer--;
-            //            }
-            //        }
+                    int gap = 5;
+                    int MaxTries = 450;
+                    bool dirtWall = Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].WallType == WallID.DirtUnsafe || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].WallType == WallID.DirtUnsafe1 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].WallType == WallID.DirtUnsafe2 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].WallType == WallID.DirtUnsafe3 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].WallType == WallID.DirtUnsafe4;
+                    for (int i = 0; i < MaxTries; i++)
+                    {
+                        if (Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].HasTile) 
+                        { 
+                            surfaceBuffer++;
+                        }
+                        if (!Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].HasTile && Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].WallType == 0)
+                        {
+                            surfaceBuffer--;
+                        }
+                    }
 
-            //        buffer = 3;
-            //        float distance = Vector2.Distance(new Vector2(PositionX, Main.spawnTileY + 10 + surfaceBuffer) - new Vector2(PositionX, originY - (int)Main.worldSurface - 25/*miner.genPos[1].Y / 16*/), Vector2.Zero);
-            //        // comment out '/ 3' for max well length
-            //        PlaceWell((int)PositionX, Main.spawnTileY + surfaceBuffer - buffer, distance / 3);
-            //    }));
-            //}
+                    buffer = 3;
+                    float distance = Vector2.Distance(new Vector2(PositionX, Main.spawnTileY + 10 + surfaceBuffer) - new Vector2(PositionX, originY - (int)Main.worldSurface - 25/*miner.genPos[1].Y / 16*/), Vector2.Zero);
+                    // comment out '/ 3' for max well length
+                    PlaceWell((int)PositionX, Math.Abs(surfaceBuffer) - buffer, distance / 3);
+                }));
+            }
             #region Vector2 array
             /* int x = MagnoDen.bounds.X;
             int y = MagnoDen.bounds.Y;
@@ -611,6 +617,21 @@ namespace ArchaeaMod
             }
         }
 
+        public override void OnWorldUnload()
+        {
+            if (Effects.Barrier.barrier != null)
+            { 
+                for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
+                {
+                    Effects.Barrier.barrier[i] = null;
+                }
+            }
+            Effects.Barrier.barrier = null;
+        }
+        public override void PostDrawInterface(SpriteBatch sb)
+        {
+            Effects.Barrier.DrawHint(sb, Main.LocalPlayer);
+        }
         int[,] wellShape = new int[,]
         {
             { 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0 },
@@ -754,6 +775,7 @@ namespace ArchaeaMod
             tag.Add("Classes", classes);
             tag.Add("IDs", playerIDs);
             tag.Add("Crystals", spawnedCrystals);
+            tag.Add("OriginX", MagnoBiomeOriginX);
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -763,16 +785,23 @@ namespace ArchaeaMod
             classes = tag.Get<List<int>>("Classes");
             playerIDs = tag.Get<List<int>>("IDs");
             spawnedCrystals = tag.GetBool("Crystals");
+            MagnoBiomeOriginX = tag.GetInt("OriginX");
         }
         public override void NetSend(BinaryWriter writer)
         {
             writer.Write(downedMagno);
             writer.Write(downedNecrosis);
+            //  Extra
+            writer.Write(spawnedCrystals);
+            writer.Write(MagnoBiomeOriginX);
         }
         public override void NetReceive(BinaryReader reader)
         {
             downedMagno = reader.ReadBoolean();
             downedNecrosis = reader.ReadBoolean();
+            //  Extra
+            spawnedCrystals = reader.ReadBoolean();
+            MagnoBiomeOriginX = reader.ReadInt32();
         }
         private bool begin;
         private bool first;
