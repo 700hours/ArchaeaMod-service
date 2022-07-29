@@ -66,7 +66,7 @@ namespace ArchaeaMod.Mode
         }
         public static int ModeScaling(Stat stat, int value, float scale, int defense, DamageClass damage)
         {
-            float quotient = defense / 999f;
+            float quotient = Math.Min(defense / 500f, 0.9f);
             float mitigate = Math.Abs(quotient - 1f);
             float bonus = 1f;
             switch (damage)
@@ -88,7 +88,7 @@ namespace ArchaeaMod.Mode
             }
             
             // Ratio
-            float ratio = 500f / 9999f;
+            float ratio = 100f / 500f;
             float result = value / ratio * scale;
             switch (stat)
             {
@@ -124,6 +124,14 @@ namespace ArchaeaMod.Mode
     {
         public override void OnWorldLoad()
         {
+            if (timer != null)
+                timer.Dispose();
+            timer = new Timer(TimeSpan.FromSeconds(10).TotalMilliseconds);
+            timer.Enabled = true;
+            timer.AutoReset = true;
+            timer.Elapsed += Timer_Elapsed;
+            timer.Start();
+
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 archaeaMode = false;
@@ -133,12 +141,20 @@ namespace ArchaeaMod.Mode
                 totalTime = 0;
             }
         }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            healthScale = ModeChecksLifeScale();
+            damageScale = ModeChecksDamageScale();
+        }
+
         public bool archaeaMode;
         public bool progress;
         public float healthScale;
         public float damageScale;
         public float dayCount;
         public float totalTime;
+        private Timer timer;
 
         public static Color[] unlock = new Color[9];
         public readonly int start = 0, health = 1, mana = 2, bosses = 3, bottom = 4, npcs = 5, week = 6, crafting = 7, downedMagno = 8;
@@ -355,8 +371,8 @@ namespace ArchaeaMod.Mode
                 {
                     Rectangle panel = new Rectangle(306 - 160, 255, 180, 100);
                     sb.Draw(TextureAssets.MagicPixel.Value, panel, Color.DodgerBlue * 0.33f);
-                    sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + Math.Abs(healthScale - 2f), new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
-                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + Math.Abs(damageScale - 2f), new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + healthScale, new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + damageScale, new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "Day: " + Math.Round(dayCount + 1, 0), new Vector2(panel.Left + 4, panel.Top + 44), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "World time: " + Math.Round(totalTime / 60d / 60d, 1), new Vector2(panel.Left + 4, panel.Top + 64), Color.White);
                 }
