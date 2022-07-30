@@ -24,7 +24,7 @@ namespace ArchaeaMod.Merged.Tiles
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = false;
             DustType = 1;
-			ItemDrop = ModContent.ItemType<cinnabar_ore>();
+			ItemDrop = ModContent.ItemType<Merged.Items.Tiles.cinnabar_ore>();
             //  UI map tile color
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Cinnabar Ore");

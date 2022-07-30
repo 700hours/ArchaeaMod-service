@@ -26,7 +26,7 @@ namespace ArchaeaMod.Merged.Items
             Item.value = 5000;
             Item.rare = 3;
             Item.maxStack = 99;
-            Item.createTile = ModContent.TileType<m_trophy>();
+            Item.createTile = ModContent.TileType<Merged.Tiles.m_trophy>();
         }
     }
 }

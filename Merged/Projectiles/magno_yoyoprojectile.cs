@@ -37,7 +37,7 @@ namespace ArchaeaMod.Merged.Projectiles
             {
                 for (float k = 0; k < MathHelper.ToRadians(360); k += 0.017f * 9)
                 {
-                    int Proj1 = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), Distance(null, k, 16f), ModContent.ProjectileType<dust_diffusion>(), Projectile.damage, 4f, Projectile.owner, ModContent.DustType<Dusts.magno_dust>());
+                    int Proj1 = Projectile.NewProjectile(Projectile.GetSource_OnHit(target), Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), Distance(null, k, 16f), ModContent.ProjectileType<ArchaeaMod.Projectiles.dust_diffusion>(), Projectile.damage, 4f, Projectile.owner, ModContent.DustType<Dusts.magno_dust>());
                     if (Main.netMode == 1) NetMessage.SendData(27, -1, -1, null, Proj1);
                     //custom sound
                     //Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/IceBeamChargeShot"), projectile.position);

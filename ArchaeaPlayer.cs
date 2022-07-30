@@ -49,7 +49,16 @@ namespace ArchaeaMod
         }
         public int classChoice = 0;
         public int playerUID = 0;
-        public int overallMaxStat = 45;
+        public int overallMaxStat = 0;
+        private void InitStatRemaining()
+        {
+            int num = 0;
+            for (int i = 0; i < spentStat.Length; i++)
+            {
+                num += spentStat[i];
+            }
+            overallMaxStat = Math.Abs(num - 45);
+        }
         public override void LoadData(TagCompound tag)
         {
             playerUID = tag.GetInt("PlayerID");
@@ -68,7 +77,6 @@ namespace ArchaeaMod
             spentStat[7] = tag.GetInt("MerchantDiscount");
             spentStat[8] = tag.GetInt("PercentDamageTaken");
             spentStat[9] = tag.GetInt("AmmoReduction");
-            overallMaxStat = tag.GetInt("overallMaxStat");
         }
         public override void SaveData(TagCompound tag)
         {
@@ -86,7 +94,6 @@ namespace ArchaeaMod
             tag.Add("MerchantDiscount", spentStat[7]);
             tag.Add("PercentDamageTaken", spentStat[8]);
             tag.Add("AmmoReduction", spentStat[9]);
-            tag.Add("overallMaxStat", overallMaxStat);
         }
         public int remainingStat;
         public int[] spentStat = new int[10];
@@ -176,43 +183,47 @@ namespace ArchaeaMod
             }
             return true;
         }
-        public void ModeOffResetStats()
+        public static int ModeOffResetStats(int lifeMax2)
         {
-            if (Player.statLifeMax2 != 100 && Player.statLifeMax2 > 500)
+            if (lifeMax2 != 100 && lifeMax2 > 500)
             {
                 int offset = 0;
-                if (Player.statLifeMax2 == 9999)
+                if (lifeMax2 == 9999)
                 {
                     offset = 5;
                 }
-                int extra = (Player.statLifeMax2 - 100) / 25;
+                int extra = (lifeMax2 - 100) / 25;
                 extra += offset;
-                Player.statLifeMax2 = 100 + extra;
-                Player.statLifeMax = Player.statLifeMax2;
+                lifeMax2 = 100 + extra;
+                return lifeMax2;
                 //Player.statLife = Player.statLifeMax2;
             }
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-                NetMessage.SendData(MessageID.PlayerLifeMana);
+            return 100;
+            //if (Main.netMode == NetmodeID.MultiplayerClient)
+            //    NetMessage.SendData(MessageID.PlayerLifeMana);
         }
         public override void PreSavePlayer()
         {
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return;
-            ModeOffResetStats();
+            Player.statLifeMax2 = ModeOffResetStats(Player.statLifeMax2);
         }
         public override void PostSavePlayer()
         {
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return;
-            if (Player.statLifeMax2 != 100)
-            {
-                int extra = Player.statLifeMax2 - 100;
-                Player.statLifeMax2 = Math.Min(9999, Math.Max(100, 100 + ArchaeaMode.LifeCrystal(extra)));
-                Player.statLifeMax = Player.statLifeMax2;
-                //Player.statLife = Player.statLifeMax;
-            }
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-                NetMessage.SendData(MessageID.PlayerLifeMana);
+            Player.statLifeMax2 = LifeMaxMode(Player.statLifeMax2);
+            Player.statLifeMax = Player.statLifeMax2;
+            //Player.statLife = Player.statLifeMax;
+            //if (Main.netMode == NetmodeID.MultiplayerClient)
+            //    NetMessage.SendData(MessageID.PlayerLifeMana);
+        }
+        public static int LifeMaxMode(int lifeMax2)
+        {
+            if (lifeMax2 == 100) return 100;
+            int extra = lifeMax2 - 100;
+            lifeMax2 = Math.Min(9999, Math.Max(100, 100 + ArchaeaMode.LifeCrystal(extra)));
+            return lifeMax2;
         }
         Timer debugTimer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
         public override void OnEnterWorld(Player player)
@@ -235,8 +246,9 @@ namespace ArchaeaMod
         {
             //  DEBUG
             if (!Player.active) return;
-            if (overallMaxStat-- > 0)
-            { 
+            InitStatRemaining();
+            if (overallMaxStat > 0)
+            {
                 remainingStat += 1;
                 SoundEngine.PlaySound(SoundID.Item29, Player.Center);
             }
@@ -251,7 +263,7 @@ namespace ArchaeaMod
         {
             if (modeFlag)
                 PostSavePlayer();
-            else ModeOffResetStats();
+            else ModeOffResetStats(Player.statLifeMax2);
         }
         #region Progression
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
@@ -277,7 +289,7 @@ namespace ArchaeaMod
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return true;
             customDamage = true;
-            damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, Player.statDefense, DamageClass.Default);
+            damage = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.Player, ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, Player.statDefense, DamageClass.Default);
             return true;
         }
         public override float UseSpeedMultiplier(Item item)

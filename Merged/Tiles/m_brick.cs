@@ -13,7 +13,7 @@ namespace ArchaeaMod.Merged.Tiles
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
-            ItemDrop = ModContent.ItemType<magno_brick>();
+            ItemDrop = ModContent.ItemType<Merged.Items.Tiles.magno_brick>();
             //  UI map tile color
             AddMapEntry(new Color(119, 111, 98));
             HitSound = SoundID.Tink;

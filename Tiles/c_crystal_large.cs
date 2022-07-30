@@ -60,7 +60,7 @@ namespace ArchaeaMod.Tiles
             int random = Main.rand.Next(4, 8);
             for (int k = 0; k < random; k++)
             {
-                Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<cinnabar_crystal>(), random, true, 0, true, false);
+                Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), random, true, 0, true, false);
             }
         }
         public override bool CanKillTile(int i, int j, ref bool blockDamaged)

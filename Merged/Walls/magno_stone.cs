@@ -11,7 +11,7 @@ namespace ArchaeaMod.Merged.Walls
         {
             Main.wallHouse[Type] = true;
             TileID.Sets.HousingWalls[Type] = true;
-            ItemDrop = ModContent.ItemType<magno_stonewall>();
+            ItemDrop = ModContent.ItemType<Merged.Items.Walls.magno_stonewall>();
             AddMapEntry(new Color(10, 10, 110));
         }
     }

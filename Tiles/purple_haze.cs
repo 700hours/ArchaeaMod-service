@@ -21,7 +21,7 @@ namespace ArchaeaMod.Tiles
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;
-            ItemDrop = ModContent.ItemType<purple_haze>();
+            ItemDrop = ModContent.ItemType<Items.Tiles.purple_haze>();
             AddMapEntry(Color.MediumPurple);
             MinPick = 95;
         }

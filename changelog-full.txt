@@ -388,3 +388,11 @@ version 1.1.4.7 -> 1.2.5.8
 -> Mode damaged wasn't scaled based on flag in all relevant methods
 # Removed
 -> Biome drop from a certain NPC
+
+[NIGHTLY BUILD]
+version 1.2.5.8 -> 1.2.5.10
+==========================
+# Fixed?
+-> Patch for Archaea Mode setting player life to max when enabled
+	Note: might have been occuring with duplicated life setting packets
+	Note: seemed to be prevalent on dedicated servers

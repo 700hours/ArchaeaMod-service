@@ -26,7 +26,7 @@ namespace ArchaeaMod.Merged.Items.Tiles
             Item.value = 1000;
             Item.rare = 1;
             Item.maxStack = 250;
-            Item.createTile = ModContent.TileType<c_ore>();
+            Item.createTile = ModContent.TileType<Merged.Tiles.c_ore>();
         }
     }
 }

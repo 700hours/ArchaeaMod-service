@@ -29,7 +29,7 @@ namespace ArchaeaMod.Merged.Tiles
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
             DustType = 1;
-            ItemDrop = ModContent.ItemType<magno_bar>();
+            ItemDrop = ModContent.ItemType<Items.Materials.magno_bar>();
             //  UI map tile color
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Rubidium Bar");

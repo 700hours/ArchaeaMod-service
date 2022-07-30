@@ -1,5 +1,5 @@
 author = Archaea devs
-version = 1.2.5.8
+version = 1.2.5.10
 displayName = Archaea Mod
 homepage = http://www.circleprefect.com/modpage
 dllReferences = tUserInterface

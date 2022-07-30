@@ -23,7 +23,7 @@ namespace ArchaeaMod.Merged.Items.Walls
             Item.useTime = 7;
             Item.useStyle = 1;
             Item.consumable = true;
-            Item.createWall = ModContent.WallType<magno_stone>();
+            Item.createWall = ModContent.WallType<Merged.Walls.magno_stone>();
         }
         public override void AddRecipes()
         {

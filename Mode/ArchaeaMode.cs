@@ -25,8 +25,15 @@ namespace ArchaeaMod.Mode
     {
         public enum Stat
         {
+            None,
             Life,
             Damage
+        }
+        public enum StatWho
+        {
+            None,
+            Player,
+            NPC
         }
         private static float LifeRegen(int statMax)
         {
@@ -64,7 +71,7 @@ namespace ArchaeaMod.Mode
             result += result % 2;
             return result;
         }
-        public static int ModeScaling(Stat stat, int value, float scale, int defense, DamageClass damage)
+        public static int ModeScaling(StatWho who, Stat stat, int value, float scale, int defense, DamageClass damage)
         {
             float quotient = Math.Min(defense / 999f, 0.9f);
             float mitigate = Math.Abs(quotient - 1f);
@@ -86,14 +93,33 @@ namespace ArchaeaMod.Mode
                 case ThrowingDamageClass:
                     break;
             }
-            
-            // Ratio
-            float ratio = 500f / 9999f;
-            float result = value / ratio * scale;
+
+            // Original ratio
+            // float ratio = 500f / 9999f;
+            // float result = value / ratio * scale;
+            int lifeMax2 = Main.LocalPlayer.statLifeMax2;
+            float ratio = ArchaeaPlayer.ModeOffResetStats(lifeMax2) / ArchaeaPlayer.LifeMaxMode(lifeMax2);
+            float result = value / ratio;
+            switch (who)
+            {
+                case StatWho.None:
+                    break;
+                //  Player.PreHurt
+                case StatWho.Player:
+                    result *= scale;
+                    break;
+                //  NPC.OnSpawn
+                case StatWho.NPC:
+                    result *= scale;
+                    break;
+            }
             switch (stat)
             {
+                case Stat.None:
+                    break;
                 case Stat.Life:
                     break;
+                // NPC.ModifyHitByItem & NPC.ModifyHitByProjectile
                 case Stat.Damage:
                     result *= bonus;
                     result *= mitigate;
@@ -298,6 +324,12 @@ namespace ArchaeaMod.Mode
                 damageScale = ModContent.GetInstance<ArchaeaMode>().ModeChecksDamageScale(archaeaMode);
             }
         }
+        public override void PreSaveAndQuit()
+        {
+            if (archaeaMode) { 
+                Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SetModeStats(false);
+            }
+        }
 
         public bool archaeaMode;
         public bool progress;
@@ -413,32 +445,40 @@ namespace ArchaeaMod.Mode
     }
     public class ModeNPC : GlobalNPC
     {
-        public override bool InstancePerEntity 
+        public override bool InstancePerEntity => true;
+        public override bool AppliesToEntity(NPC entity, bool lateInstantiation)
         {
-            get { return true; }
+            return ModContent.GetInstance<ModeToggle>().archaeaMode;
+        }
+        public override GlobalNPC NewInstance(NPC target)
+        {
+            return base.NewInstance(target);
         }
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                npc.lifeMax = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Life, npc.lifeMax, ModContent.GetInstance<ModeToggle>().healthScale, npc.defense, DamageClass.Default);
+                npc.lifeMax = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.NPC, ArchaeaMode.Stat.Life, npc.lifeMax, ModContent.GetInstance<ModeToggle>().healthScale, npc.defense, DamageClass.Default);
                 npc.life = npc.lifeMax;
-                if (Main.netMode == NetmodeID.Server)
+                
+                if (Main.netMode == NetmodeID.Server) { 
                     npc.netUpdate = true;
+                    //NetMessage.SendData(MessageID.DamageNPC, number: npc.whoAmI);
+                }
             }
         }
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, item.DamageType);
+                damage = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, item.DamageType);
             }
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, projectile.DamageType);
+                damage = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, projectile.DamageType);
             }
         }
     }

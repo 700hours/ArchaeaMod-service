@@ -25,7 +25,7 @@ namespace ArchaeaMod.Merged.Items.Tiles
             Item.value = 0;
             Item.rare = 1;
             Item.maxStack = 999;
-            Item.createTile = ModContent.TileType<m_brick>();
+            Item.createTile = ModContent.TileType<Merged.Tiles.m_brick>();
         }
         public override void AddRecipes()
         {
