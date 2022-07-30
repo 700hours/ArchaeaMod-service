@@ -36,7 +36,7 @@ namespace ArchaeaMod.NPCs.Bosses
             NPC.npcSlots = 10f;
             //bossBag = ModContent.ItemType<Merged.Items.magno_treasurebag>();
             if (!Main.dedServ) {
-                Music = MusicLoader.GetMusicSlot(Mod, "ArchaeaMod/Sounds/Muics/The_Undying_Flare");
+                Music = MusicLoader.GetMusicSlot(Mod, "ArchaeaMod/Sounds/Music/The_Undying_Flare");
             }
         }
         public override int maxParts

@@ -59,16 +59,16 @@ namespace ArchaeaMod.Mode
             
             stat = new ListBox(objective.hitbox, default, new Button[]
             {
-                new Button("", default, Color.White) { text2 = "Arrow speed" },
-                new Button("", default, Color.White) { text2 = "Jump Height" },
-                new Button("", default, Color.White) { text2 = "Attack speed" },
-                new Button("", default, Color.White) { text2 = "Move speed" },
-                new Button("", default, Color.White) { text2 = "Underwater breath" },
-                new Button("", default, Color.White) { text2 = "Toughness" },
-                new Button("", default, Color.White) { text2 = "Item damage" },
-                new Button("", default, Color.White) { text2 = "Price discount" },
-                new Button("", default, Color.White) { text2 = "% damage reduction" },
-                new Button("", default, Color.White) { text2 = "Ammo use reduction" }
+                new Button("", default, Color.White) { text2 = "Arrow speed" },         // ranged
+                new Button("", default, Color.White) { text2 = "Jump Height" },         // summoner
+                new Button("", default, Color.White) { text2 = "Attack speed" },        // melee
+                new Button("", default, Color.White) { text2 = "Move speed" },          // summoner
+                new Button("", default, Color.White) { text2 = "Underwater breath" },   // all
+                new Button("", default, Color.White) { text2 = "Toughness" },           // melee
+                new Button("", default, Color.White) { text2 = "Item damage" },         // mage
+                new Button("", default, Color.White) { text2 = "Price discount" },      // all
+                new Button("", default, Color.White) { text2 = "% damage reduction" },  // mage
+                new Button("", default, Color.White) { text2 = "Ammo use reduction" }   // ranged
             });
             for (int i = 0; i < stat.item.Length; i++) {
                 stat.item[i].texture = TextureAssets.MagicPixel.Value;
@@ -86,6 +86,11 @@ namespace ArchaeaMod.Mode
 
         public override void PostDrawInterface(SpriteBatch sb)
         {
+            if (ModContent.GetInstance<ModeToggle>().loading)
+            {
+                Utils.DrawBorderString(sb, "Loading checklist . . .", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
+                return;
+            }
             for (int i = 0; i < page.Length; i++)
             { 
                 if (page[0].active)
@@ -106,7 +111,7 @@ namespace ArchaeaMod.Mode
             }
             if (page[0].active)
             {
-                Utils.DrawBorderString(sb, "Progress checklist", new Vector2(objective.hitbox.X, objective.hitbox.Top - 32), Color.CornflowerBlue);
+                Utils.DrawBorderString(sb, "Progress checklist", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
             }
             if (page[1].active)
             {
@@ -122,7 +127,10 @@ namespace ArchaeaMod.Mode
             #region active states
             if (ArchaeaMain.progressKey.JustPressed)
             {
-                objective.active = !objective.active;
+                if (!stat.active) { 
+                    objective.active = !objective.active;
+                }
+                else stat.active = false;
                 if (!objective.active) {
                     stat.active = false;
                 }
@@ -157,6 +165,34 @@ namespace ArchaeaMod.Mode
                             break;
                         for (int n = 0; n < page[i].item.Length; n++)
                         {
+                            int classChoice = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice;
+                            switch (classChoice)
+                            {
+                                case ClassID.Melee:
+                                    if (n == 2 || n == 5)
+                                        break;
+                                    goto default;
+                                case ClassID.Ranged:
+                                    if (n == 0 || n == 9)
+                                        break;
+                                    goto default;
+                                case ClassID.Magic:
+                                    if (n == 6 || n == 8)
+                                        break;
+                                    goto default;
+                                case ClassID.Summoner:
+                                    if (n == 1 || n == 3)
+                                        break;
+                                    goto default;
+                                case ClassID.All:
+                                    if (n == 4 || n == 7)
+                                        break;
+                                    goto default;
+                                default:
+                                    page[i].item[n].active = false;
+                                    continue;
+                            }
+                            page[i].item[n].active = true;
                             if (page[i].scroll.clicked)
                                 break;
                             page[i].item[n].HoverPlaySound(SoundID.MenuTick);

@@ -136,6 +136,12 @@ namespace ArchaeaMod.ModUI
             }
             else
             {
+                float distance = 196f;
+                for (float r = 0f; r < distance; r += new Draw().radians(distance))
+                {
+                    Vector2 c = NPCs.ArchaeaNPC.AngleBased(new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), r, distance);
+                    Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X - 1, (int)c.Y - 1, 2, 2), Color.DodgerBlue * 0.50f);
+                }
                 for (int i = 0; i < categories.Length; i++)
                 {
                     sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, mainOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), mainOptions[i].color);
@@ -175,7 +181,9 @@ namespace ArchaeaMod.ModUI
                     sb.DrawString(FontAssets.MouseText.Value, "Apply", new Vector2(apply.bounds.X, apply.bounds.Bottom), Color.White);
                 if (apply.LeftClick() && apply.color != Color.Gray && back.ticks == 0)
                 {
-                    Timer timer = new Timer(Math.Max((float)player.HeldItem.useTime / Main.frameRate * 1000f, 1000f));
+                    float useTime = player.HeldItem.useTime;
+                    useTime += useTime % 10;
+                    Timer timer = new Timer(Math.Max(useTime / Main.frameRate * 1000f, 1000f));
                     timer.AutoReset = false;
                     timer.Enabled = true;
                     timer.Elapsed += (object sender, ElapsedEventArgs e) =>
@@ -212,6 +220,12 @@ namespace ArchaeaMod.ModUI
         }
         public static void ClassSelect(Player player)
         {
+            float distance = 196f;
+            for (float r = 0f; r < distance; r += new Draw().radians(distance))
+            {
+                Vector2 c = NPCs.ArchaeaNPC.AngleBased(new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), r, distance);
+                Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X - 1, (int)c.Y - 1, 2, 2), Color.DodgerBlue * 0.50f);
+            }
             for (int i = 0; i < classes.Length; i++)
             {
                 sb.Draw(mod.Assets.Request<Texture2D>("Gores/class_icons").Value, classOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), classOptions[i].color);

@@ -28,16 +28,9 @@ using System.Timers;
 
 namespace ArchaeaMod
 {
-    public class ArchaeaPlayer : ModPlayer
+    public static class ClassID
     {
-        #region biome
-        public bool MagnoBiome  => Player.InModBiome<MagnoBiome>();
-        public bool SkyFort     => Player.InModBiome<SkyFortBiome>();
-        public bool SkyPortal   => Player.InModBiome<SkyFortPortalBiome>();
-        #endregion
-        public static class ClassID
-        {
-            public const int
+        public const int
             None = 0,
             All = 5,
             Melee = 1,
@@ -46,7 +39,14 @@ namespace ArchaeaMod
             Ranged = 2,
             Throwing = -10,
             Summoner = 4;
-        }
+    }
+    public class ArchaeaPlayer : ModPlayer
+    {
+        #region biome
+        public bool MagnoBiome  => Player.InModBiome<MagnoBiome>();
+        public bool SkyFort     => Player.InModBiome<SkyFortBiome>();
+        public bool SkyPortal   => Player.InModBiome<SkyFortPortalBiome>();
+        #endregion
         public int classChoice = 0;
         public int playerUID = 0;
         public int overallMaxStat = 0;
@@ -278,8 +278,7 @@ namespace ArchaeaMod
         {
             this.Player.currentShoppingSettings.PriceAdjustment /= merchantDiscount;
             Player.jumpHeight = (int)(Player.jumpHeight * jumpHeight);
-            //  Find place to add breathMax
-            //Player.breathMax = (int)(Player.breathMax * breathTime);
+            Player.breathMax += breathTime;
             Player.statDefense += toughness;
         }
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
@@ -324,7 +323,7 @@ namespace ArchaeaMod
                     moveSpeed += num / 15f;   // 6.67% per point    Triple, Check lightning boots value
                     break;
                 case ProgressID.BreathTime:
-                    breathTime += num / 500f;  // 0.2% [6.67%] per point    [Triple], Check breathing rod value
+                    breathTime += num;        // new: +1            old: 0.2% [6.67%] per point    [Triple], Check breathing rod value
                     break;
                 case ProgressID.Toughness:
                     toughness += num;         // Add to armor
@@ -356,7 +355,7 @@ namespace ArchaeaMod
         public float jumpHeight = 1f;
         public float attackSpeed = 1f;
         public float moveSpeed = 1f;
-        public float breathTime = 1f;
+        public int   breathTime = 1;              
         public int   toughness = 1;
         public float damageBuff = 1f;
         //  Decrease

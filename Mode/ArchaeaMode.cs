@@ -98,7 +98,7 @@ namespace ArchaeaMod.Mode
             // float ratio = 500f / 9999f;
             // float result = value / ratio * scale;
             int lifeMax2 = Main.LocalPlayer.statLifeMax2;
-            float ratio = ArchaeaPlayer.ModeOffResetStats(lifeMax2) / ArchaeaPlayer.LifeMaxMode(lifeMax2);
+            float ratio = (float)ArchaeaPlayer.ModeOffResetStats(lifeMax2) / ArchaeaPlayer.LifeMaxMode(lifeMax2);
             float result = value / ratio;
             switch (who)
             {
@@ -158,6 +158,53 @@ namespace ArchaeaMod.Mode
             Week,
             Crafting,
             DownedMagno;
+        public override void NetSend(BinaryWriter writer)
+        {
+            writer.Write(Start);
+            writer.Write(Health);
+            writer.Write(Mana);
+            writer.Write(Bosses);
+            writer.Write(Bottom);
+            writer.Write(NPCs);
+            writer.Write(Week);
+            writer.Write(Crafting);
+            writer.Write(DownedMagno);
+        }
+        public override void NetReceive(BinaryReader reader)
+        {
+            Start       = reader.ReadBoolean();
+            Health      = reader.ReadBoolean();
+            Mana        = reader.ReadBoolean();
+            Bosses      = reader.ReadBoolean();
+            Bottom      = reader.ReadBoolean();
+            NPCs        = reader.ReadBoolean();
+            Week        = reader.ReadBoolean();
+            Crafting    = reader.ReadBoolean();
+            DownedMagno = reader.ReadBoolean();
+        }
+        public override void SaveWorldData(TagCompound tag)
+        {
+            tag.Add("Start", Start);
+            tag.Add("Health", Health);
+            tag.Add("Mana", Mana);
+            tag.Add("Bosses", Bosses);
+            tag.Add("Bottom", Bottom);
+            tag.Add("NPCs", NPCs);
+            tag.Add("Week", Week);
+            tag.Add("Crafting", Crafting);
+            tag.Add("DownedMagno", DownedMagno);
+        }
+        public override void LoadWorldData(TagCompound tag)
+        {
+            Start = tag.GetBool("Start");
+            Health = tag.GetBool("Health");
+            Mana = tag.GetBool("Mana");
+            Bosses = tag.GetBool("Bosses");
+            NPCs = tag.GetBool("NPCs");
+            Week = tag.GetBool("Week");
+            Crafting = tag.GetBool("Crafting");
+            DownedMagno = tag.GetBool("DownedMagno");
+        }
         private int Convert(bool flag)
         {
             return flag ? 1 : 0;
@@ -168,6 +215,7 @@ namespace ArchaeaMod.Mode
         }
         public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
         {
+            return base.HijackGetData(ref messageType, ref reader, playerNumber);
             switch (messageType)
             {
                 case MessageID.PlayerInfo:
@@ -175,11 +223,10 @@ namespace ArchaeaMod.Mode
                 case MessageID.WorldData:
                     if (Main.netMode == NetmodeID.MultiplayerClient)
                     {
-                        NetHandler.Send(Packet.ModeProgress, 256, -1, Convert(Start), Convert(Health), Convert(Mana), Convert(Bottom), NPCs, Convert(Week), Convert(Crafting), Convert(DownedMagno));
+                        //NetHandler.Send(Packet.ModeProgress, 256, -1, Convert(Start), Convert(Health), Convert(Mana), Convert(Bottom), NPCs, Convert(Week), Convert(Crafting), Convert(DownedMagno));
                     }
                     break;
             }
-            return base.HijackGetData(ref messageType, ref reader, playerNumber);
         }
         public float ModeChecksLifeScale(bool mode)
         {
@@ -192,6 +239,7 @@ namespace ArchaeaMod.Mode
                 unlock[i] = Color.Red;
             multiplier -= scaling[start];
             unlock[start] = Color.Green;
+            Start = true;
             foreach (Player player in Main.player)
             {
                 if (player.active)
@@ -200,16 +248,19 @@ namespace ArchaeaMod.Mode
                     {
                         unlock[health] = Color.Green;
                         multiplier -= scaling[health];
+                        Health = true;
                     }
                     if (Mana || player.statManaMax >= 40 || player.statManaMax2 >= 40)
                     {
                         unlock[mana] = Color.Green;
                         multiplier -= scaling[mana];
+                        Mana = true;
                     }
                     if (Bottom || player.position.Y > Main.bottomWorld * 0.75f)
                     {
                         unlock[bottom] = Color.Green;
                         multiplier -= scaling[bottom];
+                        Bottom = true;
                     }
                     break;
                 }
@@ -221,23 +272,32 @@ namespace ArchaeaMod.Mode
                 {
                     unlock[npcs] = Color.Green;
                     multiplier -= scaling[npcs];
+                    NPCs = true;
                     break;
                 }
+            }
+            if (Bosses)
+            {
+                unlock[bosses] = Color.Green;
+                multiplier -= scaling[bosses];
             }
             if (Week || ModContent.GetInstance<ModeToggle>().dayCount > 6)
             {
                 unlock[week] = Color.Green;
                 multiplier -= scaling[week];
+                Week = true;
             }
             if (Crafting || ModContent.GetInstance<ModeTile>().tileProgress)
             {
                 unlock[crafting] = Color.Green;
                 multiplier -= scaling[crafting];
+                Crafting = true;
             }
             if (DownedMagno || ModContent.GetInstance<ArchaeaWorld>().downedMagno)
             {
                 unlock[downedMagno] = Color.Green;
                 multiplier -= scaling[downedMagno];
+                DownedMagno = true;
             }
             multiplier = (float)Math.Round(Math.Abs(multiplier - 2f), 2);
             return multiplier;
@@ -296,8 +356,10 @@ namespace ArchaeaMod.Mode
     }
     public class ModeToggle : ModSystem
     {
+        public bool loading = true;
         public override void OnWorldLoad()
         {
+            loading = true;
             if (timer != null)
                 timer.Dispose();
             timer = new Timer(TimeSpan.FromSeconds(10).TotalMilliseconds);
@@ -318,6 +380,7 @@ namespace ArchaeaMod.Mode
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            loading = false;
             if (ModContent.GetInstance<ArchaeaMode>() != null)
             { 
                 healthScale = ModContent.GetInstance<ArchaeaMode>().ModeChecksLifeScale(archaeaMode);
@@ -431,7 +494,8 @@ namespace ArchaeaMod.Mode
                 if (progress)
                 {
                     Rectangle panel = new Rectangle(306 - 160, 255, 180, 100);
-                    sb.Draw(TextureAssets.MagicPixel.Value, panel, Color.DodgerBlue * 0.33f);
+                    Utils.DrawInvBG(sb, panel, Color.DodgerBlue * 0.33f);
+                    //sb.Draw(TextureAssets.MagicPixel.Value, panel, Color.DodgerBlue * 0.33f);
                     sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + healthScale, new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + damageScale, new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "Day: " + Math.Round(dayCount + 1, 0), new Vector2(panel.Left + 4, panel.Top + 44), Color.White);
@@ -446,14 +510,6 @@ namespace ArchaeaMod.Mode
     public class ModeNPC : GlobalNPC
     {
         public override bool InstancePerEntity => true;
-        public override bool AppliesToEntity(NPC entity, bool lateInstantiation)
-        {
-            return ModContent.GetInstance<ModeToggle>().archaeaMode;
-        }
-        public override GlobalNPC NewInstance(NPC target)
-        {
-            return base.NewInstance(target);
-        }
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
@@ -462,8 +518,7 @@ namespace ArchaeaMod.Mode
                 npc.life = npc.lifeMax;
                 
                 if (Main.netMode == NetmodeID.Server) { 
-                    npc.netUpdate = true;
-                    //NetMessage.SendData(MessageID.DamageNPC, number: npc.whoAmI);
+                    NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
                 }
             }
         }
@@ -479,6 +534,13 @@ namespace ArchaeaMod.Mode
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
                 damage = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, projectile.DamageType);
+            }
+        }
+        public override void OnKill(NPC npc)
+        {
+            if (npc.boss)
+            {
+                ModContent.GetInstance<ArchaeaMode>().Bosses = true;
             }
         }
     }

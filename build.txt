@@ -1,10 +1,10 @@
 author = Archaea devs
-version = 1.2.5.10
+version = 1.2.5.11
 displayName = Archaea Mod
 homepage = http://www.circleprefect.com/modpage
 dllReferences = tUserInterface
 hideCode = true
 hideResources = true
 includeSource = false
-buildIgnore = *.csproj, *.md, *.config, *.sln, *.user, obj\*, bin\*, .vs\*, .git\*, misc\*, .gitattributes, .gitignore, *.ini, ArchaeaMod\*, archive\*, Transfer\*, ArchaeaMod-base\*, ArchaeaMod-vscode\*, todo.txt, tmod\*
+buildIgnore = *.csproj, *.md, *.config, *.sln, *.user, obj\*, bin\*, .vs\*, .git\*, misc\*, .gitattributes, .gitignore, *.ini, ArchaeaMod\*, archive\*, Transfer\*, ArchaeaMod-base\*, ArchaeaMod-vscode\*, todo.txt, tmod\*, output.txt, start.txt
 includePDB = true
