@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -26,7 +26,7 @@ namespace ArchaeaMod.Merged.Items.Tiles
             Item.value = 500;
             Item.rare = 1;
             Item.maxStack = 999;
-            Item.createTile = Mod.Find<ModTile>("m_ore").Type;
+            Item.createTile = ModContent.TileType<m_ore>();
         }
     }
 }

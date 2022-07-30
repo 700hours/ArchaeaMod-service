@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -53,7 +53,7 @@ namespace ArchaeaMod.Merged.Tiles
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX == 90)
             {
-                int t = Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 8, 8, Mod.Find<ModItem>("magno_book").Type, 1, false, -1, true, false);
+                int t = Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 8, 8, ModContent.ItemType<magno_book>(), 1, false, -1, true, false);
                 if (Main.netMode != 0)
                     NetHandler.Send(Packet.SpawnItem, -1, -1, t, i * 16, j * 16);
                 return false;
@@ -65,7 +65,7 @@ namespace ArchaeaMod.Merged.Tiles
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX == 90)
             {
-                int t = Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 8, 8, Mod.Find<ModItem>("magno_book").Type, 1, false, -1, true, false);
+                int t = Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 8, 8, ModContent.ItemType<magno_book>(), 1, false, -1, true, false);
                 if (Main.netMode != 0)
                     NetHandler.Send(Packet.SpawnItem, -1, -1, t, i * 16, j * 16);
                 WorldGen.KillTile(i, j, false, false, true);
@@ -79,7 +79,7 @@ namespace ArchaeaMod.Merged.Tiles
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX == 90)
             {
-                player.cursorItemIconID = Mod.Find<ModItem>("magno_book").Type;
+                player.cursorItemIconID = ModContent.ItemType<magno_book>();
             }
         }
     }

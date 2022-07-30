@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +20,7 @@ namespace ArchaeaMod.Tiles
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
-            ItemDrop = Mod.Find<ModItem>("sky_brick").Type;
+            ItemDrop = ModContent.ItemType<Items.Tiles.sky_brick>();
             AddMapEntry(Color.LightSlateGray);
            // soundStyle = 0;
             HitSound = SoundID.Tink;

@@ -34,7 +34,7 @@ namespace ArchaeaMod.Merged.Items
             Item.consumable = true;
             Item.noMelee = true;
             Item.DamageType = DamageClass.Throwing;
-            Item.shoot = Mod.Find<ModProjectile>("cinnabar_dagger").Type;
+            Item.shoot = ModContent.ProjectileType<cinnabar_dagger>();
         }
         public override void AddRecipes()
         {

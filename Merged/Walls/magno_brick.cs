@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -11,7 +11,7 @@ namespace ArchaeaMod.Merged.Walls
         {
             Main.wallHouse[Type] = true;
             TileID.Sets.HousingWalls[Type] = true;
-            ItemDrop = Mod.Find<ModItem>("magno_brickwall").Type;
+            ItemDrop = ModContent.ItemType<magno_brickwall>();
             AddMapEntry(new Color(80, 10, 10));
         }
     }

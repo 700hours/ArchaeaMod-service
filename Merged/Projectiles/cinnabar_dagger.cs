@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -81,7 +81,7 @@ namespace ArchaeaMod.Merged.Projectiles
         {
             if (Main.rand.NextFloat() >= 0.75f)
             {
-                int daggerDrop = Item.NewItem(Item.GetSource_None(), Projectile.Center, Mod.Find<ModItem>("cinnabar_dagger").Type, 1, true, 0, false, false);
+                int daggerDrop = Item.NewItem(Item.GetSource_None(), Projectile.Center, ModContent.ItemType<cinnabar_dagger>(), 1, true, 0, false, false);
             }
             for (int k = 0; k < 8; k++)
             {

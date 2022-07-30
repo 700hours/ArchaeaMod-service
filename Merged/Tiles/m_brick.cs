@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,7 +13,7 @@ namespace ArchaeaMod.Merged.Tiles
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
-            ItemDrop = Mod.Find<ModItem>("magno_brick").Type;
+            ItemDrop = ModContent.ItemType<magno_brick>();
             //  UI map tile color
             AddMapEntry(new Color(119, 111, 98));
             HitSound = SoundID.Tink;

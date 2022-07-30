@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +21,7 @@ namespace ArchaeaMod.Tiles
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;
-            ItemDrop = Mod.Find<ModItem>("purple_haze").Type;
+            ItemDrop = ModContent.ItemType<purple_haze>();
             AddMapEntry(Color.MediumPurple);
             MinPick = 95;
         }

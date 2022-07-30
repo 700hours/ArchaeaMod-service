@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -34,7 +34,7 @@ namespace ArchaeaMod.Merged.Tiles
             TileObjectData.addAlternate(0);
             TileObjectData.addTile(Type);
             ModTranslation name = CreateMapEntryName();
-            ItemDrop = Mod.Find<ModItem>("cinnabar_crystal").Type;
+            ItemDrop = ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>();
             name.SetDefault("Cinnabar Crystal");
             AddMapEntry(new Color(210, 110, 110), name);
             TileID.Sets.DisableSmartCursor[Type] = true;
@@ -68,7 +68,7 @@ namespace ArchaeaMod.Merged.Tiles
             int random = Main.rand.Next(1, 3);
             for (int k = 0; k < random; k++)
             {
-                Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), Mod.Find<ModItem>("cinnabar_crystal").Type, random, true, 0, true, false);
+                Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), random, true, 0, true, false);
             }
         }
         public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)

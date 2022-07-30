@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,7 +41,7 @@ namespace ArchaeaMod.Merged.Items
 
         public override bool CanUseItem(Player player)
         {
-            if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("magno_orb").Type] < 1)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<Merged.Projectiles.magno_orb>()] < 1)
             {
                 return true;
             }
@@ -51,7 +51,7 @@ namespace ArchaeaMod.Merged.Items
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             SoundEngine.PlaySound(SoundID.Item14, player.Center);
-            Proj1 = Projectile.NewProjectile(Projectile.GetSource_None(), player.position + new Vector2(player.width / 2, player.height / 2), Vector2.Zero, Mod.Find<ModProjectile>("magno_orb").Type, (int)(15f * player.GetDamage(DamageClass.Magic).Multiplicative), 4f, player.whoAmI, 0f, 0f);
+            Proj1 = Projectile.NewProjectile(Projectile.GetSource_None(), player.position + new Vector2(player.width / 2, player.height / 2), Vector2.Zero, ModContent.ProjectileType<Merged.Projectiles.magno_orb>(), (int)(15f * player.GetDamage(DamageClass.Magic).Multiplicative), 4f, player.whoAmI, 0f, 0f);
             Main.projectile[Proj1].netUpdate = true;
             return true;
         }

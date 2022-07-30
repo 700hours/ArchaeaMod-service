@@ -1,4 +1,4 @@
-﻿using ArchaeaMod.NPCs;
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -48,7 +48,7 @@ namespace ArchaeaMod.Merged.Tiles
             TileID.Sets.DisableSmartCursor[Type] = true;
             AdjTiles = new int[] { TileID.Containers };
             ContainerName.SetDefault("Magno Chest");
-            ChestDrop = Mod.Find<ModItem>("magno_chest").Type;
+            ChestDrop = ModContent.ItemType<Merged.Items.Tiles.magno_chest>();
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
@@ -182,7 +182,7 @@ namespace ArchaeaMod.Merged.Tiles
                 player.cursorItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Magno Chest";
                 if(player.cursorItemIconText == "Magno Chest")
                 {
-                    player.cursorItemIconID = Mod.Find<ModItem>("magno_chest").Type;
+                    player.cursorItemIconID = ModContent.ItemType<Merged.Items.Tiles.magno_chest>();
                     player.cursorItemIconText = "";
                 }
             }

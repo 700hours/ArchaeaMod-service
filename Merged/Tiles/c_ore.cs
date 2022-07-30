@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -24,7 +24,7 @@ namespace ArchaeaMod.Merged.Tiles
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = false;
             DustType = 1;
-			ItemDrop = Mod.Find<ModItem>("cinnabar_ore").Type;
+			ItemDrop = ModContent.ItemType<cinnabar_ore>();
             //  UI map tile color
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Cinnabar Ore");

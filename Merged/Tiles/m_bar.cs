@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -29,7 +29,7 @@ namespace ArchaeaMod.Merged.Tiles
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
             DustType = 1;
-            ItemDrop = Mod.Find<ModItem>("magno_bar").Type;
+            ItemDrop = ModContent.ItemType<magno_bar>();
             //  UI map tile color
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Rubidium Bar");

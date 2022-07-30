@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -39,7 +39,7 @@ namespace ArchaeaMod.Merged.Items
 
         public override bool CanUseItem(Player player)
         {
-            if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("magno_minion").Type] < player.maxMinions && player.numMinions < player.maxMinions)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<Merged.Projectiles.magno_minion>()] < player.maxMinions && player.numMinions < player.maxMinions)
             {
                 return true;
             }
@@ -47,7 +47,7 @@ namespace ArchaeaMod.Merged.Items
         }
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
-            int projMinion = Projectile.NewProjectile(Projectile.GetSource_None(), player.position, Vector2.Zero, Mod.Find<ModProjectile>("magno_minion").Type, 5, 3f, player.whoAmI, 0f, 0f);
+            int projMinion = Projectile.NewProjectile(Projectile.GetSource_None(), player.position, Vector2.Zero, ModContent.ProjectileType<Merged.Projectiles.magno_minion>(), 5, 3f, player.whoAmI, 0f, 0f);
             Main.projectile[projMinion].netUpdate = true;
             return true;
         }

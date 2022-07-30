@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -32,7 +32,7 @@ namespace ArchaeaMod.Merged.Tiles
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 48, 48, Mod.Find<ModItem>("magno_trophy").Type);
+            Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 48, 48, ModContent.ItemType<magno_trophy>());
         }
     }
 }

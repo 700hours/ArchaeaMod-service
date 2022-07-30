@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace ArchaeaMod.Merged.Tiles
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = false;
             DustType = 1;
-			ItemDrop = Mod.Find<ModItem>("magno_ore").Type;
+			ItemDrop = ModContent.ItemType<Merged.Items.Tiles.magno_ore>();
             //  UI map tile color
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Rubidium");

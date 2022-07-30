@@ -34,8 +34,8 @@ namespace ArchaeaMod.Merged.Items.Armors
                 .Register();
         }
         public override bool IsArmorSet(Item head, Item body, Item legs)
-        {                       ModContent.ItemType<magnoplate>()
-            return body.type == Mod.Find<ModItem>("magnoplate").Type && legs.type == Mod.Find<ModItem>("magnogreaves").Type;
+        {                       
+            return body.type == ModContent.ItemType<magnoplate>() && legs.type == ModContent.ItemType<magnogreaves>();
         }
         public override void UpdateEquip(Player player)
         {

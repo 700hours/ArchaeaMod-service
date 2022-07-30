@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -37,7 +37,7 @@ namespace ArchaeaMod.Merged.Tiles
             TileObjectData.newAlternate.AnchorRight = new AnchorData(AnchorType.SolidSide, 1, 0);
             TileObjectData.addAlternate(2);
             TileObjectData.addTile(Type);
-            ItemDrop = Mod.Find<ModItem>("cinnabar_crystal").Type;
+            ItemDrop = ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>();
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Cinnabar Crystal");
             AddMapEntry(new Color(210, 110, 110), name);
@@ -62,7 +62,7 @@ namespace ArchaeaMod.Merged.Tiles
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
             if (!fail)
-                Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), Mod.Find<ModItem>("cinnabar_crystal").Type, 1, true, 0, true, false);
+                Item.NewItem(Item.GetSource_NaturalSpawn(), new Vector2(i * 16, j * 16), ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>(), 1, true, 0, true, false);
         }
         public override bool CreateDust(int i, int j, ref int type)
         {

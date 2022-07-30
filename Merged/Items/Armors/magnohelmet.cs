@@ -38,7 +38,7 @@ namespace ArchaeaMod.Merged.Items.Armors
         }
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
-            return body.type == Mod.Find<ModItem>("magnoplate").Type && legs.type == Mod.Find<ModItem>("magnogreaves").Type;
+            return body.type == ModContent.ItemType<magnoplate>() && legs.type == ModContent.ItemType<magnogreaves>();
         }
         public override void UpdateEquip(Player player)
         {
@@ -53,18 +53,18 @@ namespace ArchaeaMod.Merged.Items.Armors
                 +   "\nin dire need";
             if (!flag && player.statLife <= player.statLifeMax / 2)
             {
-                if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("magno_minion").Type] < player.maxMinions && player.numMinions < player.maxMinions)
+                if (player.ownedProjectileCounts[ModContent.ProjectileType<magno_minion>()] < player.maxMinions && player.numMinions < player.maxMinions)
                 {
-                    player.AddBuff(Mod.Find<ModBuff>("magno_summon").Type, 18000, false);
+                    player.AddBuff(ModContent.BuffType<magno_summon>(), 18000, false);
                     SoundEngine.PlaySound(SoundID.Item20, player.Center);
-                    projMinion = Projectile.NewProjectile(Projectile.GetSource_None(), player.position, Vector2.Zero, Mod.Find<ModProjectile>("magno_minion").Type, 5, 3f, player.whoAmI, 0f, 0f);
+                    projMinion = Projectile.NewProjectile(Projectile.GetSource_None(), player.position, Vector2.Zero, ModContent.ProjectileType<magno_minion>(), 5, 3f, player.whoAmI, 0f, 0f);
                     player.maxMinions += 1;
                 }
                 flag = true;
             }
             if (flag && player.statLife > player.statLifeMax / 2)
             {
-                if (Main.projectile[projMinion].type == Mod.Find<ModProjectile>("magno_minion").Type)
+                if (Main.projectile[projMinion].type == ModContent.ProjectileType<magno_minion>())
                     Main.projectile[projMinion].active = false;
                 flag = false;
             }

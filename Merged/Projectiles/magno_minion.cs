@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -63,11 +63,11 @@ namespace ArchaeaMod.Merged.Projectiles
             ticks++;
             Projectile.damage = 0;
 
-            if (player.dead || !player.HasBuff(Mod.Find<ModBuff>("magno_summon").Type))
+            if (player.dead || !player.HasBuff(ModContent.BuffType<Merged.Buffs.magno_summon>()))
             {
                 Projectile.active = false;
             }
-            if (player.HasBuff(Mod.Find<ModBuff>("magno_summon").Type))
+            if (player.HasBuff(ModContent.BuffType<Merged.Buffs.magno_summon>()))
             {
                 Projectile.timeLeft = 2;
             }
