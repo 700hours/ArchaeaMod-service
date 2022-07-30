@@ -21,7 +21,7 @@ using System.Timers;
 
 namespace ArchaeaMod.Mode
 {
-    public sealed class ArchaeaMode
+    public sealed class ArchaeaMode : ModSystem
     {
         public enum Stat
         {
@@ -119,6 +119,154 @@ namespace ArchaeaMod.Mode
             }
             return (int)result;
         }
+        public static Color[] unlock = new Color[9];
+        public static readonly int start = 0, health = 1, mana = 2, bosses = 3, bottom = 4, npcs = 5, week = 6, crafting = 7, downedMagno = 8;
+        public static readonly float[] scaling = new float[] { 0.05f, 0.1f, 0.05f, 0f, 0.2f, 0.1f, 0.5f, 0.05f, 0.1f };
+        public bool
+            Start,
+            Health,
+            Mana,
+            Bosses,
+            Bottom,
+            NPCs,
+            Week,
+            Crafting,
+            DownedMagno;
+        private int Convert(bool flag)
+        {
+            return flag ? 1 : 0;
+        }
+        public static bool ConvertToBool(int num)
+        {
+            return num == 1 ? true : false;
+        }
+        public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
+        {
+            switch (messageType)
+            {
+                case MessageID.PlayerInfo:
+                case MessageID.PlayerSpawn:
+                case MessageID.WorldData:
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                    {
+                        NetHandler.Send(Packet.ModeProgress, 256, -1, Convert(Start), Convert(Health), Convert(Mana), Convert(Bottom), NPCs, Convert(Week), Convert(Crafting), Convert(DownedMagno));
+                    }
+                    break;
+            }
+            return base.HijackGetData(ref messageType, ref reader, playerNumber);
+        }
+        public float ModeChecksLifeScale(bool mode)
+        {
+            float multiplier = 1f;
+            if (!mode)
+                return multiplier;
+            multiplier -= 0.5f;
+            Start = true;
+            for (int i = 0; i < unlock.Length; i++)
+                unlock[i] = Color.Red;
+            multiplier -= scaling[start];
+            unlock[start] = Color.Green;
+            foreach (Player player in Main.player)
+            {
+                if (player.active)
+                {
+                    if (Health || player.statLifeMax >= ArchaeaMode.LifeCrystal(100))
+                    {
+                        unlock[health] = Color.Green;
+                        multiplier -= scaling[health];
+                    }
+                    if (Mana || player.statManaMax >= 40 || player.statManaMax2 >= 40)
+                    {
+                        unlock[mana] = Color.Green;
+                        multiplier -= scaling[mana];
+                    }
+                    if (Bottom || player.position.Y > Main.bottomWorld * 0.75f)
+                    {
+                        unlock[bottom] = Color.Green;
+                        multiplier -= scaling[bottom];
+                    }
+                    break;
+                }
+            }
+            int count = 0;
+            for (int i = 0; i < Main.townNPCCanSpawn.Length; i++)
+            {
+                if (NPCs || Main.townNPCCanSpawn[i] && count++ > 4)
+                {
+                    unlock[npcs] = Color.Green;
+                    multiplier -= scaling[npcs];
+                    break;
+                }
+            }
+            if (Week || ModContent.GetInstance<ModeToggle>().dayCount > 6)
+            {
+                unlock[week] = Color.Green;
+                multiplier -= scaling[week];
+            }
+            if (Crafting || ModContent.GetInstance<ModeTile>().tileProgress)
+            {
+                unlock[crafting] = Color.Green;
+                multiplier -= scaling[crafting];
+            }
+            if (DownedMagno || ModContent.GetInstance<ArchaeaWorld>().downedMagno)
+            {
+                unlock[downedMagno] = Color.Green;
+                multiplier -= scaling[downedMagno];
+            }
+            multiplier = (float)Math.Round(Math.Abs(multiplier - 2f), 2);
+            return multiplier;
+        }
+        public float ModeChecksDamageScale(bool mode)
+        {
+            float multiplier = 1f;
+            if (!mode)
+                return multiplier;
+            multiplier -= 0.5f / 2;
+            Start = true;
+            multiplier -= scaling[start];
+            foreach (Player player in Main.player)
+            {
+                if (player != null && player.active)
+                {
+                    if (Health || player.statLifeMax >= ArchaeaMode.LifeCrystal(100))
+                    {
+                        multiplier -= scaling[health];
+                    }
+                    if (Mana || player.statManaMax >= 40 || player.statManaMax2 >= 40)
+                    {
+                        multiplier -= scaling[mana];
+                    }
+                    if (Bottom || player.position.Y > Main.bottomWorld * 0.75f)
+                    {
+                        multiplier -= scaling[bottom];
+                    }
+                    break;
+                }
+            }
+            int count = 0;
+            for (int i = 0; i < Main.townNPCCanSpawn.Length; i++)
+            {
+                if (NPCs || Main.townNPCCanSpawn[i] && count++ > 4)
+                {
+                    multiplier -= scaling[npcs] / 2f;
+                    break;
+                }
+            }
+            if (Week || ModContent.GetInstance<ModeToggle>().dayCount > 6)
+            {
+                multiplier -= scaling[week];
+            }
+            if (Crafting || ModContent.GetInstance<ModeTile>().tileProgress)
+            {
+                multiplier -= scaling[crafting];
+            }
+            if (DownedMagno || ModContent.GetInstance<ArchaeaWorld>().downedMagno)
+            {
+                multiplier -= scaling[downedMagno] / 2f;
+            }
+            multiplier = (float)Math.Round(Math.Abs(multiplier - 2f), 2);
+            return multiplier;
+        }
     }
     public class ModeToggle : ModSystem
     {
@@ -144,8 +292,11 @@ namespace ArchaeaMod.Mode
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            healthScale = ModeChecksLifeScale();
-            damageScale = ModeChecksDamageScale();
+            if (ModContent.GetInstance<ArchaeaMode>() != null)
+            { 
+                healthScale = ModContent.GetInstance<ArchaeaMode>().ModeChecksLifeScale(archaeaMode);
+                damageScale = ModContent.GetInstance<ArchaeaMode>().ModeChecksDamageScale(archaeaMode);
+            }
         }
 
         public bool archaeaMode;
@@ -156,126 +307,7 @@ namespace ArchaeaMod.Mode
         public float totalTime;
         private Timer timer;
 
-        public static Color[] unlock = new Color[9];
-        public readonly int start = 0, health = 1, mana = 2, bosses = 3, bottom = 4, npcs = 5, week = 6, crafting = 7, downedMagno = 8;
-        public readonly float[] scaling = new float[] { 0.05f, 0.1f, 0.05f, 0f, 0.2f, 0.1f, 0.5f, 0.05f, 0.1f };
-
-        public float ModeChecksLifeScale()
-        {
-            float multiplier = 1f;
-            if (!archaeaMode)
-                return multiplier;
-            multiplier -= 0.5f;
-            for (int i = 0; i < unlock.Length; i++)
-                unlock[i] = Color.Red;
-            multiplier -= scaling[start];
-            unlock[start] = Color.Green;
-            foreach (Player player in Main.player)
-            {
-                if (player.active)
-                {
-                    if (player.statLifeMax >= ArchaeaMode.LifeCrystal(100))
-                    {
-                        unlock[health] = Color.Green;
-                        multiplier -= scaling[health];
-                    }
-                    if (player.statManaMax >= 40 || player.statManaMax2 >= 40)
-                    {
-                        unlock[mana] = Color.Green;
-                        multiplier -= scaling[mana];
-                    }
-                    if (player.position.Y > Main.bottomWorld * 0.75f)
-                    {
-                        unlock[bottom] = Color.Green;
-                        multiplier -= scaling[bottom];
-                    }
-                    break;
-                }
-            }
-            int count = 0;
-            for (int i = 0; i < Main.townNPCCanSpawn.Length; i++)
-            {
-                if (Main.townNPCCanSpawn[i])
-                {
-                    if (count++ > 4)
-                    {
-                        unlock[npcs] = Color.Green;
-                        multiplier -= scaling[npcs];
-                        break;
-                    }
-                }
-            }
-            if (ModContent.GetInstance<ModeToggle>().dayCount > 6)
-            {
-                unlock[week] = Color.Green;
-                multiplier -= scaling[week];
-            }
-            if (ModContent.GetInstance<ModeTile>().tileProgress)
-            {
-                unlock[crafting] = Color.Green;
-                multiplier -= scaling[crafting];
-            }
-            if (ModContent.GetInstance<ArchaeaWorld>().downedMagno)
-            {
-                unlock[downedMagno] = Color.Green;
-                multiplier -= scaling[downedMagno];
-            }
-            multiplier = (float)Math.Round(Math.Abs(multiplier - 2f), 2);
-            return multiplier;
-        }
-        public float ModeChecksDamageScale()
-        {
-            float multiplier = 1f;
-            if (!archaeaMode)
-                return multiplier;
-            multiplier -= 0.5f / 2;
-            multiplier -= scaling[start];
-            foreach (Player player in Main.player)
-            {
-                if (player != null && player.active)
-                {
-                    if (player.statLifeMax >= ArchaeaMode.LifeCrystal(100))
-                    {
-                        multiplier -= scaling[health];
-                    }
-                    if (player.statManaMax >= 40 || player.statManaMax2 >= 40)
-                    { 
-                        multiplier -= scaling[mana];
-                    }
-                    if (player.position.Y > Main.bottomWorld * 0.75f)
-                    {
-                        multiplier -= scaling[bottom];
-                    }
-                    break;
-                }
-            }
-            int count = 0;
-            for (int i = 0; i < Main.townNPCCanSpawn.Length; i++)
-            {
-                if (Main.townNPCCanSpawn[i])
-                {
-                    if (count++ > 4)
-                    {
-                        multiplier -= scaling[npcs] / 2f;
-                        break;
-                    }
-                }
-            }
-            if (ModContent.GetInstance<ModeToggle>().dayCount > 6)
-            {
-                multiplier -= scaling[week];
-            }
-            if (ModContent.GetInstance<ModeTile>().tileProgress)
-            {
-                multiplier -= scaling[crafting];
-            }
-            if (ModContent.GetInstance<ArchaeaWorld>().downedMagno)
-            {
-                multiplier -= scaling[downedMagno] / 2f;
-            }
-            multiplier = (float)Math.Round(Math.Abs(multiplier - 2f), 2);
-            return multiplier;
-        }
+        
         public override void SaveWorldData(TagCompound tag)/* Edit tag parameter rather than returning new TagCompound */
         {
             tag.Add("ArchaeaMode", archaeaMode);
@@ -350,8 +382,8 @@ namespace ArchaeaMod.Mode
                 case MessageID.PlayerInfo:
                 case MessageID.PlayerSpawn:
                 case MessageID.WorldData:
-                    healthScale = ModeChecksLifeScale();
-                    damageScale = ModeChecksDamageScale();
+                    healthScale = ModContent.GetInstance<ArchaeaMode>().ModeChecksLifeScale(archaeaMode);
+                    damageScale = ModContent.GetInstance<ArchaeaMode>().ModeChecksDamageScale(archaeaMode);
                     if (Main.netMode == NetmodeID.MultiplayerClient)
                         NetHandler.Send(Packet.ArchaeaMode, 256, -1, 0, healthScale, damageScale, 0, archaeaMode, dayCount, totalTime);
                     break;
@@ -397,30 +429,16 @@ namespace ArchaeaMod.Mode
         }
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
         {
-            damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense * 100, item.DamageType);
+            if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+            {
+                damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, item.DamageType);
+            }
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense * 100, projectile.DamageType);
-        }
-    }
-    public class ModeItem : GlobalItem
-    {
-        public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
-        {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                damage = new StatModifier(1f, (float)Math.Abs(Math.Tan(ModContent.GetInstance<ModeToggle>().damageScale) / 10f) + 1f);
-            }
-        }
-    }        
-    public class ModeProjectile : GlobalProjectile
-    {
-        public override void ModifyDamageScaling(Projectile projectile, ref float damageScale)
-        {
-            if (ModContent.GetInstance<ModeToggle>().archaeaMode)
-            {
-                damageScale = ModContent.GetInstance<ModeToggle>().damageScale;
+                damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, projectile.DamageType);
             }
         }
     }

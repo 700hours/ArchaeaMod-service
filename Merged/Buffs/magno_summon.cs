@@ -18,7 +18,7 @@ namespace ArchaeaMod.Merged.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("magno_minion").Type] == 0)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.magno_minion>()] == 0)
             {
                 player.DelBuff(buffIndex);
                 buffIndex--;

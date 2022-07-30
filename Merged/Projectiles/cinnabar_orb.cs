@@ -126,7 +126,7 @@ namespace ArchaeaMod.Merged.Projectiles
                 }
             }
             timer++;
-            DustType = Mod.Find<ModDust>("cinnabar_dust").Type;
+            DustType = ModContent.DustType<Merged.Dusts.cinnabar_dust>();
             if (timer % 6 == 0)
             {
                 int orbDust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType, 0f, 0f, 0, Color.White, 1f);
@@ -135,7 +135,7 @@ namespace ArchaeaMod.Merged.Projectiles
         }
         public override void Kill(int timeLeft)
         {
-            DustType = Mod.Find<ModDust>("cinnabar_dust").Type;
+            DustType = ModContent.DustType<Merged.Dusts.cinnabar_dust>();
             for (int k = 0; k < 6; k++)
             {
                 int Dust1 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType, 0f, 0f, 0, Color.White, 2f);

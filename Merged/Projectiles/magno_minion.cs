@@ -129,20 +129,23 @@ namespace ArchaeaMod.Merged.Projectiles
                         npcTarget = n.whoAmI;
                         Projectile.netUpdate = true;
                         targeted = true;
+                        break;
                     }
                     npcCenter = new Vector2(n.position.X + n.width / 2, n.position.Y + n.height / 2);
-                    if (conditions && Vector2.Distance(npcCenter - Projectile.position, Vector2.Zero) < 384f)
+                    if (conditions && Vector2.Distance(npcCenter - Projectile.position, Vector2.Zero) < 800f)
                     {
                         oldNpcTarget = npcTarget;
                         npcTarget = n.whoAmI;
                         Projectile.netUpdate = true;
                         targeted = true;
+                        break;
                     }
                 }
                 else
                 {
                     Projectile.spriteDirection = player.direction * -1;
                     Projectile.rotation = 0;
+                    break;
                 }
             }
             if (targeted)
@@ -153,7 +156,7 @@ namespace ArchaeaMod.Merged.Projectiles
                 //  projectile.rotation = npcAngle;
                 if (Projectile.Hitbox.Intersects(n.Hitbox))
                     Projectile.spriteDirection = n.spriteDirection;
-                if (Vector2.Distance(npcCenter - Projectile.position, Vector2.Zero) < 384f)
+                if (Vector2.Distance(npcCenter - Projectile.position, Vector2.Zero) < 800f)
                 {
                     if (!Projectile.Hitbox.Intersects(n.Hitbox))
                     {
@@ -179,7 +182,7 @@ namespace ArchaeaMod.Merged.Projectiles
                                 int d = Dust.NewDust(Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), 4, 4, 6, Distance(null, k, 2f).X, Distance(null, k, 8f).Y, 0, default(Color), 2f);
                                 Main.dust[d].noGravity = true;
                             }
-                            Main.npc[npcTarget].StrikeNPC((int)(12f * player.GetDamage(DamageClass.Summon).Flat), 4f, 0);
+                            Main.npc[npcTarget].StrikeNPC((int)(24f * player.GetDamage(DamageClass.Summon).Flat), 4f, 0);
                             int Proj2 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<magno_minionexplosion>(), 0, 0f, Projectile.owner, 0f, 0f);
                             Main.projectile[Proj2].position = Projectile.position - new Vector2(15, 15);
                             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);

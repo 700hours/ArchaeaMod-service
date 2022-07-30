@@ -65,7 +65,7 @@ namespace ArchaeaMod.Merged.Projectiles
             if (Projectile.velocity.X < 0f && Projectile.oldVelocity.X >= 0f || Projectile.velocity.X > 0f && Projectile.oldVelocity.X <= 0f || Projectile.velocity.Y < 0f && Projectile.oldVelocity.Y >= 0f || Projectile.velocity.Y > 0f && Projectile.oldVelocity.Y <= 0f)
                 Projectile.netUpdate = true;
 
-            int DustType = Mod.Find<ModDust>("c_silver_dust").Type;
+            int DustType = ModContent.DustType<Merged.Dusts.c_silver_dust>();
             int Dust1 = Dust.NewDust(Projectile.Center + new Vector2(-4, -4), 1, 1, DustType, 0f, 0f, 0, Color.White, 1.4f); // old dust: 159, Color.OrangeRed
             Main.dust[Dust1].noGravity = true;
         }

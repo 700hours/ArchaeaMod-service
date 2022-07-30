@@ -15,7 +15,8 @@ namespace ArchaeaMod
     public class ArchaeaMain : Mod
     {
         public static Mod getMod => ModLoader.GetMod("ArchaeaMod");
-        
+        public override string Name => "ArchaeaMod";
+
         public static string magnoHead = "ArchaeaMod/Gores/magno_head";
         public static string skyHead = "ArchaeaMod/Gores/sky_head";
         //public static ModHotKey[] macro = new ModHotKey[5];
@@ -114,7 +115,7 @@ namespace ArchaeaMod
         {
             if (reader.PeekChar() == -1)
                 return;
-            int n = 0, n2 = 0;
+            int n = 0;
             byte type = reader.ReadByte();
             int t = reader.ReadInt32();
             float f = reader.ReadSingle();
@@ -245,6 +246,8 @@ namespace ArchaeaMod
                     if (Main.netMode == NetmodeID.Server)
                         NetHandler.Send(Packet.CordonedBiomes, b: b);
                     break;
+                case Packet.ModeProgress:
+                    break;
             }
         }
     }
@@ -266,6 +269,7 @@ namespace ArchaeaMod
             ModOptions = 13,
             ModeScaling = 14,
             TileProgress = 15,
-            CordonedBiomes = 16;
+            CordonedBiomes = 16,
+            ModeProgress = 17;
     }
 }

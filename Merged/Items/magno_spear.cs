@@ -12,15 +12,16 @@ namespace ArchaeaMod.Merged.Items
         {
             DisplayName.SetDefault("Rubidium Staff");
             Tooltip.SetDefault("Magnoliac artifact\n" +
-                "Increases ranged armor piercing\n" +
+                "Increases defense\n" +
                 "Increases movement speed by 30%\n" +
-                "Decreases jump height by 67%");
+                "Decreases jump height by 90%\n" +
+                "Decreases jump speed by 50%");
         }
         public override void SetDefaults()
         {
             Item.width = 32;
             Item.height = 32;
-            Item.scale = 0.67f;
+            Item.scale = 0.875f;
             Item.accessory = true;
             Item.value = 12000;
             Item.noMelee = true;
@@ -29,9 +30,10 @@ namespace ArchaeaMod.Merged.Items
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             bool mode = ModContent.GetInstance<Mode.ModeToggle>().archaeaMode;
-            player.GetArmorPenetration(DamageClass.Ranged) += mode ? 50 : 10;
+            player.statDefense = (int)(player.statDefense * (mode ? 2 : 1.1f));
             player.moveSpeed *= 1.3f;
-            Player.jumpHeight /= 3;
+            Player.jumpHeight = (int)(Player.jumpHeight * 0.1f);;
+            Player.jumpSpeed *= 0.5f;
         }
     }
 }

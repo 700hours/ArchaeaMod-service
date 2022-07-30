@@ -52,7 +52,7 @@ namespace ArchaeaMod.Merged.Items.Armors
                 +   "\nspores";
             if (ticks++ % 60 == 0)
             {
-                int newProj = Projectile.NewProjectile(Projectile.GetSource_NaturalSpawn(), player.Center, Vector2.Zero, Mod.Find<ModProjectile>("cinnabar_spore").Type, 14, 0f, player.whoAmI, x, y);
+                int newProj = Projectile.NewProjectile(Projectile.GetSource_NaturalSpawn(), player.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.cinnabar_spore>(), 14, 0f, player.whoAmI, x, y);
             }
         }
         public bool TileCheck(int i, int j)

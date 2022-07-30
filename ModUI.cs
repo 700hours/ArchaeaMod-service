@@ -175,7 +175,7 @@ namespace ArchaeaMod.ModUI
                     sb.DrawString(FontAssets.MouseText.Value, "Apply", new Vector2(apply.bounds.X, apply.bounds.Bottom), Color.White);
                 if (apply.LeftClick() && apply.color != Color.Gray && back.ticks == 0)
                 {
-                    Timer timer = new Timer((float)player.HeldItem.useTime / Main.frameRate * 1000f);
+                    Timer timer = new Timer(Math.Max((float)player.HeldItem.useTime / Main.frameRate * 1000f, 1000f));
                     timer.AutoReset = false;
                     timer.Enabled = true;
                     timer.Elapsed += (object sender, ElapsedEventArgs e) =>

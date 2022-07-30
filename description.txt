@@ -1,11 +1,24 @@
-# Archaea Mod
-## Basics
-This is a Terraria mod designed to provide new elements that are both pre-hardmode and hardmode.
+[b]Archaea Mod[/b]
+Terraria mod which is designed to provide new elements that are both pre-hardmode and hardmode.
 
-## Hint
-We have added some complex elements. 
+[i]Features implemented are a few such as these:[/i]
+* Progression-based difficulty mode
+* 2 new biomes
+* Many items and enemies
+* Complimentary to vanilla
+* Pre-hardmode completion step with hint
 
-## Team
+[hr]
+
+Progression requirements are made clear in the mod, and the gear and items found will assist in the general completion of the vanilla game.
+
+A particular inclusion is a mode which revises damage and health statistics along with a checklist, each item adding to the difficulty.
+
+Multiplayer gameplay is included. Dedicated server usage is also implemented.
+
+[hr]
+
+[b]Team[/b]
 > WarrenMark, lead
 > TerrorPenguin, artist
 > iggysaur, artist

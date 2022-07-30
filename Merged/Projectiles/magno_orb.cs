@@ -76,7 +76,7 @@ namespace ArchaeaMod.Merged.Projectiles
             {
                 Projectile.Kill();
             }
-            DustType = Mod.Find<ModDust>("magno_dust").Type;
+            DustType = ModContent.DustType<Merged.Dusts.magno_dust>();
             for (int k = 0; k < 1; k++)
             {
                 int orbDust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType, 0f, 0f, 0, default(Color), 1f);

@@ -126,8 +126,8 @@ namespace ArchaeaMod.Merged.Projectiles
         }
         public override void Kill(int timeLeft)
         {
-            int DustType = Mod.Find<ModDust>("cinnabar_dust").Type;
-            int dustType2 = Mod.Find<ModDust>("c_silver_dust").Type;
+            int DustType = ModContent.DustType<Merged.Dusts.cinnabar_dust>();
+            int dustType2 = ModContent.DustType<Merged.Dusts.c_silver_dust>();
             for (int k = 0; k < 3; k++)
             {
                 int killDust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType, 0f, 0f, 0, default(Color), 1.2f);

@@ -151,8 +151,8 @@ namespace ArchaeaMod.NPCs
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
+            npcLoot.Add(ItemDropRule.ByCondition(new Items.ArchaeaModeDrop(), ModContent.ItemType<Merged.Items.magno_spear>(), 10));
             npcLoot.Add(ItemDropRule.ByCondition(new Items.HardModeDrop(), ModContent.ItemType<Items.dream_catcher>()));
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Materials.magno_core>(), 10));
         }
 
         private int time;

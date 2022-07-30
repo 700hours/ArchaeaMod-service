@@ -21,8 +21,10 @@ using ReLogic.Graphics;
 using ArchaeaMod.GenLegacy;
 using ArchaeaMod.Mode;
 using ArchaeaMod.ModUI;
+using ArchaeaMod.Progression;
 using Terraria.DataStructures;
 using Terraria.Audio;
+using System.Timers;
 
 namespace ArchaeaMod
 {
@@ -47,18 +49,59 @@ namespace ArchaeaMod
         }
         public int classChoice = 0;
         public int playerUID = 0;
+        public int overallMaxStat = 45;
         public override void LoadData(TagCompound tag)
         {
             playerUID = tag.GetInt("PlayerID");
             if (playerUID == 0)
                 playerUID = GetHashCode();
             classChosen = tag.GetBool("Chosen");
+            //  Progression stat poins
+            remainingStat = tag.GetInt("remainingStat");
+            spentStat[0] = tag.GetInt("ArrowSpeed");
+            spentStat[1] = tag.GetInt("JumpHeight");
+            spentStat[2] = tag.GetInt("AttackSpeed");
+            spentStat[3] = tag.GetInt("MoveSpeed");
+            spentStat[4] = tag.GetInt("BreathTime");
+            spentStat[5] = tag.GetInt("Toughness");
+            spentStat[6] = tag.GetInt("DamageBuff");
+            spentStat[7] = tag.GetInt("MerchantDiscount");
+            spentStat[8] = tag.GetInt("PercentDamageTaken");
+            spentStat[9] = tag.GetInt("AmmoReduction");
+            overallMaxStat = tag.GetInt("overallMaxStat");
         }
         public override void SaveData(TagCompound tag)
         {
-            tag.Set("PlayerID", playerUID, true);
-            tag.Set("Chosen", classChosen, true);
+            tag.Add("PlayerID", playerUID);
+            tag.Add("Chosen", classChosen);
+            //  Progression stat poins
+            tag.Add("remainingStat", remainingStat);
+            tag.Add("ArrowSpeed", spentStat[0]);
+            tag.Add("JumpHeight", spentStat[1]);
+            tag.Add("AttackSpeed", spentStat[2]);
+            tag.Add("MoveSpeed", spentStat[3]);
+            tag.Add("BreathTime", spentStat[4]);
+            tag.Add("Toughness", spentStat[5]);
+            tag.Add("DamageBuff", spentStat[6]);
+            tag.Add("MerchantDiscount", spentStat[7]);
+            tag.Add("PercentDamageTaken", spentStat[8]);
+            tag.Add("AmmoReduction", spentStat[9]);
+            tag.Add("overallMaxStat", overallMaxStat);
         }
+        public int remainingStat;
+        public int[] spentStat = new int[10];
+        /* Unused
+        public int ArrowSpeed;
+        public int JumpHeight;
+        public int AttackSpeed;
+        public int MoveSpeed;
+        public int BreathTime;
+        public int Toughness;
+        public int DamageBuff;
+        public int MerchantDiscount;
+        public int PercentDamageTaken;
+        public int AmmoReduction;
+        */
         private bool start;
         public bool debugMenu;
         public bool spawnMenu;
@@ -146,7 +189,7 @@ namespace ArchaeaMod
                 extra += offset;
                 Player.statLifeMax2 = 100 + extra;
                 Player.statLifeMax = Player.statLifeMax2;
-                Player.statLife = Player.statLifeMax2;
+                //Player.statLife = Player.statLifeMax2;
             }
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 NetMessage.SendData(MessageID.PlayerLifeMana);
@@ -166,25 +209,150 @@ namespace ArchaeaMod
                 int extra = Player.statLifeMax2 - 100;
                 Player.statLifeMax2 = Math.Min(9999, Math.Max(100, 100 + ArchaeaMode.LifeCrystal(extra)));
                 Player.statLifeMax = Player.statLifeMax2;
-                Player.statLife = Player.statLifeMax;
+                //Player.statLife = Player.statLifeMax;
             }
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 NetMessage.SendData(MessageID.PlayerLifeMana);
         }
+        Timer debugTimer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
         public override void OnEnterWorld(Player player)
         {
+            //  DEBUG
+            debugTimer.Enabled = true;
+            debugTimer.AutoReset = true;
+            debugTimer.Elapsed += DebugTimer_Elapsed;
+            debugTimer.Start();
+
             PostSavePlayer();
+            InitStat(player);
             if (Effects.Barrier.barrier == null)
             {
                 Effects.Barrier.Initialize();
             }
         }
+
+        private void DebugTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //  DEBUG
+            if (!Player.active) return;
+            if (overallMaxStat-- > 0)
+            { 
+                remainingStat += 1;
+                SoundEngine.PlaySound(SoundID.Item29, Player.Center);
+            }
+            else 
+            {
+                debugTimer.Stop();
+                debugTimer.Dispose();
+            }
+        }
+
         public void SetModeStats(bool modeFlag)
         {
             if (modeFlag)
                 PostSavePlayer();
             else ModeOffResetStats();
         }
+        #region Progression
+        public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
+        {
+            price = (int)(price / merchantDiscount);
+        }
+        public override void ModifyShootStats(Item item, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+            velocity *= attackSpeed;
+        }
+        public override void PostUpdateRunSpeeds()
+        {
+            this.Player.currentShoppingSettings.PriceAdjustment /= merchantDiscount;
+            Player.jumpHeight = (int)(Player.jumpHeight * jumpHeight);
+            //  Find place to add breathMax
+            //Player.breathMax = (int)(Player.breathMax * breathTime);
+            Player.statDefense += toughness;
+        }
+        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        {
+            damage = (int)(damage / percentDamageTaken);
+            //- toughness / 2;
+            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
+                return true;
+            customDamage = true;
+            damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, Player.statDefense, DamageClass.Default);
+            return true;
+        }
+        public override float UseSpeedMultiplier(Item item)
+        {
+            return attackSpeed;
+        }
+        public override bool CanConsumeAmmo(Item weapon, Item ammo)
+        {
+            return Main.rand.NextFloat() < ammoReduction;
+        }
+        public bool SpendStatPoint(int index, int num = 1, bool force = false)
+        {
+            if (!force) {
+                if (remainingStat <= 0)
+                    return false;
+                else if (remainingStat > 0)
+                    remainingStat--;
+                spentStat[index] += num;
+            }
+            switch (index)
+            {
+                case ProgressID.ArrowSpeed:
+                    arrowSpeed += num / 33f;  // 3% per point       Double, Check magic quiver buff
+                    break;
+                case ProgressID.JumpHeight:
+                    jumpHeight += num / 22.2f; // 4.5% per point    Double, Check shiny red balloon value
+                    break;
+                case ProgressID.AttackSpeed:
+                    attackSpeed += num / 24f;  // 4.1% per point    Double, Check titan's mits value
+                    break;
+                case ProgressID.MoveSpeed:
+                    moveSpeed += num / 15f;   // 6.67% per point    Triple, Check lightning boots value
+                    break;
+                case ProgressID.BreathTime:
+                    breathTime += num / 500f;  // 0.2% [6.67%] per point    [Triple], Check breathing rod value
+                    break;
+                case ProgressID.Toughness:
+                    toughness += num;         // Add to armor
+                    break;
+                case ProgressID.DamageBuff:
+                    damageBuff += num / 100f;  // 1% per point
+                    break;
+                case ProgressID.MerchantDiscount:
+                    merchantDiscount += num / 100f;   // 1% per point
+                    break;
+                case ProgressID.PercentDamageReduction:
+                    percentDamageTaken += num / 100f; // 1% per point
+                    break;
+                case ProgressID.AmmoReduction:
+                    ammoReduction += num / 88.8f; // 1.1% per point   Double, Check ammo box
+                    break;
+            }
+            return true;
+        }
+        public void InitStat(Player player)
+        {
+            //  Handled in player Load
+            for (int i = 0; i < spentStat.Length; i++) {
+                SpendStatPoint(i, spentStat[i], true);
+            }
+        }
+        //  Increase
+        public float arrowSpeed = 1f;
+        public float jumpHeight = 1f;
+        public float attackSpeed = 1f;
+        public float moveSpeed = 1f;
+        public float breathTime = 1f;
+        public int   toughness = 1;
+        public float damageBuff = 1f;
+        //  Decrease
+        public float merchantDiscount = 1f;
+        public float percentDamageTaken = 1f;
+        public float ammoReduction = 1f;
+        #endregion
+        
         public override void PreUpdate()
         {
             Color textColor = Color.Yellow;
@@ -194,6 +362,11 @@ namespace ArchaeaMod
                 Effects.Barrier.barrier[i]?.Update(Player);
             return;
             #region debug
+            if (setModeStats)
+            {
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Merged.Items.magno_spear>());
+                setModeStats = false;
+            }
             if (!init)
             {
                 NPC.NewNPC(NPC.GetBossSpawnSource(Player.whoAmI), (int)Player.position.X, (int)Player.position.Y, ModNPCID.SkyBoss);
@@ -486,16 +659,11 @@ namespace ArchaeaMod
 
         public override void PostUpdateEquips()
         {
+            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
+                return;
             float ratio = 100f / 500f;
             float result = Player.statDefense / ratio;
             Player.statDefense = (int)result;
-        }
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
-        {
-            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
-                return true;
-            damage = ArchaeaMode.ModeScaling(ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, Player.statDefense, DamageClass.Default);
-            return true;
         }
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
@@ -724,7 +892,7 @@ namespace ArchaeaMod
             }
             if (drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI)
             {
-                if (!Main.dedServ || Effects.Barrier.barrier != null)
+                if (!Main.dedServ && Effects.Barrier.barrier != null)
                 { 
                     for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
                         Effects.Barrier.barrier[i]?.Draw(sb, Player);

@@ -358,3 +358,33 @@ version 1.0.2.4 -> 1.1.4.6
 -> Day count and mode scaling resets and saves properly
 # Removed
 -> Player mana scaling from mode
+
+version 1.1.4.6 -> 1.1.4.7
+==========================
+# Added
++ Hardmode mod biome accessory drop
+# Changed
+-> Damage and life scaling
+-> Boss orb projectile casts light instead of dust effect
+-> Cinnabar sword and staff have cinnabar bar replaced with magno bar recipe material
+-> Defense scaling mode only
+# Removed
+- A mod biome drop from a certain NPC
+
+version 1.1.4.7 -> 1.2.5.8
+==========================
+# Added
+-> Stat points meant to be granted [after objectives met]
+	Note: currently one point every five minutes
+-> Stats persistent over player save/loads
+-> Titles for the menu UI tabs
+-> Total stat points granted is 45
+# Changed
+-> Accessory now gives +10% defense non-mode
+-> Rubidium staff from 10 damage to 24 damage
+-> Rubidium minion ranged increased from 384 to 800
+# Fixed
+-> Scaled back the modded high defense value from NPCs
+-> Mode damaged wasn't scaled based on flag in all relevant methods
+# Removed
+-> Biome drop from a certain NPC
