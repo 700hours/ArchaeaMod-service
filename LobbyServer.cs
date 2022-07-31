@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.ModLoader;
 
-using ArchaeaMod.ModUI;
+using ArchaeaMod.Interface.ModUI;
 
 namespace Lobby
 {

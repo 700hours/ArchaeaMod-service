@@ -62,7 +62,7 @@ namespace ArchaeaMod.Biome
                 }
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius) * 5f)
+                    for (float n = 0; n < radius; n += Draw.radians(radius) * 5f)
                     {
                         if (n >= tunnel)
                         {
@@ -134,7 +134,7 @@ namespace ArchaeaMod.Biome
                 }
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius) * 5f)
+                    for (float n = 0; n < radius; n += Draw.radians(radius) * 5f)
                     {
                         if (n >= tunnel)
                         {
@@ -202,7 +202,7 @@ namespace ArchaeaMod.Biome
             {
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius) * 5f)
+                    for (float n = 0; n < radius; n += Draw.radians(radius) * 5f)
                     {
                         if (n >= tunnel)
                         {
@@ -266,7 +266,7 @@ namespace ArchaeaMod.Biome
             {
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius) * 5f)
+                    for (float n = 0; n < radius; n += Draw.radians(radius) * 5f)
                     {
                         if (n >= tunnel)
                         {
@@ -333,7 +333,7 @@ namespace ArchaeaMod.Biome
                 }
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius) * 5f)
+                    for (float n = 0; n < radius; n += Draw.radians(radius) * 5f)
                     {
                         if (n >= tunnel)
                         {
@@ -426,7 +426,7 @@ namespace ArchaeaMod.Biome
                 }
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius) * 5f)
+                    for (float n = 0; n < radius; n += Draw.radians(radius) * 5f)
                     {
                         if (n >= tunnel)
                         {
@@ -490,7 +490,7 @@ namespace ArchaeaMod.Biome
                 tunnel = (float)WorldGen.genRand.Next(8, 15);
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius) * 5f)
+                    for (float n = 0; n < radius; n += Draw.radians(radius) * 5f)
                     {
                         if (n < tunnel)
                         {
@@ -510,7 +510,7 @@ namespace ArchaeaMod.Biome
                 tunnel = (float)WorldGen.genRand.Next(20, 35);
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius) * 5f)
+                    for (float n = 0; n < radius; n += Draw.radians(radius) * 5f)
                     {
                         if (n < tunnel)
                         {

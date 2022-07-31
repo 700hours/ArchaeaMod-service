@@ -15,7 +15,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-using ArchaeaMod.ModUI;
+using ArchaeaMod.Interface.ModUI;
 using Terraria.DataStructures;
 using System.Timers;
 

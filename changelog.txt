@@ -1,15 +1,7 @@
-version 1.2.5.10 -> 1.2.5.11
+version 1.2.5.11 -> 1.2.5.12
 ============================
 # Changed
--> Added SyncNPC into GlobalNPC mode onspawn
--> Dynamic difficulty refactored
--> Breath time skill additive
-# Fix
--> Stat points not being granted every five minutes
--> Tremmor to Tremor spelling
--> Mode scaling float cast
--> Boss music mispelling
-# Added
--> Pre save and quit revert of player's health to vanilla values
--> Progress check list persistence
--> Class limiting for skill points
+-> Tab items are textures instead of numbers
+-> Draw radians method to static field
+# Fixed
+-> Scaling not occuring in MP

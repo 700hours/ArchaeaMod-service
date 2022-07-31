@@ -1859,7 +1859,7 @@ namespace ArchaeaMod
                 int radius = WorldGen.genRand.Next(8, 24);
                 for (int n = 0; n < radius; n++)
                 {
-                    for (float r = 0f; r < Math.PI * 2; r += new Draw().radians(n))
+                    for (float r = 0f; r < Math.PI * 2; r += Draw.radians(n))
                     {
                         float cos = i + (float)(n * (Math.Cos(r)));
                         float sine = j + (float)(n * (Math.Sin(r)));

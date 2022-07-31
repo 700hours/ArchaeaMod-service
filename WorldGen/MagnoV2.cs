@@ -111,7 +111,7 @@ namespace ArchaeaMod.Gen
                 }
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius))
+                    for (float n = 0; n < radius; n += Draw.radians(radius))
                     {
                         if (n >= tunnel)
                         {
@@ -186,7 +186,7 @@ namespace ArchaeaMod.Gen
                 }
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius))
+                    for (float n = 0; n < radius; n += Draw.radians(radius))
                     {
                         if (n >= tunnel)
                         {
@@ -257,7 +257,7 @@ namespace ArchaeaMod.Gen
             {
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius))
+                    for (float n = 0; n < radius; n += Draw.radians(radius))
                     {
                         if (n >= tunnel)
                         {
@@ -324,7 +324,7 @@ namespace ArchaeaMod.Gen
             {
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius))
+                    for (float n = 0; n < radius; n += Draw.radians(radius))
                     {
                         if (n >= tunnel)
                         {
@@ -394,7 +394,7 @@ namespace ArchaeaMod.Gen
                 }
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius))
+                    for (float n = 0; n < radius; n += Draw.radians(radius))
                     {
                         if (n >= tunnel)
                         {
@@ -490,7 +490,7 @@ namespace ArchaeaMod.Gen
                 }
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius))
+                    for (float n = 0; n < radius; n += Draw.radians(radius))
                     {
                         if (n >= tunnel)
                         {
@@ -561,7 +561,7 @@ namespace ArchaeaMod.Gen
                 tunnel = (float)WorldGen.genRand.Next(8, 15);
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius))
+                    for (float n = 0; n < radius; n += Draw.radians(radius))
                     {
                         if (n < tunnel)
                         {
@@ -591,7 +591,7 @@ namespace ArchaeaMod.Gen
                 tunnel = (float)WorldGen.genRand.Next(20, 35);
                 for (float r = 0; r < Math.PI * 2f; r += Draw.radian)
                 {
-                    for (float n = 0; n < radius; n += new Draw().radians(radius))
+                    for (float n = 0; n < radius; n += Draw.radians(radius))
                     {
                         if (n < tunnel)
                         {

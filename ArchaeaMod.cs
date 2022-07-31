@@ -248,6 +248,12 @@ namespace ArchaeaMod
                     break;
                 case Packet.ModeProgress:
                     break;
+                case Packet.ModeNPCLife:
+                    if (Main.netMode == NetmodeID.MultiplayerClient) {
+                        Main.npc[t].lifeMax = (int)f;
+                        Main.npc[t].life = (int)f;
+                    }
+                    break;
             }
         }
     }
@@ -270,6 +276,7 @@ namespace ArchaeaMod
             ModeScaling = 14,
             TileProgress = 15,
             CordonedBiomes = 16,
-            ModeProgress = 17;
+            ModeProgress = 17,
+            ModeNPCLife = 18;
     }
 }

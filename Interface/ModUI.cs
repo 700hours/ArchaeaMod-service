@@ -19,7 +19,7 @@ using ArchaeaMod.Mode;
 using Terraria.ID;
 using System.Timers;
 
-namespace ArchaeaMod.ModUI
+namespace ArchaeaMod.Interface.ModUI
 {
     public sealed class OptionsID
     {
@@ -137,10 +137,10 @@ namespace ArchaeaMod.ModUI
             else
             {
                 float distance = 196f;
-                for (float r = 0f; r < distance; r += new Draw().radians(distance))
+                for (float r = 0f; r < distance; r += Draw.radians(distance))
                 {
                     Vector2 c = NPCs.ArchaeaNPC.AngleBased(new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), r, distance);
-                    Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X - 1, (int)c.Y - 1, 2, 2), Color.DodgerBlue * 0.50f);
+                    Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X - 1, (int)c.Y - 1, 2, 2), Color.White * 0.50f);
                 }
                 for (int i = 0; i < categories.Length; i++)
                 {
@@ -182,7 +182,7 @@ namespace ArchaeaMod.ModUI
                 if (apply.LeftClick() && apply.color != Color.Gray && back.ticks == 0)
                 {
                     float useTime = player.HeldItem.useTime;
-                    useTime += useTime % 10;
+                    useTime += useTime % 100;
                     Timer timer = new Timer(Math.Max(useTime / Main.frameRate * 1000f, 1000f));
                     timer.AutoReset = false;
                     timer.Enabled = true;
@@ -221,10 +221,10 @@ namespace ArchaeaMod.ModUI
         public static void ClassSelect(Player player)
         {
             float distance = 196f;
-            for (float r = 0f; r < distance; r += new Draw().radians(distance))
+            for (float r = 0f; r < distance; r += Draw.radians(distance))
             {
                 Vector2 c = NPCs.ArchaeaNPC.AngleBased(new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), r, distance);
-                Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X - 1, (int)c.Y - 1, 2, 2), Color.DodgerBlue * 0.50f);
+                Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X - 1, (int)c.Y - 1, 2, 2), Color.White * 0.50f);
             }
             for (int i = 0; i < classes.Length; i++)
             {

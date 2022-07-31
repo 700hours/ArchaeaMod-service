@@ -12,7 +12,7 @@ using Terraria.GameContent;
 using Terraria.ModLoader;
 using ReLogic.Graphics;
 
-using ArchaeaMod.ModUI;
+using ArchaeaMod.Interface.ModUI;
 using Terraria.DataStructures;
 
 namespace ArchaeaMod

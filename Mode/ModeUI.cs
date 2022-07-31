@@ -36,7 +36,7 @@ namespace ArchaeaMod.Mode
         private ListBox stat;
         private ListBox[] page;
         private Button[] tab;
-        private int tick;
+        private int classChoice = 0;
 
         public override void OnModLoad()
         {
@@ -59,16 +59,16 @@ namespace ArchaeaMod.Mode
             
             stat = new ListBox(objective.hitbox, default, new Button[]
             {
-                new Button("", default, Color.White) { text2 = "Arrow speed" },         // ranged
-                new Button("", default, Color.White) { text2 = "Jump Height" },         // summoner
-                new Button("", default, Color.White) { text2 = "Attack speed" },        // melee
-                new Button("", default, Color.White) { text2 = "Move speed" },          // summoner
-                new Button("", default, Color.White) { text2 = "Underwater breath" },   // all
-                new Button("", default, Color.White) { text2 = "Toughness" },           // melee
-                new Button("", default, Color.White) { text2 = "Item damage" },         // mage
-                new Button("", default, Color.White) { text2 = "Price discount" },      // all
-                new Button("", default, Color.White) { text2 = "% damage reduction" },  // mage
-                new Button("", default, Color.White) { text2 = "Ammo use reduction" }   // ranged
+                new Button("", default, Color.White) { text2 = "Arrow speed", innactiveDrawText = true },         // ranged
+                new Button("", default, Color.White) { text2 = "Jump Height", innactiveDrawText = true },         // summoner
+                new Button("", default, Color.White) { text2 = "Attack speed", innactiveDrawText = true },        // melee
+                new Button("", default, Color.White) { text2 = "Move speed",  innactiveDrawText = true },         // summoner
+                new Button("", default, Color.White) { text2 = "Underwater breath", innactiveDrawText = true },   // all
+                new Button("", default, Color.White) { text2 = "Toughness", innactiveDrawText = true },           // melee
+                new Button("", default, Color.White) { text2 = "Item damage", innactiveDrawText = true },         // mage
+                new Button("", default, Color.White) { text2 = "Price discount", innactiveDrawText = true },      // all
+                new Button("", default, Color.White) { text2 = "% damage reduction", innactiveDrawText = true },  // mage
+                new Button("", default, Color.White) { text2 = "Ammo use reduction", innactiveDrawText = true }   // ranged
             });
             for (int i = 0; i < stat.item.Length; i++) {
                 stat.item[i].texture = TextureAssets.MagicPixel.Value;
@@ -103,11 +103,20 @@ namespace ArchaeaMod.Mode
                     page[1].DrawItems(sb, FontAssets.MouseText.Value, 8, 8, 32);
                     page[1].scroll.Draw(sb, Color.White);
                 }
-                if (tab[i].active)
-                { 
-                    sb.Draw(TextureAssets.MagicPixel.Value, tab[i].box, Color.Gray);
-                    tab[i].Draw(FontAssets.MouseText.Value);
-                }
+            }
+            if (tab[0].active)
+            {
+                tab[0].HoverPlaySound(SoundID.MenuTick);
+                if (TextureAssets.Item[ItemID.Book].Value.Name.Contains("Dummy"))
+                    Item.NewItem(Item.GetSource_None(), Rectangle.Empty, ItemID.Book);
+                sb.Draw(TextureAssets.Item[ItemID.Book].Value, tab[0].box, Color.White);
+            }
+            if (tab[1].active)
+            {
+                tab[1].HoverPlaySound(SoundID.MenuTick);
+                if (TextureAssets.Item[ItemID.Book].Value.Name.Contains("Dummy"))
+                    Item.NewItem(Item.GetSource_None(), Rectangle.Empty, ItemID.IronBroadsword);
+                sb.Draw(TextureAssets.Item[ItemID.IronBroadsword].Value, tab[1].box, Color.White);
             }
             if (page[0].active)
             {
@@ -149,8 +158,10 @@ namespace ArchaeaMod.Mode
             if (objective.active)
                 stat.hitbox = objective.hitbox;
             else objective.hitbox = stat.hitbox;
-            tab[0].box = new Rectangle(objective.hitbox.X - 32, objective.hitbox.Top, 16, 24);
-            tab[1].box = new Rectangle(objective.hitbox.X - 32, objective.hitbox.Top + 42, 16, 24);
+            int xOffset = 48;
+            int yOffset = 42;
+            tab[0].box = new Rectangle(objective.hitbox.X - xOffset, objective.hitbox.Top, 32, 32);
+            tab[1].box = new Rectangle(objective.hitbox.X - xOffset, objective.hitbox.Top + yOffset, 32, 32);
 
             for (int i = 0; i < page.Length; i++)
             {
@@ -165,9 +176,12 @@ namespace ArchaeaMod.Mode
                             break;
                         for (int n = 0; n < page[i].item.Length; n++)
                         {
-                            int classChoice = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice;
+                            page[i].item[n].active = true;
                             switch (classChoice)
                             {
+                                case ClassID.None:
+                                    classChoice = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice;
+                                    break;
                                 case ClassID.Melee:
                                     if (n == 2 || n == 5)
                                         break;
@@ -190,9 +204,8 @@ namespace ArchaeaMod.Mode
                                     goto default;
                                 default:
                                     page[i].item[n].active = false;
-                                    continue;
+                                    break;
                             }
-                            page[i].item[n].active = true;
                             if (page[i].scroll.clicked)
                                 break;
                             page[i].item[n].HoverPlaySound(SoundID.MenuTick);

@@ -15,7 +15,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-using ArchaeaMod.ModUI;
+using ArchaeaMod.Interface.ModUI;
 using Terraria.DataStructures;
 using System.Timers;
 
@@ -160,6 +160,7 @@ namespace ArchaeaMod.Mode
             DownedMagno;
         public override void NetSend(BinaryWriter writer)
         {
+            
             writer.Write(Start);
             writer.Write(Health);
             writer.Write(Mana);
@@ -510,17 +511,19 @@ namespace ArchaeaMod.Mode
     public class ModeNPC : GlobalNPC
     {
         public override bool InstancePerEntity => true;
-        public override void OnSpawn(NPC npc, IEntitySource source)
+        public override void SetDefaults(NPC npc)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                npc.lifeMax = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.NPC, ArchaeaMode.Stat.Life, npc.lifeMax, ModContent.GetInstance<ModeToggle>().healthScale, npc.defense, DamageClass.Default);
-                npc.life = npc.lifeMax;
-                
-                if (Main.netMode == NetmodeID.Server) { 
-                    NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
-                }
+                int lifeMax = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.NPC, ArchaeaMode.Stat.Life, npc.lifeMax, ModContent.GetInstance<ModeToggle>().healthScale, npc.defense, DamageClass.Default);
+                npc.lifeMax = lifeMax;
+                npc.life = lifeMax;
+                npc.netUpdate = true;
             }
+        }
+        //  Runs Server side in dedicated servers
+        public override void OnSpawn(NPC npc, IEntitySource source)
+        {
         }
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
         {

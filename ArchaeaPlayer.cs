@@ -20,7 +20,7 @@ using ReLogic.Graphics;
 
 using ArchaeaMod.GenLegacy;
 using ArchaeaMod.Mode;
-using ArchaeaMod.ModUI;
+using ArchaeaMod.Interface.ModUI;
 using ArchaeaMod.Progression;
 using Terraria.DataStructures;
 using Terraria.Audio;
@@ -109,6 +109,8 @@ namespace ArchaeaMod
         public int PercentDamageTaken;
         public int AmmoReduction;
         */
+        private int breathTimer;
+        private const int breathTimerMax = 180;
         private bool start;
         public bool debugMenu;
         public bool spawnMenu;
@@ -278,8 +280,15 @@ namespace ArchaeaMod
         {
             this.Player.currentShoppingSettings.PriceAdjustment /= merchantDiscount;
             Player.jumpHeight = (int)(Player.jumpHeight * jumpHeight);
-            Player.breathMax += breathTime;
             Player.statDefense += toughness;
+        }
+        public override void PostUpdateMiscEffects()
+        {
+            if (Player.wet && Player.breath < Player.breathMax && breathTimer-- < breathTime)
+            {
+                Player.breath += 10;
+                breathTimer = breathTimerMax;
+            }
         }
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
@@ -297,7 +306,7 @@ namespace ArchaeaMod
         }
         public override bool CanConsumeAmmo(Item weapon, Item ammo)
         {
-            return Main.rand.NextFloat() < ammoReduction;
+            return Main.rand.NextFloat() < Math.Abs(ammoReduction - 2f);
         }
         public bool SpendStatPoint(int index, int num = 1, bool force = false)
         {
@@ -323,7 +332,7 @@ namespace ArchaeaMod
                     moveSpeed += num / 15f;   // 6.67% per point    Triple, Check lightning boots value
                     break;
                 case ProgressID.BreathTime:
-                    breathTime += num;        // new: +1            old: 0.2% [6.67%] per point    [Triple], Check breathing rod value
+                    breathTime += num * 2;        // new: +2            old: 0.2% [6.67%] per point    [Triple], Check breathing rod value
                     break;
                 case ProgressID.Toughness:
                     toughness += num;         // Add to armor
@@ -696,7 +705,7 @@ namespace ArchaeaMod
             if (outOfBounds)
             {
                 effectTime--;
-                for (float i = 0; i < Math.PI * 2f; i += new Draw().radians(effectTime / 64f))
+                for (float i = 0; i < Math.PI * 2f; i += Draw.radians(effectTime / 64f))
                 {
                     int offset = 4;
                     float x = (float)(Player.Center.X - offset + (effectTime / 4) * Math.Cos(i));
@@ -1124,7 +1133,7 @@ namespace ArchaeaMod
     public class Draw
     {
         public const float radian = 0.017f;
-        public float radians(float distance)
+        public static float radians(float distance)
         {
             return radian * (45f / distance);
         }

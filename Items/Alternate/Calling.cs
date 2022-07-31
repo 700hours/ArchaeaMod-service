@@ -218,7 +218,7 @@ namespace ArchaeaMod.Items.Alternate
         {
             if (distance != 0f)
             {
-                for (float r = 0f; r < distance; r += draw.radians(distance))
+                for (float r = 0f; r < distance; r += Draw.radians(distance))
                 {
                     Vector2 c = NPCs.ArchaeaNPC.AngleBased(Projectile.Center, r, distance) - Main.screenPosition;
                     Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X, (int)c.Y, 1, 1), Color.DodgerBlue * 0.50f);

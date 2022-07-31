@@ -698,13 +698,12 @@ namespace ArchaeaMod
                             break;
                         }
             }
-            Draw draw = new Draw();
             for (int k = i; k < i + width; k++)
                 for (int l = j; l < j + height; l++)
                     if (k < fort.GetLength(0) && l < fort.GetLength(1))
                         fort[index][k, l] = ID.Empty;
             for (float radius = 0; radius < height; radius++)
-                for (float r = -(float)Math.PI; r <= 0; r += draw.radians(radius))
+                for (float r = -(float)Math.PI; r <= 0; r += Draw.radians(radius))
                 {
                     Vector2 c = NPCs.ArchaeaNPC.AngleBased(new Vector2(i + width / 2, j + height / 2), r, radius);
                     if (c.X < fort.GetLength(0) && c.Y < fort.GetLength(1))
@@ -715,13 +714,12 @@ namespace ArchaeaMod
         public void CloudForm(int i, int j)
         {
             int width = 90;
-            var d = new Draw();
             for (int m = 0; m < width; m++)
                 for (int n = 0; n < width / 2; n++)
                 {
                     if (WorldGen.genRand.Next(25) == 0)
                         for (float k = 0; k < 12; k += 12 * Draw.radian)
-                            for (float r = 0f; r < Math.PI * 2f; r += d.radians(k))
+                            for (float r = 0f; r < Math.PI * 2f; r += Draw.radians(k))
                             {
                                 int cos = (int)(i + m + k * Math.Cos(r));
                                 int sine = (int)(j + n + k / 2f * Math.Sin(r));
