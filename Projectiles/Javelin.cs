@@ -40,19 +40,41 @@ namespace ArchaeaMod.Projectiles
         }
         public override bool PreAI()
         {
-            switch (ai)
+            switch ((int)Projectile.ai[0])
             {
-                case -1:
-                    Projectile.rotation = NPCs.ArchaeaNPC.AngleTo(owner.Center, Main.MouseWorld) + (float)(Math.PI / 4f);
-                    rotate = Projectile.rotation;
-                    rotate += (float)Math.PI / 4f;
-                    Projectile.position = new Vector2(ArchaeaItem.StartThrowX(owner), Projectile.position.Y - 16f);
-                    goto case 0;
                 case 0:
-                    ai = 0;
-                    break;
+                    ThrowAngle(); 
+                    for (int n = 0 ; n < 2; n++)
+                    {
+                        int index = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.position, Projectile.velocity, this.Type, Projectile.damage, Projectile.knockBack, Projectile.owner, 10, n);
+                        Main.projectile[index].localAI[0] = 1;
+                    }
+                    goto case 1;
+                case 1:
+                    Projectile.ai[0] = 1;
+                    return true;
+                case 10:
+                    if (Projectile.localAI[0] == 1)
+                    {
+                        ThrowAngle();
+                        int i = (int)Projectile.ai[1];
+                        double cos = 6f * (Math.Cos(NPCs.ArchaeaNPC.AngleTo(Main.player[Projectile.owner].Center, Main.MouseWorld) - (i == 0 ? -(Draw.radian * 10f) : Draw.radian * 10f)));
+                        double sine = 6f * (Math.Sin(NPCs.ArchaeaNPC.AngleTo(Main.player[Projectile.owner].Center, Main.MouseWorld) - (i == 0 ? -(Draw.radian * 10f) : Draw.radian * 10f)));
+                        Projectile.velocity = new Vector2((float)cos, (float)sine);
+                        Projectile.netUpdate = true;
+                        Projectile.localAI[0] = 2;
+                    }
+                    return true;
+                default:
+                    return true;
             }
-            return true;
+        }
+        private void ThrowAngle()
+        {
+            Projectile.rotation = NPCs.ArchaeaNPC.AngleTo(owner.Center, Main.MouseWorld) + (float)(Math.PI / 4f);
+            rotate = Projectile.rotation;
+            rotate += (float)Math.PI / 4f;
+            Projectile.position = new Vector2(ArchaeaItem.StartThrowX(owner), Projectile.position.Y - 16f);
         }
         private int time = 90;
         private float rotate;

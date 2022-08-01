@@ -375,7 +375,6 @@ namespace ArchaeaMod
         
         public override void PreUpdate()
         {
-            Color textColor = Color.Yellow;
             if (Main.dedServ || Effects.Barrier.barrier == null)
                 return;
             for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
@@ -384,9 +383,16 @@ namespace ArchaeaMod
             #region debug
             if (setModeStats)
             {
-                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Merged.Items.magno_spear>());
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Merged.Items.magno_book>());
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.m_shield>());
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.Armors.RustbaneHead>());
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.Armors.RustbanePlate>());
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.Armors.RustbaneLegs>());
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.r_Javelin>(), 250);
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.r_Tomohawk>(), 250);
                 setModeStats = false;
             }
+            Color textColor = Color.Yellow;
             if (!init)
             {
                 NPC.NewNPC(NPC.GetBossSpawnSource(Player.whoAmI), (int)Player.position.X, (int)Player.position.Y, ModNPCID.SkyBoss);
@@ -744,6 +750,20 @@ namespace ArchaeaMod
                 }
                 classChosen = true;
             }
+            if (Items.ArchaeaItem.ArmorSet(Player, ModContent.ItemType<Items.Armors.RustbaneHead>(), ModContent.ItemType<Items.Armors.RustbanePlate>(), ModContent.ItemType<Items.Armors.RustbaneLegs>()))
+            {
+                if ((int)Main.time % 10 == 0) 
+                {
+                    float radius = Main.rand.Next(100, 200);
+                    double angle = Math.PI * 2d * Main.rand.NextFloat();
+                    double cos  = Player.Center.X + radius * Math.Cos(angle);
+                    double sine = Player.Center.Y + radius * Math.Sin(angle);
+                    int index = Projectile.NewProjectile(Projectile.GetSource_None(), new Vector2((float)cos, (float)sine), Vector2.Zero, ModContent.ProjectileType<Projectiles.dust_diffusion>(), 50, 1f, Player.whoAmI, ModContent.DustType<Merged.Dusts.magno_dust>(), radius);
+                    Main.projectile[index].timeLeft = 200;
+                    Main.projectile[index].tileCollide = false;
+                    Main.projectile[index].localAI[0] = 10;
+                }
+            }
         }
 
         public override bool PreItemCheck()
@@ -925,6 +945,7 @@ namespace ArchaeaMod
             if (spawnMenu)
                 SpawnMenu();
             #region innactive draw testing
+            
             return;
             //var tex = ModContent.GetInstance<Items.Alternate.MagnoCannon>().tex;
             if (Items.Alternate.MagnoCannon.tex != null && Player.controlUseItem)

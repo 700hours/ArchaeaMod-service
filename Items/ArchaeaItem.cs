@@ -101,7 +101,7 @@ namespace ArchaeaMod.Items
         {
             if (player.releaseUseItem && player.controlUseItem && item.DamageType == DamageClass.Throwing)
             {
-                float range = 500f;
+                float range = 800f;
                 Target[] targets = Target.GetTargets(player, range).Where(t => t != null).ToArray();
                 if (targets == null)
                     return;
@@ -115,7 +115,6 @@ namespace ArchaeaMod.Items
                             Vector2 start = target.npc.Center - new Vector2(0f, 500f);
                             ArchaeaItem.Bolt(player, target.npc, ref start, 80);
                         }
-                        break;
                     }
                 }
                 //  Ancient
@@ -128,7 +127,6 @@ namespace ArchaeaMod.Items
                             Vector2 start = target.npc.Center - new Vector2(0f, 500f);
                             ArchaeaItem.Bolt(player, target.npc, ref start, 20);
                         }
-                        break;
                     }
                 }
             }

@@ -38,6 +38,10 @@ namespace ArchaeaMod.Items
             Item.consumable = true;
             Item.noUseGraphic = true;
         }
+        public override bool CanUseItem(Player player)
+        {
+            return player.ownedProjectileCounts[Item.shoot] < 1;
+        }
         public override void AddRecipes()
         {
             var r = CreateRecipe()

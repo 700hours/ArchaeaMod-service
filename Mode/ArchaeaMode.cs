@@ -97,8 +97,7 @@ namespace ArchaeaMod.Mode
             // Original ratio
             // float ratio = 500f / 9999f;
             // float result = value / ratio * scale;
-            int lifeMax2 = Main.LocalPlayer.statLifeMax2;
-            float ratio = (float)ArchaeaPlayer.ModeOffResetStats(lifeMax2) / ArchaeaPlayer.LifeMaxMode(lifeMax2);
+            float ratio = 500f / 999f;
             float result = value / ratio;
             switch (who)
             {
@@ -160,7 +159,6 @@ namespace ArchaeaMod.Mode
             DownedMagno;
         public override void NetSend(BinaryWriter writer)
         {
-            
             writer.Write(Start);
             writer.Write(Health);
             writer.Write(Mana);
@@ -245,7 +243,7 @@ namespace ArchaeaMod.Mode
             {
                 if (player.active)
                 {
-                    if (Health || player.statLifeMax >= ArchaeaMode.LifeCrystal(100))
+                    if (Health || player.statLifeMax >= ArchaeaMode.LifeCrystal(20))
                     {
                         unlock[health] = Color.Green;
                         multiplier -= scaling[health];
@@ -315,7 +313,7 @@ namespace ArchaeaMod.Mode
             {
                 if (player != null && player.active)
                 {
-                    if (Health || player.statLifeMax >= ArchaeaMode.LifeCrystal(100))
+                    if (Health || player.statLifeMax >= ArchaeaMode.LifeCrystal(20))
                     {
                         multiplier -= scaling[health];
                     }
@@ -343,7 +341,7 @@ namespace ArchaeaMod.Mode
             {
                 multiplier -= scaling[week];
             }
-            if (Crafting || ModContent.GetInstance<ModeTile>().tileProgress)
+            if (Crafting || ModContent.GetInstance<ModeTile>().tileProgress)          
             {
                 multiplier -= scaling[crafting];
             }
@@ -354,7 +352,7 @@ namespace ArchaeaMod.Mode
             multiplier = (float)Math.Round(Math.Abs(multiplier - 2f), 2);
             return multiplier;
         }
-    }
+}
     public class ModeToggle : ModSystem
     {
         public bool loading = true;

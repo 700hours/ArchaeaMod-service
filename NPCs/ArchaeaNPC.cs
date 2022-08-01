@@ -324,6 +324,10 @@ namespace ArchaeaMod.NPCs
             }
             return Main.player[Main.myPlayer];
         }
+        public static NPC FindClosestNPC(Player player, bool unlimited = false, float range = 300f)
+        {
+            return Main.npc.FirstOrDefault(t => Vector2.Distance(player.Center, t.Center) < range);
+        }
 
         public static Vector2 AngleToSpeed(float angle, float amount = 2f)
         {

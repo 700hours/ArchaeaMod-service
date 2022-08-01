@@ -32,9 +32,9 @@ namespace ArchaeaMod.Entities
             orbit = (float)Math.Round(orbit + (radian * Math.Min(player.statLifeMax / Math.Max(player.statLife, 1) + 2f, 6f)), 2);
             if (orbit >= Math.Round(Math.PI * 2f, 2))
                 orbit = 0f;
-            float cos = player.Center.X + (float)(radius * Math.Cos(start + orbit));
-            float sine = player.Center.Y + (float)(radius * Math.Sin(start + orbit));
-            Center = new Vector2(cos, sine);
+            double cos = player.Center.X + (float)(radius * ((float)player.statLife / player.statLifeMax2)) * Math.Cos(start + orbit);
+            double sine = player.Center.Y + (float)(radius * ((float)player.statLife / player.statLifeMax2)) * Math.Sin(start + orbit);
+            Center = new Vector2((float)cos, (float)sine);
             if (!player.active || Items.ArchaeaItem.NotEquipped(player, ModContent.ItemType<Items.m_shield>()))
                 Kill(true);
         }

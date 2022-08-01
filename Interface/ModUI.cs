@@ -136,12 +136,13 @@ namespace ArchaeaMod.Interface.ModUI
             }
             else
             {
-                float distance = 196f;
-                for (float r = 0f; r < distance; r += Draw.radians(distance))
-                {
-                    Vector2 c = NPCs.ArchaeaNPC.AngleBased(new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), r, distance);
-                    Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X - 1, (int)c.Y - 1, 2, 2), Color.White * 0.50f);
-                }
+                //  Way too laggy
+                //float distance = 196f;
+                //for (float r = 0f; r < distance; r += Draw.radians(distance))
+                //{
+                //    Vector2 c = NPCs.ArchaeaNPC.AngleBased(new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), r, distance);
+                //    Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X - 1, (int)c.Y - 1, 2, 2), Color.White * 0.50f);
+                //}
                 for (int i = 0; i < categories.Length; i++)
                 {
                     sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, mainOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), mainOptions[i].color);

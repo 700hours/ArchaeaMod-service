@@ -36,6 +36,10 @@ namespace ArchaeaMod.Items.Armors
         {
             player.GetDamage(DamageClass.Throwing) *= 1.20f;
         }
+        public override void UpdateArmorSet(Player player)
+        {
+            player.setBonus = "Emanates rusty dust storm";
+        }
         public override void AddRecipes()
         {
             CreateRecipe()

@@ -389,8 +389,13 @@ version 1.1.4.7 -> 1.2.5.8
 # Removed
 -> Biome drop from a certain NPC
 
+version 1.2.5.8 -> 1.2.5.9
+==========================
+# Fixed
+* A bunch of references that were not dedicated-server friendly
+
 [NIGHTLY BUILD]
-version 1.2.5.8 -> 1.2.5.10
+version 1.2.5.9 -> 1.2.5.10
 ==========================
 # Fixed?
 -> Patch for Archaea Mode setting player life to max when enabled
@@ -412,3 +417,18 @@ version 1.2.5.10 -> 1.2.5.11
 -> Pre save and quit revert of player's health to vanilla values
 -> Progress check list persistence
 -> Class limiting for skill points
+
+version 1.2.5.11 -> 1.2.6.12
+============================
+# New Item AI
+-> Shield orbit radius shrinks based on player lifeStat
+-> Rustbane armor set bonus is a rust storm
+-> Magno book shoots three projectiles instead of one + new effect
+-> Rust Javelin creates three projectiles when thrown
+-> Rust Tomohawk creates one projectile that orbits player before attack
+# Changed
+-> Tab items are textures instead of numbers
+-> Draw radians method to static field
+-> Magno book damage from 10 to 28
+# Fixed
+-> Scaling not occuring in MP with SetDefaults

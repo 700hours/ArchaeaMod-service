@@ -28,7 +28,7 @@ namespace ArchaeaMod.Merged.Items
             Item.scale = 1f;
             Item.useTime = 20;
             Item.useAnimation = 20;
-            Item.damage = 15;
+            Item.damage = 28;
             Item.mana = 8;
             Item.crit = 7;
             Item.useStyle = 1;
@@ -51,7 +51,8 @@ namespace ArchaeaMod.Merged.Items
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             SoundEngine.PlaySound(SoundID.Item14, player.Center);
-            Proj1 = Projectile.NewProjectile(Projectile.GetSource_None(), player.position + new Vector2(player.width / 2, player.height / 2), Vector2.Zero, ModContent.ProjectileType<Merged.Projectiles.magno_orb>(), (int)(15f * player.GetDamage(DamageClass.Magic).Multiplicative), 4f, player.whoAmI, 0f, 0f);
+            Proj1 = Projectile.NewProjectile(Projectile.GetSource_None(), player.position + new Vector2(player.width / 2, player.height / 2), Vector2.Zero, ModContent.ProjectileType<Merged.Projectiles.magno_orb>(), (int)(Item.damage * player.GetDamage(DamageClass.Magic).Multiplicative), 4f, player.whoAmI, -1f);
+            Main.projectile[Proj1].ai[1] = Proj1;
             Main.projectile[Proj1].netUpdate = true;
             return true;
         }

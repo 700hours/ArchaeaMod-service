@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using System.Drawing;
 
 namespace ArchaeaMod.Effects
 {
@@ -36,10 +37,78 @@ namespace ArchaeaMod.Effects
     public class Fx
     {
         public static Particle[] particle = new Particle[20];
-        #pragma warning disable CA1416 // Validate platform compatibility
-        public static MemoryStream GenerateImage(byte index, int width, int height, bool inUse, Color transparency, bool style = true)
+#pragma warning disable CA1416 // Validate platform compatibility
+        public static PointF[] GenerateImage(int width, int height, bool inUse, Color transparency, bool style = true)
         {
             PointF[] oldPoints = new PointF[] { };
+            int distance = width;
+            #region waveform
+            var data = _Buffer(width);
+
+            float num = data.Max();
+            float num2 = data.Min();
+            float num3 = data.Average();
+            int[] indexArray = new int[3];
+            for (int i = 0; i < data.Length; i++)
+            {
+                if (num == data[i])
+                    indexArray[0] = i;
+                if (num2 == data[i])
+                    indexArray[1] = i;
+                if (num3 == data[i])
+                    indexArray[2] = i;
+            }
+            int length = indexArray.Max() - indexArray.Min();
+            if (length + indexArray[2] < width)
+                length += indexArray[2];
+
+            PointF[] points = new PointF[width];
+            if (inUse)
+            {
+                for (int i = 0; i < points.Length; i += points.Length / Math.Max(length, 1))
+                {
+                    float y = height / 2 * (float)(data[i] * (style ? Math.Sin((float)i / width * Math.PI) : 1f)) + height / 2;
+                    points[i] = new PointF(Math.Min(i, points.Length), y);
+                }
+                PointF begin = new PointF();
+                bool flag = false;
+                int num4 = 0;
+                for (int i = 1; i < points.Length; i++)
+                {
+                    if (points[i] == default(PointF) && !flag)
+                    {
+                        begin = points[i - 1];
+                        num4 = i;
+                        flag = true;
+                    }
+                    if ((points[i] != default(PointF) || i == points.Length - 2) && flag)
+                    {
+                        for (int j = num4; j < i; j++)
+                        {
+                            points[j] = new PointF(begin.X, begin.Y);
+                        }
+                        flag = false;
+                    }
+                }
+                for (int i = points.Length - 1; i > 0; i--)
+                {
+                    if (points[i].X == 0f)
+                        points[i].X = i;
+                    if (points[i].Y == 0f)
+                        points[i].Y = points[i - 1].Y;
+                }
+                points[points.Length - 1] = points[points.Length - 2];
+            }
+            if (points.Length > 1)
+            {
+                oldPoints = points;
+                return points;
+            }
+            return new PointF[] { new PointF(0, 0) };
+            #endregion
+        }
+        public static MemoryStream GenerateImage(byte index, int width, int height, Brush bg, Color transparency, PointF[] point = null)
+        {
             int distance = width;
             MemoryStream mem = new MemoryStream();
 
@@ -50,79 +119,20 @@ namespace ArchaeaMod.Effects
                     switch (index)
                     {
                         case FxID.WaveForm:
-                            #region waveform
-                            var data = _Buffer(width);
-
-                            float num = data.Max();
-                            float num2 = data.Min();
-                            float num3 = data.Average();
-                            int[] indexArray = new int[3];
-                            for (int i = 0; i < data.Length; i++)
+                            graphic.FillRectangle(bg, new System.Drawing.Rectangle(0, 0, width, height));
+                            if (point.Length > 1)
                             {
-                                if (num == data[i])
-                                    indexArray[0] = i;
-                                if (num2 == data[i])
-                                    indexArray[1] = i;
-                                if (num3 == data[i])
-                                    indexArray[2] = i;
+                                var brush = new System.Drawing.TextureBrush(Image.FromFile(@"C:\Users\Makoto\Documents\My Games\Terraria\tModLoader\ModSources\ArchaeaMod\Gores\chain.png"));
+                                var pen = new System.Drawing.Pen(brush);
+                                graphic.DrawCurve(pen, point);
                             }
-                            int length = indexArray.Max() - indexArray.Min();
-                            if (length + indexArray[2] < width)
-                                length += indexArray[2];
-
-                            PointF[] points = new PointF[width];
-                            if (inUse)
-                            {
-                                for (int i = 0; i < points.Length; i += points.Length / Math.Max(length, 1))
-                                {
-                                    float y = height / 2 * (float)(data[i] * (style ? Math.Sin((float)i / width * Math.PI) : 1f)) + height / 2;
-                                    points[i] = new PointF(Math.Min(i, points.Length), y);
-                                }
-                                PointF begin = new PointF();
-                                bool flag = false;
-                                int num4 = 0;
-                                for (int i = 1; i < points.Length; i++)
-                                {
-                                    if (points[i] == default(PointF) && !flag)
-                                    {
-                                        begin = points[i - 1];
-                                        num4 = i;
-                                        flag = true;
-                                    }
-                                    if ((points[i] != default(PointF) || i == points.Length - 2) && flag)
-                                    {
-                                        for (int j = num4; j < i; j++)
-                                        {
-                                            points[j] = new PointF(begin.X, begin.Y);
-                                        }
-                                        flag = false;
-                                    }
-                                }
-                                for (int i = points.Length - 1; i > 0; i--)
-                                {
-                                    if (points[i].X == 0f)
-                                        points[i].X = i;
-                                    if (points[i].Y == 0f)
-                                        points[i].Y = points[i - 1].Y;
-                                }
-                                points[points.Length - 1] = points[points.Length - 2];
-                            }
-                            graphic.FillRectangle(System.Drawing.Brushes.Black, new System.Drawing.Rectangle(0, 0, width, height));
-                            if (points.Length > 1)
-                            {
-                                var pen = new System.Drawing.Pen(System.Drawing.Brushes.White);
-                                pen.Width = 1;
-                                graphic.DrawCurve(pen, points);
-                                oldPoints = points;
-                            }
-                            #endregion
                             break;
                         case FxID.Polygon:
-
                             break;
                     }
                     bitmap.MakeTransparent(transparency);
                     bitmap.Save(mem, System.Drawing.Imaging.ImageFormat.Png);
+                    bitmap.Save("magno cannon effect.bmp");
                     return mem;
                 }
             }
