@@ -210,6 +210,7 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
+            npcLoot.Add(ItemDropRule.OneFromOptions(1, new[] { ModItemID.GhostlyChains, ModItemID.PossessedMusket, ModItemID.PossessedSpiculum }));
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.n_Staff>()));
             npcLoot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<Items.acc_cluster>(), 2, 2));
         }

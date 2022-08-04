@@ -8,6 +8,7 @@ namespace ArchaeaMod.Merged.Items
 {
     public class magno_spear : ModItem
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Rubidium Staff");

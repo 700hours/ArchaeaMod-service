@@ -17,6 +17,7 @@ namespace ArchaeaMod.Items
 {
     public class MagnoGun_3 : ModItem
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Rubidium Gun");

@@ -44,6 +44,19 @@ namespace ArchaeaMod.Items
             Merged.Projectiles.cinnabar_arrow.SyncProj(Main.projectile[index]);
             return false;
         }
+        public override bool PreDrawInInventory(SpriteBatch sb, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            Texture2D tex = Mod.Assets.Request<Texture2D>("Gores/MagnoGun_3").Value;
+            sb.Draw(tex, position, null, Color.SkyBlue * 0.9f, 0f, default, scale, SpriteEffects.None, 0f);
+            return false;
+        }
+        public override bool PreDrawInWorld(SpriteBatch sb, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+        {
+            Texture2D tex = Mod.Assets.Request<Texture2D>("Gores/MagnoGun_3").Value;
+            sb.Draw(tex, Item.position - Main.screenPosition, new Rectangle(0, 0, tex.Width, tex.Height), Color.SkyBlue * 0.9f, 0f, default, scale, SpriteEffects.None, 0f);
+            return false;
+        }
+        public override string Texture => "ArchaeaMod/Gores/MagnoGun_3";
         public override Vector2? HoldoutOffset() => new Vector2(-3, 0);
     }
 }

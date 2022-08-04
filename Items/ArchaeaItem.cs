@@ -28,6 +28,9 @@ namespace ArchaeaMod
         {
             get { return ModContent.ItemType<Sabre>(); }
         }
+        public static int PossessedMusket => ModContent.ItemType<Items.PossessedMusket>();
+        public static int PossessedSpiculum => ModContent.ItemType<Items.PossessedSpiculum>();
+        public static int GhostlyChains => ModContent.ItemType<Items.GhostlyChains>();
     }
 }
 namespace ArchaeaMod.Items

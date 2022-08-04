@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -88,6 +89,7 @@ namespace ArchaeaMod.Projectiles
             if (!npc.active || npc.life <= 0)
                 Projectile.Kill();
             else Projectile.timeLeft = 60;
+            Projectile.rotation = Projectile.velocity.ToRotation();
             Vector2 longest = ground.OrderBy(t => t.Distance(npc.Center)).ToArray()[0];
             float distance = Vector2.Distance(longest, npc.Center);
             if (distance > 150f)
@@ -97,14 +99,22 @@ namespace ArchaeaMod.Projectiles
                 if (directionX == -1 && npc.velocity.X < 0f || directionX == 1 && npc.velocity.X > 0f)
                 {
                     npc.velocity.X = -directionX * 2f;
+                    npc.netUpdate = true;
                 }
                 if (directionY == -1 && npc.velocity.Y < 0f || directionY == 1 && npc.velocity.Y > 0f)
                 {
                     npc.velocity.Y = -directionY * 2f;
+                    npc.netUpdate = true;
                 }
             }
             if (Projectile.velocity.X < 0f && Projectile.oldVelocity.X >= 0f || Projectile.velocity.X > 0f && Projectile.oldVelocity.X <= 0f || Projectile.velocity.Y < 0f && Projectile.oldVelocity.Y >= 0f || Projectile.velocity.Y > 0f && Projectile.oldVelocity.Y <= 0f)
                 Projectile.netUpdate = true;
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D tex = Mod.Assets.Request<Texture2D>("Gores/GhostlyChains").Value;
+            sb.Draw(tex, Projectile.position - Main.screenPosition, null, Color.SkyBlue * 0.9f, Projectile.rotation, new Vector2(tex.Width, tex.Height), 1.1f, SpriteEffects.None, 0f);
+            return false;
         }
         public override void PostDraw(Color lightColor)
         {
