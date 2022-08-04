@@ -21,7 +21,7 @@ namespace ArchaeaMod.Items.Armors
             Item.width = 22;
             Item.height = 18;
             Item.rare = 3;
-            Item.defense = 10;
+            Item.defense = 7;
             Item.value = 2000;
         }
         public override void AddRecipes()

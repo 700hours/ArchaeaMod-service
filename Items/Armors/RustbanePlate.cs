@@ -22,23 +22,12 @@ namespace ArchaeaMod.Items.Armors
             Item.width = 34;
             Item.height = 20;
             Item.rare = 3;
-            Item.defense = 18;
+            Item.defense = 14;
             Item.value = 4000;
-        }
-        public override bool IsArmorSet(Item head, Item body, Item legs)
-        {
-            return
-            head == ModContent.GetInstance<RustbaneHead>().Item &&
-            body == Item &&
-            legs == ModContent.GetInstance<RustbaneLegs>().Item;
         }
         public override void UpdateEquip(Player player)
         {
             player.GetDamage(DamageClass.Throwing) *= 1.20f;
-        }
-        public override void UpdateArmorSet(Player player)
-        {
-            player.setBonus = "Emanates rusty dust storm";
         }
         public override void AddRecipes()
         {

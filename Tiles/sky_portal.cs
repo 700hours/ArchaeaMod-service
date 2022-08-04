@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -35,7 +36,7 @@ namespace ArchaeaMod.Tiles
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num)
-        {
+        {                            
             fail = true;
             num = 0;
         }
@@ -51,6 +52,23 @@ namespace ArchaeaMod.Tiles
         }
         public override bool CanExplode(int i, int j)
         {
+            return false;
+        }
+        float ticks = -300;
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            if (ticks++ >= 300)
+                ticks = -300;
+            if ((int)Main.time % 10 == 0)
+            {
+                int x = i * 16 + 24;
+                int y = j * 16 + 24;
+                Vector2 v2 = new Vector2(x, y);
+                double radius = Vector2.Lerp(new Vector2(100, 0), new Vector2(300, 0), Math.Abs(ticks)).X;
+                double cos  = v2.X + radius * Math.Cos(Math.PI * 2f * Main.rand.NextFloat());
+                double sine = v2.Y + radius * Math.Sin(Math.PI * 2f * Main.rand.NextFloat());
+                ArchaeaPlayer.RadialDustDiffusion(v2, cos, sine, (float)radius, ModContent.DustType<Dusts.Shimmer_1>(), 5, true);
+            }
             return false;
         }
     }

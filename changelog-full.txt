@@ -432,3 +432,29 @@ version 1.2.5.11 -> 1.2.6.12
 -> Magno book damage from 10 to 28
 # Fixed
 -> Scaling not occuring in MP with SetDefaults
+
+version 1.2.6.12 -> 1.3.7.13
+============================
+# Added
+-> Side quests for each class
+-> Stun debuff
+-> New graphic for Acrobat class
+-> Class quest tab
+
+version 1.3.7.13 -> 1.3.8.14
+============================
+# Added
+-> Short dialog signifying trait gained
+# Re-added
+-> Added a legacy sky structure
+-> Dust particles around landmark
+-> Ranged Rubidium weapon
+# Fixed
+-> Magno book projectiles
+-> All player health scaling with mode set on or off
+-> Mage trait text
+-> Resentful spirits following players to spawn
+-> Well structure generating incorrectly
+# Changed
+-> Halls structure creation with different tiles
+-> Reduced Rustbane defense and set bonus by 25%

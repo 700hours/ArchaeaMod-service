@@ -519,10 +519,6 @@ namespace ArchaeaMod.Mode
                 npc.netUpdate = true;
             }
         }
-        //  Runs Server side in dedicated servers
-        public override void OnSpawn(NPC npc, IEntitySource source)
-        {
-        }
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)

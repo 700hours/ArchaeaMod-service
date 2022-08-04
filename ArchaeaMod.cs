@@ -9,6 +9,7 @@ using ArchaeaMod.Entities;
 using Terraria.ID;
 using ArchaeaMod.Mode;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace ArchaeaMod
 {
@@ -20,7 +21,9 @@ namespace ArchaeaMod
         public static string magnoHead = "ArchaeaMod/Gores/magno_head";
         public static string skyHead = "ArchaeaMod/Gores/sky_head";
         //public static ModHotKey[] macro = new ModHotKey[5];
-        public static ModKeybind progressKey; 
+        public static ModKeybind progressKey;
+        public static ModKeybind leapBind;
+        public static ModKeybind leapAttackBind;
         public override void Load()
         {
             AddBossHeadTexture(magnoHead, ModNPCID.MagnoliacHead);
@@ -31,11 +34,30 @@ namespace ArchaeaMod
                 MusicLoader.AddMusicBox(this, MusicLoader.GetMusicSlot(this, "Sounds/Music/Magno_Biome"), ModContent.ItemType<Items.Tiles.mbox_magno_1>(), ModContent.TileType<Tiles.music_boxes>(), 36);
                 MusicLoader.AddMusicBox(this, MusicLoader.GetMusicSlot(this, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma"), ModContent.ItemType<Items.Tiles.mbox_magno_2>(), ModContent.TileType<Tiles.music_boxes_alt>(), 36);
             }
-            progressKey = KeybindLoader.RegisterKeybind(this, "Progress diaglog visible", Keys.None);
+            progressKey    = KeybindLoader.RegisterKeybind(this, "Progress diaglog visible", Keys.None);
+            leapBind       = KeybindLoader.RegisterKeybind(this, "Melee class leap", Keys.Space);
+            leapAttackBind = KeybindLoader.RegisterKeybind(this, "Melee class leap attack", Keys.None);
             //for (int i = 0; i < macro.Length; i++)
             //{
             //    macro[i] = RegisterHotKey($"Macro {i + 1}", "");
             //}
+        }
+        //  Ported from tUserInterface Element.Drag()
+        public static Vector2 Impact(Entity entity, Rectangle hitbox)
+        {
+            Point point = entity.position.ToPoint();
+            Point relative = RelativeMouse(hitbox, entity.position.ToPoint());
+            if (hitbox.Contains(point))
+            {
+                return new Vector2((int)entity.position.X - relative.X, (int)entity.position.Y - relative.Y);
+            }
+            return entity.position;
+        }
+        private static Point RelativeMouse(Rectangle element, Point position)
+        {
+            int x = position.X - element.Left;
+            int y = position.Y - element.Top;
+            return new Point(x, y);
         }
         //public void SetModInfo(out string name, ref ModProperties properties)
         //{
@@ -45,7 +67,7 @@ namespace ArchaeaMod
         //    properties.AutoloadGores = true;
         //    properties.AutoloadSounds = true;
         //}
-        
+
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
             NetHandler.Receive(reader);
@@ -249,9 +271,18 @@ namespace ArchaeaMod
                 case Packet.ModeProgress:
                     break;
                 case Packet.ModeNPCLife:
-                    if (Main.netMode == NetmodeID.MultiplayerClient) {
+                    if (Main.netMode == NetmodeID.MultiplayerClient) 
+                    {
                         Main.npc[t].lifeMax = (int)f;
                         Main.npc[t].life = (int)f;
+                    }
+                    break;
+                case Packet.SetModeLife:
+                    if (Main.netMode == NetmodeID.Server)
+                        NetHandler.Send(Packet.SetModeLife, b: b);
+                    else
+                    {
+                        Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SetModeStats(b);
                     }
                     break;
             }
@@ -259,24 +290,27 @@ namespace ArchaeaMod
     }
     public class Packet
     {
-        public const byte
-            WorldTime = 1,
-            SpawnNPC = 2,
-            SpawnItem = 3,
-            TeleportPlayer = 4,
-            StrikeNPC = 5,
-            ArchaeaMode = 6,
-            SyncClass = 7,
-            SyncInput = 8,
-            SyncEntity = 9,
-            Debug = 10,
-            TileExplode = 11,
-            DownedMagno = 12,
-            ModOptions = 13,
-            ModeScaling = 14,
-            TileProgress = 15,
-            CordonedBiomes = 16,
-            ModeProgress = 17,
-            ModeNPCLife = 18;
+        public const byte WorldTime = 1;
+        public const byte SpawnNPC = 2;
+        public const byte SpawnItem = 3;
+        public const byte TeleportPlayer = 4;
+        public const byte StrikeNPC = 5;
+        public const byte ArchaeaMode = 6;
+        [Obsolete("This packet ended up being unecessary.")]
+        public const byte SyncClass = 7;
+        public const byte SyncInput = 8;
+        public const byte SyncEntity = 9;
+        public const byte Debug = 10;
+        public const byte TileExplode = 11;
+        public const byte DownedMagno = 12;
+        public const byte ModOptions = 13;
+        public const byte ModeScaling = 14;
+        public const byte TileProgress = 15;
+        public const byte CordonedBiomes = 16;
+        [Obsolete("Handled in a different network hook.")]
+        public const byte ModeProgress = 17;
+        [Obsolete("Mode scaling happens in GlobalNPC.SetDefaults().")]
+        public const byte ModeNPCLife = 18;
+        public const byte SetModeLife = 19;
     }
 }

@@ -53,6 +53,9 @@ namespace ArchaeaMod.NPCs
         private Vector2 newPosition;
         public override bool PreAI()
         {
+            var plr = target().GetModPlayer<ArchaeaPlayer>();
+            if (!plr.SkyFort && !plr.SkyPortal)
+                NPC.active = false;
             if (time++ > frameCount * frameTime)
                 time = 0;
             if (!chosenTexture)

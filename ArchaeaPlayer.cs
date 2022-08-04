@@ -25,10 +25,11 @@ using ArchaeaMod.Progression;
 using Terraria.DataStructures;
 using Terraria.Audio;
 using System.Timers;
+using tUserInterface.Extension;
 
 namespace ArchaeaMod
 {
-    public static class ClassID
+    public sealed class ClassID
     {
         public const int
             None = 0,
@@ -40,6 +41,19 @@ namespace ArchaeaMod
             Throwing = -10,
             Summoner = 4;
     }
+    public sealed class PylonID
+    {
+        public const int 
+            Desert = 0,
+            Hallow = 1,
+            Jungle = 2,
+            Mushroom = 3,
+            Ocean = 4,
+            Purity = 5,
+            Snow = 6,
+            Underground = 7,
+            Victory = 8;
+    }
     public class ArchaeaPlayer : ModPlayer
     {
         #region biome
@@ -47,9 +61,121 @@ namespace ArchaeaMod
         public bool SkyFort     => Player.InModBiome<SkyFortBiome>();
         public bool SkyPortal   => Player.InModBiome<SkyFortPortalBiome>();
         #endregion
+        //  Class type
         public int classChoice = 0;
         public int playerUID = 0;
+        
+        //  Stat and trait
+        public int remainingStat;
         public int overallMaxStat = 0;
+        private int breathTimer;
+        private const int breathTimerMax = 180;
+        public int[] spentStat = new int[10];
+        public bool[] trait = new bool[30];
+        public int placedTiles = 0;
+        public bool[] placedPylon = new bool[9];
+
+        //  Misc
+        private bool start;
+        public bool debugMenu;
+        public bool spawnMenu;
+        private bool setInitMode = true;
+        private bool setModeStats = true;
+        private bool classChosen;
+        private const int maxTime = 360;
+        private int effectTime = maxTime;
+        private int boundsCheck;
+        private float darkAlpha = 0f;
+        private Action<float, float> method;
+        public bool classChecked;
+        Effects.Polygon polygon = new Effects.Polygon();
+
+        //  Stat variables
+        //  Increase
+        public float arrowSpeed = 1f;
+        public float jumpHeight = 1f;
+        public float attackSpeed = 1f;
+        public float moveSpeed = 1f;
+        public int breathTime = 1;
+        public int toughness = 1;
+        public float damageBuff = 1f;
+        //  Decrease
+        public float merchantDiscount = 1f;
+        public float percentDamageTaken = 1f;
+        public float ammoReduction = 1f;
+
+        //  More trait variables
+        private int TRAIT_TIME_MaxDirtStack = 0;
+        private int TRAIT_TIME_MAX_MaxDirtStack = 60 * 60 * 60 * 120; // Frame rate, Seconds, Minutes, Hours
+        public int TRAIT_PlantedMushroom = 0;
+        public int TRAIT_PlacedRails = 0;
+        public int TRAIT_PlacedBricks = 0;
+        public int TRAIT_PlacedPylon = 0;
+
+        //  Biome bounds
+        private bool outOfBounds;
+        private bool[] zones = new bool[index];
+        private const int index = 12;
+        private Vector2 oldPosition;
+
+        //  Spawn menu debugging
+        private bool initMenu;
+        private string[] label;
+        private Rectangle box;
+        private TextBox[] input;
+        private Button[] button;
+        
+        public override void clientClone(ModPlayer clientClone)
+        {
+            ArchaeaPlayer modPlayer = (ArchaeaPlayer)clientClone;
+            //  Trait variables
+            modPlayer.trait = trait;
+            modPlayer.placedPylon = placedPylon;
+            modPlayer.placedTiles = placedTiles;
+            modPlayer.TRAIT_PlacedBricks = TRAIT_PlacedBricks;
+            modPlayer.TRAIT_PlacedRails = TRAIT_PlacedRails;
+            modPlayer.TRAIT_PlantedMushroom = TRAIT_PlantedMushroom;
+            modPlayer.TRAIT_TIME_MaxDirtStack = TRAIT_TIME_MaxDirtStack;
+            //  Increase
+            modPlayer.arrowSpeed = arrowSpeed;
+            modPlayer.jumpHeight = jumpHeight;
+            modPlayer.attackSpeed = attackSpeed;
+            modPlayer.moveSpeed = moveSpeed;
+            modPlayer.breathTime = breathTime;
+            modPlayer.toughness = toughness;
+            modPlayer.damageBuff = damageBuff;
+            //  Decrease
+            modPlayer.merchantDiscount = merchantDiscount;
+            modPlayer.percentDamageTaken = percentDamageTaken;
+            modPlayer.ammoReduction = ammoReduction;
+            //  End
+            clientClone = modPlayer;
+        }
+        public override void SendClientChanges(ModPlayer clientPlayer)
+        {
+            ArchaeaPlayer modPlayer = (ArchaeaPlayer)clientPlayer;
+            //  Traits variables
+            trait = modPlayer.trait;
+            placedPylon = modPlayer.placedPylon;
+            placedTiles = modPlayer.placedTiles;
+            TRAIT_PlacedBricks = modPlayer.TRAIT_PlacedBricks;
+            TRAIT_PlacedRails = modPlayer.TRAIT_PlacedRails;
+            TRAIT_PlantedMushroom = modPlayer.TRAIT_PlantedMushroom;
+            TRAIT_TIME_MaxDirtStack = modPlayer.TRAIT_TIME_MaxDirtStack;
+            //  Increase
+            arrowSpeed = modPlayer.arrowSpeed;
+            jumpHeight = modPlayer.jumpHeight;
+            attackSpeed = modPlayer.attackSpeed;
+            moveSpeed = modPlayer.moveSpeed;
+            breathTime = modPlayer.breathTime;
+            toughness = modPlayer.toughness;
+            damageBuff = modPlayer.damageBuff;
+            //  Decrease
+            merchantDiscount = modPlayer.merchantDiscount;
+            percentDamageTaken = modPlayer.percentDamageTaken;
+            ammoReduction = modPlayer.ammoReduction;
+        }
+
         private void InitStatRemaining()
         {
             int num = 0;
@@ -77,6 +203,24 @@ namespace ArchaeaMod
             spentStat[7] = tag.GetInt("MerchantDiscount");
             spentStat[8] = tag.GetInt("PercentDamageTaken");
             spentStat[9] = tag.GetInt("AmmoReduction");
+            //  Class trait requirements
+            placedTiles = tag.GetInt("placedTiles");
+            TRAIT_PlacedBricks = tag.GetInt("placedBricks");
+            TRAIT_PlacedRails = tag.GetInt("placedRails");
+            TRAIT_PlantedMushroom = tag.GetInt("plantedMushroom");
+            placedPylon[PylonID.Desert] = tag.GetBool("desertPylon");
+            placedPylon[PylonID.Hallow] = tag.GetBool("hallowPylon");
+            placedPylon[PylonID.Jungle] = tag.GetBool("junglePylon");
+            placedPylon[PylonID.Mushroom] = tag.GetBool("mushroomPylon");
+            placedPylon[PylonID.Ocean] = tag.GetBool("oceanPylon");
+            placedPylon[PylonID.Purity] = tag.GetBool("purityPylon");
+            placedPylon[PylonID.Snow] = tag.GetBool("snowPylon");
+            placedPylon[PylonID.Underground] = tag.GetBool("undergroundPylon");
+            placedPylon[PylonID.Victory] = tag.GetBool("victoryPylon");
+            for (int i = 0; i < trait.Length; i++)
+            {
+                trait[i] = tag.GetBool($"trait{i}");
+            }
         }
         public override void SaveData(TagCompound tag)
         {
@@ -94,9 +238,71 @@ namespace ArchaeaMod
             tag.Add("MerchantDiscount", spentStat[7]);
             tag.Add("PercentDamageTaken", spentStat[8]);
             tag.Add("AmmoReduction", spentStat[9]);
+            //  Class trait requirements
+            tag.Add("placedTiles", placedTiles);
+            tag.Add("placedRails", TRAIT_PlacedRails);
+            tag.Add("placedBricks", TRAIT_PlacedBricks);
+            tag.Add("plantedMushroom", TRAIT_PlantedMushroom);
+            tag.Add("desertPylon", placedPylon[PylonID.Desert]);
+            tag.Add("hallowPylon", placedPylon[PylonID.Hallow]);
+            tag.Add("junglePylon", placedPylon[PylonID.Jungle]);
+            tag.Add("mushroomPylon", placedPylon[PylonID.Mushroom]);
+            tag.Add("oceanPylon", placedPylon[PylonID.Ocean]);
+            tag.Add("purityPylon", placedPylon[PylonID.Purity]);
+            tag.Add("snowPylon", placedPylon[PylonID.Snow]);
+            tag.Add("undergroundPylon", placedPylon[PylonID.Underground]);
+            tag.Add("victoryPylon", placedPylon[PylonID.Victory]);
+            for (int i = 0; i < trait.Length; i++)
+            {
+                tag.Add($"trait{i}", trait[i]);
+            }
         }
-        public int remainingStat;
-        public int[] spentStat = new int[10];
+       
+        public bool SetClassTrait(int index, int classID, bool flag)
+        {
+            if (trait[index])
+                return false;
+            if (flag && classID == classChoice)
+            {
+                trait[index] = flag;
+                //  Dialogue that displays general Trait acquired
+                ModContent.GetInstance<ModeUI>().ticks = 300;
+                SoundEngine.PlaySound(SoundID.Item4, Player.Center);
+                return true;
+            }
+            return false;
+        }
+        public static bool SetClassTrait(int index, int classID, bool flag, int whoAmI)
+        {
+            ArchaeaPlayer player = Main.player[whoAmI].GetModPlayer<ArchaeaPlayer>();
+            if (player.trait[index])
+                return false;
+            //  player.placedTiles needs to be moved to an Update
+            if (flag && classID == player.classChoice)
+            {
+                player.trait[index] = flag;
+                //  Dialogue that displays general Trait acquired
+                ModContent.GetInstance<ModeUI>().ticks = 300;
+                SoundEngine.PlaySound(SoundID.Item4, Main.player[whoAmI].Center);
+                return true;
+            }
+            return false;
+        }
+        public static bool CheckHasTrait(int index, int classID, int whoAmI)
+        {
+            if (whoAmI >= Main.player.Length || !Main.player[whoAmI].active)
+                return false;
+            ArchaeaPlayer player = Main.player[whoAmI].GetModPlayer<ArchaeaPlayer>();
+            if (player.classChoice == classID && player.trait[index])
+                return true;
+            return false;
+        }
+        public bool CheckHasTrait(int index, int classID)
+        {
+            if (classChoice == classID && trait[index])
+                return true;
+            return false;
+        }
         /* Unused
         public int ArrowSpeed;
         public int JumpHeight;
@@ -109,17 +315,11 @@ namespace ArchaeaMod
         public int PercentDamageTaken;
         public int AmmoReduction;
         */
-        private int breathTimer;
-        private const int breathTimerMax = 180;
-        private bool start;
-        public bool debugMenu;
-        public bool spawnMenu;
-        private bool setInitMode = true;
-        private bool setModeStats = true;
+
         public override bool CanUseItem(Item item)
         {
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
-                return true;
+                return ClassItemCheck();
             switch (item.type)
             {
                 case ItemID.LifeCrystal:
@@ -133,6 +333,11 @@ namespace ArchaeaMod
                     SoundEngine.PlaySound(SoundID.Item4, Player.Center);
                     if (Main.netMode == NetmodeID.MultiplayerClient)
                         NetMessage.SendData(MessageID.PlayerLifeMana);
+                    if ((ModContent.GetInstance<ModeToggle>().archaeaMode && Player.statLifeMax2 == 9999) 
+                        || Player.statLifeMax2 == 400)
+                    {
+                        SetClassTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, true);
+                    }
                     return false;
                 case ItemID.LifeFruit:
                     if (Player.statLifeMax < 9999)
@@ -147,6 +352,9 @@ namespace ArchaeaMod
                         NetMessage.SendData(MessageID.PlayerLifeMana);
                     return false;
                 case ItemID.ManaCrystal:
+                    if (Player.statManaMax2 == 200) {
+                        SetClassTrait(TraitID.MELEE_Flask, ClassID.Melee, true);
+                    }
                     break;
                     #region Mana capped at 400
                     if (Player.statManaMax < 999)
@@ -183,7 +391,7 @@ namespace ArchaeaMod
                     return false;
                     #endregion
             }
-            return true;
+            return ClassItemCheck();
         }
         public static int ModeOffResetStats(int lifeMax2)
         {
@@ -261,6 +469,10 @@ namespace ArchaeaMod
             }
         }
 
+        public void SetModeStats(bool modeFlag, int whoAmI)
+        {
+            NetHandler.Send(Packet.SetModeLife, 256, whoAmI, b: modeFlag);
+        }
         public void SetModeStats(bool modeFlag)
         {
             if (modeFlag)
@@ -290,8 +502,19 @@ namespace ArchaeaMod
                 breathTimer = breathTimerMax;
             }
         }
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
         {
+            if (CheckHasTrait(TraitID.MAGE_DamageReduce, ClassID.Magic))
+            {
+                damage = (int)(damage * 0.9f);
+            }
+            if (CheckHasTrait(TraitID.MAGE_NoKb, ClassID.Magic))
+            {
+                if (Main.rand.NextFloat() < 0.5f)
+                { 
+                    Player.noKnockback = true;
+                }
+            }
             damage = (int)(damage / percentDamageTaken);
             //- toughness / 2;
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
@@ -359,22 +582,115 @@ namespace ArchaeaMod
                 SpendStatPoint(i, spentStat[i], true);
             }
         }
-        //  Increase
-        public float arrowSpeed = 1f;
-        public float jumpHeight = 1f;
-        public float attackSpeed = 1f;
-        public float moveSpeed = 1f;
-        public int   breathTime = 1;              
-        public int   toughness = 1;
-        public float damageBuff = 1f;
-        //  Decrease
-        public float merchantDiscount = 1f;
-        public float percentDamageTaken = 1f;
-        public float ammoReduction = 1f;
         #endregion
-        
+
+        #region Melee Leap
+        private void Leap(int type, float speed, ref int tick)
+        {
+            if (Collision.SolidCollision(Player.position, Player.width, Player.height) || ground == Vector2.Zero)
+            {
+                ground = Vector2.Zero;
+                if (type == _LeapAttack)
+                {
+                    Helper.LeftMouse();
+                }
+                tick = 0;
+                return;
+            }
+            if (startDirection == 1)
+            {
+                leapStart += Draw.radian * speed;
+            }
+            else leapStart -= Draw.radian * speed;
+            Player.position = NPCs.ArchaeaNPC.AngleBased(ground, leapStart, Main.screenWidth / 4);
+        }
+        private Vector2 findGround(int direction = 1)
+        {
+            int x = (int)Main.screenPosition.X + (direction == 1 ? Main.screenWidth / 2 : 0);
+            int y = (int)Main.screenPosition.Y;
+            return NPCs.ArchaeaNPC.FindGround(Player, new Rectangle(x, y, Main.screenWidth / 2, Main.screenHeight));
+        }
+        private float angleDirection(int direction)
+        {
+            if (direction == 1)
+            {
+                return 90f * Draw.radian;
+            }
+            else return -180f * Draw.radian;
+        }
+        private void InitLeap(ref int tick)
+        {
+            startDirection = Player.direction;
+            leapStart = angleDirection(Player.direction);
+            ground = findGround(Player.direction);
+            tick = -1;
+        }
+        public const int _Leap = 0, _LeapAttack = 1;
+        Vector2 ground = Vector2.Zero;
+        int ticks, ticks2;
+        int leap, leap2;
+        int dash;
+        int startDirection;
+        int timeSinceLastDash;
+        float leapStart;
+        #endregion
         public override void PreUpdate()
         {
+            //  Leap and Leap attack
+            if (ground == Vector2.Zero)
+            {
+                if (leap > 0 && leap2 > 0)
+                {
+                    if (ticks++ > 120)
+                    {
+                        leap = 0;
+                        leap2 = 0;
+                    }
+                }
+                if (CheckHasTrait(TraitID.MELEE_Leap, ClassID.Melee) && ArchaeaMain.leapBind.JustPressed)
+                {
+                    leap++;
+                }
+                if (CheckHasTrait(TraitID.MELEE_LeapAttack, ClassID.Melee) && ArchaeaMain.leapAttackBind.JustPressed)
+                {
+                    leap2++;
+                }
+            }
+            if (leap >= 2)
+                InitLeap(ref leap);
+            if (leap2 >= 2)
+                InitLeap(ref leap2);
+            if (ground != Vector2.Zero)
+            {
+                if (leap is -1)
+                    Leap(_Leap, 1f, ref leap);
+                if (leap2 is -1)
+                    Leap(_LeapAttack, 1.5f, ref leap2);
+            }
+            //  Dash trait
+            if (CheckHasTrait(TraitID.ALL_Dash, ClassID.All))
+            {
+                if (timeSinceLastDash < 600)
+                    timeSinceLastDash++;
+                if (ticks2++ > 90)
+                {
+                    ticks = 0;
+                    dash = 0;
+                }
+                if (timeSinceLastDash > 180)
+                { 
+                    if (Player.releaseLeft && Player.controlLeft)
+                    {
+                        dash++;
+                    }
+                    if (dash >= 2)
+                    {
+                        Player.velocity.X -= -(Player.direction * Player.moveSpeed * 4f);
+                        timeSinceLastDash = 0;
+                    }
+                }
+            }
+
             if (Main.dedServ || Effects.Barrier.barrier == null)
                 return;
             for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
@@ -383,13 +699,10 @@ namespace ArchaeaMod
             #region debug
             if (setModeStats)
             {
-                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Merged.Items.magno_book>());
-                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.m_shield>());
-                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.Armors.RustbaneHead>());
-                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.Armors.RustbanePlate>());
-                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.Armors.RustbaneLegs>());
-                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.r_Javelin>(), 250);
-                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.r_Tomohawk>(), 250);
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.MagnoGun_3>());
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.GhostlyChains>());
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.PossessedMusket>());
+                Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.PossessedSpiculum>());
                 setModeStats = false;
             }
             Color textColor = Color.Yellow;
@@ -683,8 +996,23 @@ namespace ArchaeaMod
             return Main.keyState.IsKeyDown(key);
         }
 
+        public override void PreUpdateMovement()
+        {
+            if (CheckHasTrait(TraitID.ALL_IncJumpHeight, ClassID.All))
+            { 
+                Player.jumpSpeed *= 1.25f;
+            }
+        }
         public override void PostUpdateEquips()
         {
+            if (CheckHasTrait(TraitID.ALL_TenDefense, ClassID.All))
+            {
+                Player.statDefense += 10;
+            }
+            if (CheckHasTrait(TraitID.SUMMONER_PlusCount, ClassID.Summoner))
+            {
+                Player.maxMinions += 2;
+            }
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return;
             float ratio = 100f / 500f;
@@ -701,13 +1029,51 @@ namespace ArchaeaMod
                 }
             }
         }
+        public override void ModifyManaCost(Item item, ref float reduce, ref float mult)
+        {
+            if (CheckHasTrait(TraitID.MAGE_DecreaseCost, ClassID.Magic))
+            {
+                mult = 0.8f;
+            }
+        }
 
-        private bool classChosen;
-        private const int maxTime = 360;
-        private int effectTime = maxTime;
-        private int boundsCheck;
         public override void PostUpdate()
         {
+            //  Trait characteristics
+            //  Wall jump
+            if (CheckHasTrait(TraitID.ALL_WallJump, ClassID.All))
+            {
+                int iLeft   = (int)(Player.position.X - 8) / 16;
+                int iRight  = (int)(Player.position.Y + Player.width + 8) / 16;
+                int j       = (int)(Player.position.Y + Player.height - 8) / 16;
+                Tile tLeft  = Main.tile[iLeft, j];
+                Tile tRight = Main.tile[iRight, j];
+                if (tLeft.HasTile && Main.tileSolid[tLeft.TileType])
+                {
+                    if (Player.controlJump && Player.controlRight && Player.velocity.Y != 0)
+                    {
+                        Player.velocity.Y -= Player.jumpSpeed;
+                    }
+                }
+                if (tRight.HasTile && Main.tileSolid[tRight.TileType])
+                {
+                    if (Player.controlJump && Player.controlLeft && Player.velocity.Y != 0)
+                    {
+                        Player.velocity.Y -= Player.jumpSpeed;
+                    }
+                }
+            }
+            //  Extra double jump
+            if (CheckHasTrait(TraitID.ALL_DoubleJump, ClassID.All))
+            {
+                if (Player.releaseJump && Player.controlJump && Player.velocity.Y > 0f)
+                {
+                    Player.DoubleJumpVisuals();
+                    SoundEngine.PlaySound(SoundID.DoubleJump, Player.Center);
+                    Player.velocity.Y -= Player.jumpSpeed;
+                }
+            }
+
             if (outOfBounds)
             {
                 effectTime--;
@@ -750,6 +1116,7 @@ namespace ArchaeaMod
                 }
                 classChosen = true;
             }
+            //  Rustbane armor set bonus
             if (Items.ArchaeaItem.ArmorSet(Player, ModContent.ItemType<Items.Armors.RustbaneHead>(), ModContent.ItemType<Items.Armors.RustbanePlate>(), ModContent.ItemType<Items.Armors.RustbaneLegs>()))
             {
                 if ((int)Main.time % 10 == 0) 
@@ -758,15 +1125,91 @@ namespace ArchaeaMod
                     double angle = Math.PI * 2d * Main.rand.NextFloat();
                     double cos  = Player.Center.X + radius * Math.Cos(angle);
                     double sine = Player.Center.Y + radius * Math.Sin(angle);
-                    int index = Projectile.NewProjectile(Projectile.GetSource_None(), new Vector2((float)cos, (float)sine), Vector2.Zero, ModContent.ProjectileType<Projectiles.dust_diffusion>(), 50, 1f, Player.whoAmI, ModContent.DustType<Merged.Dusts.magno_dust>(), radius);
-                    Main.projectile[index].timeLeft = 200;
-                    Main.projectile[index].tileCollide = false;
-                    Main.projectile[index].localAI[0] = 10;
+                    RadialDustDiffusion(Player.Center, cos, sine, radius, ModContent.DustType<Dusts.Shimmer_2>(), 37, Player.whoAmI, false);
                 }
+            }
+            
+            //  side quests
+            if (Player.position.Y > Main.UnderworldLayer * 16f)
+            {
+                SetClassTrait(TraitID.RANGED_Fire, ClassID.Ranged, true);
+            }
+            int stack = 0, maxStack = 999;
+            for (int i = 0; i < Player.inventory.Length; i++)
+            {
+                if (Player.inventory[i].type == ItemID.DirtBlock)
+                {
+                    stack += Player.inventory[i].stack;
+                }
+            }
+            if (stack < maxStack)
+            {
+                TRAIT_TIME_MaxDirtStack = 0;
+            }
+            else
+            {
+                TRAIT_TIME_MaxDirtStack += Main.frameRate;
+                if (TRAIT_TIME_MaxDirtStack >= TRAIT_TIME_MAX_MaxDirtStack)
+                {
+                    SetClassTrait(TraitID.RANGED_Ice, ClassID.Ranged, true);
+                }
+            }
+            //  DEBUG this
+            //  Unknown how fallStart interacts with an entire fall
+            //  Does it compare start fall tile to end fall tile? or does it increment?
+            if (Player.fallStart >= 1000)
+            {
+                SetClassTrait(TraitID.MELEE_Leap, ClassID.Melee, true);
+            }
+            if (TRAIT_PlantedMushroom >= 80)
+            {
+                SetClassTrait(TraitID.MAGE_NoManaCost, ClassID.Magic, true);
+            }
+            if (Player.ZoneBeach)
+            {
+                SetClassTrait(TraitID.MAGE_NoKb, ClassID.Magic, true);
+            }
+            if (Player.ZoneMeteor)
+            {
+                SetClassTrait(TraitID.MAGE_DecreaseCost, ClassID.Magic, true);
+            }
+            if (TRAIT_PlacedBricks >= 500)
+            {
+                SetClassTrait(TraitID.SUMMONER_NoManaCost, ClassID.Summoner, true);
+            }
+            if (TRAIT_PlacedRails >= 1000)
+            {
+                SetClassTrait(TraitID.MAGE_DamageReduce, ClassID.Magic, true);
+            }
+            if (Player.position.Y / 16 < 100)
+            {
+                SetClassTrait(TraitID.SUMMONER_ThrowStar, ClassID.Summoner, true);
+            }
+            SetClassTrait(TraitID.RANGED_Tracking, ClassID.Ranged, Player.downedDD2EventAnyDifficulty);
+            SetClassTrait(TraitID.RANGED_Ichor, ClassID.Ranged, NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3);
+            SetClassTrait(TraitID.MELEE_DoubleSwing, ClassID.Melee, NPC.downedGoblins && NPC.downedMartians && NPC.downedPirates);
+        }
+        public static void RadialDustDiffusion(Vector2 origin, double x, double y, float radius, int dustType, int damage, bool hostile, int owner = 255)
+        {
+            int index = Projectile.NewProjectile(Projectile.GetSource_None(), new Vector2((float)x, (float)y), Vector2.Zero, ModContent.ProjectileType<Projectiles.dust_diffusion>(), damage, 1f, owner, dustType, radius);
+            Main.projectile[index].timeLeft = 200;
+            Main.projectile[index].tileCollide = false;
+            Main.projectile[index].localAI[0] = 10;
+            Main.projectile[index].hostile = hostile;
+        }
+        public static void RadialDustDiffusion(Vector2 origin, double x, double y, float radius, int frequency, int dustType, int damage, bool hostile, int owner = 255)
+        {
+            if ((int)Main.time % frequency == 0)
+            {
+                int index = Projectile.NewProjectile(Projectile.GetSource_None(), new Vector2((float)x, (float)y), Vector2.Zero, ModContent.ProjectileType<Projectiles.dust_diffusion>(), damage, 1f, owner, dustType, radius);
+                Main.projectile[index].timeLeft = 200;
+                Main.projectile[index].tileCollide = false;
+                Main.projectile[index].localAI[0] = 10;
+                Main.projectile[index].hostile = hostile;
             }
         }
 
-        public override bool PreItemCheck()
+        public bool ClassItemCheck()
         {
             Item item = Player.inventory[Player.selectedItem];
             bool nonTool = item.pick == 0 && item.axe == 0 && item.hammer == 0;
@@ -832,10 +1275,7 @@ namespace ArchaeaMod
                 }
             }
         }
-        private bool outOfBounds;
-        private bool[] zones = new bool[index];
-        private const int index = 12;
-        private Vector2 oldPosition;
+        
         public void BiomeBounds()
         {
             zones = new bool[]
@@ -890,7 +1330,6 @@ namespace ArchaeaMod
             }
             return false;
         }
-        private float darkAlpha = 0f;
         private void DarkenedVision()
         {
             if (!SkyFort || ModContent.GetInstance<ArchaeaWorld>().downedNecrosis)
@@ -918,9 +1357,7 @@ namespace ArchaeaMod
         {
             get { return Main.spriteBatch; }
         }
-        private Action<float, float> method;
-        public bool classChecked;
-        Effects.Polygon polygon = new Effects.Polygon();
+
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
             if (/*classChoice == ClassID.None &&*/ drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI && !drawInfo.drawPlayer.dead)
@@ -1032,11 +1469,6 @@ namespace ArchaeaMod
                 }
             }
         }
-        private bool initMenu;
-        private string[] label;
-        private Rectangle box;
-        private TextBox[] input;
-        private Button[] button;
         private void SpawnMenu()
         {
             return;

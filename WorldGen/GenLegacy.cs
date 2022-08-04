@@ -452,7 +452,7 @@ namespace ArchaeaMod.GenLegacy
         public int[][,] rooms = new int[20][,];
         private Vector2[] centers = new Vector2[20];
         private Mod mod = ModLoader.GetMod("ArchaeaMod");
-        public void SkyFortGen()
+        public void SkyFortGen(ushort tileType, ushort wallType)
         {
             int roomX = WorldGen.genRand.Next(300);
             int roomY = 0;
@@ -486,13 +486,13 @@ namespace ArchaeaMod.GenLegacy
                         switch (rooms[i][m, n])
                         {
                             case 0:
-                                tile.WallType = (ushort)ModContent.WallType<Merged.Walls.magno_brick>();
+                                tile.WallType = wallType;
                                 tile.TileType = 0;
                                 tile.HasTile = false;
                                 break;
                             case 1:
                                 if (WorldGen.genRand.Next(2) == 1)
-                                    tile.TileType = (ushort)ModContent.TileType<Merged.Tiles.m_stone>();
+                                    tile.TileType = tileType;
                                 else
                                     tile.TileType = TileID.RainCloud;
                                 tile.HasTile = true;
@@ -539,7 +539,7 @@ namespace ArchaeaMod.GenLegacy
                                         Tile hall = Main.tile[placeX, placeY];
                                         if (hall.WallType == 0)
                                         {
-                                            hall.TileType = (ushort)ModContent.TileType<Merged.Tiles.m_stone>();
+                                            hall.TileType = tileType;
                                             hall.HasTile = true;
                                         }
                                     }
@@ -555,7 +555,7 @@ namespace ArchaeaMod.GenLegacy
                                         int wallX = (int)placement.X + p;
                                         int wallY = (int)placement.Y + q;
                                         Tile wall = Main.tile[wallX, wallY];
-                                        wall.WallType = (ushort)ModContent.WallType<Merged.Walls.magno_brick>();
+                                        wall.WallType = wallType;
                                         wall.TileType = 0;
                                         wall.HasTile = false;
                                     }

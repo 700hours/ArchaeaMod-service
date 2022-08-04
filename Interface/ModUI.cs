@@ -199,13 +199,10 @@ namespace ArchaeaMod.Interface.ModUI
                     ModContent.GetInstance<ModeToggle>().SetCordonedBiomes(mainOptions[1].active);
                     ModContent.GetInstance<ModeToggle>().SetArchaeaMode(mainOptions[2].active);
                     //}
-                    for (int i = 0; i < Main.player.Length; i++)
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
                     {
-                        if (Main.player[i].active && i < 256)
-                        {
-                            Main.player[i].GetModPlayer<ArchaeaPlayer>()
-                                .SetModeStats(ModContent.GetInstance<ModeToggle>().archaeaMode);
-                        }
+                        player.GetModPlayer<ArchaeaPlayer>()
+                            .SetModeStats(ModContent.GetInstance<ModeToggle>().archaeaMode, player.whoAmI);
                     }
                     Toggled = false;
                     return true;
@@ -222,14 +219,15 @@ namespace ArchaeaMod.Interface.ModUI
         public static void ClassSelect(Player player)
         {
             float distance = 196f;
-            for (float r = 0f; r < distance; r += Draw.radians(distance))
-            {
-                Vector2 c = NPCs.ArchaeaNPC.AngleBased(new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), r, distance);
-                Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X - 1, (int)c.Y - 1, 2, 2), Color.White * 0.50f);
-            }
+            //for (float r = 0f; r < distance; r += Draw.radians(distance))
+            //{
+            //    Vector2 c = NPCs.ArchaeaNPC.AngleBased(new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), r, distance);
+            //    Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)c.X - 1, (int)c.Y - 1, 2, 2), Color.White * 0.50f);
+            //}
             for (int i = 0; i < classes.Length; i++)
             {
-                sb.Draw(mod.Assets.Request<Texture2D>("Gores/class_icons").Value, classOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), classOptions[i].color);
+                if (i != 4) sb.Draw(mod.Assets.Request<Texture2D>("Gores/class_icons").Value, classOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), classOptions[i].color);
+                else        sb.Draw(mod.Assets.Request<Texture2D>("Gores/ClassIcon_UI").Value, classOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), classOptions[i].color);
                 if (classOptions[i].HoverOver())
                 {
                     if (classOptions[i].LeftClick())

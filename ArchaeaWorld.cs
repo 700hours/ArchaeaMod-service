@@ -252,6 +252,17 @@ namespace ArchaeaMod
                     progress.End();
                 }, 1f));
             }
+            int index1 = tasks.FindIndex(pass => pass.Name.Equals("Wet Jungle"));
+            if (index1 != -1)
+            {
+                tasks.Insert(index1, new PassLegacy("Halls", delegate (GenerationProgress progress, GameConfiguration c)
+                {
+                    progress.Start(1f);
+                    progress.Message = "Halls";
+                    SkyHall hall = new SkyHall();
+                    hall.SkyFortGen(skyBrick, skyBrickWall);
+                }, 1f));
+            }
             int index2 = tasks.FindIndex(pass => pass.Name.Equals("Wet Jungle"));
             if (index2 != -1)
             {
@@ -435,6 +446,7 @@ namespace ArchaeaMod
             {
                 tasks.Insert(WellIndex + 1, new PassLegacy("Digging Well", delegate (GenerationProgress progress, GameConfiguration c)
                 {
+                    surfaceBuffer = (int)(Main.maxTilesY * 0.167f);
                     progress.Message = "Digging Well";
                     Vector2 Center = new Vector2((Main.maxTilesX / 2) * 16, (Main.maxTilesY / 2) * 16);
                     //MINER Legacy gen
@@ -446,27 +458,27 @@ namespace ArchaeaMod
                     int tries = 0;
                     do { 
                         PositionX = WorldGen.genRand.Next(originX, originX + mWidth);
-                    } while (PositionX < Main.rightWorld - mWidth && tries++ < 100);
+                    } while (PositionX < Main.rightWorld / 16f - mWidth && tries++ < 200);
 
                     int gap = 5;
-                    int MaxTries = 450;
-                    bool dirtWall = Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].WallType == WallID.DirtUnsafe || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].WallType == WallID.DirtUnsafe1 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].WallType == WallID.DirtUnsafe2 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].WallType == WallID.DirtUnsafe3 || Main.tile[(int)PositionX, Main.spawnTileY - surfaceBuffer].WallType == WallID.DirtUnsafe4;
+                    int MaxTries = (int)(Main.maxTilesY * 0.167f);
+                    bool dirtWall = Main.tile[(int)PositionX, surfaceBuffer].WallType == WallID.DirtUnsafe || Main.tile[(int)PositionX, surfaceBuffer].WallType == WallID.DirtUnsafe1 || Main.tile[(int)PositionX, surfaceBuffer].WallType == WallID.DirtUnsafe2 || Main.tile[(int)PositionX, surfaceBuffer].WallType == WallID.DirtUnsafe3 || Main.tile[(int)PositionX, surfaceBuffer].WallType == WallID.DirtUnsafe4;
                     for (int i = 0; i < MaxTries; i++)
                     {
-                        if (Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].HasTile) 
+                        if (Main.tile[(int)PositionX + gap, surfaceBuffer].HasTile) 
                         { 
-                            surfaceBuffer++;
-                        }
-                        if (!Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].HasTile && Main.tile[(int)PositionX + gap, Main.spawnTileY - surfaceBuffer].WallType == 0)
-                        {
                             surfaceBuffer--;
+                        }
+                        if (!Main.tile[(int)PositionX + gap, surfaceBuffer].HasTile && Main.tile[(int)PositionX + gap, surfaceBuffer].WallType == 0)
+                        {
+                            surfaceBuffer++;
                         }
                     }
 
                     buffer = 3;
-                    float distance = Vector2.Distance(new Vector2(PositionX, Main.spawnTileY + 10 + surfaceBuffer) - new Vector2(PositionX, originY - (int)Main.worldSurface - 25/*miner.genPos[1].Y / 16*/), Vector2.Zero);
+                    float distance = Vector2.Distance(new Vector2(PositionX, 10 + surfaceBuffer) - new Vector2(PositionX, originY - (int)Main.worldSurface - 25/*miner.genPos[1].Y / 16*/), Vector2.Zero);
                     // comment out '/ 3' for max well length
-                    PlaceWell((int)PositionX, Math.Abs(surfaceBuffer) - buffer, distance / 3);
+                    PlaceWell((int)PositionX, Math.Abs(surfaceBuffer) - buffer, distance);
                 }));
             }
             #region Vector2 array

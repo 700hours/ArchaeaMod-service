@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Timers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -25,12 +26,20 @@ namespace ArchaeaMod.Projectiles
             Projectile.ignoreWater = false;
             Projectile.tileCollide = true;
             Projectile.hide = true;
-        }
-        int dustType
-        {
-             get { return (int)Projectile.ai[0]; }
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = -1;
         }
         public override bool? CanCutTiles() => false;
+        int dustType
+        {
+            get { return (int)Projectile.ai[0]; }
+            set { Projectile.ai[0] = value; }
+        }
+        int owner
+        {
+            get { return Projectile.owner; }
+        }
         public override void AI()
         {
             if ((int)Projectile.localAI[0] == 10)

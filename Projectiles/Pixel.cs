@@ -31,6 +31,9 @@ namespace ArchaeaMod.Projectiles
             Projectile.friendly = true;
             Projectile.timeLeft = 120;
             Projectile.alpha = 255;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = -1;
         }
         public override Color? GetAlpha(Color lightColor)
         {
@@ -43,7 +46,8 @@ namespace ArchaeaMod.Projectiles
             Default = 0,
             Sword = 1,
             Active = 2,
-            Gravity = 3;
+            Gravity = 3,
+            AntiGravity = 4;
         private float rotate;
         private float alpha;
         private Dust dust;
@@ -85,6 +89,14 @@ namespace ArchaeaMod.Projectiles
                     break;
                 case Active:
                     dust = SetDust();
+                    break;
+                case AntiGravity:
+                    if (alpha < 1f)
+                    {
+                        alpha += 0.02f;
+                        Projectile.scale *= alpha;
+                    }
+                    Projectile.velocity.Y = -0.5f;
                     break;
             }
         }

@@ -89,7 +89,7 @@ namespace ArchaeaMod.Merged.Projectiles
                     else if (index == 1)
                     {
                         angle1 -= Draw.radian * 5f;
-                        if (mouseBox.Contains(Projectile.Hitbox.Center)) {
+                        if (ticks++ > 180 / 5) {
                             Projectile.Kill();
                         }
                     }

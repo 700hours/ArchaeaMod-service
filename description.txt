@@ -3,10 +3,15 @@ Terraria mod which is designed to provide new elements that are both pre-hardmod
 
 [i]Features implemented are a few such as these:[/i]
 * Progression-based difficulty mode
-* 2 new biomes
+* 1 new biome
+* 2 new structures
 * Many items and enemies
 * Complimentary to vanilla
 * Pre-hardmode completion step with hint
+
+There are several key binds that do things like prompt show/hide UI. 
+
+The status dialog is drag-able--click and hold anywhere on it to move it around.
 
 [hr]
 

@@ -293,6 +293,25 @@ namespace ArchaeaMod.NPCs
                 return floor[Main.rand.Next(floor.Count())];
             else return Vector2.Zero;
         }
+        public static Vector2 AllSolidFloorsV2(Entity target, int range = 400)
+        {
+            int x = (int)(target.Center.X - range / 2);
+            int y = (int)(target.Center.Y - range / 2);
+            int right = x + range;
+            int bottom = y + range;
+            List<Vector2> floor = new List<Vector2>();
+            for (int i = x; i < right; i++)
+            {
+                for (int j = y; j < bottom; j++)
+                {
+                    if (Collision.IsWorldPointSolid(new Vector2(i, j)))
+                        floor.Add(new Vector2(i, j));
+                }
+            }
+            if (floor.Count() > 0)
+                return floor[Main.rand.Next(floor.Count())];
+            else return Vector2.Zero;
+        }
         public static bool WithinRange(Vector2 position, Rectangle range)
         {
             return range.Contains(position.ToPoint());
@@ -327,6 +346,14 @@ namespace ArchaeaMod.NPCs
         public static NPC FindClosestNPC(Player player, bool unlimited = false, float range = 300f)
         {
             return Main.npc.FirstOrDefault(t => Vector2.Distance(player.Center, t.Center) < range);
+        }
+        public static NPC FindClosestNPC(Projectile projectile, float range = 300f)
+        {
+            return Main.npc.FirstOrDefault(t => Vector2.Distance(projectile.Center, t.Center) < range);
+        }
+        public static NPC[] FindCloseNPCs(Projectile projectile)
+        {
+            return Main.npc.OrderBy(t => t.position.Distance(projectile.Center)).ToArray();
         }
 
         public static Vector2 AngleToSpeed(float angle, float amount = 2f)
