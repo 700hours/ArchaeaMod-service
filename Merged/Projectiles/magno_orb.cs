@@ -62,6 +62,7 @@ namespace ArchaeaMod.Merged.Projectiles
                     Projectile.ai[0] = 0;
                     for (int i = 0; i < 2; i++) { 
                         proj[i] = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, this.Type, Projectile.damage, Projectile.knockBack, Projectile.owner, 10f, i);
+                        ArchaeaItem.SyncProj(Main.projectile[proj[i]]);
                     }
                     Main.projectile[proj[0]].localAI[0] = proj[1];
                     goto case 0;

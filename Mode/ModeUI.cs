@@ -79,81 +79,11 @@ namespace ArchaeaMod.Mode
             stat.scroll = new Scroll(objective.hitbox);
             stat.active = false;
 
-            trait[ClassID.Melee - 1] = new ListBox(objective.hitbox, default, new[] 
-            {
-                "Defeat each invasion once\n" +
-                "   Double swing",
-                "Place 250 solid tiles\n" +
-                "   Double knockback",
-                "Defeat a Nymph\n" +
-                "   Stun NPCs on hit",
-                "Reach maximum mana\n" +
-                "   50% Cinnabar flask",
-                "Craft wings\n" +
-                "   Leap attack",
-                "Survive a 1000 tile fall\n" +
-                "   Leap"
-            }, null, new Color[5]);
-            trait[ClassID.Ranged - 1] = new ListBox(objective.hitbox, default, new[]
-            {
-                "Make a Star Cannon\n" +
-                "   Double fire arrows",
-                "Defeat Old One's Army\n" +
-                "   Subtle arrow tracking",
-                "Reach the underworld\n" +
-                "   Fire arrows",
-                "Hold max dirt stack for 120 minutes\n" +
-                "   Ice arrows",
-                "Defeat all Mech bosses\n" +
-                "   Ichor arrows",
-                "Acquire Daedalus\n" +
-                "   Cinnabar arrows"
-            }, null, new Color[5]);
-            trait[ClassID.Magic - 1] = new ListBox(objective.hitbox, default, new[]
-            {
-                "Make Ankh Shield\n" +
-                "   50% double attack chance",
-                "Plant 80 o.w. mushroom seeds\n" +
-                "   50% no mana cost chance",
-                "Place 1000 rails\n" +
-                "   10% damage reduction",
-                "Craft a hook\n" +
-                "   20% increased move speed",
-                "Reach the ocean\n" +
-                "   50% no knockback chance",
-                "Reach fallen meteor\n" +
-                "   20% reduced mana cost"
-            }, null, new Color[5]);
-            trait[ClassID.Summoner -1] = new ListBox(objective.hitbox, default, new[]
-            {
-                "Acquire Giant Harpy Feather\n" +
-                "   +2 minion count",
-                "Reach maximum life\n" +
-                "   +20% minion damage",
-                "Place 500 of any bricks\n" +
-                "   No mana cost",
-                "Last-hit a boss with cannonball\n" +
-                "   10% chance attack throws boulder",
-                "Find a sword shrine\n" +
-                "   10% chance attack throws bones",
-                "Reach space\n" +
-                "   10% chance attack throws star"
-            }, null, new Color[5]);
-            trait[ClassID.All - 1] = new ListBox(objective.hitbox, default, new[] 
-            {
-                "Craft Avenger Emblem\n" +
-                "   Wall jump",
-                "Place two different pylons\n" +
-                "   Extra double jump",
-                "Craft Molten Pickaxe\n" +
-                "   +10 defense",
-                "Get max Well Fed buff\n" +
-                "   +25% jump height",
-                "Last-hit Eye of Cthulhu\n" +
-                "   Dash",
-                "Get 10+ villagers\n" +
-                "   50% chance falling star"
-            }, null, new Color[5]);
+            trait[ClassID.Melee - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Melee - 1, 0), null, new Color[5]);
+            trait[ClassID.Ranged - 1] = new ListBox(objective.hitbox, default,  ClassArray(ClassID.Ranged - 1, 0), null, new Color[5]);
+            trait[ClassID.Magic - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Magic - 1, 0), null, new Color[5]);
+            trait[ClassID.Summoner -1] = new ListBox(objective.hitbox, default, ClassArray(ClassID.Summoner - 1, 0), null, new Color[5]);;
+            trait[ClassID.All - 1] = new ListBox(objective.hitbox, default,     ClassArray(ClassID.All - 1, 0), null, new Color[5]);
             for (int i = 0; i < trait.Length; i++)
             {
                 trait[i].bgColor = Color.Transparent;
@@ -161,7 +91,6 @@ namespace ArchaeaMod.Mode
                 trait[i].active = false;
                 trait[i].textColor = new Color[] { Color.Red, Color.Red, Color.Red, Color.Red, Color.Red, Color.Red };
             }
-
             tab = new Button[]
             {
                 new Button("1", default, Color.LightGray),
@@ -169,6 +98,94 @@ namespace ArchaeaMod.Mode
                 new Button("3", default, Color.LightGray)
             };
             page = new ListBox[] { objective, stat, default };
+        }
+        private string[] ClassArray(int index, int num = 0, int num2 = 0)
+        {
+            switch (index) 
+            {
+                case 0:     // Melee
+                    return new[] 
+                    { 
+                        "Defeat each invasion once\n" +
+                        "   Double swing",
+                        $"Place {num}/250 solid tiles\n" +
+                        "   Double knockback",
+                        "Defeat a Nymph\n" +
+                        "   Stun NPCs on hit",
+                        "Reach maximum mana\n" +
+                        "   50% Cinnabar flask",
+                        "Craft wings\n" +
+                        "   Leap attack",
+                        "Survive a 1000 tile fall\n" +
+                        "   Leap"
+                    };
+                case 1:     // Ranged
+                    return new[]
+                    {
+                        "Make a Star Cannon\n" +
+                        "   Double fire arrows",
+                        "Defeat Old One's Army\n" +
+                        "   Subtle arrow tracking",
+                        "Reach the underworld\n" +
+                        "   Fire arrows",
+                        $"Hold max dirt stack for {num}/120 minutes\n" +
+                        "   Ice arrows",
+                        "Defeat all Mech bosses\n" +
+                        "   Ichor arrows",
+                        "Acquire Daedalus\n" +
+                        "   Cinnabar arrows"
+                    };
+                case 2:     // Magic
+                    return new[] 
+                    {
+                        "Make Ankh Shield\n" +
+                        "   50% double attack chance",
+                        $"Plant {num}/80 o.w. mushroom seeds\n" +
+                        "   50% no mana cost chance",
+                        $"Place {num2}/1000 rails\n" +
+                        "   10% damage reduction",
+                        "Craft a hook\n" +
+                        "   20% increased move speed",
+                        "Reach the ocean\n" +
+                        "   50% no knockback chance",
+                        "Reach fallen meteor\n" +
+                        "   20% reduced mana cost"
+                    };
+                case 3:     // Summoner
+                    return new[] 
+                    {
+                        "Acquire Giant Harpy Feather\n" +
+                        "   +2 minion count",
+                        "Reach maximum life\n" +
+                        "   +20% minion damage",
+                        $"Place {num}/500 of any bricks\n" +
+                        "   No mana cost",
+                        "Last-hit a boss with cannonball\n" +
+                        "   10% chance attack throws boulder",
+                        "Find a sword shrine\n" +
+                        "   10% chance attack throws bones",
+                        "Reach space\n" +
+                        "   10% chance attack throws star"
+                    };
+                case 4:     // All
+                    return new[]
+                    {
+                        "Craft Avenger Emblem\n" +
+                        "   Wall jump",
+                        "Place two different pylons\n" +
+                        "   Extra double jump",
+                        "Craft Molten Pickaxe\n" +
+                        "   +10 defense",
+                        "Get max Well Fed buff\n" +
+                        "   +25% jump height",
+                        "Last-hit Eye of Cthulhu\n" +
+                        "   Dash",
+                        $"Get {num}/10 villagers\n" +
+                        "   50% chance falling star"
+                    };
+                default:
+                    return new[] { "" };
+            }
         }
 
         private int TraitIndex()
@@ -402,6 +419,25 @@ namespace ArchaeaMod.Mode
                         }
                         break;
                 }
+            }
+            ArchaeaPlayer modPlayer = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>();
+            switch (TraitIndex())
+            {
+                case 0:
+                    trait[0].content = ClassArray(0, modPlayer.placedTiles);
+                    break;
+                case 1:
+                    trait[1].content = ClassArray(1, modPlayer.TRAIT_TIME_MaxDirtStack);
+                    break;
+                case 2:
+                    trait[2].content = ClassArray(2, modPlayer.TRAIT_PlantedMushroom, modPlayer.TRAIT_PlacedRails);
+                    break;
+                case 3:
+                    trait[3].content = ClassArray(3, modPlayer.TRAIT_PlantedMushroom, modPlayer.TRAIT_PlacedRails);
+                    break;
+                case 4:
+                    trait[4].content = ClassArray(4, Main.townNPCCanSpawn.Count(t => t == true));
+                    break;
             }
             InBoundsUI(objective);
             InBoundsUI(stat);

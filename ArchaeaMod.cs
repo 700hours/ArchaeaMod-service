@@ -34,7 +34,7 @@ namespace ArchaeaMod
                 MusicLoader.AddMusicBox(this, MusicLoader.GetMusicSlot(this, "Sounds/Music/Magno_Biome"), ModContent.ItemType<Items.Tiles.mbox_magno_1>(), ModContent.TileType<Tiles.music_boxes>(), 36);
                 MusicLoader.AddMusicBox(this, MusicLoader.GetMusicSlot(this, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma"), ModContent.ItemType<Items.Tiles.mbox_magno_2>(), ModContent.TileType<Tiles.music_boxes_alt>(), 36);
             }
-            progressKey    = KeybindLoader.RegisterKeybind(this, "Progress diaglog visible", Keys.None);
+            progressKey    = KeybindLoader.RegisterKeybind(this, "Progress diaglog visible", Keys.Q);
             leapBind       = KeybindLoader.RegisterKeybind(this, "Melee class leap", Keys.Space);
             leapAttackBind = KeybindLoader.RegisterKeybind(this, "Melee class leap attack", Keys.None);
             //for (int i = 0; i < macro.Length; i++)

@@ -38,6 +38,7 @@ namespace ArchaeaMod.Items
             Item.shootSpeed = 8f;
             Item.channel = true;
             Item.noUseGraphic = true;
+            Item.DamageType = DamageClass.Melee;
         }
 
         [CloneByReference]

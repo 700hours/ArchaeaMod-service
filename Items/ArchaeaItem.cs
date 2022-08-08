@@ -96,6 +96,22 @@ namespace ArchaeaMod.Items
                 }
             }
         }
+
+        public static void SyncProj(int netID, Projectile Projectile)
+        {
+            if (Main.netMode == netID)
+            {
+                NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile.whoAmI, Projectile.position.X, Projectile.position.Y, Projectile.rotation);
+                Projectile.netUpdate = true;
+            }
+        }
+        public static void SyncProj(Projectile Projectile)
+        {
+            if (Main.netMode == 1)
+            {
+                NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile.whoAmI);
+            }
+        }
     }
 
     public class ArchaeaItem_Global : GlobalItem

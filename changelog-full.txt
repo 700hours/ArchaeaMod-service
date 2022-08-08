@@ -458,3 +458,24 @@ version 1.3.7.13 -> 1.3.8.14
 # Changed
 -> Halls structure creation with different tiles
 -> Reduced Rustbane defense and set bonus by 25%
+
+version 1.3.8.14 -> 1.3.9.14
+============================
+# Added
+-> Three new items that drop from boss
+# Removed
+-> Rubidium staff accessory
+
+version 1.3.9.14 -> 1.3.9.15
+============================
+# Changed
+-> Set default keybind of show/hide menu to 'Q'
+# Fixed
+-> Certain projectile has proper tileCollide
+-> Price discount
+-> Certain item's ranged damage scaling
+-> Certain projectile's speed
+-> Trait menu status # updating
+-> Rusty Thrasher damage type set to Melee
+# Removed
+-> Armor set bonus dust lighting removed

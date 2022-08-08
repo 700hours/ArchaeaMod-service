@@ -54,6 +54,7 @@ namespace ArchaeaMod.Merged.Items
             Proj1 = Projectile.NewProjectile(Projectile.GetSource_None(), player.position + new Vector2(player.width / 2, player.height / 2), Vector2.Zero, ModContent.ProjectileType<Merged.Projectiles.magno_orb>(), (int)(Item.damage * player.GetDamage(DamageClass.Magic).Multiplicative), 4f, player.whoAmI, -1f);
             Main.projectile[Proj1].ai[1] = Proj1;
             Main.projectile[Proj1].netUpdate = true;
+            ArchaeaMod.Items.ArchaeaItem.SyncProj(Main.projectile[Proj1]);
             return true;
         }
     }

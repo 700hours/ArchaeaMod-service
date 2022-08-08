@@ -57,6 +57,8 @@ namespace ArchaeaMod.Tiles
         float ticks = -300;
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
+            if (Main.dedServ)
+                return false;
             if (ticks++ >= 300)
                 ticks = -300;
             if ((int)Main.time % 10 == 0)

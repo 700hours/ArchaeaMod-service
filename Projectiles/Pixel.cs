@@ -55,6 +55,7 @@ namespace ArchaeaMod.Projectiles
         {
             get { return Main.player[Projectile.owner]; }
         }
+        private float endY;
         public override bool PreAI()
         {
             switch (ai)
@@ -63,6 +64,7 @@ namespace ArchaeaMod.Projectiles
                     direction = owner.direction == 1 ? true : false;
                     rotate = direction ? 0f : (float)Math.PI;
                     dust = SetDust();
+                    endY = owner.position.Y;
                     goto case 1;
                 case 1:
                     ai = 1;
@@ -70,7 +72,7 @@ namespace ArchaeaMod.Projectiles
             }
             return true;
         }
-        public void AIType()
+        public void _AIType()
         {
             switch ((int)Projectile.ai[1])
             {
@@ -85,6 +87,7 @@ namespace ArchaeaMod.Projectiles
                 case Sword:
                     NPCs.ArchaeaNPC.RotateIncrement(true, ref rotate, (float)Math.PI / 2f, 0.15f, out rotate);
                     Projectile.velocity += NPCs.ArchaeaNPC.AngleToSpeed(rotate, 0.25f);
+                    Projectile.tileCollide = Projectile.position.Y > endY;
                     dust.position = Projectile.position;
                     break;
                 case Active:
@@ -102,7 +105,7 @@ namespace ArchaeaMod.Projectiles
         }
         public override void AI()
         {
-            AIType();
+            _AIType();
         }
         public override void Kill(int timeLeft)
         {

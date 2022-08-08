@@ -138,7 +138,7 @@ namespace ArchaeaMod.Progression.Global
         }
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
-            if (npc.townNPC && Main.townNPCCanSpawn.Count(t => t == true) >= 10)
+            if (Main.townNPCCanSpawn.Count(t => t == true) >= 10)
             {
                 ArchaeaPlayer.SetClassTrait(TraitID.ALL_FallingStarAtk, ClassID.All, true, Main.LocalPlayer.whoAmI);
             }

@@ -50,14 +50,14 @@ namespace ArchaeaMod.Items
                 var proj = ModContent.GetModProjectile(type);
                 int i = Projectile.NewProjectile(source, position, velocity, type, (int)(proj.Projectile.damage + Item.damage * player.GetDamage(DamageClass.Ranged).Multiplicative), knockback, player.whoAmI);
                 Main.projectile[i].rotation = player.AngleTo(Main.MouseWorld);
-                Merged.Projectiles.cinnabar_arrow.SyncProj(Main.projectile[i]);
+                ArchaeaItem.SyncProj(Main.projectile[i]);
             }
             else
             {
                 var proj = ModContent.GetModProjectile(Item.shoot);
                 int i = Projectile.NewProjectile(source, position, velocity, Item.shoot, (int)(proj.Projectile.damage + Item.damage * player.GetDamage(DamageClass.Ranged).Multiplicative), knockback, player.whoAmI);
                 Main.projectile[i].rotation = player.AngleTo(Main.MouseWorld);
-                Merged.Projectiles.cinnabar_arrow.SyncProj(Main.projectile[i]);
+                ArchaeaItem.SyncProj(Main.projectile[i]);
             }
             return false;
         }

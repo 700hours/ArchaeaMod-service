@@ -29,6 +29,7 @@ namespace ArchaeaMod.Projectiles
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.penetrate = 1;
+            Projectile.DamageType = DamageClass.Ranged;
         }
         SpriteBatch sb => Main.spriteBatch;
         Vector2 impact = Vector2.Zero;
@@ -37,7 +38,7 @@ namespace ArchaeaMod.Projectiles
         {
             impact = ArchaeaMain.Impact(Projectile, target.Hitbox);
             npc = target.whoAmI;
-            int index = NPC.NewNPC(NPC.GetSource_None(), (int)impact.X, (int)impact.Y, ModContent.NPCType<NPCs.PossessedBullet>(), Target: npc);
+            int index = NPC.NewNPC(NPC.GetSource_None(), (int)impact.X, (int)impact.Y, ModContent.NPCType<NPCs.PossessedBullet>(), 0, Projectile.damage, Projectile.owner, Target: npc);
             if (Main.netMode == 1)
             {
                 NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, index);

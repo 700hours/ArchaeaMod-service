@@ -54,7 +54,7 @@ namespace ArchaeaMod.Merged.Items
                 var proj = ModContent.GetModProjectile(type);
                 int i = Projectile.NewProjectile(Projectile.GetSource_None(), position, velocity, type, (int)(proj.Projectile.damage + Item.damage * player.GetDamage(DamageClass.Ranged).Multiplicative), knockback, player.whoAmI);
                 if (Main.netMode != NetmodeID.SinglePlayer)
-                    Projectiles.cinnabar_arrow.SyncProj(Main.projectile[i]);
+                    ArchaeaItem.SyncProj(Main.projectile[i]);
                 return false;
             }
             return true;

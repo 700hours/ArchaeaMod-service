@@ -35,13 +35,14 @@ namespace ArchaeaMod.Items
             Item.knockBack = 1f;
             Item.rare = ItemRarityID.LightPurple;
             Item.DamageType = DamageClass.Ranged;
+            Item.shootSpeed = 8f;
             //Item.UseSound = Shoot sound
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             int index = Projectile.NewProjectile(source, position, velocity, Item.shoot, Item.damage, knockback, Item.playerIndexTheItemIsReservedFor);
             Main.projectile[index].rotation = player.AngleTo(Main.MouseWorld);
-            Merged.Projectiles.cinnabar_arrow.SyncProj(Main.projectile[index]);
+            ArchaeaItem.SyncProj(Main.projectile[index]);
             return false;
         }
         public override bool PreDrawInInventory(SpriteBatch sb, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)

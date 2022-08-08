@@ -108,7 +108,7 @@ namespace ArchaeaMod.Projectiles
             { 
                 speed *= 1.34f;
                 int index = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.position, Vector2.Zero, Projectile.type, Projectile.damage, Projectile.knockBack, Projectile.owner, ++whoAmI, speed);
-                Merged.Projectiles.cinnabar_arrow.SyncProj(Main.projectile[index]);
+                Items.ArchaeaItem.SyncProj(Main.projectile[index]);
             }
             return true;
         }

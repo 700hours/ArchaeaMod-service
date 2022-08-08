@@ -100,18 +100,19 @@ namespace ArchaeaMod
         public int toughness = 1;
         public float damageBuff = 1f;
         //  Decrease
-        public float merchantDiscount = 1f;
+        public float merchantDiscount = 1f;  
+        public double oldPriceDiscount;
         public float percentDamageTaken = 1f;
         public float ammoReduction = 1f;
 
         //  More trait variables
-        private int TRAIT_TIME_MaxDirtStack = 0;
-        private int TRAIT_TIME_MAX_MaxDirtStack = 60 * 60 * 60 * 120; // Frame rate, Seconds, Minutes, Hours
+        public int TRAIT_TIME_MaxDirtStack = 0;
+        public int TRAIT_TIME_MAX_MaxDirtStack = 60 * 60 * 60 * 120; // Frame rate, Seconds, Minutes, Hours
         public int TRAIT_PlantedMushroom = 0;
         public int TRAIT_PlacedRails = 0;
         public int TRAIT_PlacedBricks = 0;
         public int TRAIT_PlacedPylon = 0;
-
+        
         //  Biome bounds
         private bool outOfBounds;
         private bool[] zones = new bool[index];
@@ -490,7 +491,7 @@ namespace ArchaeaMod
         }
         public override void PostUpdateRunSpeeds()
         {
-            this.Player.currentShoppingSettings.PriceAdjustment /= merchantDiscount;
+            Player.currentShoppingSettings.PriceAdjustment /= merchantDiscount;
             Player.jumpHeight = (int)(Player.jumpHeight * jumpHeight);
             Player.statDefense += toughness;
         }
@@ -636,6 +637,7 @@ namespace ArchaeaMod
         #endregion
         public override void PreUpdate()
         {
+            oldPriceDiscount = Player.currentShoppingSettings.PriceAdjustment;
             //  Leap and Leap attack
             if (ground == Vector2.Zero)
             {
@@ -1039,6 +1041,8 @@ namespace ArchaeaMod
 
         public override void PostUpdate()
         {
+            //  Reset
+            Player.currentShoppingSettings.PriceAdjustment = oldPriceDiscount;
             //  Trait characteristics
             //  Wall jump
             if (CheckHasTrait(TraitID.ALL_WallJump, ClassID.All))
@@ -1116,18 +1120,6 @@ namespace ArchaeaMod
                 }
                 classChosen = true;
             }
-            //  Rustbane armor set bonus
-            if (Items.ArchaeaItem.ArmorSet(Player, ModContent.ItemType<Items.Armors.RustbaneHead>(), ModContent.ItemType<Items.Armors.RustbanePlate>(), ModContent.ItemType<Items.Armors.RustbaneLegs>()))
-            {
-                if ((int)Main.time % 10 == 0) 
-                {
-                    float radius = Main.rand.Next(100, 200);
-                    double angle = Math.PI * 2d * Main.rand.NextFloat();
-                    double cos  = Player.Center.X + radius * Math.Cos(angle);
-                    double sine = Player.Center.Y + radius * Math.Sin(angle);
-                    RadialDustDiffusion(Player.Center, cos, sine, radius, ModContent.DustType<Dusts.Shimmer_2>(), 37, Player.whoAmI, false);
-                }
-            }
             
             //  side quests
             if (Player.position.Y > Main.UnderworldLayer * 16f)
@@ -1199,13 +1191,18 @@ namespace ArchaeaMod
         }
         public static void RadialDustDiffusion(Vector2 origin, double x, double y, float radius, int frequency, int dustType, int damage, bool hostile, int owner = 255)
         {
-            if ((int)Main.time % frequency == 0)
+            if (Main.dedServ) return;
+            if (frequency <= 0)
+                frequency = 10;
+            if ((int)Main.time % 10 == 0)
             {
                 int index = Projectile.NewProjectile(Projectile.GetSource_None(), new Vector2((float)x, (float)y), Vector2.Zero, ModContent.ProjectileType<Projectiles.dust_diffusion>(), damage, 1f, owner, dustType, radius);
                 Main.projectile[index].timeLeft = 200;
                 Main.projectile[index].tileCollide = false;
                 Main.projectile[index].localAI[0] = 10;
+                Main.projectile[index].localAI[1] = radius;
                 Main.projectile[index].hostile = hostile;
+                Main.projectile[index].netUpdate = true;
             }
         }
 

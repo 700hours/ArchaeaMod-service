@@ -34,7 +34,10 @@ namespace ArchaeaMod.NPCs
             NPC.lavaImmune = true;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
+            NPC.immortal = true;
         }
+        int damage => (int)NPC.ai[0];
+        int owner => (int)NPC.ai[1];
         public override void AI()
         {
             NPC target = Main.npc[NPC.target];
@@ -46,7 +49,7 @@ namespace ArchaeaMod.NPCs
                 Main.dust[dust].noGravity = true;
                 if ((int)Main.time % 60 == 0)
                 {
-                    target.StrikeNPC(20, 0f, 0, false, true);
+                    target.StrikeNPC((int)(damage * 10 * Main.player[owner].GetDamage<RangedDamageClass>().Multiplicative), 0f, 0, false, true);
                     Dust.NewDust(v2, 3, 3, DustID.Smoke, 0, -3f, 0, default, 2.5f);
                 }
             }

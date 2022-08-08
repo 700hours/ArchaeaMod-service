@@ -30,13 +30,23 @@ namespace ArchaeaMod.Items.Armors
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
             return
-            head == ModContent.GetInstance<RustbaneHead>().Item &&
-            body == ModContent.GetInstance<RustbanePlate>().Item &&
-            legs == ModContent.GetInstance<RustbaneLegs>().Item;
+            head.type == Item.type &&
+            body.type == ModContent.ItemType<RustbanePlate>() &&
+            legs.type == ModContent.ItemType<RustbaneLegs>();
         }
         public override void UpdateArmorSet(Player player)
         {
+            if (Main.dedServ) return;
+            //  Rustbane armor set bonus
             player.setBonus = "Emanates rusty dust storm";
+            if (Main.time > 0 && (int)Main.time % 10 == 0)
+            {
+                float radius = Main.rand.Next(100, 200);
+                double angle = Math.PI * 2d * Main.rand.NextFloat();
+                double cos = player.Center.X + radius * Math.Cos(angle);
+                double sine = player.Center.Y + radius * Math.Sin(angle);
+                ArchaeaPlayer.RadialDustDiffusion(player.Center, cos, sine, radius, 10, DustID.Pearlsand, 37, false, player.whoAmI);
+            }
         }
         public override void AddRecipes()
         {

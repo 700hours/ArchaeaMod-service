@@ -45,6 +45,11 @@ namespace ArchaeaMod.Projectiles
         }
         SpriteBatch sb => Main.spriteBatch;
         NPC npc => Main.npc[(int)Projectile.ai[0]];
+        int whoAmI
+        {
+            get { return (int)Projectile.localAI[0]; }
+            set { Projectile.localAI[0] = value; }
+        }
         Vector2[] ground = new Vector2[3];
         const float MaxDistance = 300f;
         public override bool PreAI()
@@ -53,9 +58,14 @@ namespace ArchaeaMod.Projectiles
             {
                 case 0:
                     Projectile.penetrate = -1;
-                    var n = NPCs.ArchaeaNPC.FindCloseNPCs(Projectile)[0];
-                    if (n == default)
+                    var array = NPCs.ArchaeaNPC.FindCloseNPCs(Projectile);
+                    var n = array[whoAmI];
+                    if (n == default || !n.active || n.life <= 0 || n.boss)
+                    {
+                        if (whoAmI < array.Length)
+                            whoAmI++;
                         return false;
+                    }
                     target = n.whoAmI;
                     goto case 1;
                 case 1:

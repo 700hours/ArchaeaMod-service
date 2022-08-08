@@ -32,9 +32,9 @@ namespace ArchaeaMod.Merged.Items.Armors
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
             return
-            head == ModContent.GetInstance<ancient_shockhelmet>().Item &&
-            body == Item &&
-            legs == ModContent.GetInstance<ancient_shockgreaves>().Item;
+            head.type == ModContent.ItemType<ancient_shockhelmet>() &&
+            body.type == Item.type &&
+            legs.type == ModContent.ItemType<ancient_shockgreaves>();
         }
 
         int Proj1;

@@ -120,10 +120,14 @@ namespace ArchaeaMod.NPCs
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
+            int[] i = new[] 
+            {
+                ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>(),
+                ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>(),
+                ModContent.ItemType<Merged.Items.Armors.ancient_shockgreaves>()
+            }; 
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.r_plate>(), 3, 1, 4));
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Armors.ancient_shockhelmet>(), 13));
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Armors.ancient_shockplate>(), 13));
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Merged.Items.Armors.ancient_shockgreaves>(), 13));        
+            npcLoot.Add(ItemDropRule.OneFromOptions(13, i));
         }
 
         private bool BeginActive()
