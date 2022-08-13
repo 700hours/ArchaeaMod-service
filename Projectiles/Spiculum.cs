@@ -59,14 +59,14 @@ namespace ArchaeaMod.Projectiles
             }
             Projectile.rotation = Projectile.velocity.ToRotation() + 135f * Draw.radian;
             if (!target[whoAmI].active || target[whoAmI].life <= 0 || target[whoAmI].friendly)
-            { 
+            {
                 if (whoAmI < Main.npc.Length && target[whoAmI].Distance(Projectile.Center) < 1000f)
-                { 
+                {
                     whoAmI++;
                 }
                 else
                 {
-                    Projectile.velocity = Projectile.velocity.MoveTowards(Main.player[Projectile.owner].position, speed);
+                    Projectile.velocity = Projectile.velocity.MoveTowards(Main.player[Projectile.owner].Center, speed);
                     if (Projectile.Hitbox.Intersects(Main.player[Projectile.owner].Hitbox))
                     {
                         Projectile.timeLeft = 600;
@@ -77,7 +77,7 @@ namespace ArchaeaMod.Projectiles
             if (target[whoAmI].Distance(Projectile.Center) < 1000f)
             {
                 Projectile.penetrate = -1;
-                Projectile.velocity = NPCs.ArchaeaNPC.AngleToSpeed(Projectile.Center.AngleTo(target[whoAmI].position), speed);
+                Projectile.velocity = NPCs.ArchaeaNPC.AngleToSpeed(Projectile.Center.AngleTo(target[whoAmI].Center), speed);
                 if (!Projectile.Hitbox.Intersects(target[whoAmI].Hitbox))
                 {   
                     Projectile.timeLeft = 2;

@@ -1,4 +1,11 @@
-version 1.3.9.15 -> 1.3.*
+version 1.3.9.15 -> 1.3.9.16
 ============================
+# Added
+-> Progress text values such as tile counts
+# Changed
+-> Spiculum targeting adjustment
+-> Gargoyle NPC.wet spawning condition
+# Fixed
+-> Proper damage reduction stat
 # Removed
 -> Cinnabar bar

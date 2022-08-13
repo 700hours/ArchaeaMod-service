@@ -89,7 +89,7 @@ namespace ArchaeaMod.NPCs
                 if (ArchaeaWorld.Inbounds(i, j) && Main.tile[i, j].WallType != ArchaeaWorld.skyBrickWall)
                 {
                     newPosition = ArchaeaNPC.FindAny(NPC, ArchaeaNPC.FindClosest(NPC, true), true, 800);
-                    if (newPosition != Vector2.Zero)
+                    if (newPosition != Vector2.Zero && !NPC.wet)
                     {
                         NPC.netUpdate = true;
                         init = true;

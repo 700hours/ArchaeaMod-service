@@ -112,7 +112,8 @@ namespace ArchaeaMod
         public int TRAIT_PlacedRails = 0;
         public int TRAIT_PlacedBricks = 0;
         public int TRAIT_PlacedPylon = 0;
-        
+        public int fallDistance = 0;
+
         //  Biome bounds
         private bool outOfBounds;
         private bool[] zones = new bool[index];
@@ -137,6 +138,7 @@ namespace ArchaeaMod
             modPlayer.TRAIT_PlacedRails = TRAIT_PlacedRails;
             modPlayer.TRAIT_PlantedMushroom = TRAIT_PlantedMushroom;
             modPlayer.TRAIT_TIME_MaxDirtStack = TRAIT_TIME_MaxDirtStack;
+            modPlayer.fallDistance = fallDistance;
             //  Increase
             modPlayer.arrowSpeed = arrowSpeed;
             modPlayer.jumpHeight = jumpHeight;
@@ -163,6 +165,7 @@ namespace ArchaeaMod
             TRAIT_PlacedRails = modPlayer.TRAIT_PlacedRails;
             TRAIT_PlantedMushroom = modPlayer.TRAIT_PlantedMushroom;
             TRAIT_TIME_MaxDirtStack = modPlayer.TRAIT_TIME_MaxDirtStack;
+            fallDistance = modPlayer.fallDistance;
             //  Increase
             arrowSpeed = modPlayer.arrowSpeed;
             jumpHeight = modPlayer.jumpHeight;
@@ -491,7 +494,6 @@ namespace ArchaeaMod
         }
         public override void PostUpdateRunSpeeds()
         {
-            Player.currentShoppingSettings.PriceAdjustment /= merchantDiscount;
             Player.jumpHeight = (int)(Player.jumpHeight * jumpHeight);
             Player.statDefense += toughness;
         }
@@ -512,11 +514,11 @@ namespace ArchaeaMod
             if (CheckHasTrait(TraitID.MAGE_NoKb, ClassID.Magic))
             {
                 if (Main.rand.NextFloat() < 0.5f)
-                { 
+                {
                     Player.noKnockback = true;
                 }
             }
-            damage = (int)(damage / percentDamageTaken);
+            damage = (int)(damage * Math.Max(percentDamageTaken, 0f));
             //- toughness / 2;
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return true;
@@ -568,7 +570,7 @@ namespace ArchaeaMod
                     merchantDiscount += num / 100f;   // 1% per point
                     break;
                 case ProgressID.PercentDamageReduction:
-                    percentDamageTaken += num / 100f; // 1% per point
+                    percentDamageTaken -= num / 100f; // 1% per point
                     break;
                 case ProgressID.AmmoReduction:
                     ammoReduction += num / 88.8f; // 1.1% per point   Double, Check ammo box
@@ -637,7 +639,6 @@ namespace ArchaeaMod
         #endregion
         public override void PreUpdate()
         {
-            oldPriceDiscount = Player.currentShoppingSettings.PriceAdjustment;
             //  Leap and Leap attack
             if (ground == Vector2.Zero)
             {
@@ -1038,11 +1039,28 @@ namespace ArchaeaMod
                 mult = 0.8f;
             }
         }
-
+        private bool flag = true;
+        public void NPCVendorScaling(float scale = 1f)
+        {
+            //  Merchant discount
+            if (flag && Player.talkNPC > 0)
+            {
+                Player.currentShoppingSettings.PriceAdjustment /= scale;
+                flag = false;
+            }
+            if (flag)
+            {
+                oldPriceDiscount = Player.currentShoppingSettings.PriceAdjustment;
+            }
+            if (Player.talkNPC <= 0)
+            {
+                Player.currentShoppingSettings.PriceAdjustment = oldPriceDiscount;
+                flag = true;
+            }
+        }
         public override void PostUpdate()
         {
-            //  Reset
-            Player.currentShoppingSettings.PriceAdjustment = oldPriceDiscount;
+            NPCVendorScaling(merchantDiscount);
             //  Trait characteristics
             //  Wall jump
             if (CheckHasTrait(TraitID.ALL_WallJump, ClassID.All))
@@ -1149,7 +1167,13 @@ namespace ArchaeaMod
             //  DEBUG this
             //  Unknown how fallStart interacts with an entire fall
             //  Does it compare start fall tile to end fall tile? or does it increment?
-            if (Player.fallStart >= 1000)
+            if (Player.velocity.Y == Player.maxFallSpeed && Player.ropeCount <= 0)
+            {
+                //  Refer to "tile fall data.txt"
+                fallDistance += 0;
+            }
+            else fallDistance = 0;
+            if (fallDistance / 16 >= 1000)
             {
                 SetClassTrait(TraitID.MELEE_Leap, ClassID.Melee, true);
             }
@@ -1176,6 +1200,10 @@ namespace ArchaeaMod
             if (Player.position.Y / 16 < 100)
             {
                 SetClassTrait(TraitID.SUMMONER_ThrowStar, ClassID.Summoner, true);
+            }
+            if (placedTiles >= 250)
+            { 
+                SetClassTrait(TraitID.MELEE_DoubleKb, ClassID.Melee, true);
             }
             SetClassTrait(TraitID.RANGED_Tracking, ClassID.Ranged, Player.downedDD2EventAnyDifficulty);
             SetClassTrait(TraitID.RANGED_Ichor, ClassID.Ranged, NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3);

@@ -116,7 +116,7 @@ namespace ArchaeaMod.Mode
                         "   50% Cinnabar flask",
                         "Craft wings\n" +
                         "   Leap attack",
-                        "Survive a 1000 tile fall\n" +
+                        $"Survive a {num2}/1000 tile fall\n" +
                         "   Leap"
                     };
                 case 1:     // Ranged
@@ -280,7 +280,7 @@ namespace ArchaeaMod.Mode
                 int cOffset = Main.player[Main.myPlayer].height * 2;
                 int xOffset = 8;
                 int yOffset = 8;
-                var rect = UiHelper.CenterBox(Main.screenWidth, Main.screenHeight + cOffset, 140, 24);
+                var rect = UiHelper.CenterBox(Main.screenWidth, Main.screenHeight + cOffset, 140, 36);
                 Utils.DrawInvBG(sb, rect, Color.Transparent);
                 Utils.DrawBorderString(sb, "Trait acquired!", new Vector2(rect.X + xOffset, rect.Y + yOffset), Color.CornflowerBlue);
             }
@@ -424,7 +424,7 @@ namespace ArchaeaMod.Mode
             switch (TraitIndex())
             {
                 case 0:
-                    trait[0].content = ClassArray(0, modPlayer.placedTiles);
+                    trait[0].content = ClassArray(0, modPlayer.placedTiles, modPlayer.fallDistance / 16);
                     break;
                 case 1:
                     trait[1].content = ClassArray(1, modPlayer.TRAIT_TIME_MaxDirtStack);

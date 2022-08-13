@@ -331,8 +331,6 @@ namespace ArchaeaMod.Progression.Global
     {
         public override void PlaceInWorld(int i, int j, int type, Item item)
         {
-            ArchaeaPlayer.SetClassTrait(TraitID.MELEE_DoubleKb, ClassID.Melee, false, item.playerIndexTheItemIsReservedFor);
-
             Player player = Main.player[item.playerIndexTheItemIsReservedFor];
             ArchaeaPlayer modPlayer = player.GetModPlayer<ArchaeaPlayer>();
             if (modPlayer.classChoice == ClassID.Magic)
@@ -352,6 +350,10 @@ namespace ArchaeaMod.Progression.Global
                 {
                     modPlayer.TRAIT_PlacedBricks++;
                 }
+            }
+            if (modPlayer.classChoice == ClassID.Melee)
+            {
+                modPlayer.placedTiles++;
             }
             if (modPlayer.classChoice == ClassID.All)
             {

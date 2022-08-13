@@ -217,6 +217,9 @@ namespace ArchaeaMod.Mode
             return base.HijackGetData(ref messageType, ref reader, playerNumber);
             switch (messageType)
             {
+                case MessageID.SyncTalkNPC:
+                    //  Doesn't occur in singleplayer
+                    break;
                 case MessageID.PlayerInfo:
                 case MessageID.PlayerSpawn:
                 case MessageID.WorldData:
