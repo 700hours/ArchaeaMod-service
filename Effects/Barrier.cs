@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -46,6 +47,7 @@ namespace ArchaeaMod.Effects
             hitbox = new Rectangle(x, y, Size, Size);
         }
         public bool active;
+        public static bool hintInit = false;
         private float alpha = 0f;
         public static readonly int Size = 96;
         public static readonly int Width = 96;
@@ -71,17 +73,27 @@ namespace ArchaeaMod.Effects
         }
         public void Update(Player player)
         {
-            if (ModContent.GetInstance<ArchaeaWorld>().MagnoBiomeOriginX == 0)
+            int originX = ModContent.GetInstance<ArchaeaWorld>().MagnoBiomeOriginX;
+            if (originX == 0)
                 return;
             if (!active || ModContent.GetInstance<ArchaeaWorld>().downedMagno)
                 return;
-            if (player.position.Y + player.height >= position.Y) {
+            if (player.position.Y + player.height >= position.Y) 
+            {
                 player.velocity.Y = 0f;
                 player.slowFall = true;
             }
-            if (player.position.Y + player.height > position.Y) {
+            if (player.position.Y + player.height > position.Y) 
+            {
                 player.position.Y = position.Y - player.height;
                 player.slowFall = true;
+            }
+            if (!Barrier.hintInit && player.position.Y > position.Y - Main.screenHeight / 2)
+            {
+                int direction = originX > player.position.X ? -1 : 1;
+                SoundEngine.PlaySound(SoundID.Roar, new Vector2(player.position.X - Main.screenWidth / 2 * direction, player.Center.Y));
+                Main.NewText("Sounds resound from the direction of the magnoliac region...");
+                hintInit = true;
             }
         }
         public void Draw(SpriteBatch sb, Player player)

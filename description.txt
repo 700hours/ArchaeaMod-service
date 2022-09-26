@@ -1,10 +1,19 @@
 [b]Archaea Mod[/b]
 Terraria mod which is designed to provide new elements that are both pre-hardmode and hardmode.
 
+[b]Latest update[/b]
+[i]version 1.3.9.19 -> 1.3.9.21
+============================
+# Added
+-> Progression hint sound effect and text message
+# Changed
+-> Certain mod boss has HP reduced by half[/i]
+
+[hr]
 [i]Features implemented are a few such as these:[/i]
 * Progression-based difficulty mode
 * 1 new biome
-* 2 new structures
+* 3 new structures
 * Many items and enemies
 * Complimentary to vanilla
 * Pre-hardmode completion step with hint
@@ -14,7 +23,6 @@ There are several key binds that do things like prompt show/hide UI.
 The status dialog is drag-able--click and hold anywhere on it to move it around.
 
 [hr]
-
 Progression requirements are made clear in the mod, and the gear and items found will assist in the general completion of the vanilla game.
 
 A particular inclusion is a mode which revises damage and health statistics along with a checklist, each item adding to the difficulty.
@@ -22,7 +30,6 @@ A particular inclusion is a mode which revises damage and health statistics alon
 Multiplayer gameplay is included. Dedicated server usage is also implemented.
 
 [hr]
-
 [b]Team[/b]
 > WarrenMark, lead
 > TerrorPenguin, artist

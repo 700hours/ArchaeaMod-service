@@ -384,16 +384,14 @@ namespace ArchaeaMod.Mode
         {
             loading = false;
             if (ModContent.GetInstance<ArchaeaMode>() != null)
-            { 
+            {
                 healthScale = ModContent.GetInstance<ArchaeaMode>().ModeChecksLifeScale(archaeaMode);
                 damageScale = ModContent.GetInstance<ArchaeaMode>().ModeChecksDamageScale(archaeaMode);
             }
         }
         public override void PreSaveAndQuit()
         {
-            if (archaeaMode) { 
-                Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SetModeStats(false);
-            }
+            Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SetModeStats(false);
         }
 
         public bool archaeaMode;

@@ -88,12 +88,15 @@ namespace ArchaeaMod.Interface.ModUI
         private static ArchaeaPlayer modPlayer;
         internal static bool Toggled = false;
         static bool flag = false;
+        static bool flag2 = false;
         public static bool MainOptions(Player player, bool forceDraw = false)
         {
             if (reset)
             {
                 Initialize();
                 apply.color = Color.Gray;
+                mainOptions[2].active = ModContent.GetInstance<ModeToggle>().archaeaMode;
+                mainOptions[2].color = mainOptions[2].active ? Color.Blue : Color.White;
                 reset = false;
             }
             if (toggle.LeftClick())
@@ -199,7 +202,7 @@ namespace ArchaeaMod.Interface.ModUI
                     ModContent.GetInstance<ModeToggle>().SetCordonedBiomes(mainOptions[1].active);
                     ModContent.GetInstance<ModeToggle>().SetArchaeaMode(mainOptions[2].active);
                     //}
-                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                    if (Main.netMode != NetmodeID.Server)
                     {
                         player.GetModPlayer<ArchaeaPlayer>()
                             .SetModeStats(ModContent.GetInstance<ModeToggle>().archaeaMode, player.whoAmI);

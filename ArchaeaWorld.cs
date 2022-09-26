@@ -788,6 +788,7 @@ namespace ArchaeaMod
             tag.Add("IDs", playerIDs);
             tag.Add("Crystals", spawnedCrystals);
             tag.Add("OriginX", MagnoBiomeOriginX);
+            tag.Add("hint", Effects.Barrier.hintInit);
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -798,6 +799,7 @@ namespace ArchaeaMod
             playerIDs = tag.Get<List<int>>("IDs");
             spawnedCrystals = tag.GetBool("Crystals");
             MagnoBiomeOriginX = tag.GetInt("OriginX");
+            Effects.Barrier.hintInit = tag.GetBool("hint");
         }
         public override void NetSend(BinaryWriter writer)
         {

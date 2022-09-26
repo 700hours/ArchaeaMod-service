@@ -89,6 +89,7 @@ namespace ArchaeaMod
         private Action<float, float> method;
         public bool classChecked;
         Effects.Polygon polygon = new Effects.Polygon();
+        public bool loadComplete;
 
         //  Stat variables
         //  Increase
@@ -412,20 +413,32 @@ namespace ArchaeaMod
                 return lifeMax2;
                 //Player.statLife = Player.statLifeMax2;
             }
-            return 100;
+            return lifeMax2;
+            //if (Main.netMode == NetmodeID.MultiplayerClient)
+            //    NetMessage.SendData(MessageID.PlayerLifeMana);
+        }
+        public void PreSavePlayer(Player Player)
+        {
+            Player.statLifeMax2 = ModeOffResetStats(Player.statLifeMax2);
+            Player.statLifeMax = Player.statLifeMax2;
+        }
+        public void PostSavePlayer(Player Player)
+        {
+            Player.statLifeMax2 = LifeMaxMode(Player.statLifeMax2);
+            Player.statLifeMax = Player.statLifeMax2;
+            //Player.statLife = Player.statLifeMax;
             //if (Main.netMode == NetmodeID.MultiplayerClient)
             //    NetMessage.SendData(MessageID.PlayerLifeMana);
         }
         public override void PreSavePlayer()
         {
-            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
-                return;
+            return; //  This is not necessary and turning on or off Archaea Mode sets the values manually
             Player.statLifeMax2 = ModeOffResetStats(Player.statLifeMax2);
+            Player.statLifeMax = Player.statLifeMax2;
         }
         public override void PostSavePlayer()
         {
-            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
-                return;
+            return; //  This is not necessary and turning on or off Archaea Mode sets the values manually
             Player.statLifeMax2 = LifeMaxMode(Player.statLifeMax2);
             Player.statLifeMax = Player.statLifeMax2;
             //Player.statLife = Player.statLifeMax;
@@ -435,6 +448,7 @@ namespace ArchaeaMod
         public static int LifeMaxMode(int lifeMax2)
         {
             if (lifeMax2 == 100) return 100;
+            if (lifeMax2 > 500)  return lifeMax2;
             int extra = lifeMax2 - 100;
             lifeMax2 = Math.Min(9999, Math.Max(100, 100 + ArchaeaMode.LifeCrystal(extra)));
             return lifeMax2;
@@ -448,7 +462,8 @@ namespace ArchaeaMod
             debugTimer.Elapsed += DebugTimer_Elapsed;
             debugTimer.Start();
 
-            PostSavePlayer();
+            
+            SetModeStats(ModContent.GetInstance<ModeToggle>().archaeaMode);
             InitStat(player);
             if (Effects.Barrier.barrier == null)
             {
@@ -475,13 +490,38 @@ namespace ArchaeaMod
 
         public void SetModeStats(bool modeFlag, int whoAmI)
         {
-            NetHandler.Send(Packet.SetModeLife, 256, whoAmI, b: modeFlag);
+            if (Main.netMode == NetmodeID.MultiplayerClient) 
+            { 
+                NetHandler.Send(Packet.SetModeLife, 256, whoAmI, b: modeFlag);
+            }
+            else
+            {
+                if (modeFlag)
+                {
+                    PostSavePlayer(Player);
+                }
+                else
+                {
+                    PreSavePlayer(Player);
+                }
+            }
         }
         public void SetModeStats(bool modeFlag)
         {
             if (modeFlag)
-                PostSavePlayer();
-            else ModeOffResetStats(Player.statLifeMax2);
+            {
+                PostSavePlayer(Player);
+            }
+            else
+            {
+                PreSavePlayer(Player);
+            }
+            return;
+            Player.statLifeMax2 = ModeOffResetStats(Player.statLifeMax2);
+            Player.statLifeMax = Player.statLifeMax2;
+            //if (modeFlag)
+            //    PostSavePlayer();
+            //else ModeOffResetStats(Player.statLifeMax2);
         }
         #region Progression
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
@@ -1382,7 +1422,6 @@ namespace ArchaeaMod
         {
             get { return Main.spriteBatch; }
         }
-
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
             if (/*classChoice == ClassID.None &&*/ drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI && !drawInfo.drawPlayer.dead)
