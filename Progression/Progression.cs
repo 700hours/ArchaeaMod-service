@@ -148,6 +148,7 @@ namespace ArchaeaMod.Progression.Global
     {
         Timer timer;
         float rand;
+        int useCount = 0;
         public override bool InstancePerEntity => true;
         //  Assigning trait effects
         public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -207,6 +208,26 @@ namespace ArchaeaMod.Progression.Global
             }
         }
 
+        //  Custom UseItem
+        public void BeginUseItem(Item item, Player player)
+        {
+            if (useCount > 0)
+                return;
+
+            timer = new Timer(Math.Max((float)item.useTime / Main.frameRate * 1000f * 0.75f + 1f, 100f));
+            timer.Enabled = true;
+            timer.Elapsed += (object sender, ElapsedEventArgs e) =>
+            {
+                useCount = 0;
+            };
+            timer.Start();
+        }
+        public void EndUseItem(Item item, Player player)
+        {
+            if (useCount > 0)
+                return;
+            useCount = 1;
+        }
         //  Assigning trait values
         public override bool OnPickup(Item item, Player player)
         {
@@ -267,6 +288,7 @@ namespace ArchaeaMod.Progression.Global
         }
         public override bool? UseItem(Item item, Player player)
         {
+            BeginUseItem(item, player);
             //  Assigning trait effects
             if (Main.rand.NextFloat() < 0.1f)
             {
@@ -297,18 +319,8 @@ namespace ArchaeaMod.Progression.Global
                 }
             }
             //  Assigning trait values
-            if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_DoubleSwing, ClassID.Melee, player.whoAmI))
-            {
-                timer = new Timer(Math.Max((float)item.useTime / Main.frameRate * 1000f * 0.75f, 100f));
-                timer.Enabled = true;
-                timer.Elapsed += (object sender, ElapsedEventArgs e) =>
-                {
-                    Helper.LeftMouse();
-                    timer.Dispose();
-                };
-                timer.Start();
-            }
             ArchaeaPlayer.SetClassTrait(TraitID.ALL_IncJumpHeight, ClassID.All, item.buffType == BuffID.WellFed3, player.whoAmI);
+            EndUseItem(item, player);
             return null;
         }
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)

@@ -114,6 +114,7 @@ namespace ArchaeaMod
         public int TRAIT_PlacedBricks = 0;
         public int TRAIT_PlacedPylon = 0;
         public int fallDistance = 0;
+        public bool itemUsed = false;
 
         //  Biome bounds
         private bool outOfBounds;
