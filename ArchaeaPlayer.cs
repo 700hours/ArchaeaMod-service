@@ -1396,7 +1396,7 @@ namespace ArchaeaMod
             }
             return false;
         }
-        private void DarkenedVision()
+        public void DarkenedVision()
         {
             if (!SkyFort || ModContent.GetInstance<ArchaeaWorld>().downedNecrosis)
             {
@@ -1409,15 +1409,30 @@ namespace ArchaeaMod
                     darkAlpha += 1f / 150f;
             }
             Texture2D texture = TextureAssets.MagicPixel.Value;
-            Color color = Color.Black * darkAlpha;
+            Color color = Color.Black * Math.Min(darkAlpha, 1f);
             int range = 200;
-            int side = Main.screenWidth / 2 - range;
-            int top = Main.screenHeight / 2 - range;
-            sb.Draw(texture, new Rectangle(0, 0, side, Main.screenHeight), color);
-            sb.Draw(texture, new Rectangle(Main.screenWidth - side, 0, side, Main.screenHeight), color);
-            sb.Draw(texture, new Rectangle(side, 0, range * 2, top), color);
-            sb.Draw(texture, new Rectangle(side, Main.screenHeight - top, range * 2, top), color);
-            sb.Draw(Mod.Assets.Request<Texture2D>("Gores/fort_vignette_ui").Value, new Rectangle(side, top, range * 2, range * 2 + 1), Color.Black * darkAlpha);
+            int side = Main.screenWidth / 2 - range + (Main.screenWidth % 2);
+            int top = Main.screenHeight / 2 - range + (Main.screenHeight % 2);
+
+            var _left = new Rectangle(0, 0, side, Main.screenHeight);
+            var _right = new Rectangle(Main.screenWidth - side, 0, side, Main.screenHeight);
+            var _top = new Rectangle(side, 0, range * 2, top);
+            var _bottom = new Rectangle(side, Main.screenHeight - top, range * 2, top);
+            var _center = new Rectangle(side, top, range * 2, range * 2);
+            if (_top.Intersects(_right))
+                _top.Width -= 1;
+            if (_bottom.Intersects(_right))
+                _bottom.Width -= 1;
+            if (_center.Intersects(_bottom))
+                _center.Height -= 1;
+            if (_center.Intersects(_right))
+                _center.Width -= 1;
+
+            sb.Draw(texture, _left, color);
+            sb.Draw(texture, _right, color);
+            sb.Draw(texture, _top, color);
+            sb.Draw(texture, _bottom, color);
+            sb.Draw(Mod.Assets.Request<Texture2D>("Gores/fort_vignette_ui").Value, _center, color);
         }
         private SpriteBatch sb
         {
@@ -1439,8 +1454,6 @@ namespace ArchaeaMod
                     for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
                         Effects.Barrier.barrier[i]?.Draw(sb, Player);
                 }
-                if (!Main.hardMode)
-                    DarkenedVision();
             }
             if (debugMenu)
                 DebugMenu();

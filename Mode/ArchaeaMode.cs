@@ -488,9 +488,14 @@ namespace ArchaeaMod.Mode
         public override void PostDrawTiles()
         {
             SpriteBatch sb = Main.spriteBatch;
+            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            if (!Main.hardMode)
+            { 
+                Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().DarkenedVision();
+            }
             if (Main.playerInventory)
             {
-                sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                
                 if (progress)
                 {
                     Rectangle panel = new Rectangle(306 - 160, 255, 180, 100);
@@ -503,8 +508,8 @@ namespace ArchaeaMod.Mode
                 }
                 if (archaeaMode)
                     objectiveButton.Draw();
-                sb.End();
             }
+            sb.End();
         }
     }
     public class ModeNPC : GlobalNPC

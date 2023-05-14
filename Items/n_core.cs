@@ -14,7 +14,7 @@ namespace ArchaeaMod.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Dark Aura");
-            Tooltip.SetDefault("");
+            Tooltip.SetDefault("For use in the dark sky portal chamber.");
         }
         public override void SetDefaults()
         {

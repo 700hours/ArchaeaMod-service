@@ -2,10 +2,15 @@
 Terraria mod which is designed to provide new elements that are both pre-hardmode and hardmode.
 
 [b]Latest update[/b]
-[i]version 1.3.9.21 -> 1.3.10.22
+[i]version 1.3.9.21 -> 1.3.11.26
 ============================
 # Fixed
--> Double Swing trait spam on melee class[/i]
+-> Double Swing trait spam on melee class
+-> A barrier error
+-> Mod overlay flicker when player is moving
+-> Overlay clipping
+# Changed
+-> Core item tooltip now has description[/i]
 
 [hr]
 [i]Features implemented are a few such as these:[/i]
