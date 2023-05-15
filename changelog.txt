@@ -1,4 +1,7 @@
-version 1.3.11.26 -> 1.3.12.27
+version 1.3.11.26 -> 1.3.12.29
 ==============================
 # Fixed
 -> Barrier "Value cannot be null" error
+-> Hint drawing
+# Changed
+-> Switched to new tModLoader player PreHurt

@@ -11,13 +11,13 @@ namespace ArchaeaMod.Entities
 {
     public class MagnoShield : ArchaeaEntity
     {
-        private float start
+        private decimal start
         {
-            get { return ai[0]; }
+            get { return (decimal)ai[0]; }
         }
-        private float radius = 64f;
-        private float orbit;
-        private const float radian = 0.017f;
+        private decimal radius = 64m;
+        private decimal orbit;
+        private const decimal radian = 0.017m;
         public override void SetDefaults()
         {
             width = 18;
@@ -29,11 +29,11 @@ namespace ArchaeaMod.Entities
             netUpdate = true;
             Player player = Main.player[owner];
             rotation = ArchaeaNPC.AngleTo(player.Center, Center);
-            orbit = (float)Math.Round(orbit + (radian * Math.Min(player.statLifeMax / Math.Max(player.statLife, 1) + 2f, 6f)), 2);
-            if (orbit >= Math.Round(Math.PI * 2f, 2))
-                orbit = 0f;
-            double cos = player.Center.X + (float)(radius * ((float)player.statLife / player.statLifeMax2)) * Math.Cos(start + orbit);
-            double sine = player.Center.Y + (float)(radius * ((float)player.statLife / player.statLifeMax2)) * Math.Sin(start + orbit);
+            orbit = Math.Round(orbit + (radian * Math.Min((decimal)player.statLifeMax / Math.Max(player.statLife, 1m) + 2m, 6m)), 2);
+            if (orbit >= Math.Round((decimal)Math.PI * 2m, 2))
+                orbit = 0m;
+            decimal cos = (decimal)player.Center.X + (radius * ((decimal)player.statLife / player.statLifeMax2)) * (decimal)Math.Cos((double)(start + orbit));
+            decimal sine = (decimal)player.Center.Y + (radius * ((decimal)player.statLife / player.statLifeMax2)) * (decimal)Math.Sin((double)(start + orbit));
             Center = new Vector2((float)cos, (float)sine);
             if (!player.active || Items.ArchaeaItem.NotEquipped(player, ModContent.ItemType<Items.m_shield>()))
                 Kill(true);

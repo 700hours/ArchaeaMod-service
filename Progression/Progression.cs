@@ -144,6 +144,7 @@ namespace ArchaeaMod.Progression.Global
             }
         }
     }
+    [CloneByReference]
     public class ClassItem : GlobalItem
     {
         Timer timer;

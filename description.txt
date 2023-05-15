@@ -2,15 +2,13 @@
 Terraria mod which is designed to provide new elements that are both pre-hardmode and hardmode.
 
 [b]Latest update[/b]
-[i]version 1.3.9.21 -> 1.3.11.26
-============================
+[i]version 1.3.11.26 -> 1.3.12.29
+==============================
 # Fixed
--> Double Swing trait spam on melee class
--> A barrier error
--> Mod overlay flicker when player is moving
--> Overlay clipping
+-> Barrier "Value cannot be null" error
+-> Hint drawing
 # Changed
--> Core item tooltip now has description[/i]
+-> Switched to new tModLoader player PreHurt[/i]
 
 [hr]
 [i]Features implemented are a few such as these:[/i]

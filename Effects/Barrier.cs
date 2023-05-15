@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,11 +8,14 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using tUserInterface.Extension;
 
 namespace ArchaeaMod.Effects
 {
@@ -116,25 +120,50 @@ namespace ArchaeaMod.Effects
         {
             if (ModContent.GetInstance<ArchaeaWorld>().MagnoBiomeOriginX == 0)
                 return;
-            if (player.position.X > ModContent.GetInstance<ArchaeaWorld>().MagnoBiomeOriginX * 16 &&
-                player.position.X < (ModContent.GetInstance<ArchaeaWorld>().MagnoBiomeOriginX + 1600) * 16)
+            if (player.GetModPlayer<ArchaeaPlayer>().MagnoBiome)
                 return;
-            if (ModContent.GetInstance<ArchaeaWorld>().downedMagno || player.GetModPlayer<ArchaeaPlayer>().MagnoBiome)
+            int originX = ModContent.GetInstance<ArchaeaWorld>().MagnoBiomeOriginX;
+            int worldOriginX = ModContent.GetInstance<ArchaeaWorld>().MagnoBiomeOriginX * 16;
+            bool flag = 
+                (player.position.X > worldOriginX &&
+                player.position.X < (originX + 1600) * 16);
+            if (ModContent.GetInstance<ArchaeaWorld>().downedMagno)
                 return;
-            var b = barrier.FirstOrDefault(t => t.active);
-            if (b != default && b.active)
+            int layer = Main.UnderworldLayer * 16;
+            if (player.position.Y > layer - Main.screenHeight * 3)
             {
+                Texture2D tex = mod.Assets.Request<Texture2D>("Gores/arrow").Value;
+                Texture2D result = null;
+                using (MemoryStream res = new MemoryStream())
+                { 
+                    using (MemoryStream mem = new MemoryStream())
+                    { 
+                        tex.SaveAsPng(mem, tex.Width, tex.Height);
+                        using (Bitmap bmp = (Bitmap)Bitmap.FromStream(mem))
+                        {
+                            bmp.MakeTransparent(System.Drawing.Color.Black);
+                            bmp.Save(res, System.Drawing.Imaging.ImageFormat.Png);
+                        }
+                    }
+                    result = Fx.FromStream(res);
+                }
                 Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
                 if (Main.drawToScreen)
                 {
                     zero = Vector2.Zero;
                 }
                 Color color = Color.FromNonPremultiplied((int)(255 * 0.604f), (int)(255 * 0.161f), (int)(255 * 0.161f), 255);
-                if (ModContent.GetInstance<ArchaeaWorld>().MagnoBiomeOriginX < player.Center.X) { 
-                    sb.Draw(mod.Assets.Request<Texture2D>("Gores/arrow").Value, new Vector2(50, Main.screenHeight / 2 - Height / 2), default, color, 0f, new Vector2(Width / 2, Height / 2), 0.5f, SpriteEffects.FlipHorizontally, 0f);
+                if (flag)
+                {
+                    sb.Draw(result, new Vector2(Main.screenWidth / 2, Height + 20), default, color, MathHelper.ToRadians(-90f), new Vector2(Width / 2, Height / 2), 0.5f, SpriteEffects.None, 0f);
                 }
-                else {
-                    sb.Draw(mod.Assets.Request<Texture2D>("Gores/arrow").Value, new Vector2(Main.screenWidth - Width - 50, Main.screenHeight / 2 - Height / 2), default, color, 0f, new Vector2(Width / 2, Height / 2), 0.5f, SpriteEffects.None, 0f);
+                else if (worldOriginX < player.Center.X) 
+                { 
+                    sb.Draw(result, new Vector2(50, Main.screenHeight / 2 - Height / 2), default, color, 0f, new Vector2(Width / 2, Height / 2), 0.5f, SpriteEffects.FlipHorizontally, 0f);
+                }
+                else 
+                {
+                    sb.Draw(result, new Vector2(Main.screenWidth - Width - 50, Main.screenHeight / 2 - Height / 2), default, color, 0f, new Vector2(Width / 2, Height / 2), 0.5f, SpriteEffects.None, 0f);
                 }
             }
         }
