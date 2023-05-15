@@ -37,6 +37,7 @@ namespace ArchaeaMod.Mode
         private ListBox[] trait = new ListBox[5];
         private ListBox[] page;
         private Button[] tab;
+        private Button close;
         private int classChoice = 0;
         public int ticks = 0;
 
@@ -44,7 +45,7 @@ namespace ArchaeaMod.Mode
         {
             if (Main.dedServ) return;
             //start = 0, health = 1, mana = 2, bosses = 3, bottom = 4, npcs = 5, week = 6, crafting = 7, downedMagno = 8;
-            objective = new ListBox(new Rectangle(200, 200, 240, 300), default, new[] 
+            objective = new ListBox(new Rectangle(200, 200, 240, 200), default, new[] 
             { 
                 "World start begins",
                 "Heart crystal used",
@@ -79,6 +80,15 @@ namespace ArchaeaMod.Mode
             stat.scroll = new Scroll(objective.hitbox);
             stat.active = false;
 
+            var mode = new ListBox(objective.hitbox, default, new[]
+            {
+                "Optional: Archaea Mode",
+                "enables objectives",
+                "that scale difficulty."
+            }, null, new [] { Color.Gray });
+            mode.scroll = new Scroll(mode.hitbox);
+            mode.bgColor = Color.Transparent;
+
             trait[ClassID.Melee - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Melee - 1, 0), null, new Color[5]);
             trait[ClassID.Ranged - 1] = new ListBox(objective.hitbox, default,  ClassArray(ClassID.Ranged - 1, 0), null, new Color[5]);
             trait[ClassID.Magic - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Magic - 1, 0), null, new Color[5]);
@@ -97,7 +107,7 @@ namespace ArchaeaMod.Mode
                 new Button("2", default, Color.LightGray),
                 new Button("3", default, Color.LightGray)
             };
-            page = new ListBox[] { objective, stat, default };
+            page = new ListBox[] { objective, stat, default, mode };
         }
         private string[] ClassArray(int index, int num = 0, int num2 = 0)
         {
@@ -199,8 +209,13 @@ namespace ArchaeaMod.Mode
                 Utils.DrawBorderString(sb, "Loading checklist . . .", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
                 return;
             }
-            for (int i = 0; i < page.Length; i++)
-            { 
+            for (int i = 0; i < page.Length - 1; i++)
+            {
+                if (page[0].active && !ModContent.GetInstance<ModeToggle>().archaeaMode)
+                {
+                    page[3].Draw(sb, FontAssets.MouseText.Value, 8, 8, 32);
+                    break;
+                }
                 if (page[0].active)
                 {
                     page[0].Draw(sb, FontAssets.MouseText.Value, 8, 8, 32);
@@ -442,6 +457,7 @@ namespace ArchaeaMod.Mode
             InBoundsUI(objective);
             InBoundsUI(stat);
             InBoundsUI(trait[TraitIndex()]);
+            InBoundsUI(page[3]);
         }
         private void InBoundsUI(ListBox listBox)
         {

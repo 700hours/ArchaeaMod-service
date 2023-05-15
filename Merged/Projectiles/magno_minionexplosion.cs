@@ -10,6 +10,7 @@ namespace ArchaeaMod.Merged.Projectiles
 {
     public class magno_minionexplosion : ModProjectile
     {
+        bool nativeHitNPC => (int)Projectile.ai[0] == 1 ? true : false;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Minion Explosion");
@@ -45,6 +46,22 @@ namespace ArchaeaMod.Merged.Projectiles
             }
         }
 
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            if (nativeHitNPC)
+            {
+                target.StrikeNPC(damage, knockback, Projectile.Center.X < target.Center.X ? 1 : -1, crit);
+            }
+        }
+
+        public override bool? CanDamage()
+        {
+            return true;
+        }
+        public override bool CanHitPvp(Player target)
+        {
+            return true;
+        }
         public override bool? CanCutTiles()
         {
             return false;

@@ -19,7 +19,7 @@ using ArchaeaMod.Mode;
 using Terraria.ID;
 using System.Timers;
 
-namespace ArchaeaMod.Interface.ModUI
+namespace ArchaeaMod.Interface.UI
 {
     public sealed class OptionsID
     {

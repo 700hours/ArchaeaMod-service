@@ -69,7 +69,7 @@ namespace ArchaeaMod.Tiles
                 double radius = Vector2.Lerp(new Vector2(100, 0), new Vector2(300, 0), Math.Abs(ticks)).X;
                 double cos  = v2.X + radius * Math.Cos(Math.PI * 2f * Main.rand.NextFloat());
                 double sine = v2.Y + radius * Math.Sin(Math.PI * 2f * Main.rand.NextFloat());
-                ArchaeaPlayer.RadialDustDiffusion(v2, cos, sine, (float)radius, ModContent.DustType<Dusts.Shimmer_1>(), 5, true);
+                ArchaeaPlayer.RadialDustDiffusion(v2, cos, sine, (float)radius, ModContent.DustType<Dusts.Shimmer_1>(), 0, true);
             }
             return false;
         }

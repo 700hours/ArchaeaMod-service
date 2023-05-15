@@ -11,6 +11,9 @@ namespace ArchaeaMod.Merged.Projectiles
 {
     public class magno_minion : ModProjectile
     {
+        bool fadeOutFlag => Projectile.ai[0] == -100f ? true : false;
+        int _npcTarget => (int)Projectile.ai[1];
+
         public override void SetDefaults()
         {
             Main.projPet[Projectile.type] = true;
@@ -33,8 +36,12 @@ namespace ArchaeaMod.Merged.Projectiles
 
         public void Initialize()
         {
-            Projectile.netUpdate = true;
             oldProj = Projectile.whoAmI;
+            if (fadeOutFlag)
+            {
+                Projectile.alpha = 0;
+            }
+            Projectile.netUpdate = true;
         }
         bool init;
         bool target = false, targeted = false;
@@ -52,10 +59,20 @@ namespace ArchaeaMod.Merged.Projectiles
         Vector2 npcCenter;
         public override void AI()
         {
-            if(!init)
+            if (!init)
             {
                 Initialize();
                 init = true;
+            }
+            if (fadeOutFlag)
+            {
+                Projectile.position = Main.npc[_npcTarget].Center - new Vector2(Projectile.width / 2, Projectile.height / 2);
+                Projectile.scale += 0.02f;
+                if ((Projectile.alpha += 2) >= 255)
+                {
+                    Projectile.Kill();
+                }
+                return;
             }
 
             Player player = Main.player[Projectile.owner];
@@ -182,7 +199,7 @@ namespace ArchaeaMod.Merged.Projectiles
                                 int d = Dust.NewDust(Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), 4, 4, 6, Distance(null, k, 2f).X, Distance(null, k, 8f).Y, 0, default(Color), 2f);
                                 Main.dust[d].noGravity = true;
                             }
-                            Main.npc[npcTarget].StrikeNPC((int)(24f * player.GetDamage(DamageClass.Summon).Flat), 4f, 0);
+                            Main.npc[npcTarget].StrikeNPC((int)(24f * player.GetDamage(DamageClass.Summon).Multiplicative), 4f, 0);
                             int Proj2 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<magno_minionexplosion>(), 0, 0f, Projectile.owner, 0f, 0f);
                             Main.projectile[Proj2].position = Projectile.position - new Vector2(15, 15);
                             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);

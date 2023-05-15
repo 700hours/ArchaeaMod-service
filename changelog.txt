@@ -1,7 +1,7 @@
-version 1.3.11.26 -> 1.3.12.29
+version 1.3.12.29 -> 1.3.13.31
 ==============================
-# Fixed
--> Barrier "Value cannot be null" error
--> Hint drawing
+# Added
+-> Message signifying mode scaling option instead of empty box
 # Changed
--> Switched to new tModLoader player PreHurt
+-> Shrank vertical dimension of UI
+-> Particular armor set bonus is more explosive and less dusty

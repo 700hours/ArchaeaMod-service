@@ -20,7 +20,7 @@ using ReLogic.Graphics;
 
 using ArchaeaMod.GenLegacy;
 using ArchaeaMod.Mode;
-using ArchaeaMod.Interface.ModUI;
+using ArchaeaMod.Interface.UI;
 using ArchaeaMod.Progression;
 using Terraria.DataStructures;
 using Terraria.Audio;
