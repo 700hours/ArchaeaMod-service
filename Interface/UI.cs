@@ -158,6 +158,24 @@ namespace ArchaeaMod.Interface.UI
                             break;
                         }
                         sb.DrawString(FontAssets.MouseText.Value, categories[i], new Vector2(mainOptions[i].bounds.X, mainOptions[i].bounds.Bottom), Color.White);
+                        switch (i)
+                        { 
+                            case 0:
+                                string text = "Class selection is once per character.";
+                                int width = (int)FontAssets.MouseText.Value.MeasureString(text).X;
+                                sb.DrawString(FontAssets.MouseText.Value, text, new Vector2(Main.screenWidth / 2 - width / 2, Main.screenHeight - 32), Color.Gray);
+                                break;
+                            case 1:
+                                string text2 = "Not implemented.";
+                                int width2 = (int)FontAssets.MouseText.Value.MeasureString(text2).X;
+                                sb.DrawString(FontAssets.MouseText.Value, text2, new Vector2(Main.screenWidth / 2 - width2 / 2, Main.screenHeight - 32), Color.Gray);
+                                break;
+                            case 2:
+                                string text3 = "Increases stats of all players and NPCs and scales difficulty a bit.";
+                                int width3 = (int)FontAssets.MouseText.Value.MeasureString(text3).X;
+                                sb.DrawString(FontAssets.MouseText.Value, text3, new Vector2(Main.screenWidth / 2 - width3 / 2, Main.screenHeight - 32), Color.Gray);
+                                break;
+                        }
                     }
                 }
                 //currently without designation
@@ -352,12 +370,15 @@ namespace ArchaeaMod.Interface.UI
                             text += " ";
                         else if (key == Keys.OemPeriod)
                             text += ".";
+                        else if (key == Keys.OemMinus)
+                            text += "_";
                         else if (text.Length < 24 && key != Keys.OemPeriod)
                         {
                             string n = key.ToString().ToLower();
                             if (n.StartsWith("d") && n.Length == 2)
                                 n = n.Substring(1);
-                            text += n;
+                            if (n.Length == 1)
+                                text += n;
                         }
                     }
                 }

@@ -456,8 +456,8 @@ namespace ArchaeaMod.GenLegacy
         {
             int roomX = WorldGen.genRand.Next(300);
             int roomY = 0;
-            float maxTiles = Main.maxTilesX;
-            int start = (int)(maxTiles / WorldGen.genRand.NextFloat(1.5f, 4f));
+            float maxTiles = WorldGen.genRand.Next(200, (int)(Main.maxTilesX / 1.5));
+            int start = (int)maxTiles;//(int)(maxTiles / WorldGen.genRand.NextFloat(1.5f, 4f));
             for (int i = 0; i < rooms.Length; i++)
             {
                 progress = i;
@@ -513,7 +513,7 @@ namespace ArchaeaMod.GenLegacy
                                     for (float l = 0; l < 1f; l += 0.025f)
                                     {
                                         Vector2 placement = Vector2.Lerp(center, point, l);
-                                        Tile cloud = Main.tile[(int)placement.X, (int)placement.Y];
+                                        Tile cloud = Main.tile[(int)Math.Max(placement.X, 0), (int)Math.Max(placement.Y, 0)];
                                         if (WorldGen.genRand.Next(2) == 0)
                                             cloud.TileType = TileID.Cloud;
                                         else
@@ -534,8 +534,8 @@ namespace ArchaeaMod.GenLegacy
                                 {
                                     for (int q = -5; q <= 5; q++)
                                     {
-                                        int placeX = (int)placement.X + l;
-                                        int placeY = (int)placement.Y + q;
+                                        int placeX = (int)Math.Max(placement.X + l, 0);
+                                        int placeY = (int)Math.Max(placement.Y + q, 0);
                                         Tile hall = Main.tile[placeX, placeY];
                                         if (hall.WallType == 0)
                                         {
@@ -552,8 +552,8 @@ namespace ArchaeaMod.GenLegacy
                                 {
                                     for (int q = -3; q < 3; q++)
                                     {
-                                        int wallX = (int)placement.X + p;
-                                        int wallY = (int)placement.Y + q;
+                                        int wallX = (int)Math.Max(placement.X + p, 0);
+                                        int wallY = (int)Math.Max(placement.Y + q, 0);
                                         Tile wall = Main.tile[wallX, wallY];
                                         wall.WallType = wallType;
                                         wall.TileType = 0;

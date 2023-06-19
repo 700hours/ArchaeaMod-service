@@ -23,7 +23,7 @@ namespace ArchaeaMod.Buffs
         {
             if (npc.boss) 
                 return;
-            npc.velocity.X = Vector2.Zero.X;
+            npc.velocity = Vector2.Zero;
             npc.color = Color.LightGray;
         }
     }

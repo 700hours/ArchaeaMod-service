@@ -26,6 +26,10 @@ using Terraria.DataStructures;
 using Terraria.Audio;
 using System.Timers;
 using tUserInterface.Extension;
+using System.Security.Policy;
+using ArchaeaMod.NPCs;
+using System.Reflection.Metadata;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ArchaeaMod
 {
@@ -72,6 +76,7 @@ namespace ArchaeaMod
         private const int breathTimerMax = 180;
         public int[] spentStat = new int[10];
         public bool[] trait = new bool[30];
+        public bool[] objectiveStat = new bool[9];
         public int placedTiles = 0;
         public bool[] placedPylon = new bool[9];
 
@@ -80,7 +85,7 @@ namespace ArchaeaMod
         public bool debugMenu;
         public bool spawnMenu;
         private bool setInitMode = true;
-        private bool setModeStats = true;
+        private bool setModeStats = false;
         private bool classChosen;
         private const int maxTime = 360;
         private int effectTime = maxTime;
@@ -108,12 +113,14 @@ namespace ArchaeaMod
 
         //  More trait variables
         public int TRAIT_TIME_MaxDirtStack = 0;
-        public int TRAIT_TIME_MAX_MaxDirtStack = 60 * 60 * 60 * 120; // Frame rate, Seconds, Minutes, Hours
+        public int TRAIT_TIME_MAX_MaxDirtStack = 60 * 60 * 20 * 1; // Frame rate, Seconds, Minutes, Hours
         public int TRAIT_PlantedMushroom = 0;
         public int TRAIT_PlacedRails = 0;
         public int TRAIT_PlacedBricks = 0;
         public int TRAIT_PlacedPylon = 0;
         public int fallDistance = 0;
+        public int fallDistance2 = 0;
+        public int comparison = 0;
         public bool itemUsed = false;
 
         //  Biome bounds
@@ -141,6 +148,12 @@ namespace ArchaeaMod
             modPlayer.TRAIT_PlantedMushroom = TRAIT_PlantedMushroom;
             modPlayer.TRAIT_TIME_MaxDirtStack = TRAIT_TIME_MaxDirtStack;
             modPlayer.fallDistance = fallDistance;
+            modPlayer.fallDistance2 = fallDistance2;
+            modPlayer.comparison = comparison;
+            //  Stat variables
+            modPlayer.objectiveStat = objectiveStat;
+            modPlayer.overallMaxStat = overallMaxStat;
+            modPlayer.remainingStat = remainingStat;
             //  Increase
             modPlayer.arrowSpeed = arrowSpeed;
             modPlayer.jumpHeight = jumpHeight;
@@ -168,6 +181,12 @@ namespace ArchaeaMod
             TRAIT_PlantedMushroom = modPlayer.TRAIT_PlantedMushroom;
             TRAIT_TIME_MaxDirtStack = modPlayer.TRAIT_TIME_MaxDirtStack;
             fallDistance = modPlayer.fallDistance;
+            fallDistance2 = modPlayer.fallDistance2;
+            comparison = modPlayer.comparison;
+            //  Stat variables
+            objectiveStat = modPlayer.objectiveStat;
+            overallMaxStat = modPlayer.overallMaxStat;
+            remainingStat = modPlayer.remainingStat;
             //  Increase
             arrowSpeed = modPlayer.arrowSpeed;
             jumpHeight = modPlayer.jumpHeight;
@@ -199,6 +218,7 @@ namespace ArchaeaMod
             classChosen = tag.GetBool("Chosen");
             //  Progression stat poins
             remainingStat = tag.GetInt("remainingStat");
+            overallMaxStat = tag.GetInt("overallMaxStat");
             spentStat[0] = tag.GetInt("ArrowSpeed");
             spentStat[1] = tag.GetInt("JumpHeight");
             spentStat[2] = tag.GetInt("AttackSpeed");
@@ -209,6 +229,10 @@ namespace ArchaeaMod
             spentStat[7] = tag.GetInt("MerchantDiscount");
             spentStat[8] = tag.GetInt("PercentDamageTaken");
             spentStat[9] = tag.GetInt("AmmoReduction");
+            for (int i = 0; i < objectiveStat.Length; i++)
+            {
+                objectiveStat[i] = tag.GetBool($"stat{i}");
+            }
             //  Class trait requirements
             placedTiles = tag.GetInt("placedTiles");
             TRAIT_PlacedBricks = tag.GetInt("placedBricks");
@@ -234,6 +258,7 @@ namespace ArchaeaMod
             tag.Add("Chosen", classChosen);
             //  Progression stat poins
             tag.Add("remainingStat", remainingStat);
+            tag.Add("overallMaxStat", overallMaxStat);
             tag.Add("ArrowSpeed", spentStat[0]);
             tag.Add("JumpHeight", spentStat[1]);
             tag.Add("AttackSpeed", spentStat[2]);
@@ -244,6 +269,10 @@ namespace ArchaeaMod
             tag.Add("MerchantDiscount", spentStat[7]);
             tag.Add("PercentDamageTaken", spentStat[8]);
             tag.Add("AmmoReduction", spentStat[9]);
+            for (int i = 0; i < objectiveStat.Length; i++)
+            {
+                tag.Add($"stat{i}", objectiveStat[i]);
+            }
             //  Class trait requirements
             tag.Add("placedTiles", placedTiles);
             tag.Add("placedRails", TRAIT_PlacedRails);
@@ -263,13 +292,20 @@ namespace ArchaeaMod
                 tag.Add($"trait{i}", trait[i]);
             }
         }
-       
+
+        public bool HasClassTrait(int index, int classID)
+        {
+            return trait[index] && classID == classChoice;
+        }
+
         public bool SetClassTrait(int index, int classID, bool flag)
         {
             if (trait[index])
                 return false;
             if (flag && classID == classChoice)
             {
+                overallMaxStat++;
+                remainingStat++;
                 trait[index] = flag;
                 //  Dialogue that displays general Trait acquired
                 ModContent.GetInstance<ModeUI>().ticks = 300;
@@ -286,6 +322,8 @@ namespace ArchaeaMod
             //  player.placedTiles needs to be moved to an Update
             if (flag && classID == player.classChoice)
             {
+                player.overallMaxStat++;
+                player.remainingStat++;
                 player.trait[index] = flag;
                 //  Dialogue that displays general Trait acquired
                 ModContent.GetInstance<ModeUI>().ticks = 300;
@@ -324,43 +362,48 @@ namespace ArchaeaMod
 
         public override bool CanUseItem(Item item)
         {
-            if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
-                return ClassItemCheck();
+            //if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
+            //    return ClassItemCheck();
             switch (item.type)
             {
                 case ItemID.LifeCrystal:
-                    if (Player.statLifeMax < 9999)
-                    {
-                        Player.statLifeMax += ArchaeaMode.LifeCrystal();
-                        Player.statLifeMax = Math.Min(Player.statLifeMax, 9999);
-                        item.stack--;
+                    if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+                    { 
+                        if (Player.statLifeMax < 9999)
+                        {
+                            Player.statLifeMax += ArchaeaMode.LifeCrystal();
+                            Player.statLifeMax = Math.Min(Player.statLifeMax, 9999);
+                            item.stack--;
+                        }
+                        Player.ApplyItemAnimation(item);
+                        SoundEngine.PlaySound(SoundID.Item4, Player.Center);
+                        if (Main.netMode == NetmodeID.MultiplayerClient)
+                            NetMessage.SendData(MessageID.PlayerLifeMana);
+                        return false;
                     }
-                    Player.ApplyItemAnimation(item);
-                    SoundEngine.PlaySound(SoundID.Item4, Player.Center);
-                    if (Main.netMode == NetmodeID.MultiplayerClient)
-                        NetMessage.SendData(MessageID.PlayerLifeMana);
-                    if ((ModContent.GetInstance<ModeToggle>().archaeaMode && Player.statLifeMax2 == 9999) 
-                        || Player.statLifeMax2 == 400)
+                    if ((ModContent.GetInstance<ModeToggle>().archaeaMode && Player.statLifeMax2 >= 8999) 
+                        || Player.statLifeMax2 >= 380)
                     {
                         SetClassTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, true);
                     }
-                    return false;
+                    break;
                 case ItemID.LifeFruit:
-                    if (Player.statLifeMax < 9999)
+                    if (ModContent.GetInstance<ModeToggle>().archaeaMode)
                     { 
-                        Player.statLifeMax += ArchaeaMode.LifeCrystal(5);
-                        Player.statLifeMax = Math.Min(Player.statLifeMax, 9999);
-                        item.stack--;
+                        if (Player.statLifeMax < 9999)
+                        { 
+                            Player.statLifeMax += ArchaeaMode.LifeCrystal(5);
+                            Player.statLifeMax = Math.Min(Player.statLifeMax, 9999);
+                            item.stack--;
+                        }
+                        Player.ApplyItemAnimation(item);
+                        SoundEngine.PlaySound(SoundID.Item4, Player.Center);
+                        if (Main.netMode == NetmodeID.MultiplayerClient)
+                            NetMessage.SendData(MessageID.PlayerLifeMana);
+                        return false;
                     }
-                    Player.ApplyItemAnimation(item);
-                    SoundEngine.PlaySound(SoundID.Item4, Player.Center);
-                    if (Main.netMode == NetmodeID.MultiplayerClient)
-                        NetMessage.SendData(MessageID.PlayerLifeMana);
-                    return false;
+                    break;
                 case ItemID.ManaCrystal:
-                    if (Player.statManaMax2 == 200) {
-                        SetClassTrait(TraitID.MELEE_Flask, ClassID.Melee, true);
-                    }
                     break;
                     #region Mana capped at 400
                     if (Player.statManaMax < 999)
@@ -461,9 +504,8 @@ namespace ArchaeaMod
             debugTimer.Enabled = true;
             debugTimer.AutoReset = true;
             debugTimer.Elapsed += DebugTimer_Elapsed;
-            debugTimer.Start();
+            //debugTimer.Start();
 
-            
             SetModeStats(ModContent.GetInstance<ModeToggle>().archaeaMode);
             InitStat(player);
             if (Effects.Barrier.barrier == null)
@@ -472,9 +514,21 @@ namespace ArchaeaMod
             }
         }
 
+        public override void ModifyWeaponDamage(Item item, ref StatModifier damage)
+        {
+            if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, Main.myPlayer))
+            {
+                if (item.DamageType == DamageClass.Summon)
+                {
+                    damage.Base = 1.2f;
+                }
+            }
+        }
+
         private void DebugTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             //  DEBUG
+            return;
             if (!Player.active) return;
             InitStatRemaining();
             if (overallMaxStat > 0)
@@ -535,6 +589,15 @@ namespace ArchaeaMod
         }
         public override void PostUpdateRunSpeeds()
         {
+            if (CheckHasTrait(TraitID.ALL_IncJumpHeight, ClassID.All))
+            {
+                Player.jumpHeight = (int)(Player.jumpHeight * 1.25f);
+            }
+            if (CheckHasTrait(TraitID.MAGE_MoveSpeed, ClassID.Magic))
+            { 
+                Player.maxRunSpeed *= 1.10f;
+            }
+            Player.maxRunSpeed *= moveSpeed;
             Player.jumpHeight = (int)(Player.jumpHeight * jumpHeight);
             Player.statDefense += toughness;
         }
@@ -546,7 +609,7 @@ namespace ArchaeaMod
                 breathTimer = breathTimerMax;
             }
         }
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
         {
             if (CheckHasTrait(TraitID.MAGE_DamageReduce, ClassID.Magic))
             {
@@ -629,45 +692,108 @@ namespace ArchaeaMod
         #endregion
 
         #region Melee Leap
-        private void Leap(int type, float speed, ref int tick)
+        private void Leap(int type, float speed, float radius, ref int tick)
         {
-            if (Collision.SolidCollision(Player.position, Player.width, Player.height) || ground == Vector2.Zero)
-            {
-                ground = Vector2.Zero;
-                if (type == _LeapAttack)
+            Func<bool> collision = new Func<bool>(() =>
+            { 
+                if (Collision.SolidCollision(Player.position, Player.width, Player.height) || ground == Vector2.Zero)
                 {
-                    Helper.LeftMouse();
+                    return true;
                 }
-                tick = 0;
-                return;
-            }
+                return false;
+            });
             if (startDirection == 1)
             {
                 leapStart += Draw.radian * speed;
+                if (leapStart > Draw.radian * (360f - 90f) || collision())
+                {
+                    if (type == _LeapAttack)
+                    {
+                        Helper.LeftMouse();
+                    }
+                    Player.velocity.X = (float)Math.Sqrt(radius);
+                    Player.velocity.Y = 0;
+                    ground = Vector2.Zero;
+                    tick = 0;
+                    return;
+                }
             }
-            else leapStart -= Draw.radian * speed;
-            Player.position = NPCs.ArchaeaNPC.AngleBased(ground, leapStart, Main.screenWidth / 4);
+            else
+            {
+                leapStart -= Draw.radian * speed;
+                if (Math.Abs(leapStart) > Draw.radian * (180f - 90f) || collision())
+                {
+                    if (type == _LeapAttack)
+                    {
+                        Helper.LeftMouse();
+                    }
+                    Player.velocity.X = -(float)Math.Sqrt(radius);
+                    Player.velocity.Y = 0;
+                    ground = Vector2.Zero;
+                    tick = 0;
+                    return;
+                }
+            }
+            Player.position = ground + LeapAngle(leapStart, radius);
         }
-        private Vector2 findGround(int direction = 1)
+        private Vector2 LeapAngle(float angle, float radius)
         {
+            float cos = (float)(radius * Math.Cos(angle));
+            float sine = (float)(radius * 1.5f * Math.Sin(angle));
+            return new Vector2(cos, sine);
+        }
+        private Vector2 findGround(float radius, int direction = 1)
+        {
+            if (direction == 1)
+            {
+                return Player.position + new Vector2(radius, 0f);
+            }
+            else return Player.position - new Vector2(radius, 0f);
+            #region
             int x = (int)Main.screenPosition.X + (direction == 1 ? Main.screenWidth / 2 : 0);
             int y = (int)Main.screenPosition.Y;
-            return NPCs.ArchaeaNPC.FindGround(Player, new Rectangle(x, y, Main.screenWidth / 2, Main.screenHeight));
+            Rectangle rect = new Rectangle(x, y, Main.screenWidth / 2, Main.screenHeight);
+            for (int i = 0; i < x / 16; i++)
+            {
+                for (int j = 0; j < y / 16; j++)
+                {
+                    if (Main.tile[i, j].HasTile && Main.tile[i + 1, j].HasTile)
+                    {
+                        var ground = new Vector2(i * 16, j * 16);
+                        if (Collision.CanHitLine(Player.Center, Player.width, Player.height, ground, Player.width, Player.height))
+                        {
+                            return ground;
+                        }
+                    }
+                }
+            }
+            return Vector2.Zero;
+            #endregion
         }
         private float angleDirection(int direction)
         {
             if (direction == 1)
             {
-                return 90f * Draw.radian;
+                return 180f * Draw.radian;
             }
-            else return -180f * Draw.radian;
+            else return 0f;
+        }
+        private bool IsOnGround()
+        {
+            int i = (Player.Hitbox.Left + 8) / 16;
+            int j = Player.Hitbox.Bottom / 16;
+            return Main.tile[i, j + 1].HasTile && Main.tile[i + 1, j + 1].HasTile;
         }
         private void InitLeap(ref int tick)
         {
-            startDirection = Player.direction;
-            leapStart = angleDirection(Player.direction);
-            ground = findGround(Player.direction);
-            tick = -1;
+            if (IsOnGround())
+            {
+                Player.direction = Main.MouseWorld.X < Player.position.X ? -1 : 1;
+                startDirection = Player.direction;
+                leapStart = angleDirection(Player.direction);
+                ground = findGround(Player.position.Distance(Main.MouseWorld) / 2, Player.direction);
+                tick = -1;
+            }
         }
         public const int _Leap = 0, _LeapAttack = 1;
         Vector2 ground = Vector2.Zero;
@@ -693,11 +819,17 @@ namespace ArchaeaMod
                 }
                 if (CheckHasTrait(TraitID.MELEE_Leap, ClassID.Melee) && ArchaeaMain.leapBind.JustPressed)
                 {
-                    leap++;
+                    if (IsOnGround())
+                    { 
+                        leap += 2;
+                    }
                 }
                 if (CheckHasTrait(TraitID.MELEE_LeapAttack, ClassID.Melee) && ArchaeaMain.leapAttackBind.JustPressed)
                 {
-                    leap2++;
+                    if (IsOnGround())
+                    { 
+                        leap2 += 2;
+                    }
                 }
             }
             if (leap >= 2)
@@ -707,9 +839,9 @@ namespace ArchaeaMod
             if (ground != Vector2.Zero)
             {
                 if (leap is -1)
-                    Leap(_Leap, 1f, ref leap);
+                    Leap(_Leap, 3f, Player.position.Distance(Main.MouseWorld) / 2, ref leap);
                 if (leap2 is -1)
-                    Leap(_LeapAttack, 1.5f, ref leap2);
+                    Leap(_LeapAttack, 3f, Player.position.Distance(Main.MouseWorld) / 2, ref leap2);
             }
             //  Dash trait
             if (CheckHasTrait(TraitID.ALL_Dash, ClassID.All))
@@ -719,18 +851,18 @@ namespace ArchaeaMod
                 if (ticks2++ > 90)
                 {
                     ticks = 0;
-                    dash = 0;
                 }
                 if (timeSinceLastDash > 180)
                 { 
-                    if (Player.releaseLeft && Player.controlLeft)
+                    if (KeyPress(Keys.A) || KeyPress(Keys.D))
                     {
                         dash++;
                     }
                     if (dash >= 2)
                     {
-                        Player.velocity.X -= -(Player.direction * Player.moveSpeed * 4f);
+                        Player.velocity.X = (Player.direction * Player.moveSpeed * 8f);
                         timeSinceLastDash = 0;
+                        dash = 0;
                     }
                 }
             }
@@ -739,7 +871,7 @@ namespace ArchaeaMod
                 return;
             for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
                 Effects.Barrier.barrier[i]?.Update(Player);
-            return;
+            //return;
             #region debug
             if (setModeStats)
             {
@@ -752,8 +884,11 @@ namespace ArchaeaMod
             Color textColor = Color.Yellow;
             if (!init)
             {
+                // DEBUG of sky boss testing -- immediate spawn upon world join
+                /*
                 NPC.NewNPC(NPC.GetBossSpawnSource(Player.whoAmI), (int)Player.position.X, (int)Player.position.Y, ModNPCID.SkyBoss);
                 init = true;
+                */
             }
             if (Player.chest != -1 && Main.chest[Player.chest] != null)
             {
@@ -1042,10 +1177,6 @@ namespace ArchaeaMod
 
         public override void PreUpdateMovement()
         {
-            if (CheckHasTrait(TraitID.ALL_IncJumpHeight, ClassID.All))
-            { 
-                Player.jumpSpeed *= 1.25f;
-            }
         }
         public override void PostUpdateEquips()
         {
@@ -1099,6 +1230,7 @@ namespace ArchaeaMod
                 flag = true;
             }
         }
+        private int counter = 0;
         public override void PostUpdate()
         {
             NPCVendorScaling(merchantDiscount);
@@ -1113,27 +1245,41 @@ namespace ArchaeaMod
                 Tile tRight = Main.tile[iRight, j];
                 if (tLeft.HasTile && Main.tileSolid[tLeft.TileType])
                 {
-                    if (Player.controlJump && Player.controlRight && Player.velocity.Y != 0)
+                    if (KeyPress(Keys.Space) && Player.controlRight && Player.velocity.Y != 0)
                     {
-                        Player.velocity.Y -= Player.jumpSpeed;
+                        Player.velocity.Y = -Player.jumpSpeed * 2f;
+                        Player.fallStart = (int)Player.position.Y;
+                        Player.fallStart2 = (int)Player.position.Y;
                     }
                 }
                 if (tRight.HasTile && Main.tileSolid[tRight.TileType])
                 {
-                    if (Player.controlJump && Player.controlLeft && Player.velocity.Y != 0)
+                    if (KeyPress(Keys.Space) && Player.controlLeft && Player.velocity.Y != 0)
                     {
-                        Player.velocity.Y -= Player.jumpSpeed;
+                        Player.velocity.Y = -Player.jumpSpeed * 2f;
+                        Player.fallStart = (int)Player.position.Y;
+                        Player.fallStart2 = (int)Player.position.Y;
                     }
                 }
             }
             //  Extra double jump
             if (CheckHasTrait(TraitID.ALL_DoubleJump, ClassID.All))
             {
-                if (Player.releaseJump && Player.controlJump && Player.velocity.Y > 0f)
+                if (Player.velocity.Y != 0f)
                 {
-                    Player.DoubleJumpVisuals();
-                    SoundEngine.PlaySound(SoundID.DoubleJump, Player.Center);
-                    Player.velocity.Y -= Player.jumpSpeed;
+                    if (KeyPress(Keys.Space) && counter == 0)
+                    {
+                        counter++;
+                        Player.DoubleJumpVisuals();
+                        SoundEngine.PlaySound(SoundID.DoubleJump, Player.Center);
+                        Player.velocity.Y = -Player.jumpSpeed * 2f;
+                        Player.fallStart = (int)Player.position.Y;
+                        Player.fallStart2 = (int)Player.position.Y;
+                    }
+                }
+                else 
+                { 
+                    counter = 0;
                 }
             }
 
@@ -1193,14 +1339,15 @@ namespace ArchaeaMod
                     stack += Player.inventory[i].stack;
                 }
             }
-            if (stack < maxStack)
+            if (HasClassTrait(TraitID.RANGED_Ice, ClassID.Ranged) || stack < maxStack)
             {
                 TRAIT_TIME_MaxDirtStack = 0;
+                TRAIT_TIME_MAX_MaxDirtStack = 60 * 60 * 20 * 1;
             }
             else
             {
                 TRAIT_TIME_MaxDirtStack += Main.frameRate;
-                if (TRAIT_TIME_MaxDirtStack >= TRAIT_TIME_MAX_MaxDirtStack)
+                if (TRAIT_TIME_MaxDirtStack / 60 / 60 >= TRAIT_TIME_MAX_MaxDirtStack)
                 {
                     SetClassTrait(TraitID.RANGED_Ice, ClassID.Ranged, true);
                 }
@@ -1210,11 +1357,20 @@ namespace ArchaeaMod
             //  Does it compare start fall tile to end fall tile? or does it increment?
             if (Player.velocity.Y == Player.maxFallSpeed && Player.ropeCount <= 0)
             {
-                //  Refer to "tile fall data.txt"
-                fallDistance += 0;
+                if (fallDistance == 0)
+                { 
+                    //  Refer to "tile fall data.txt"
+                    fallDistance = (int)Player.position.Y / 16;
+                }
+                fallDistance2 = (int)Player.position.Y / 16;
             }
-            else fallDistance = 0;
-            if (fallDistance / 16 >= 1000)
+            else 
+            {
+                fallDistance2 = 0;
+                fallDistance = 0;
+            }
+            comparison = Math.Max(fallDistance2 - fallDistance, 0);
+            if (comparison >= 1000)
             {
                 SetClassTrait(TraitID.MELEE_Leap, ClassID.Melee, true);
             }
@@ -1245,6 +1401,10 @@ namespace ArchaeaMod
             if (placedTiles >= 250)
             { 
                 SetClassTrait(TraitID.MELEE_DoubleKb, ClassID.Melee, true);
+            }
+            if (Player.statManaMax2 == 200)
+            {
+                SetClassTrait(TraitID.MELEE_Flask, ClassID.Melee, true);
             }
             SetClassTrait(TraitID.RANGED_Tracking, ClassID.Ranged, Player.downedDD2EventAnyDifficulty);
             SetClassTrait(TraitID.RANGED_Ichor, ClassID.Ranged, NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3);
@@ -1487,33 +1647,38 @@ namespace ArchaeaMod
             #endregion
         }
         private bool init;
+        private bool flag2;
         private List<string> name = new List<string>();
         private List<int> id = new List<int>();
+        private List<ItemDebug> debugList = new List<ItemDebug>();
         private void DebugMenu()
         {
-            return;
-            if (!init || id == null || id.Count == 0 || name == null || name.Count == 0)
+            //return;
+            if (!flag2)
             {
-                name.Clear();
-                id.Clear();
+                debugList.Clear();
                 for (int i = 0; i < TextureAssets.Item.Length; i++)
                 {
                     int item = Item.NewItem(Item.GetSource_None(), Vector2.Zero, i, 1);
-                    name.Add(Main.item[item].Name);
-                    id.Add(i);
+                    debugList.Add(new ItemDebug()
+                    {
+                        index = i,
+                        texture = TextureAssets.Item[i].Value,
+                        name = Main.item[item].Name
+                    });
                     if (item < Main.item.Length)
                         Main.item[item].active = false;
                 }
-                init = true;
+                flag2 = true;
             }
             Func<string, Texture2D[]> search = delegate(string Name)
             {
                 List<Texture2D> t = new List<Texture2D>();
-                if (Name.Length > 2 && name != null && name.Count > 0)
+                if (Name.Length > 2 && debugList != null && debugList.Count > 0)
                 {
-                    for (int i = 0; i < name.Count; i++)
+                    for (int i = 0; i < debugList.Count; i++)
                     {
-                        if (name[i].ToLower().Contains(Name.ToLower()))
+                        if (debugList[i].name.ToLower().Contains(Name.ToLower()))
                         {
                             t.Add(TextureAssets.Item[i].Value);
                         }
@@ -1527,19 +1692,22 @@ namespace ArchaeaMod
                 Texture2D[] array = search(Main.chatText);
                 if (array != null && array.Length > 0 && array[0] != TextureAssets.MagicPixel.Value)
                 {
-                    int index = 0; //TextureAssets.Item.ToList().IndexOf(array[0]); // Need to translate Texture2D value to a texture asset
+                    //int.TryParse(Main.chatText, out int num);
+                    ItemDebug _index = debugList.FirstOrDefault(t => t.name.ToLower() == Main.chatText.ToLower());// || t.name.ToLower().Contains(Main.chatText.ToLower()));//TextureAssets.Item..ToList().IndexOf(array[0]); // Need to translate Texture2D value to a texture asset
+                    if (_index == default)
+                        return;
                     int x = 20;
                     int y = 112;
-                    sb.Draw(array[0], new Vector2(x, y), Color.White);
-                    sb.DrawString(FontAssets.MouseText.Value, string.Format("{0} {1}", name[index], id[index]), new Vector2(x + 50, y + 4), Color.White);
-
+                    sb.Draw(_index.texture, new Vector2(x, y), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, string.Format("{0} {1}", _index.name, _index.index), new Vector2(x + 50, y + 4), Color.White);
+                    
                     Rectangle grab = new Rectangle(x, y, 48, 48);
                     if (grab.Contains(Main.MouseScreen.ToPoint()))
                     {
                         sb.DrawString(FontAssets.MouseText.Value, "Left/Right click", new Vector2(x, y + 50), Color.White);
                         if (LeftClick() || RightHold())
                         {
-                            int t = Item.NewItem(Item.GetSource_None(), Player.Center, index);
+                            int t = Item.NewItem(Item.GetSource_None(), Player.Center, _index.index);
                             if (Main.netMode != 0)
                                 NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
                         }
@@ -1547,9 +1715,16 @@ namespace ArchaeaMod
                 }
             }
         }
+        class ItemDebug
+        {
+            public int index;
+            public string name;
+            public Texture2D texture;
+            public Item item;
+        }
         private void SpawnMenu()
         {
-            return;
+            //return;
             int x = 80;
             int y = 180;
             int width = 300;
@@ -1558,7 +1733,7 @@ namespace ArchaeaMod
             {
                 label = new string[]
                 {
-                    "ID",
+                    "ID/Name",
                     "Life",
                     "Defense",
                     "Damage",
@@ -1616,6 +1791,17 @@ namespace ArchaeaMod
                         }
                         float randX = Main.rand.NextFloat(Player.position.X - 300, Player.position.X + 300);
                         float Y = Player.position.Y - 100;
+                        if (!int.TryParse(input[0].text, out _))
+                        {
+                            string s = input[0].text.Substring(0, 1).ToUpper();
+                            string search = s + input[0].text.Substring(1);
+                            if (!NPCID.Search.TryGetId(search, out int num))
+                            {
+                                search = "ArchaeaMod/" + search;
+                            }
+                            NPCID.Search.TryGetId(search, out num);
+                            vars[0] = num;
+                        }
                         if (Main.netMode != 0)
                             NetHandler.Send(Packet.SpawnNPC, -1, -1, (int)vars[0], vars[1], vars[2], (int)vars[3], false, vars[4], Main.MouseWorld.X, Main.MouseWorld.Y);
                         else

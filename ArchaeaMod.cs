@@ -113,6 +113,15 @@ namespace ArchaeaMod
             return swapTracks ? MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma") : MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Magno_Biome");
         }
     }
+    public class FactoryBiome : ModBiome
+    {
+        public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
+        public override int Music => MusicID.Eerie;
+        public override bool IsBiomeActive(Player player)
+        {
+            return Main.SceneMetrics.GetTileCount(ArchaeaWorld.factoryBrick) >= 150;
+        }
+    }
     public class NetHandler
     {
         private static Mod mod

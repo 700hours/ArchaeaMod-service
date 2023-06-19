@@ -26,11 +26,25 @@ using ArchaeaMod.Merged.Items;
 using ArchaeaMod.Merged.Tiles;
 using ArchaeaMod.Merged.Walls;
 using System.IO;
+using ArchaeaMod.Tiles;
+using ArchaeaMod.Walls;
 
 namespace ArchaeaMod
 {
     public class ArchaeaWorld : ModSystem
     {
+        public static ushort factoryBrick
+        {
+            get { return (ushort)ModContent.TileType<factory_brick_1>(); }
+        }
+        public static ushort factoryBrickWall
+        {
+            get { return (ushort)ModContent.WallType<factory_brickwall_1>(); }
+        }
+        public static ushort factoryBrickWallUnsafe
+        {
+            get { return (ushort)ModContent.WallType<factory_brickwall_1_unsafe>(); }
+        }
         public static ushort magnoStone
         {
             get { return (ushort)ModContent.TileType<m_stone>(); }
@@ -141,6 +155,7 @@ namespace ArchaeaMod
         //    System.Drawing.Color.Brown,
         //    System.Drawing.Color.Green
         //};
+        public bool[] objectiveStat = new bool[9];
         public bool downedMagno;
         public bool downedNecrosis;
         public int MagnoBiomeOriginX;
@@ -434,6 +449,46 @@ namespace ArchaeaMod
                     count = 0;
                     progress.Value = (float)i / max;
                 }
+                progress.Value = 1f;
+                progress.End();
+            }, 1f));
+            int index6 = index5 + 1;
+            tasks.Insert(index6, new PassLegacy("More Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
+            {
+                progress.Start(1f);
+                progress.Message = "Even More Magno";
+                /*
+                new Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, 120, 16, (int)Math.Sqrt(Main.maxTilesX), 100, 200);
+                int x = 0;
+                int y = Main.UnderworldLayer - 200;
+                for (int i = 0; i < tile.GetLength(0); i++)
+                {
+                    for (int j = 0; j < tile.GetLength(1); j++)
+                    {
+                        Tile _tile = Main.tile[x + i, y + j];
+                        if (tile[i, j] == Factory.Tile)
+                        { 
+                            _tile.HasTile = true;
+                            _tile.TileType = magnoBrick;
+                        }
+                        else
+                        {
+                            _tile.HasTile = false;
+                            _tile.TileType = TileID.Dirt;
+                        }
+                    }
+                }
+                for (int i = 0; i < wall.GetLength(0); i++)
+                {
+                    for (int j = 0; j < wall.GetLength(1); j++)
+                    {
+                        Tile _tile = Main.tile[x + i, y + j];
+                        if (wall[i, j] == Factory.Wall)
+                        {
+                            _tile.WallType = magnoBrickWall;
+                        }
+                    }
+                }              */
                 progress.Value = 1f;
                 progress.End();
             }, 1f));
@@ -789,6 +844,10 @@ namespace ArchaeaMod
             tag.Add("Crystals", spawnedCrystals);
             tag.Add("OriginX", MagnoBiomeOriginX);
             tag.Add("hint", Effects.Barrier.hintInit);
+            for (int i = 0; i < objectiveStat.Length; i++)
+            {
+                tag.Add($"stat{i}", objectiveStat[i]);
+            }
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -800,6 +859,10 @@ namespace ArchaeaMod
             spawnedCrystals = tag.GetBool("Crystals");
             MagnoBiomeOriginX = tag.GetInt("OriginX");
             Effects.Barrier.hintInit = tag.GetBool("hint");
+            for (int i = 0; i < objectiveStat.Length; i++)
+            {
+                objectiveStat[i] = tag.GetBool($"stat{i}");
+            }
         }
         public override void NetSend(BinaryWriter writer)
         {
@@ -808,6 +871,10 @@ namespace ArchaeaMod
             //  Extra
             writer.Write(spawnedCrystals);
             writer.Write(MagnoBiomeOriginX);
+            for (int i = 0; i < objectiveStat.Length; i++)
+            {
+                writer.Write(objectiveStat[i]);
+            }
         }
         public override void NetReceive(BinaryReader reader)
         {
@@ -816,6 +883,10 @@ namespace ArchaeaMod
             //  Extra
             spawnedCrystals = reader.ReadBoolean();
             MagnoBiomeOriginX = reader.ReadInt32();
+            for (int i = 0; i < objectiveStat.Length; i++)
+            {
+                objectiveStat[i] = reader.ReadBoolean();
+            }
         }
         private bool begin;
         private bool first;

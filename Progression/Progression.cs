@@ -1,24 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
+﻿using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using ReLogic.Graphics;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-
-using ArchaeaMod.Interface.UI;
-using Terraria.DataStructures;
-using Terraria.Audio;
+using System;
+using System.Linq;
 using System.Timers;
+using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.ID;
+using Terraria.ModLoader;
+using tUserInterface.Extension;
 
 namespace ArchaeaMod.Progression
 {
@@ -74,8 +64,6 @@ namespace ArchaeaMod.Progression
 }
 namespace ArchaeaMod.Progression.Global
 {
-    using tUserInterface.Extension;
-
     public class ProgressItem : GlobalItem
     {
         public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
@@ -117,6 +105,18 @@ namespace ArchaeaMod.Progression.Global
                 }
             }
             lastHitOwner = player.whoAmI;
+            if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_DoubleKb, ClassID.Melee, player.whoAmI))
+            {
+                knockback *= 2f;
+            }
+            if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_Stun, ClassID.Melee, player.whoAmI))
+            {
+                npc.AddBuff(ModContent.BuffType<Buffs.stun>(), 90);
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    NetMessage.SendData(MessageID.AddNPCBuff, -1, -1, null, npc.whoAmI, ModContent.BuffType<Buffs.stun>(), 90);
+                }
+            }
         }
         public override void OnKill(NPC npc)
         {
@@ -150,19 +150,28 @@ namespace ArchaeaMod.Progression.Global
         Timer timer;
         float rand;
         int useCount = 0;
+        int count = 0;
         public override bool InstancePerEntity => true;
         //  Assigning trait effects
         public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            if (Main.frameRate <= 0)
+            {
+                return false;
+            }
             if (ArchaeaPlayer.CheckHasTrait(TraitID.RANGED_DoubleFire, ClassID.Ranged, player.whoAmI))
             {
-                timer = new Timer(Math.Max((float)item.useTime / Main.frameRate * 1000f / 2f, 100f));
+                timer = new Timer(Math.Max((float)item.useTime / Math.Max(Main.frameRate, 60f) * 1000f / 2f, 100f));
+                timer.AutoReset = false;
                 timer.Enabled = true;
                 timer.Elapsed += (object sender, ElapsedEventArgs e) => 
                 {
+                    timer.Stop();
                     player.ApplyItemAnimation(item, 0.5f);
                     SoundEngine.PlaySound(item.UseSound.Value, player.Center);
-                    Projectile.NewProjectile(source, position, velocity, type, damage, knockback);
+                    var proj = Projectile.NewProjectileDirect(Projectile.GetSource_None(), position, velocity, type, damage, knockback, player.whoAmI);
+                    proj.netUpdate = true;
+                    proj.friendly = true;
                     timer.Dispose();
                 };
                 timer.Start();
@@ -172,14 +181,18 @@ namespace ArchaeaMod.Progression.Global
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.MAGE_DoubleAttack, ClassID.Magic, player.whoAmI))
                 {
                     if (rand < 0.5f)
-                    { 
-                        timer = new Timer(Math.Max((float)item.useTime / Main.frameRate * 1000f / 2f, 100f));
+                    {
+                        timer = new Timer(Math.Max((float)item.useTime / Math.Max(Main.frameRate, 60f) * 1000f / 2f, 100f));
                         timer.Enabled = true;
+                        timer.AutoReset = false;
                         timer.Elapsed += (object sender, ElapsedEventArgs e) =>
                         {
+                            timer.Stop();
                             player.ApplyItemAnimation(item, 0.5f);
                             SoundEngine.PlaySound(item.UseSound.Value, player.Center);
-                            Projectile.NewProjectile(source, position, velocity, type, damage, knockback);
+                            var proj = Projectile.NewProjectileDirect(Projectile.GetSource_None(), position, velocity, type, damage, knockback, player.whoAmI);
+                            proj.netUpdate = true;
+                            proj.friendly = true;
                             timer.Dispose();
                         };
                         timer.Start();
@@ -196,7 +209,7 @@ namespace ArchaeaMod.Progression.Global
                 {
                     if (Main.rand.NextFloat() < 0.5f)
                     {
-                        reduce += item.mana;
+                        reduce -= item.mana;
                     }
                 }
             }
@@ -204,7 +217,7 @@ namespace ArchaeaMod.Progression.Global
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_NoManaCost, ClassID.Summoner, player.whoAmI))
                 {
-                    reduce += item.mana;
+                    reduce -= item.mana;
                 }
             }
         }
@@ -215,7 +228,7 @@ namespace ArchaeaMod.Progression.Global
             if (useCount > 0)
                 return;
 
-            timer = new Timer(Math.Max((float)item.useTime / Main.frameRate * 1000f * 0.75f + 1f, 100f));
+            timer = new Timer(Math.Max((float)item.useTime / Math.Max(Main.frameRate, 60f) * 1000f * 0.75f + 1f, 100f));
             timer.Enabled = true;
             timer.Elapsed += (object sender, ElapsedEventArgs e) =>
             {
@@ -291,25 +304,25 @@ namespace ArchaeaMod.Progression.Global
         {
             BeginUseItem(item, player);
             //  Assigning trait effects
-            if (Main.rand.NextFloat() < 0.1f)
+            if (Main.rand.NextFloat() < 0.01f)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_ThrowBoulder, ClassID.Summoner, player.whoAmI))
                 {
-                    Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position + new Vector2(Items.ArchaeaItem.StartThrowX(player)), new Vector2(2f * player.direction, -3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.Boulder, Main.hardMode ? 40 : 20, 5f, player.whoAmI);
+                    Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.Boulder, Main.hardMode ? 20 : 10, 5f, player.whoAmI);
                 }
             }
-            if (Main.rand.NextFloat() < 0.1f)
+            if (Main.rand.NextFloat() < 0.01f)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_ThrowBones, ClassID.Summoner, player.whoAmI))
                 {
-                    Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position + new Vector2(Items.ArchaeaItem.StartThrowX(player)), new Vector2(2f * player.direction, -3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.BoneGloveProj, Main.hardMode ? 50 : 25, 3f, player.whoAmI);
+                    Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.BoneGloveProj, Main.hardMode ? 25 : 12, 3f, player.whoAmI);
                 }
             }
-            if (Main.rand.NextFloat() < 0.1f)
+            if (Main.rand.NextFloat() < 0.01f)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_ThrowStar, ClassID.Summoner, player.whoAmI))
                 {
-                    Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position + new Vector2(Items.ArchaeaItem.StartThrowX(player)), new Vector2(2f * player.direction, -3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.StarCannonStar, Main.hardMode ? 60 : 30, 2f, player.whoAmI);
+                    Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.StarCannonStar, Main.hardMode ? 30 : 15, 2f, player.whoAmI);
                 }
             }
             if (Main.rand.NextFloat() < 0.5f)
@@ -323,21 +336,6 @@ namespace ArchaeaMod.Progression.Global
             ArchaeaPlayer.SetClassTrait(TraitID.ALL_IncJumpHeight, ClassID.All, item.buffType == BuffID.WellFed3, player.whoAmI);
             EndUseItem(item, player);
             return null;
-        }
-        public override void ModifyHitNPC(Item item, Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
-        {
-            if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_DoubleKb, ClassID.Melee, player.whoAmI))
-            {
-                knockBack *= 2f;
-            }
-            if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_Stun, ClassID.Melee, player.whoAmI))
-            {
-                target.AddBuff(ModContent.BuffType<Buffs.stun>(), 90);
-                if (Main.netMode == NetmodeID.Server)
-                {
-                    NetMessage.SendData(MessageID.AddNPCBuff, -1, -1, null, target.whoAmI, ModContent.BuffType<Buffs.stun>(), 90);
-                }
-            }
         }
     }
     public class ClassTile : GlobalTile
@@ -372,6 +370,8 @@ namespace ArchaeaMod.Progression.Global
             {
                 if (item.createTile == TileID.TeleportationPylon)
                 {
+                    int frame = Main.tile[i, j].TileFrameX / 18;
+                    modPlayer.placedPylon[frame - 1] = true;
                     ArchaeaPlayer.SetClassTrait(TraitID.ALL_DoubleJump, ClassID.All, modPlayer.placedPylon.Count(t => t == true) >= 2, player.whoAmI);
                 }
             }
@@ -379,9 +379,15 @@ namespace ArchaeaMod.Progression.Global
         public override void NearbyEffects(int i, int j, int type, bool closer)
         {
             //  Find TileID of sword shrine
-            if (closer && Main.LocalPlayer.IsTileTypeInInteractionRange(type) && type == TileID.LargePiles && Main.tile[i, j].TileFrameX ==  48 * 5 && Main.tile[i, j].TileFrameY == 32)
+            if (type == TileID.LargePiles2)
             {
-                ArchaeaPlayer.SetClassTrait(TraitID.SUMMONER_ThrowBones, ClassID.Summoner, true, Main.LocalPlayer.whoAmI);
+                if (Main.tile[i, j].TileFrameX == 918 && Main.tile[i, j].TileFrameY == 0)
+                {
+                    if (Main.LocalPlayer.IsTileTypeInInteractionRange(type))
+                    { 
+                        ArchaeaPlayer.SetClassTrait(TraitID.SUMMONER_ThrowBones, ClassID.Summoner, true, Main.LocalPlayer.whoAmI);
+                    }
+                }
             }
         }
     }
@@ -390,14 +396,17 @@ namespace ArchaeaMod.Progression.Global
         public override bool InstancePerEntity => true;
         public override void AI(Projectile projectile)
         {
-            if (projectile.friendly)
+            if (projectile.friendly && projectile.active)
             { 
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.RANGED_Tracking, ClassID.Ranged, projectile.owner))
                 {
-                    NPC npc = NPCs.ArchaeaNPC.FindClosestNPC(projectile);
+                    NPC npc = Main.npc.Where(t => t.active && !t.friendly).OrderBy(t => t.Center.Distance(projectile.Center)).FirstOrDefault();
+                    //direction = projectile.Center.X < npc.Center.X ? 1 : -1;
                     if (npc is default(NPC))
                         return;
-                    else projectile.velocity.MoveTowards(npc.Center, projectile.stepSpeed);
+                    else 
+                    {
+                    }
                 }
                 //  Add arrow debuff signifier trait effects here
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.RANGED_Fire, ClassID.Ranged, projectile.owner))
@@ -418,14 +427,14 @@ namespace ArchaeaMod.Progression.Global
                 }
             }
         }
-        public override void ModifyDamageScaling(Projectile projectile, ref float damageScale)
+        public override void ModifyHitNPC(Projectile projectile, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             //  Summoner minion buff
             if (projectile.minion)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, projectile.owner))
                 {
-                    damageScale = 1.2f;
+                    damage = (int)(damage * 1.2f);
                 }
             }
         }

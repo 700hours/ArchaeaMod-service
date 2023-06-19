@@ -41,7 +41,7 @@ namespace ArchaeaMod.Items.Armors
         {
             if (Main.dedServ) return;
             //  Rustbane armor set bonus
-            player.setBonus = "\"Put your faith in the BOMB?!\"";
+            player.setBonus = "\"Bomb?!\"";
             if (Main.npc.Where(t => t.Center.Distance(player.Center) <= 300f && t.active && !t.friendly).Count() > 0)
             {
                 if (Main.time > 0 && (int)Main.time % Main.rand.Next(5, 30) == 0)

@@ -2,13 +2,42 @@
 Terraria mod which is designed to provide new elements that are both pre-hardmode and hardmode.
 
 [b]Latest update[/b]
-[i]version 1.3.11.26 -> 1.3.12.29
+[i]version 1.3.13.29 -> 1.3.14.57
 ==============================
 # Fixed
--> Barrier "Value cannot be null" error
--> Hint drawing
+## General
+-> Necrosis spawns immediately
+-> Magno minion not targeting correctly
+--> Right click targeting
+--> Not attacking properly
+## All class
+-> All class wall jump is hold instead of press
+-> Wall jump was not a jump
+-> Double jump was not a jump
+-> Jump height trait fixed
+-> Dash did not dash
+## Ranged class
+-> Ranged class ice arrow trait minute bugged
+-> Double cast projectile
+-> Double arrow does no damage
+## Melee class
+-> Melee stun and knockback traits now effective
+-> Flask trait granting
+-> Fall counter properly counts tiles
+-> Leap melee traits now leap
+## Mage class
+-> Mana cost reduction chance for mages
+# Fixed?
+-> Sky hall needs to be moved out of the range of the first spawn area
+# Added
+-> Run speed from stat and Mage trait proper
 # Changed
--> Switched to new tModLoader player PreHurt[/i]
+-> Ice arrow trait changed from 2 hours to 20 minutes
+-> Limited trait tasks to maximum values
+-> Stat points now get awarded for world and class objectives
+-> Class selection not limited to Archaea mode
+-> Change stats to give points after objectives are met
+-> Add options texts such as player class being per-character[/i]
 
 [hr]
 [i]Features implemented are a few such as these:[/i]

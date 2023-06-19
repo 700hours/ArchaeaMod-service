@@ -11,6 +11,8 @@
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\tUserInterface\tUserInterface.csproj" />
+    <Reference Include="tUserInterface">
+      <HintPath>lib\tUserInterface.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

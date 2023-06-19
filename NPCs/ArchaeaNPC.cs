@@ -368,6 +368,12 @@ namespace ArchaeaMod.NPCs
             float sine = position.Y + (float)(radius * Math.Sin(angle));
             return new Vector2(cos, sine);
         }
+        public static Vector2 AngleBased(float angle, float radius)
+        {
+            float cos = (float)(radius * Math.Cos(angle));
+            float sine = (float)(radius * Math.Sin(angle));
+            return new Vector2(cos, sine);
+        }
         public static float RandAngle()
         {
             return Main.rand.NextFloat((float)(Math.PI * 2d));

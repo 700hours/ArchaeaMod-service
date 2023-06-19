@@ -118,7 +118,7 @@ namespace ArchaeaMod.Mode
                     { 
                         "Defeat each invasion once\n" +
                         "   Double swing",
-                        $"Place {num}/250 solid tiles\n" +
+                        $"Place {Math.Min(num, 250)}/250 solid tiles\n" +
                         "   Double knockback",
                         "Defeat a Nymph\n" +
                         "   Stun NPCs on hit",
@@ -138,7 +138,7 @@ namespace ArchaeaMod.Mode
                         "   Subtle arrow tracking",
                         "Reach the underworld\n" +
                         "   Fire arrows",
-                        $"Hold max dirt stack for {num}/120 minutes\n" +
+                        $"Hold max dirt stack for {Math.Min(num / 60 / 60 / 60, 20)}/{20} minutes\n" +
                         "   Ice arrows",
                         "Defeat all Mech bosses\n" +
                         "   Ichor arrows",
@@ -171,11 +171,11 @@ namespace ArchaeaMod.Mode
                         $"Place {num}/500 of any bricks\n" +
                         "   No mana cost",
                         "Last-hit a boss with cannonball\n" +
-                        "   10% chance attack throws boulder",
+                        "   1% chance attack throws boulder",
                         "Find a sword shrine\n" +
-                        "   10% chance attack throws bones",
+                        "   1% chance attack throws bones",
                         "Reach space\n" +
-                        "   10% chance attack throws star"
+                        "   1% chance attack throws star"
                     };
                 case 4:     // All
                     return new[]
@@ -279,7 +279,7 @@ namespace ArchaeaMod.Mode
             if (page[1].active)
             {
                 Utils.DrawBorderString(sb, "Player stat bonuses", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
-                if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat > 0) 
+                if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat >= 0) 
                 {
                     Utils.DrawBorderString(sb, $"Stat points: {Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat} / {Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat}", new Vector2(objective.hitbox.X, objective.hitbox.Bottom), Color.MediumPurple);
                     Utils.DrawBorderString(sb, "Click items to assign points", new Vector2(objective.hitbox.X, objective.hitbox.Bottom + 24), Color.Gray);
@@ -439,7 +439,7 @@ namespace ArchaeaMod.Mode
             switch (TraitIndex())
             {
                 case 0:
-                    trait[0].content = ClassArray(0, modPlayer.placedTiles, modPlayer.fallDistance / 16);
+                    trait[0].content = ClassArray(0, modPlayer.placedTiles, modPlayer.comparison);
                     break;
                 case 1:
                     trait[1].content = ClassArray(1, modPlayer.TRAIT_TIME_MaxDirtStack);

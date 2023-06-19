@@ -47,7 +47,8 @@ namespace ArchaeaMod.Merged.Items
         }
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
-            int projMinion = Projectile.NewProjectile(Projectile.GetSource_None(), player.position, Vector2.Zero, ModContent.ProjectileType<Merged.Projectiles.magno_minion>(), 5, 3f, player.whoAmI, 0f, 0f);
+            int projMinion = Projectile.NewProjectile(Projectile.GetSource_None(), player.position, Vector2.Zero, ModContent.ProjectileType<Merged.Projectiles.magno_minion>(), Item.damage, 3f, player.whoAmI, 0f, 0f);
+            Main.projectile[projMinion].localAI[0] = Item.damage;
             Main.projectile[projMinion].netUpdate = true;
             return true;
         }

@@ -18,6 +18,7 @@ using Terraria.ModLoader.IO;
 using ArchaeaMod.Interface.UI;
 using Terraria.DataStructures;
 using System.Timers;
+using ArchaeaMod.Progression;
 
 namespace ArchaeaMod.Mode
 {
@@ -241,6 +242,12 @@ namespace ArchaeaMod.Mode
                 unlock[i] = Color.Red;
             multiplier -= scaling[start];
             unlock[start] = Color.Green;
+            if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[start])
+            {
+                Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat++;
+                Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat++;
+                Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[start] = true;
+            }
             Start = true;
             foreach (Player player in Main.player)
             {
@@ -249,18 +256,36 @@ namespace ArchaeaMod.Mode
                     if (Health || player.statLifeMax >= ArchaeaMode.LifeCrystal(20))
                     {
                         unlock[health] = Color.Green;
+                        if (!player.GetModPlayer<ArchaeaPlayer>().objectiveStat[health])
+                        {
+                            player.GetModPlayer<ArchaeaPlayer>().remainingStat++;
+                            Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat++;
+                            player.GetModPlayer<ArchaeaPlayer>().objectiveStat[health] = true;
+                        }
                         multiplier -= scaling[health];
                         Health = true;
                     }
                     if (Mana || player.statManaMax >= 40 || player.statManaMax2 >= 40)
                     {
                         unlock[mana] = Color.Green;
+                        if (!player.GetModPlayer<ArchaeaPlayer>().objectiveStat[mana])
+                        {
+                            player.GetModPlayer<ArchaeaPlayer>().remainingStat++;
+                            Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat++;
+                            player.GetModPlayer<ArchaeaPlayer>().objectiveStat[mana] = true;
+                        }
                         multiplier -= scaling[mana];
                         Mana = true;
                     }
                     if (Bottom || player.position.Y > Main.bottomWorld * 0.75f)
                     {
                         unlock[bottom] = Color.Green;
+                        if (!player.GetModPlayer<ArchaeaPlayer>().objectiveStat[bottom])
+                        {
+                            player.GetModPlayer<ArchaeaPlayer>().remainingStat++;
+                            Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat++;
+                            player.GetModPlayer<ArchaeaPlayer>().objectiveStat[bottom] = true;
+                        }
                         multiplier -= scaling[bottom];
                         Bottom = true;
                     }
@@ -273,6 +298,12 @@ namespace ArchaeaMod.Mode
                 if (NPCs || Main.townNPCCanSpawn[i] && count++ > 4)
                 {
                     unlock[npcs] = Color.Green;
+                    if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[bottom])
+                    {
+                        Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat++;
+                        Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat++;
+                        Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[bottom] = true;
+                    }
                     multiplier -= scaling[npcs];
                     NPCs = true;
                     break;
@@ -281,23 +312,47 @@ namespace ArchaeaMod.Mode
             if (Bosses)
             {
                 unlock[bosses] = Color.Green;
+                if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[bosses])
+                {
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat++;
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat++;
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[bosses] = true;
+                }
                 multiplier -= scaling[bosses];
             }
             if (Week || ModContent.GetInstance<ModeToggle>().dayCount > 6)
             {
                 unlock[week] = Color.Green;
                 multiplier -= scaling[week];
+                if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[week])
+                {
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat++;
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat++;
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[week] = true;
+                }
                 Week = true;
             }
             if (Crafting || ModContent.GetInstance<ModeTile>().tileProgress)
             {
                 unlock[crafting] = Color.Green;
                 multiplier -= scaling[crafting];
+                if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[crafting])
+                {
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat++;
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat++;
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[crafting] = true;
+                }
                 Crafting = true;
             }
             if (DownedMagno || ModContent.GetInstance<ArchaeaWorld>().downedMagno)
             {
                 unlock[downedMagno] = Color.Green;
+                if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[downedMagno])
+                {
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat++;
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat++;
+                    Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[downedMagno] = true;
+                }
                 multiplier -= scaling[downedMagno];
                 DownedMagno = true;
             }
@@ -387,6 +442,10 @@ namespace ArchaeaMod.Mode
             {
                 healthScale = ModContent.GetInstance<ArchaeaMode>().ModeChecksLifeScale(archaeaMode);
                 damageScale = ModContent.GetInstance<ArchaeaMode>().ModeChecksDamageScale(archaeaMode);
+            }
+            if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, Main.myPlayer))
+            {
+                Main.player[Main.myPlayer].GetDamage(DamageClass.Summon) *= 1.20f;
             }
         }
         public override void PreSaveAndQuit()
@@ -498,7 +557,7 @@ namespace ArchaeaMod.Mode
                 
                 if (progress)
                 {
-                    Rectangle panel = new Rectangle(306 - 160, 255, 180, 100);
+                    Rectangle panel = new Rectangle(306 - 160, 300, 180, 100);
                     Utils.DrawInvBG(sb, panel, Color.DodgerBlue * 0.33f);
                     //sb.Draw(TextureAssets.MagicPixel.Value, panel, Color.DodgerBlue * 0.33f);
                     sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + healthScale, new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
