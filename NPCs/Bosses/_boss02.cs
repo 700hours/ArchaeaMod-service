@@ -2,9 +2,11 @@
 using System.Transactions;
 using System.Windows.Markup;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace ArchaeaMod.NPCs.Bosses
@@ -96,55 +98,50 @@ namespace ArchaeaMod.NPCs.Bosses
                     for (int n = 0; n < lenY; n++)
                     {
                         if (m == 0 || m == lenX - 1 || n == 0 || n == lenY - 1)
-                        { 
+                        {
                             int i = (int)target.position.X / 16 - lenX / 2 + m;
                             int j = (int)target.position.Y / 16 - lenY / 2 + n;
                             OldCage.coord[m, n] = new Point(i, j);
-                            {   //  Setting tiles
-                                Tile tile = Main.tile[Math.Max(0, i), Math.Max(0, j)];
-                                if (!tile.HasTile && tile.BlockType == TileID.Dirt)
-                                { 
-                                    oldCage[m, n] = true;
-                                    tile.TileType = TileID.AdamantiteBeam;
-                                    tile.HasTile = true;
-                                    WorldGen.SectionTileFrame(i - 1, j - 1, i + 1, j + 1);
-                                    if (Main.netMode != NetmodeID.SinglePlayer)
-                                    {   //  DEBUG: proper message ID?
-                                        NetMessage.SendData(MessageID.TileFrameSection, number: i, number2: j);
-                                    }
-                                }
-                            }
                         }
                     }
                     break;
             }
         }
+        public override void PostAI()
+        {
+            
+        }
+        public override void PostDraw(SpriteBatch sb, Vector2 screenPos, Color drawColor)
+        {
+            int lenX = OldCage.coord.GetLength(0);
+            int lenY = OldCage.coord.GetLength(1);
+            for (int m = 0; m < lenX; m++)
+            {
+                for (int n = 0; n < lenY; n++)
+                {
+                    if (m == 0 || m == lenX - 1 || n == 0 || n == lenY - 1)
+                    {
+                        int x = OldCage.coord[m, n].X * 16;
+                        int y = OldCage.coord[m, n].Y * 16;
+                        sb.Draw(TextureAssets.MagicPixel.Value, new Rectangle(x, y, 16, 16), ArchaeaPlayer.)
+                    }
+                } 
+            }
+        }
         void ClearOldCage()
         {
-            if (oldCage == null) return;
-            int lenX = oldCage.GetLength(0);
-            int lenY = oldCage.GetLength(1);
+            if (OldCage.coord == null) return;
+            int lenX = OldCage.coord.GetLength(0);
+            int lenY = OldCage.coord.GetLength(1);
             for (int m = 0; m < lenX; m++)
             for (int n = 0; n < lenY; n++)
             {
                 if (m == 0 || m == lenX - 1 || n == 0 || n == lenY - 1)
                 {
-                    if (OldCage.coord.GetLength(0) < m || OldCage.coord.GetLength(1) < n)
-                    { 
-                        return;
-                    }
-                    var p = OldCage.coord[m, n];
-                    if (p.X <= 0 || p.X >= Main.maxTilesX || p.Y <= 0 || p.Y >= Main.maxTilesY)
-                    {
-                        return;
-                    }
-                    if (!oldCage[m, n])
-                    {
-                        WorldGen.KillTile(p.X, p.Y, false, false, true);
-                    }
+                    OldCage.coord[m, n] = Point.Zero;
                 }
             }
-            oldCage = null;
+            OldCage.coord = null;
         }
         int SmartSize(float @base = 15f)
         {

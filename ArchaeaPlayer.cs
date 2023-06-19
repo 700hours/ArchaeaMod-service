@@ -125,7 +125,7 @@ namespace ArchaeaMod
 
         //  Biome bounds
         private bool outOfBounds;
-        private bool[] zones = new bool[index];
+        public bool[] zones = new bool[index];
         private const int index = 12;
         private Vector2 oldPosition;
 
