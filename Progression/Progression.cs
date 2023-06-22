@@ -357,7 +357,7 @@ namespace ArchaeaMod.Progression.Global
             }
             if (modPlayer.classChoice == ClassID.Summoner)
             {
-                if (item.Name.Contains("Brick"))
+                if (item.Name.ToLower().Contains("brick"))
                 {
                     modPlayer.TRAIT_PlacedBricks++;
                 }

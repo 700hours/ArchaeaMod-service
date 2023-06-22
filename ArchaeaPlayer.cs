@@ -336,10 +336,17 @@ namespace ArchaeaMod
         {
             if (whoAmI >= Main.player.Length || !Main.player[whoAmI].active)
                 return false;
-            ArchaeaPlayer player = Main.player[whoAmI].GetModPlayer<ArchaeaPlayer>();
-            if (player.classChoice == classID && player.trait[index])
-                return true;
-            return false;
+            try
+            { 
+                ArchaeaPlayer player = Main.player[whoAmI].GetModPlayer<ArchaeaPlayer>();
+                if (player.classChoice == classID && player.trait[index])
+                    return true;
+                return false;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
         public bool CheckHasTrait(int index, int classID)
         {
@@ -890,7 +897,7 @@ namespace ArchaeaMod
                 init = true;
                 */
             }
-            if (Player.chest != -1 && Main.chest[Player.chest] != null)
+            if (Player.chest >= 0 && Main.chest[Player.chest] != null)
             {
                 Merged.Tiles.m_chest.ChestSummon(Main.chest[Player.chest].x / 16, Main.chest[Player.chest].y / 16);
             }
@@ -1144,6 +1151,7 @@ namespace ArchaeaMod
             //    Main.drawingPlayerChat = false;
             //    Main.chatRelease = false;
             //}
+            return;
             if (KeyPress(Keys.F2) && KeyHold(Keys.LeftControl))
             {
                 if (Main.netMode == 1)
@@ -1502,6 +1510,16 @@ namespace ArchaeaMod
             }
         }
         
+        public static Color[] zoneColor = new Color[]
+        {
+            Color.LightYellow,
+            Color.Plum,
+            Color.DarkRed,
+            Color.Yellow,
+            Color.SlateGray,
+
+        };
+            
         public void BiomeBounds()
         {
             zones = new bool[]

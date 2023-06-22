@@ -448,7 +448,7 @@ namespace ArchaeaMod.Mode
                     trait[2].content = ClassArray(2, modPlayer.TRAIT_PlantedMushroom, modPlayer.TRAIT_PlacedRails);
                     break;
                 case 3:
-                    trait[3].content = ClassArray(3, modPlayer.TRAIT_PlantedMushroom, modPlayer.TRAIT_PlacedRails);
+                    trait[3].content = ClassArray(3, modPlayer.TRAIT_PlacedBricks);
                     break;
                 case 4:
                     trait[4].content = ClassArray(4, Main.townNPCCanSpawn.Count(t => t == true));

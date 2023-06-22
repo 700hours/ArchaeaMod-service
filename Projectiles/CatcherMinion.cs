@@ -12,6 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 using ArchaeaMod.Items;
+using ArchaeaMod.Merged.Projectiles;
 
 namespace ArchaeaMod.Projectiles
 {
@@ -23,12 +24,20 @@ namespace ArchaeaMod.Projectiles
         }
         public override void SetDefaults()
         {
+            Main.projPet[Projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
+
             Projectile.width = 20;
             Projectile.height = 26;
             Projectile.damage = 10;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
+            Projectile.timeLeft = 18000;
             Projectile.friendly = true;
+            Projectile.minion = true;
+            Projectile.minionSlots = 1f;
+            Projectile.netImportant = true;
+            Projectile.ignoreWater = true;
         }
 
         private int ai = -1;
@@ -46,11 +55,19 @@ namespace ArchaeaMod.Projectiles
         private Target target;
         public override bool PreAI()
         {
+            Projectile.timeLeft = 36000;
+
             if (alpha && Projectile.alpha > 0)
             {
                 Projectile.alpha -= 20;
             }
             else alpha = false;
+
+            NPC t = Main.npc.FirstOrDefault(_t => Main.mouseRight && _t.Hitbox.Contains(Main.MouseWorld.ToPoint()));
+            if (t != default)
+            {
+                target = new Target(t, owner);
+            }
 
             switch (ai)
             {
@@ -90,6 +107,26 @@ namespace ArchaeaMod.Projectiles
         {
             if (!owner.active || owner.dead || !owner.HasBuff(ModContent.BuffType<Buffs.buff_catcher>()))
                 Projectile.active = false;
+
+            foreach (NPC npc in Main.npc)
+            { 
+                int npcTarget = npc.whoAmI;
+                if (!Main.npc[npcTarget].friendly && !Main.npc[npcTarget].townNPC)
+                {
+                    if (Main.npc[npcTarget].Hitbox.Intersects(Projectile.Hitbox))
+                    {
+                        if (ArchaeaItem.Elapsed(5))
+                        { 
+                            if ((Main.npc[npcTarget].lifeMax > 50 && (Main.expertMode || Main.hardMode)) || (Main.npc[npcTarget].lifeMax > 22 && !Main.expertMode && !Main.hardMode))
+                            { 
+                                Main.npc[npcTarget].StrikeNPC((int)(Projectile.ai[0] * Main.player[Projectile.owner].GetDamage(DamageClass.Summon).Additive), 4f, 0);
+                                Projectile.netUpdate = true;
+                            }
+                        }
+                    }
+                }
+            }
+
             if (target == null || target.npc.life <= 0 || !target.npc.active)
             {
                 FindOwner();
@@ -225,7 +262,7 @@ namespace ArchaeaMod.Projectiles
         }
         public override bool PreKill(int timeLeft)
         {
-            timeLeft = 36000;
+            Projectile.timeLeft = 36000;
             return false;
         }
     }

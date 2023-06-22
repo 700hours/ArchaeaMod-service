@@ -43,6 +43,7 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         Player target => Main.player[NPC.target];
         bool[,] oldCage;
+        bool[] zone => target.GetModPlayer<ArchaeaPlayer>().zones;
         //  this boss unlocks biomes
         //  if not defeated, the biome remains locked
         //  changes patterns after each defeat
@@ -123,11 +124,20 @@ namespace ArchaeaMod.NPCs.Bosses
                     {
                         int x = OldCage.coord[m, n].X * 16;
                         int y = OldCage.coord[m, n].Y * 16;
-                        sb.Draw(TextureAssets.MagicPixel.Value, new Rectangle(x, y, 16, 16), ArchaeaPlayer.)
+                        //sb.Draw(TextureAssets.MagicPixel.Value, new Rectangle(x, y, 16, 16), )
                     }
                 } 
             }
         }
+        Color getZoneColor()
+        {
+            for (int i = 0; i < zone.Length; i++)
+            {
+                
+            }   
+            return Color.White;
+        }
+
         void ClearOldCage()
         {
             if (OldCage.coord == null) return;

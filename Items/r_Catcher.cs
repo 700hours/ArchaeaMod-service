@@ -49,20 +49,22 @@ namespace ArchaeaMod.Items
         private Projectile minion;
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
+            count = player.ownedProjectileCounts[ModContent.ProjectileType<CatcherMinion>()];
             minions = count + player.numMinions;
-            if (minions == player.maxMinions || player.HasBuff(buffType))
+            if (minions < player.maxMinions)
             {
-                if (minion != null)
-                    minion.active = false;
-                minion = Projectile.NewProjectileDirect(Projectile.GetSource_None(), player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<CatcherMinion>(), Item.damage, Item.knockBack, player.whoAmI);
+                //if (minion != null)
+                //    minion.active = false;
+                //player.numMinions++;
+                Projectile.NewProjectileDirect(Projectile.GetSource_None(), player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<CatcherMinion>(), Item.damage, Item.knockBack, player.whoAmI, Item.damage);
                 if (Main.netMode == 2)
                     NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, minion.whoAmI);
             }
+            else return false;
             if (!player.HasBuff(buffType))
             {
                 player.AddBuff(buffType, 36000);
-                minion = Projectile.NewProjectileDirect(Projectile.GetSource_None(), player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<CatcherMinion>(), Item.damage, Item.knockBack, player.whoAmI);
-                count = player.ownedProjectileCounts[minion.type];
+                //minion = Projectile.NewProjectileDirect(Projectile.GetSource_None(), player.position - new Vector2(0, player.height), Vector2.Zero, ModContent.ProjectileType<CatcherMinion>(), Item.damage, Item.knockBack, player.whoAmI);
                 if (Main.netMode == 2)
                     NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, minion.whoAmI);
             }

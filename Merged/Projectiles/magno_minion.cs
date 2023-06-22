@@ -148,6 +148,13 @@ namespace ArchaeaMod.Merged.Projectiles
                 Projectile.netUpdate = true;
                 flag3 = true;
             }
+
+            if (targeted && Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > Main.screenWidth)
+            {
+                Projectile.position = player.Center - new Vector2(0, player.height);
+                targeted = false;
+            }
+
             orbitPosition = player.position + new Vector2(Random * 2f, -64f);
             Angle = (float)Math.Atan2(orbitPosition.Y - Projectile.position.Y, orbitPosition.X - Projectile.position.X);
             if (!targeted)
@@ -160,10 +167,6 @@ namespace ArchaeaMod.Merged.Projectiles
                 else if (Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > 128f)
                 {
                     Projectile.velocity = Distance(null, Angle, 8f);
-                }
-                if (Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > 1024)
-                {
-                    Projectile.position = player.Center - new Vector2(0, player.height);
                 }
                 #region float
                 float Revolution = 6.28308f;

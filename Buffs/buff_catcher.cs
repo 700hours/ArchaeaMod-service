@@ -23,5 +23,9 @@ namespace ArchaeaMod.Buffs
         {
             tip = "Junky Rust";
         }
+        public override void Update(Player player, ref int buffIndex)
+        {
+            player.buffTime[buffIndex] = 360;
+        }
     }
 }
