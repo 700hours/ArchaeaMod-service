@@ -20,6 +20,7 @@ namespace ArchaeaMod.Tiles
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
+            Main.tileMerge[Type][ArchaeaWorld.magnoStone] = true;
             ItemDrop = ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>();
             AddMapEntry(new Color(230, 130, 130));
            // soundStyle = 0;

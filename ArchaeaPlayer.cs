@@ -334,19 +334,13 @@ namespace ArchaeaMod
         }
         public static bool CheckHasTrait(int index, int classID, int whoAmI)
         {
-            if (whoAmI >= Main.player.Length || !Main.player[whoAmI].active)
+            if (whoAmI >= Main.player.Length || !Main.player[whoAmI].active || whoAmI < 0)
                 return false;
-            try
-            { 
-                ArchaeaPlayer player = Main.player[whoAmI].GetModPlayer<ArchaeaPlayer>();
-                if (player.classChoice == classID && player.trait[index])
-                    return true;
-                return false;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
+
+            ArchaeaPlayer player = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>();
+            if (player.classChoice == classID && player.trait[index])
+                return true;
+            return false;
         }
         public bool CheckHasTrait(int index, int classID)
         {
@@ -508,9 +502,9 @@ namespace ArchaeaMod
         public override void OnEnterWorld(Player player)
         {
             //  DEBUG
-            debugTimer.Enabled = true;
-            debugTimer.AutoReset = true;
-            debugTimer.Elapsed += DebugTimer_Elapsed;
+            //debugTimer.Enabled = true;
+            //debugTimer.AutoReset = true;
+            //debugTimer.Elapsed += DebugTimer_Elapsed;
             //debugTimer.Start();
 
             SetModeStats(ModContent.GetInstance<ModeToggle>().archaeaMode);
@@ -1151,7 +1145,6 @@ namespace ArchaeaMod
             //    Main.drawingPlayerChat = false;
             //    Main.chatRelease = false;
             //}
-            return;
             if (KeyPress(Keys.F2) && KeyHold(Keys.LeftControl))
             {
                 if (Main.netMode == 1)

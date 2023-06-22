@@ -13,6 +13,14 @@ namespace ArchaeaMod.Merged.Tiles
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
+            Main.tileMerge[Type][TileID.WoodBlock] = true;
+            Main.tileMerge[Type][TileID.Stone] = true;
+            Main.tileMerge[Type][TileID.Sand] = true;
+            Main.tileMerge[Type][TileID.Grass] = true;
+            Main.tileMerge[TileID.WoodBlock][Type] = true;
+            Main.tileMerge[TileID.Stone][Type] = true;
+            Main.tileMerge[TileID.Sand][Type] = true;
+            Main.tileMerge[TileID.Grass][Type] = true;
             ItemDrop = ModContent.ItemType<Merged.Items.Tiles.magno_brick>();
             //  UI map tile color
             AddMapEntry(new Color(119, 111, 98));

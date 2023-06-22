@@ -293,9 +293,9 @@ namespace ArchaeaMod.Mode
                 }
             }
             int count = 0;
-            for (int i = 0; i < Main.townNPCCanSpawn.Length; i++)
+            for (int i = 0; i < Main.npc.Length; i++)
             {
-                if (NPCs || Main.townNPCCanSpawn[i] && count++ > 4)
+                if (NPCs || Main.npc[i].townNPC && count++ > 4)
                 {
                     unlock[npcs] = Color.Green;
                     if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[bottom])
@@ -417,13 +417,14 @@ namespace ArchaeaMod.Mode
         public override void OnWorldLoad()
         {
             loading = true;
+            /*
             if (timer != null)
                 timer.Dispose();
             timer = new Timer(TimeSpan.FromSeconds(10).TotalMilliseconds);
             timer.Enabled = true;
             timer.AutoReset = true;
             timer.Elapsed += Timer_Elapsed;
-            timer.Start();
+            timer.Start();*/
 
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
@@ -435,7 +436,7 @@ namespace ArchaeaMod.Mode
             }
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private void LoadObjectivesMenu()
         {
             loading = false;
             if (ModContent.GetInstance<ArchaeaMode>() != null)
@@ -528,6 +529,10 @@ namespace ArchaeaMod.Mode
             }
             if (objectiveButton.LeftClick() && Main.playerInventory)
                 progress = !progress;
+            if (loading)
+            {
+                LoadObjectivesMenu();
+            }
         }
         public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
         {

@@ -65,6 +65,10 @@ namespace ArchaeaMod
         {
             get { return (ushort)ModContent.TileType<c_ore>(); }
         }
+        public static ushort crystalBlock
+        {
+            get { return (ushort)ModContent.TileType<c_crystal_block>(); }
+        }
         public static ushort crystal
         {
             get { return (ushort)ModContent.TileType<c_crystalsmall>(); }

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -13,7 +14,6 @@ namespace ArchaeaMod.Merged.Projectiles
     public class magno_minion : ModProjectile
     {
         bool fadeOutFlag => Projectile.ai[0] == -100f ? true : false;
-        int _npcTarget => (int)Projectile.ai[1];
         int damage => (int)Projectile.localAI[0];
         public override bool MinionContactDamage() => false;
 
@@ -36,22 +36,18 @@ namespace ArchaeaMod.Merged.Projectiles
             Projectile.minionSlots = 1f;
             Projectile.netImportant = true;
         }
-
-        public void Initialize()
-        {
-            oldProj = Projectile.whoAmI;
-            if (fadeOutFlag)
-            {
-                Projectile.alpha = 0;
-            }
-            Projectile.netUpdate = true;
-        }
         bool init;
-        bool target = false, targeted = false;
+        bool targeted => !targetCheck;
         bool flag, flag2, flag3;
+        bool resetIdleRandom = false;
         int ticks = 0;
         int Proj1;
-        int npcTarget = 0, oldNpcTarget = -1;
+        int npcTarget
+        {
+            get { return (int)Projectile.ai[1]; }
+            set { Projectile.ai[1] = value; }
+        }
+        int oldNpcTarget = -1;
         int oldProj;
         int Random;
         float Angle, npcAngle;
@@ -60,105 +56,127 @@ namespace ArchaeaMod.Merged.Projectiles
         const float radians = 0.017f;
         Vector2 orbitPosition;
         Vector2 npcCenter;
-        Player player => Main.player[Projectile.owner];
+        NPC target => Main.npc[npcTarget];
+        Player owner => Main.player[Projectile.owner];
+        bool targetCheck => IsNotValidNPC(target) || oldNpcTarget == -1;
 
-        public override bool PreAI()
+        private bool IsNotValidNPC(NPC n)
         {
-            NPC t = Main.npc.FirstOrDefault(_t => _t.Hitbox.Contains(Main.MouseWorld.ToPoint()));
-            if (t != default && Main.mouseRight)
-            {
-                oldNpcTarget = npcTarget;
-                npcTarget = t.whoAmI;
-                //Projectile.netUpdate = true;
-                targeted = true;
-            }
-
-            for (int i = 0; i < Main.npc.Length; i++)
-            {
-                NPC n = Main.npc[i];
-                if (n.active /*&& !n.dontTakeDamage && !n.immortal*/ && ((n.lifeMax >= 50 && (Main.expertMode || Main.hardMode)) || (n.lifeMax >= 15 && !Main.expertMode && !Main.hardMode)))
-                {
-                    bool conditions = n.life <= 0 || !targeted || npcTarget != n.whoAmI;
-                    npcCenter = new Vector2(n.position.X + n.width / 2, n.position.Y + n.height / 2);
-                    if (conditions && Vector2.Distance(npcCenter - Projectile.position, Vector2.Zero) < 800f)
-                    {
-                        oldNpcTarget = npcTarget;
-                        npcTarget = n.whoAmI;
-                        //Projectile.netUpdate = true;
-                        targeted = true;
-                        break;
-                    }
-                }
-                else
-                {
-                    Projectile.spriteDirection = player.direction * -1;
-                    Projectile.rotation = 0;
-                    break;
-                }
-            }
-            return true;
+            return !n.active || n.life <= 0 || n.friendly || n.CountsAsACritter || n.Center.Distance(owner.Center) >= Main.screenHeight / 2f;
         }
-        public override void AI()
+        private bool GetTarget()
         {
-            if (!init)
+            var n = Main.npc.OrderBy(t => t.Distance(owner.Center)).FirstOrDefault(t => !IsNotValidNPC(t) && t.Distance(owner.Center) < Main.screenHeight / 2);
+            if (n != default && targetCheck)
             {
-                Initialize();
+               SetTarget(n);
+               return true;
+            }
+            return false;
+        }
+        private void SetTarget(NPC n)
+        {
+            oldNpcTarget = npcTarget;
+            npcTarget = n.whoAmI;
+        }
+        private void ResetToIdle()
+        { 
+            Projectile.spriteDirection = owner.direction * -1;
+            Projectile.rotation = 0; 
+        }
+        public void Initialize(bool flag = false)
+        {
+            if (!init || flag)
+            {
+                Random = Main.rand.Next(-24, 24);
+                oldProj = Projectile.whoAmI;
+                if (fadeOutFlag)
+                {
+                    Projectile.alpha = 0;
+                }
+                Projectile.netUpdate = true;
                 init = true;
             }
+        }
+        private void CheckDespawn(bool flag = false)
+        {
             if (fadeOutFlag)
             {
-                Projectile.position = Main.npc[_npcTarget].Center - new Vector2(Projectile.width / 2, Projectile.height / 2);
+                Projectile.position = target.Center - new Vector2(Projectile.width / 2, Projectile.height / 2);
                 Projectile.scale += 0.02f;
                 if ((Projectile.alpha += 2) >= 255)
                 {
-                    Projectile.Kill();
+                    Projectile.timeLeft = 0;
                 }
-                return;
             }
-
-            Player player = Main.player[Projectile.owner];
-
-            ticks++;
-            //Projectile.damage = 8;
-
-            if (player.dead || !player.HasBuff(ModContent.BuffType<Merged.Buffs.magno_summon>()))
+            if (owner.dead || !owner.HasBuff(ModContent.BuffType<Merged.Buffs.magno_summon>()))
             {
                 Projectile.ai[0] = -100f;
-                return;
             }
-            if (player.HasBuff(ModContent.BuffType<Merged.Buffs.magno_summon>()))
+            if (flag)
             {
-                Projectile.timeLeft = 2;
+                Projectile.timeLeft = 0;
             }
-            if (player.ownedProjectileCounts[Projectile.type] > player.maxMinions)
+            if (owner.ownedProjectileCounts[Projectile.type] > owner.maxMinions ||
+                owner.numMinions > owner.maxMinions)
             {
                 foreach (Projectile p in Main.projectile)
                 {
                     if (p.type == Projectile.type && p.active)
                     {
-                        p.Kill();
+                        p.timeLeft = 0;
                         break;
                     }
                 }
             }
-
-            if (!flag3)
+        }
+        private void ForceKeepActive()
+        {
+            if (owner.HasBuff(ModContent.BuffType<Merged.Buffs.magno_summon>()))
             {
-                Random = Main.rand.Next(-24, 24);
-                Projectile.netUpdate = true;
-                flag3 = true;
+                Projectile.timeLeft = 2;
             }
-
-            if (targeted && Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > Main.screenWidth)
+        }
+        private void CheckResetDistance()
+        {
+            if (Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > Main.screenWidth)
             {
-                Projectile.position = player.Center - new Vector2(0, player.height);
-                targeted = false;
+                Projectile.position = owner.Center - new Vector2(0, owner.height);
+            }
+        }
+
+        public override bool PreAI()
+        {
+            Initialize(); 
+            if (ticks++ > 1000)
+            {
+                ticks = 0;
+            }
+            NPC t = Main.npc.FirstOrDefault(_t => _t.Hitbox.Contains(Main.MouseWorld.ToPoint()));
+            if (t != default && Main.mouseRight)
+            {
+                SetTarget(t);
+            }
+            return true;
+        }
+        public override void AI()
+        {
+            Player player = owner;
+            ForceKeepActive(); 
+            CheckDespawn();
+            CheckResetDistance();
+            GetTarget();
+
+            if (Projectile.velocity.X <= Projectile.oldVelocity.X || Projectile.velocity.X > Projectile.oldVelocity.X || Projectile.velocity.Y <= Projectile.oldVelocity.Y || Projectile.velocity.Y > Projectile.oldVelocity.Y)
+            {
+                Projectile.netUpdate = true;
             }
 
             orbitPosition = player.position + new Vector2(Random * 2f, -64f);
             Angle = (float)Math.Atan2(orbitPosition.Y - Projectile.position.Y, orbitPosition.X - Projectile.position.X);
-            if (!targeted)
+            if (IsNotValidNPC(target))
             {
+                ResetToIdle();
                 if (Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > 32f && Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) <= 128f)
                 {
                     Projectile.position += Distance(null, Angle, 4f);
@@ -178,66 +196,43 @@ namespace ArchaeaMod.Merged.Projectiles
 
                 Projectile.position.Y += Cos * WaveOffset;
                 #endregion
+                return;
             }
-
-           
-            if (targeted)
+            NPC n = target;
+            npcCenter = new Vector2(n.position.X + n.width / 2, n.position.Y + n.height / 2);
+            npcAngle = (float)Math.Atan2(npcCenter.Y - Projectile.Center.Y, npcCenter.X - Projectile.Center.X);
+            if (Projectile.Hitbox.Intersects(n.Hitbox))
+            { 
+                Projectile.spriteDirection = n.spriteDirection;
+            }
+            if (Vector2.Distance(npcCenter - owner.Center, Vector2.Zero) < Main.screenHeight / 2)
             {
-                NPC n = Main.npc[npcTarget];
-                npcCenter = new Vector2(n.position.X + n.width / 2, n.position.Y + n.height / 2);
-                npcAngle = (float)Math.Atan2(npcCenter.Y - Projectile.position.Y, npcCenter.X - Projectile.position.X);
-                //  projectile.rotation = npcAngle;
-                if (Projectile.Hitbox.Intersects(n.Hitbox))
-                    Projectile.spriteDirection = n.spriteDirection;
-                if (Vector2.Distance(npcCenter - Projectile.position, Vector2.Zero) < 800f)
+                if (!n.Hitbox.Contains(Projectile.Center.ToPoint()))
                 {
-                    if (!n.Hitbox.Contains(Projectile.Center.ToPoint()))
-                    {
-                        if (!flag2)
-                        {
-                            Projectile.position += Distance(null, npcAngle, 8f);
-                            //Projectile.netUpdate = true;
-                        }
-                    }
-                    else 
-                    {
-                        /*  float radius = 32f;
-                            degrees += radians * 9f;
-                            projectile.position.X = n.Center.X + (float)(radius * Math.Cos(degrees));
-                            projectile.position.Y = n.Center.Y + (float)(radius * Math.Sin(degrees));
-                        */
-                        flag2 = true;
-                        Projectile.Center = n.Center;
-                        if (ticks % 120 == 0)
-                        {
-                            if (!Main.npc[npcTarget].friendly && !Main.npc[npcTarget].townNPC)
-                            {
-                                for (float k = 0; k < MathHelper.ToRadians(360); k += 0.017f * 9)
-                                {
-                                    int d = Dust.NewDust(Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), 4, 4, 6, Distance(null, k, 2f).X, Distance(null, k, 8f).Y, 0, default(Color), 2f);
-                                    Main.dust[d].noGravity = true;
-                                }
-                                Main.npc[npcTarget].StrikeNPC((int)(damage * player.GetDamage(DamageClass.Summon).Additive), 4f, 0);
-                                int Proj2 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<magno_minionexplosion>(), 0, 0f, Projectile.owner, 0f, 0f);
-                                Main.projectile[Proj2].position = Projectile.position - new Vector2(15, 15);
-                                Main.projectile[Proj2].minion = true;
-                                SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
-                                Projectile.netUpdate = true;
-                            }
-                        }
-                    }
-                    target = true;
+                    Projectile.position += Distance(null, npcAngle, 8f);
                 }
-                else target = false;
-                if (!n.active || oldNpcTarget != n.whoAmI)
+                else 
                 {
-                    flag2 = false;
-                    target = false;
-                    targeted = false;
+                    Projectile.Center = n.Center;
+                    if (ticks % 120 == 0)
+                    {
+                        if (!Main.npc[npcTarget].friendly && !Main.npc[npcTarget].townNPC)
+                        {
+                            for (float k = 0; k < MathHelper.ToRadians(360); k += 0.017f * 9)
+                            {
+                                int d = Dust.NewDust(Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), 4, 4, 6, Distance(null, k, 2f).X, Distance(null, k, 8f).Y, 0, default(Color), 2f);
+                                Main.dust[d].noGravity = true;
+                            }
+                            Main.npc[npcTarget].StrikeNPC((int)(damage * player.GetDamage(DamageClass.Summon).Additive), 4f, 0);
+                            int Proj2 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<magno_minionexplosion>(), 0, 0f, Projectile.owner, 0f, 0f);
+                            Main.projectile[Proj2].position = Projectile.position - new Vector2(15, 15);
+                            Main.projectile[Proj2].minion = true;
+                            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
+                            Projectile.netUpdate = true;
+                        }
+                    }
                 }
             }
-            if (Projectile.velocity.X <= Projectile.oldVelocity.X || Projectile.velocity.X > Projectile.oldVelocity.X || Projectile.velocity.Y <= Projectile.oldVelocity.Y || Projectile.velocity.Y > Projectile.oldVelocity.Y)
-                Projectile.netUpdate = true;
         }
 
         public override bool? CanCutTiles()

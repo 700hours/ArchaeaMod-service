@@ -17,9 +17,17 @@ namespace ArchaeaMod.Tiles
         public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
-            Main.tileMergeDirt[Type] = false;
+            Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
+            Main.tileMerge[Type][TileID.WoodBlock] = true;
+            Main.tileMerge[Type][TileID.Stone] = true;
+            Main.tileMerge[Type][TileID.Sand] = true;
+            Main.tileMerge[Type][TileID.Grass] = true;
+            Main.tileMerge[TileID.WoodBlock][Type] = true;
+            Main.tileMerge[TileID.Stone][Type] = true;
+            Main.tileMerge[TileID.Sand][Type] = true;
+            Main.tileMerge[TileID.Grass][Type] = true;
             ItemDrop = ModContent.ItemType<Items.Tiles.sky_brick>();
             AddMapEntry(Color.LightSlateGray);
            // soundStyle = 0;

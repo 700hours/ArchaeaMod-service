@@ -163,17 +163,17 @@ namespace ArchaeaMod.Interface.UI
                             case 0:
                                 string text = "Class selection is once per character.";
                                 int width = (int)FontAssets.MouseText.Value.MeasureString(text).X;
-                                sb.DrawString(FontAssets.MouseText.Value, text, new Vector2(Main.screenWidth / 2 - width / 2, Main.screenHeight - 32), Color.Gray);
+                                sb.DrawString(FontAssets.MouseText.Value, text, new Vector2(Main.screenWidth / 2 - width / 2, Main.screenHeight - 32), Color.White);
                                 break;
                             case 1:
                                 string text2 = "Not implemented.";
                                 int width2 = (int)FontAssets.MouseText.Value.MeasureString(text2).X;
-                                sb.DrawString(FontAssets.MouseText.Value, text2, new Vector2(Main.screenWidth / 2 - width2 / 2, Main.screenHeight - 32), Color.Gray);
+                                sb.DrawString(FontAssets.MouseText.Value, text2, new Vector2(Main.screenWidth / 2 - width2 / 2, Main.screenHeight - 32), Color.White);
                                 break;
                             case 2:
                                 string text3 = "Increases stats of all players and NPCs and scales difficulty a bit.";
                                 int width3 = (int)FontAssets.MouseText.Value.MeasureString(text3).X;
-                                sb.DrawString(FontAssets.MouseText.Value, text3, new Vector2(Main.screenWidth / 2 - width3 / 2, Main.screenHeight - 32), Color.Gray);
+                                sb.DrawString(FontAssets.MouseText.Value, text3, new Vector2(Main.screenWidth / 2 - width3 / 2, Main.screenHeight - 32), Color.White);
                                 break;
                         }
                     }

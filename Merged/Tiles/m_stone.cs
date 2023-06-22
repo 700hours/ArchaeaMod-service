@@ -14,6 +14,8 @@ namespace ArchaeaMod.Merged.Tiles
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
+            Main.tileMerge[Type][ArchaeaWorld.crystalBlock] = true;
+            Main.tileMerge[Type][ArchaeaWorld.magnoOre] = true;
             ItemDrop = ModContent.ItemType<Merged.Items.Tiles.magno_stone>();
             //  UI map tile color
             AddMapEntry(new Color(119, 111, 98));
