@@ -2,27 +2,11 @@
 Terraria mod which is designed to provide new elements that are both pre-hardmode and hardmode.
 
 [b]Latest update[/b]
-[i]version 1.3.14.57 -> 1.3.17.66
+[i]version 1.3.19.68 -> 1.3.20.70
 ==============================
-# Fixed
-* Structure gen sometimes escaped expect array values
-* Player.chest returned < 0 (-2) when using piggy bank (line 900)
-* Rusty Catcher does not support more than one
-* Rusty Catcher minion doesn't follow the player during long distances (despawns)
-* Summoner brick-placing trait tip properly displays total placed bricks
-* Rusty Catcher buff runs out
-* Some boss music had incorrect return value
-* Magno minion does not stop targeting even if too far away from player
-* Incorrect mod boss music index causing no music
-
-version 1.3.17.66 -> 1.3.19.68
-==============================
-# Fixed
--> Town counter not counting NPCs properly
 # Changed
--> Magno Brick, Sky Brick and others merges with Wood Block, Stone, Sand and Grass
-
-Note: on the path to a more bug-free version.[/i]
+-> Progress menu now loads on world enter instead of timer
+-> Magno minion AI revised[/i]
 
 [hr]
 [i]Features implemented are a few such as these:[/i]

@@ -1,6 +1,5 @@
-version 1.3.17.66 -> 1.3.19.68
+version 1.3.19.68 -> 1.3.20.70
 ==============================
-# Fixed
--> Town counter not counting NPCs properly
 # Changed
--> Magno Brick, Sky Brick and others merges with Wood Block, Stone, Sand and Grass
+-> Progress menu now loads on world enter instead of timer
+-> Magno minion AI revised

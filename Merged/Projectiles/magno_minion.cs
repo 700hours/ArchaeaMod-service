@@ -144,6 +144,10 @@ namespace ArchaeaMod.Merged.Projectiles
                 Projectile.position = owner.Center - new Vector2(0, owner.height);
             }
         }
+        private new bool CanDamage()
+        {
+            return !Main.npc[npcTarget].friendly && Main.npc[npcTarget].type != NPCID.FairyCritterPink && Main.npc[npcTarget].type != NPCID.FairyCritterGreen && Main.npc[npcTarget].type != NPCID.FairyCritterBlue && !Main.npc[npcTarget].CountsAsACritter && !Main.npc[npcTarget].townNPC;
+        }
 
         public override bool PreAI()
         {
@@ -213,10 +217,10 @@ namespace ArchaeaMod.Merged.Projectiles
                 }
                 else 
                 {
-                    Projectile.Center = n.Center;
+                    Projectile.Center = n.Hitbox.Center();
                     if (ticks % 120 == 0)
                     {
-                        if (!Main.npc[npcTarget].friendly && !Main.npc[npcTarget].townNPC)
+                        if (CanDamage())
                         {
                             for (float k = 0; k < MathHelper.ToRadians(360); k += 0.017f * 9)
                             {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Terraria.ID.ContentSamples.CreativeHelper;
+﻿using static Terraria.ID.ContentSamples.CreativeHelper;
 using Terraria.ModLoader;
 
 using Microsoft.Xna.Framework;
