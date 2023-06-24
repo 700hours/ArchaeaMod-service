@@ -30,6 +30,7 @@ using System.Security.Policy;
 using ArchaeaMod.NPCs;
 using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using ArchaeaMod.Factory;
 
 namespace ArchaeaMod
 {
@@ -382,7 +383,7 @@ namespace ArchaeaMod
                             NetMessage.SendData(MessageID.PlayerLifeMana);
                         return false;
                     }
-                    if ((ModContent.GetInstance<ModeToggle>().archaeaMode && Player.statLifeMax2 >= 8999) 
+                    if ((ModContent.GetInstance<ModeToggle>().archaeaMode && Player.statLifeMax2 >= 9499) 
                         || Player.statLifeMax2 >= 380)
                     {
                         SetClassTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, true);
@@ -1234,6 +1235,10 @@ namespace ArchaeaMod
         private int counter = 0;
         public override void PostUpdate()
         {
+            foreach (Room r in Factory.Factory.room)
+            {
+                r.Update(Player);
+            }
             NPCVendorScaling(merchantDiscount);
             //  Trait characteristics
             //  Wall jump

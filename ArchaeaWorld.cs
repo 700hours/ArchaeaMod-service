@@ -461,38 +461,7 @@ namespace ArchaeaMod
             {
                 progress.Start(1f);
                 progress.Message = "Even More Magno";
-                /*
-                new Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, 120, 16, (int)Math.Sqrt(Main.maxTilesX), 100, 200);
-                int x = 0;
-                int y = Main.UnderworldLayer - 200;
-                for (int i = 0; i < tile.GetLength(0); i++)
-                {
-                    for (int j = 0; j < tile.GetLength(1); j++)
-                    {
-                        Tile _tile = Main.tile[x + i, y + j];
-                        if (tile[i, j] == Factory.Tile)
-                        { 
-                            _tile.HasTile = true;
-                            _tile.TileType = magnoBrick;
-                        }
-                        else
-                        {
-                            _tile.HasTile = false;
-                            _tile.TileType = TileID.Dirt;
-                        }
-                    }
-                }
-                for (int i = 0; i < wall.GetLength(0); i++)
-                {
-                    for (int j = 0; j < wall.GetLength(1); j++)
-                    {
-                        Tile _tile = Main.tile[x + i, y + j];
-                        if (wall[i, j] == Factory.Wall)
-                        {
-                            _tile.WallType = magnoBrickWall;
-                        }
-                    }
-                }              */
+                new Factory.Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, 280);
                 progress.Value = 1f;
                 progress.End();
             }, 1f));

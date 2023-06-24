@@ -15,4 +15,7 @@
       <HintPath>lib\tUserInterface.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WorldGen\Factory\" />
+  </ItemGroup>
 </Project>

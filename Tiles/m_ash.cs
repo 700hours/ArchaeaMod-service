@@ -25,7 +25,7 @@ namespace ArchaeaMod.Tiles
             //  UI map tile color
             AddMapEntry(new Color(180, 180, 180));
            // soundStyle = 0;
-            HitSound = SoundID.Tink;
+            HitSound = SoundID.Dig;
         }
 
         public override bool HasWalkDust()

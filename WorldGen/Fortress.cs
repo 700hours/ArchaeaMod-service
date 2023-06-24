@@ -44,7 +44,7 @@ namespace ArchaeaMod
         private Vector2 origin;
         private List<Vector2> path;
         public const int YCoord = 60;
-        private const ushort
+        public const ushort
             TILE_None = 0,
             TILE_Chain = 1,
             TILE_Brick = 2,
@@ -58,7 +58,7 @@ namespace ArchaeaMod
             ENTR_Wood3 = 7,
             ENTR_Wood7 = 8,
             ENTR_Wood9 = 9;
-        private ushort[,] cage = new ushort[,]
+        public static ushort[,] cage = new ushort[,]
         {
             { 0, 0, 0, 1, 0, 0, 0 },
             { 0, 0, 0, 1, 0, 0, 0 },

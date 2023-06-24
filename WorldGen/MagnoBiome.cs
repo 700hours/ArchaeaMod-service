@@ -7,6 +7,7 @@ using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using WorldGen = Terraria.WorldGen;
 
 namespace ArchaeaMod.Biome
 {

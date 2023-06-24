@@ -213,7 +213,7 @@ namespace ArchaeaMod.Merged.Projectiles
             {
                 if (!n.Hitbox.Contains(Projectile.Center.ToPoint()))
                 {
-                    Projectile.position += Distance(null, npcAngle, 8f);
+                    Projectile.velocity = Distance(null, npcAngle, 8f);
                 }
                 else 
                 {
@@ -248,6 +248,13 @@ namespace ArchaeaMod.Merged.Projectiles
         {
             float VelocityX = (float)(Radius * Math.Cos(Angle));
             float VelocityY = (float)(Radius * Math.Sin(Angle));
+
+            return new Vector2(VelocityX, VelocityY);
+        }
+        public Vector2 DistanceV2(Player player, float Angle, float Radius)
+        {
+            float VelocityX = Radius + (float)Math.Cos(Angle);
+            float VelocityY = Radius + (float)Math.Sin(Angle);
 
             return new Vector2(VelocityX, VelocityY);
         }
