@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace ArchaeaMod.Walls
@@ -15,9 +17,13 @@ namespace ArchaeaMod.Walls
         }
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            r = 0.4f;
-            g = 0.1f;
-            b = 0.1f;
+            r = 0.1f;
+            g = 0.0f;
+            b = 0.0f;
+            if (Main.tile[i, j].HasTile)
+            {
+                r = 0f;
+            }
         }
         public override void KillWall(int i, int j, ref bool fail)
         {

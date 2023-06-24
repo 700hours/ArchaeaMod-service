@@ -31,6 +31,7 @@ using ArchaeaMod.NPCs;
 using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ArchaeaMod.Factory;
+using ArchaeaMod.Items;
 
 namespace ArchaeaMod
 {
@@ -65,6 +66,7 @@ namespace ArchaeaMod
         public bool MagnoBiome  => Player.InModBiome<MagnoBiome>();
         public bool SkyFort     => Player.InModBiome<SkyFortBiome>();
         public bool SkyPortal   => Player.InModBiome<SkyFortPortalBiome>();
+        public bool Factory     => Player.InModBiome<FactoryBiome>();
         #endregion
         //  Class type
         public int classChoice = 0;
@@ -1179,6 +1181,15 @@ namespace ArchaeaMod
 
         public override void PreUpdateMovement()
         {
+            if (Factory && Player.wet)
+            {
+                Player.velocity /= 1.5f;
+                if (ArchaeaItem.Elapsed(90))
+                {
+                    Player.Hurt(PlayerDeathReason.LegacyDefault(), 40, Player.direction);
+                    Player.AddBuff(BuffID.Burning, 300, false);
+                }
+            }
         }
         public override void PostUpdateEquips()
         {
@@ -1235,7 +1246,7 @@ namespace ArchaeaMod
         private int counter = 0;
         public override void PostUpdate()
         {
-            foreach (Room r in Factory.Factory.room)
+            foreach (Room r in ArchaeaMod.Factory.Factory.room)
             {
                 r.Update(Player);
             }

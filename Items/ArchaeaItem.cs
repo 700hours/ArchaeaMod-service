@@ -68,6 +68,10 @@ namespace ArchaeaMod.Items
         {
             return Math.Round(Main.time, 0) % interval == 0;
         }
+        public static bool Elapsed(ref int interval, int time)
+        {
+            return ++interval >= time;
+        }
         public static bool ArmorSet(Player player, string head, string body, string legs)
         {
             return player.armor[0].Name == head &&
@@ -96,7 +100,24 @@ namespace ArchaeaMod.Items
                 }
             }
         }
-
+        public static void Bolt(ref Vector2 start, Vector2 end, int damage = 20, int arcs = 30, float localAI0 = 0f)
+        {
+            float max = end.Distance(start);
+            for (int k = 0; k < max; k++)
+            {
+                for (int i = 0; i < arcs; i++)
+                {
+                    if (start.Y > end.Y)
+                        return;
+                    float angle = Main.rand.NextFloat(0f, (float)Math.PI);
+                    start += NPCs.ArchaeaNPC.AngleToSpeed(angle, k);
+                    Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_None(), start, Vector2.Zero, ModContent.ProjectileType<Pixel>(), damage, 0f, Main.myPlayer, Pixel.Electric, Pixel.Active);
+                    proj.timeLeft = 3;
+                    proj.localAI[0] = localAI0;
+                }
+            }
+        }
+        
         public static void SyncProj(int netID, Projectile Projectile)
         {
             if (Main.netMode == netID)

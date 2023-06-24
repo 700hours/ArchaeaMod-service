@@ -13,31 +13,6 @@ using Terraria.WorldBuilding;
 
 namespace ArchaeaMod
 {
-    public class MagnoCave : ArchaeaWorld
-    {
-        private static int x
-        {
-            get { return WorldGen.genRand.Next(100, (int)Main.rightWorld / 16 - 100); }
-        }
-        private static int y
-        {
-            get { return WorldGen.genRand.Next((int)Main.worldSurface / 16 + 300, (int)Main.bottomWorld / 16 - 250); }
-        }
-        public int rand;
-        public float progress;
-        public Digger[] diggers;
-        public static Vector2 Center()
-        {
-            return new Vector2(x, y);
-        }
-        public void Initialize(ushort tileID, ushort wallID)
-        {
-            rand = WorldGen.genRand.Next(7, 12);
-            diggers = new Digger[rand];
-            for (int i = 0; i < rand; i++)
-                diggers[i] = new Digger(25, tileID, wallID);
-        }
-    }
     public class MagnoDen
     {
         public static bool active = true;

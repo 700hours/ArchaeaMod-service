@@ -66,6 +66,14 @@ namespace ArchaeaMod
         {
             get { return ModContent.NPCType<NPCs.Sky_3>(); }
         }
+        public static int Mechanic
+        {
+            get { return ModContent.NPCType<NPCs.Town.Mechanic>(); }
+        }
+        public static int MechanicMinion
+        {
+            get { return ModContent.NPCType<NPCs.Town.MechanicMinion>(); }
+        }
     }
 }
 
@@ -117,6 +125,10 @@ namespace ArchaeaMod.NPCs
             {
                 shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.gray_solution>());
             }
+        }
+        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        {
+            pool.Add(NPCID.BlazingWheel, spawnInfo.Player.GetModPlayer<ArchaeaPlayer>().Factory ? 0.2f : 0f);
         }
     }
     public class ArchaeaNPC : GlobalNPC

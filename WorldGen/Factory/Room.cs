@@ -45,9 +45,8 @@ namespace ArchaeaMod.Factory
         Rectangle hitbox => new Rectangle(Left, Top, bound.Width, bound.Height);
         
         public Rectangle bound;
-        public void Build()
+        public void Build(int buffer = 10)
         {
-            bool flag = Terraria.WorldGen.genRand.NextBool();
             int offX = 0;
             bool placed = false;
             int X1 = Left;
@@ -58,6 +57,12 @@ namespace ArchaeaMod.Factory
             {
                 for (int j = Y1; j < Y2; j++)
                 {
+                    //  Set wall type for room
+                    i = Math.Max(buffer, Math.Min(Main.maxTilesX - buffer, i));
+                    j = Math.Max(buffer, Math.Min(Main.maxTilesY - buffer, j));
+
+                    Main.tile[i, j].WallType = Factory.Wall;
+
                     switch (type)
                     {
                         case RoomID.Empty:
@@ -65,7 +70,10 @@ namespace ArchaeaMod.Factory
                         case RoomID.Simple:
                             if (IsBottom(j) && i % 2 == 0)
                             {
-                                Terraria.WorldGen.PlaceTile(i, j, TileID.Spikes);
+                                if (Main.tile[i, j + 1].HasTile)
+                                { 
+                                    Terraria.WorldGen.PlaceTile(i, j, TileID.Spikes, true, true);
+                                }
                             }
                             break;
                         case RoomID.Trapped:
@@ -85,22 +93,26 @@ namespace ArchaeaMod.Factory
                         case RoomID.Challenge:
                             if (!placed && IsTop(j) && IsCenter(i))
                             {
-                                for (int m = 0; m < Structures.cage.GetLength(0); m++)
+                                for (int m = 0; m < Structures.cageSafe.GetLength(1); m++)
                                 {
-                                    for (int n = 0; n < Structures.cage.GetLength(1); n++)
+                                    for (int n = 0; n < Structures.cageSafe.GetLength(0); n++)
                                     {
                                         int x = i + m;
                                         int y = j + n;
-                                        switch (Structures.cage[m, n])
+                                        switch (Structures.cageSafe[m, n])
                                         { 
                                             case Structures.TILE_Chain:
                                                 for (int l = 0; l < 6; l++)
                                                 {
-                                                    Terraria.WorldGen.PlaceTile(x, y - l, TileID.Chain);
+                                                    Terraria.WorldGen.PlaceTile(x, y - l, TileID.Chain, true, true);
                                                 }
                                                 break;
                                             case Structures.TILE_Brick:
-                                                Terraria.WorldGen.PlaceTile(x, y, ArchaeaWorld.factoryBrick);
+                                                Terraria.WorldGen.PlaceTile(x, y, ArchaeaWorld.factoryBrick, true, true);
+                                                break;
+                                            default:
+                                                Tile tile = Main.tile[x, y];
+                                                tile.HasTile = false;
                                                 break;
                                         }
                                     }
@@ -109,7 +121,10 @@ namespace ArchaeaMod.Factory
                             }
                             if (IsBottom(j) && i % 2 == 0)
                             {
-                                Terraria.WorldGen.PlaceTile(i, j, TileID.Spikes);
+                                if (Main.tile[i, j + 1].HasTile)
+                                {
+                                    Terraria.WorldGen.PlaceTile(i, j, TileID.Spikes, true, true);
+                                }
                             }
                             break;
                         case RoomID.Pillars:
@@ -117,19 +132,22 @@ namespace ArchaeaMod.Factory
                             {
                                 if (i % 4 == 0)
                                 {
-                                    Terraria.WorldGen.PlaceTile(i, j, TileID.Statues, style: 36);
+                                    Terraria.WorldGen.PlaceTile(i, j, TileID.Statues, true, true, style: 36);
                                 }
                             }
                             break;
                         case RoomID.Webbed:
                             if (Terraria.WorldGen.genRand.NextBool(4))
                             {
-                                Terraria.WorldGen.PlaceTile(i, j - 1, TileID.Sand, true);
-                                Terraria.WorldGen.PlaceTile(i, j, TileID.Cobweb, true);
+                                if (i > X1 + 8 && j > Y1 + 8)
+                                { 
+                                    Terraria.WorldGen.PlaceTile(i, j - 1, TileID.Sand, true, true);
+                                    Terraria.WorldGen.PlaceTile(i, j, TileID.Cobweb, true, true);
+                                }
                             }
                             break;
                         case RoomID.MonsterDen:
-                            if (IsBottom(i) && i % 3 == 0)
+                            if (IsBottom(j) && i % 3 == 0)
                             {
                                 Terraria.WorldGen.PlaceStatueTrap(i, j);
                             }
@@ -142,25 +160,25 @@ namespace ArchaeaMod.Factory
                             }
                             break;
                         case RoomID.Lighted:
-                            if (IsTop(j) && i > X1 + 3 && i < X2 - 4)
+                            if (IsTop(j) && IsCenter(i))
                             {
-                                Terraria.WorldGen.PlaceTile(i, j, ModContent.TileType<Tiles.m_chandelier>());
+                                Terraria.WorldGen.PlaceTile(i, j, ModContent.TileType<Tiles.m_chandelier>(), true, true);
                             }
                             break;
                         case RoomID.Dais:
-                            if (IsTop(j) && i > X1 + 3 && i < X2 - 4)
+                            if (IsTop(j) && IsCenter(i))
                             {
-                                Terraria.WorldGen.PlaceTile(i, j, ModContent.TileType<Tiles.m_chandelier>());
+                                Terraria.WorldGen.PlaceTile(i, j, ModContent.TileType<Tiles.m_chandelier>(), true, true);
                             }
                             if (IsRight(i) && IsBottom(j))
                             { 
                                 offX = 2;
-                                Terraria.WorldGen.PlaceTile(i     - offX, j, ArchaeaWorld.factoryBrick);
-                                Terraria.WorldGen.PlaceTile(i - 1 - offX, j, ArchaeaWorld.factoryBrick);
-                                Terraria.WorldGen.PlaceTile(i - 2 - offX, j, ArchaeaWorld.factoryBrick);
-                                Terraria.WorldGen.PlaceTile(i     - offX, j - 1, ArchaeaWorld.factoryBrick);
-                                Terraria.WorldGen.PlaceTile(i - 1 - offX, j - 1, ArchaeaWorld.factoryBrick);
-                                Terraria.WorldGen.Place2x1(i, j - 2, (ushort)ModContent.TileType<Tiles.m_chair>());
+                                Terraria.WorldGen.PlaceTile(i     - offX, j, ArchaeaWorld.factoryBrick, true, true);
+                                Terraria.WorldGen.PlaceTile(i - 1 - offX, j, ArchaeaWorld.factoryBrick, true, true);
+                                Terraria.WorldGen.PlaceTile(i - 2 - offX, j, ArchaeaWorld.factoryBrick, true, true);
+                                Terraria.WorldGen.PlaceTile(i     - offX, j - 1, ArchaeaWorld.factoryBrick, true, true);
+                                Terraria.WorldGen.PlaceTile(i - 1 - offX, j - 1, ArchaeaWorld.factoryBrick, true, true);
+                                Terraria.WorldGen.PlaceTile(i     - offX, j - 2, (ushort)ModContent.TileType<Tiles.m_chair>(), true, true);
                                 return;
                             }
                             break;
@@ -169,9 +187,9 @@ namespace ArchaeaMod.Factory
                             {
                                 if (i % 2 == 0)
                                 {
-                                    if (Main.rand.NextBool(3))
+                                    if (Main.rand.NextBool(2))
                                     {
-                                        Terraria.WorldGen.Place2x2(i, j - 1, TileID.Tombstones, Main.rand.Next(11));
+                                        Terraria.WorldGen.PlaceTile(i, j, TileID.Tombstones, true, true, -1, Main.rand.Next(11));
                                     }
                                 }    
                             }
@@ -179,6 +197,10 @@ namespace ArchaeaMod.Factory
                         case RoomID.Heated:
                             isHeated = true;
                             Main.tile[i, j].WallType = WallID.HellstoneBrickUnsafe;
+                            if (j < Bottom - 4)
+                            {
+                                WorldGen.PlaceLiquid(i, j, LiquidID.Water, 255);
+                            }
                             break;
                     }
                 }
@@ -190,19 +212,19 @@ namespace ArchaeaMod.Factory
         }
         private bool IsTop(int j)
         {
-            return j == Top;
+            return j - 1 == Top;
         }
         private bool IsBottom(int j)
         {
-            return j == Bottom;
+            return j + 1 == Bottom;
         }
         private bool IsRight(int i)
         {
-            return i == Right;
+            return i + 1 == Right;
         }
         private bool IsLeft(int i)
         {
-            return i == Left;
+            return i - 1 == Left;
         }
         private bool IsCenter(int i)
         {
@@ -227,7 +249,7 @@ namespace ArchaeaMod.Factory
 
     public sealed class RoomID
     {
-        public const byte Total = 12;
+        public const byte Total = 13;
         public const byte
             Empty = 0,
             Simple = 1,

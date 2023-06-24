@@ -13,8 +13,13 @@ namespace ArchaeaMod.Merged.Projectiles
 {
     public class magno_minion : ModProjectile
     {
-        bool fadeOutFlag => Projectile.ai[0] == -100f ? true : false;
+        bool fadeOutFlag => Projectile.localAI[1] == -100f ? true : false;
         int damage => (int)Projectile.localAI[0];
+        int leaderIndex
+        {
+            get { return (int)Projectile.ai[0]; }
+            set { Projectile.ai[0] = value; }
+        }
         public override bool MinionContactDamage() => false;
 
         public override void SetDefaults()
@@ -57,6 +62,7 @@ namespace ArchaeaMod.Merged.Projectiles
         Vector2 orbitPosition;
         Vector2 npcCenter;
         NPC target => Main.npc[npcTarget];
+        NPC leader => Main.npc[leaderIndex];
         Player owner => Main.player[Projectile.owner];
         bool targetCheck => IsNotValidNPC(target) || oldNpcTarget == -1;
 
@@ -74,6 +80,16 @@ namespace ArchaeaMod.Merged.Projectiles
             }
             return false;
         }
+        private bool GetTarget(NPC leader)
+        {
+            var n = Main.npc.OrderBy(t => t.Distance(leader.Center)).FirstOrDefault(t => !IsNotValidNPC(t) && t.Distance(leader.Center) < Main.screenHeight / 2);
+            if (n != default && targetCheck)
+            {
+                SetTarget(n);
+                return true;
+            }
+            return false;
+        }
         private void SetTarget(NPC n)
         {
             oldNpcTarget = npcTarget;
@@ -88,6 +104,11 @@ namespace ArchaeaMod.Merged.Projectiles
         {
             if (!init || flag)
             {
+                //  Add npc buff
+                if (leader.TypeName == "Mechanic")
+                {
+                    leader.AddBuff(ModContent.BuffType<Merged.Buffs.magno_summon>(), 18000);
+                }
                 Random = Main.rand.Next(-24, 24);
                 oldProj = Projectile.whoAmI;
                 if (fadeOutFlag)
@@ -111,7 +132,7 @@ namespace ArchaeaMod.Merged.Projectiles
             }
             if (owner.dead || !owner.HasBuff(ModContent.BuffType<Merged.Buffs.magno_summon>()))
             {
-                Projectile.ai[0] = -100f;
+                Projectile.localAI[1] = -100f;
             }
             if (flag)
             {
@@ -130,9 +151,49 @@ namespace ArchaeaMod.Merged.Projectiles
                 }
             }
         }
+        private void CheckDespawn(NPC leader, bool flag = false)
+        {
+            if (fadeOutFlag)
+            {
+                Projectile.position = target.Center - new Vector2(Projectile.width / 2, Projectile.height / 2);
+                Projectile.scale += 0.02f;
+                if ((Projectile.alpha += 2) >= 255)
+                {
+                    Projectile.timeLeft = 0;
+                }
+            }
+            if (!leader.active || leader.life <= 0 || !leader.HasBuff(ModContent.BuffType<Merged.Buffs.magno_summon>()))
+            {
+                Projectile.localAI[1] = -100f;
+            }
+            if (flag)
+            {
+                Projectile.timeLeft = 0;
+            }
+            /*
+            if (leader.ownedProjectileCounts[Projectile.type] > owner.maxMinions ||
+                owner.numMinions > owner.maxMinions)
+            {
+                foreach (Projectile p in Main.projectile)
+                {
+                    if (p.type == Projectile.type && p.active)
+                    {
+                        p.timeLeft = 0;
+                        break;
+                    }
+                }
+            }*/
+        }
         private void ForceKeepActive()
         {
             if (owner.HasBuff(ModContent.BuffType<Merged.Buffs.magno_summon>()))
+            {
+                Projectile.timeLeft = 2;
+            }
+        }
+        private void ForceKeepActive(NPC leader)
+        {
+            if (leader.HasBuff(ModContent.BuffType<Merged.Buffs.magno_summon>()))
             {
                 Projectile.timeLeft = 2;
             }
@@ -142,6 +203,13 @@ namespace ArchaeaMod.Merged.Projectiles
             if (Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > Main.screenWidth)
             {
                 Projectile.position = owner.Center - new Vector2(0, owner.height);
+            }
+        }
+        private void CheckResetDistance(NPC leader)
+        {
+            if (Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > Main.screenWidth)
+            {
+                Projectile.position = leader.Center - new Vector2(0, leader.height);
             }
         }
         private new bool CanDamage()
@@ -165,6 +233,11 @@ namespace ArchaeaMod.Merged.Projectiles
         }
         public override void AI()
         {
+            if (leader.TypeName == "Mechanic")
+            {
+                AI(leader);
+                return;
+            }
             Player player = owner;
             ForceKeepActive(); 
             CheckDespawn();
@@ -228,6 +301,80 @@ namespace ArchaeaMod.Merged.Projectiles
                                 Main.dust[d].noGravity = true;
                             }
                             Main.npc[npcTarget].StrikeNPC((int)(damage * player.GetDamage(DamageClass.Summon).Additive), 4f, 0);
+                            int Proj2 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<magno_minionexplosion>(), 0, 0f, Projectile.owner, 0f, 0f);
+                            Main.projectile[Proj2].position = Projectile.position - new Vector2(15, 15);
+                            Main.projectile[Proj2].minion = true;
+                            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
+                            Projectile.netUpdate = true;
+                        }
+                    }
+                }
+            }
+        }
+        public void AI(NPC leader)
+        {
+            ForceKeepActive(leader);
+            CheckDespawn(leader);
+            CheckResetDistance(leader);
+            GetTarget(leader);
+
+            if (Projectile.velocity.X <= Projectile.oldVelocity.X || Projectile.velocity.X > Projectile.oldVelocity.X || Projectile.velocity.Y <= Projectile.oldVelocity.Y || Projectile.velocity.Y > Projectile.oldVelocity.Y)
+            {
+                Projectile.netUpdate = true;
+            }
+
+            orbitPosition = leader.position + new Vector2(Random * 2f, -64f);
+            Angle = (float)Math.Atan2(orbitPosition.Y - Projectile.position.Y, orbitPosition.X - Projectile.position.X);
+            if (IsNotValidNPC(target))
+            {
+                ResetToIdle();
+                if (Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > 32f && Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) <= 128f)
+                {
+                    Projectile.position += Distance(null, Angle, 4f);
+                    Projectile.velocity = Vector2.Zero;
+                }
+                else if (Vector2.Distance(orbitPosition - Projectile.position, Vector2.Zero) > 128f)
+                {
+                    Projectile.velocity = Distance(null, Angle, 8f);
+                }
+                #region float
+                float Revolution = 6.28308f;
+                float WavesPerSecond = 1.0f;
+                float Time = 1.0f / Main.frameRate;
+                WaveTimer += Time * Revolution * WavesPerSecond;
+                float Cos = (float)Math.Cos(180);
+                float WaveOffset = (float)Math.Sin(WaveTimer) * 5f;
+
+                Projectile.position.Y += Cos * WaveOffset;
+                #endregion
+                return;
+            }
+            NPC n = target;
+            npcCenter = new Vector2(n.position.X + n.width / 2, n.position.Y + n.height / 2);
+            npcAngle = (float)Math.Atan2(npcCenter.Y - Projectile.Center.Y, npcCenter.X - Projectile.Center.X);
+            if (Projectile.Hitbox.Intersects(n.Hitbox))
+            {
+                Projectile.spriteDirection = n.spriteDirection;
+            }
+            if (Vector2.Distance(npcCenter - owner.Center, Vector2.Zero) < Main.screenHeight / 2)
+            {
+                if (!n.Hitbox.Contains(Projectile.Center.ToPoint()))
+                {
+                    Projectile.velocity = Distance(null, npcAngle, 8f);
+                }
+                else
+                {
+                    Projectile.Center = n.Hitbox.Center();
+                    if (ticks % 120 == 0)
+                    {
+                        if (CanDamage())
+                        {
+                            for (float k = 0; k < MathHelper.ToRadians(360); k += 0.017f * 9)
+                            {
+                                int d = Dust.NewDust(Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), 4, 4, 6, Distance(null, k, 2f).X, Distance(null, k, 8f).Y, 0, default(Color), 2f);
+                                Main.dust[d].noGravity = true;
+                            }
+                            Main.npc[npcTarget].StrikeNPC(damage, 4f, 0);
                             int Proj2 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<magno_minionexplosion>(), 0, 0f, Projectile.owner, 0f, 0f);
                             Main.projectile[Proj2].position = Projectile.position - new Vector2(15, 15);
                             Main.projectile[Proj2].minion = true;

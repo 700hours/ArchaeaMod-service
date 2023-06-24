@@ -28,11 +28,17 @@ using ArchaeaMod.Merged.Walls;
 using System.IO;
 using ArchaeaMod.Tiles;
 using ArchaeaMod.Walls;
+using Terraria.GameContent.Shaders;
+using System.Globalization;
 
 namespace ArchaeaMod
 {
     public class ArchaeaWorld : ModSystem
     {
+        public static ushort factoryOilLeak
+        {
+            get { return (ushort)ModContent.TileType<factory_oil_leak>(); }
+        }
         public static ushort factoryBrick
         {
             get { return (ushort)ModContent.TileType<factory_brick_1>(); }
@@ -168,67 +174,13 @@ namespace ArchaeaMod
         private Treasures t;
         public static Vector2[] genPosition;
         public bool[] flags = new bool[9];
+        
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
             int CavesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Granite")); // Granite
-            /*  //  New Magno gen--incomplete implementation
-            if (CavesIndex != -1)
-            {
-                miner = new Miner();
-                tasks.Insert(CavesIndex, new PassLegacy("Miner", delegate (GenerationProgress progress)
-                {
-                    progress.Start(1f);
-                    progress.Message = "Magno miner";
-                    int width = 400, height = 600;
-                    int top = (int)(Main.maxTilesY * 0.75f);
-                    int left = WorldGen.genRand.Next(200, Main.maxTilesX - width);
-                    Bitmap bmp = (Bitmap)Bitmap.FromFile(@"C:\Users\nolan\OneDrive\Documents\My Games\Terraria\ModLoader\Mods\output.bmp");
-                    progress.Message = "Render biome";
-                    for (int i = left; i < left + width; i++)
-                    {
-                        progress.Value += 1f / width;
-                        for (int j = top; j < top + height; j++)
-                        {
-                            if (bmp.GetPixel(i - left, j - top) == type[ColorID.Plant])
-                            {
-                                Main.tile[i, j].active(true);
-                                Main.tile[i, j].type = TileID.JungleGrass;
-                            }
-                            else if (bmp.GetPixel(i - left, j - top) == type[ColorID.Ash])
-                            {
-                                Main.tile[i, j].active(true);
-                                Main.tile[i, j].type = TileID.Ash;
-                            }
-                            else if (bmp.GetPixel(i - left, j - top) == type[ColorID.Empty])
-                            {
-                                Main.tile[i, j].active(false);
-                            }
-                            else if (bmp.GetPixel(i - left, j - top) == type[ColorID.Stone])
-                            {
-                                Main.tile[i, j].active(true);
-                                Main.tile[i, j].type = magnoStone;
-                            }
-                            else if (bmp.GetPixel(i - left, j - top) == type[ColorID.Ore])
-                            {
-                                Main.tile[i, j].active(true);
-                                Main.tile[i, j].type = magnoOre;
-                            }
-                        }
-                    }
-                    progress.End();
-                }));
-            }*/
             int originX = 0, originY = 0, mWidth = 800, mHeight = 450;
-            //int Magno = tasks.FindIndex(genpass => genpass.Name.Equals("Corruption"));
             if (CavesIndex != -1)
             {
-                //  NEW implementation
-                //tasks.Insert(CavesIndex, new PassLegacy("Magno Lair", delegate (GenerationProgress progress)
-                //{
-                //    Biome.MagnoBiome.Generate(progress);
-                //}));
-                //  LEGACY implementation
-                //  miner = new Miner();
                 tasks.Insert(CavesIndex + 1, new PassLegacy("Magno Caver", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     originX = WorldGen.genRand.Next(200, Main.maxTilesX - 1000);
@@ -237,15 +189,6 @@ namespace ArchaeaMod
                     MagnoBiomeOriginX = originX;
                     MagnoV2 magno = MagnoV2.NewBiome(ref originX, ref originY);
                     magno.tGenerate(progress);
-                    //  Legacy Magno gen
-                    //progress.Start(1f);
-                    //progress.Message = "MINER";
-                    //miner.active = true;
-                    //miner.Reset();
-                    //while (miner.active)
-                    //    miner.Update();
-                    //genPosition = miner.genPos;
-                    //progress.End();
                 }));
             }
             int shinies = tasks.FindIndex(pass => pass.Name.Equals("Altars"));
@@ -255,11 +198,6 @@ namespace ArchaeaMod
                 {
                     for (int k = 0; k < (int)((4200 * 1200) * 6E-05); k++)
                     {
-                        //  WorldGen.TileRunner(WorldGen.genRand.Next((int)(genPosition[0].X / 16) - miner.edge / 2, (int)(genPosition[1].X / 16) + miner.edge / 2), WorldGen.genRand.Next((int)genPosition[0].Y / 16 - miner.edge / 2, (int)genPosition[1].Y / 16 + miner.edge / 2), WorldGen.genRand.Next(15, 18), WorldGen.genRand.Next(2, 6), magnoDirt, false, 0f, 0f, false, true);
-                        //MINER Legacy
-                        //int randX = WorldGen.genRand.Next((int)(genPosition[0].X / 16) - miner.edge / 2, (int)(genPosition[1].X / 16) + miner.edge / 2);
-                        //int randY = WorldGen.genRand.Next((int)genPosition[0].Y / 16 - miner.edge / 2, (int)genPosition[1].Y / 16 + miner.edge / 2);
-                        //NEW Magno gen
                         int randX = WorldGen.genRand.Next(originX, originX + mWidth);
                         int randY = WorldGen.genRand.Next(originY, originY + mHeight);
                         if (Main.tile[Math.Max(randX, 10), Math.Max(randY, 10)].TileType == magnoStone)
@@ -448,14 +386,14 @@ namespace ArchaeaMod
                     }
                 }));
             }
-            int index6 = index5 + 1;
+            int index6 = tasks.FindIndex(pass => pass.Name.Equals("Dungeon")) - 1;
             if (index6 != -1)
             { 
                 tasks.Insert(index6 + 1, new PassLegacy("More Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     progress.Message = "Even More Magno";
-                    int height = 200;
-                    new Factory.Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, height, nodeDistance: 30);
+                    int height = 150;
+                    new Factory.Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, height, size: 6, maxNodes: 100, nodeDistance: 30);
                     int x = 0;
                     int y = Factory.Factory.Top;
                     for (int i = 0; i < tile.GetLength(0); i++)
@@ -467,6 +405,8 @@ namespace ArchaeaMod
                             { 
                                 _tile.HasTile = false;
                                 _tile.TileType = TileID.Dirt;
+                                _tile.LiquidType = LiquidID.Water;
+                                _tile.LiquidAmount = 0;
                             }
                         }
                     }
@@ -477,13 +417,19 @@ namespace ArchaeaMod
                             Tile _tile = Main.tile[x + i, y + j];
                             if (tile[i, j] == Factory.Factory.Tile)
                             {
-                                _tile.HasTile = true;
-                                _tile.TileType = Factory.Factory.Tile;
+                                WorldGen.PlaceTile(x + i, y + j, Factory.Factory.Tile, true, true);
                             }
-                            if (tile[i, j] == Factory.Factory.Tile2)
+                            else if (tile[i, j] == Factory.Factory.Tile2)
                             {
-                                _tile.HasTile = true;
-                                _tile.TileType = Factory.Factory.Tile2;
+                                WorldGen.PlaceTile(x + i, y + j, Factory.Factory.Tile2, true, true);
+                            }
+                            else if (tile[i, j] == Factory.Factory.ConveyerL)
+                            {
+                                WorldGen.PlaceTile(x + i, y + j, Factory.Factory.ConveyerL, true, true);
+                            }
+                            else if (tile[i, j] == Factory.Factory.ConveyerR)
+                            {
+                                WorldGen.PlaceTile(x + i, y + j, Factory.Factory.ConveyerR, true, true);
                             }
                         }
                     }
@@ -498,10 +444,16 @@ namespace ArchaeaMod
                             }
                         }
                     }
-                    foreach (var r in Factory.Factory.room)
+                /*  Treasures t = new Treasures();
+                    var v2 = Treasures.GetCeiling(new Vector2(x, y), Main.maxTilesX, height, false, factoryBrick);
+                    for (int i = 0; i < v2.Length; i++)
                     {
-                        r.Build();
+                        if (Main.rand.NextBool(3))
+                        {
+                            t.PlaceTile((int)v2[i].X, (int)v2[i].Y - 1, factoryOilLeak, true, true, 30);
+                        }
                     }
+                    t = null;*/
                 }));
             }
 
@@ -548,20 +500,17 @@ namespace ArchaeaMod
                     PlaceWell((int)PositionX, Math.Abs(surfaceBuffer) - buffer, distance);
                 }));
             }
-            #region Vector2 array
-            /* int x = MagnoDen.bounds.X;
-            int y = MagnoDen.bounds.Y;
-            int right = MagnoDen.bounds.Right;
-            int bottom = MagnoDen.bounds.Bottom;
-            Vector2[] regions = new Vector2[MagnoDen.bounds.Width * MagnoDen.bounds.Height];
-            for (int i = x; i < right; i++)
-                for (int j = y; j < bottom; j++)
+            int RoomIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Remove Broken Traps"));
+            if (RoomIndex != -1)
+            {
+                tasks.Insert(RoomIndex, new PassLegacy("Room Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
-                    if (Main.tile[i, j].type == TileID.PearlstoneBrick)
-                        regions[count] = new Vector2(i, j);
-                    count++;
-                }*/
-            #endregion
+                    foreach (var r in Factory.Factory.room)
+                    {
+                        r.Build();
+                    }
+                }));
+            }
         }
         public override void PostWorldGen()
         {
@@ -856,6 +805,7 @@ namespace ArchaeaMod
             tag.Add("Crystals", spawnedCrystals);
             tag.Add("OriginX", MagnoBiomeOriginX);
             tag.Add("hint", Effects.Barrier.hintInit);
+            tag.Add("mechTalk", ModContent.GetInstance<NPCs.Town.MechanicMinion>().justTalked);
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 tag.Add($"stat{i}", objectiveStat[i]);
@@ -871,6 +821,7 @@ namespace ArchaeaMod
             spawnedCrystals = tag.GetBool("Crystals");
             MagnoBiomeOriginX = tag.GetInt("OriginX");
             Effects.Barrier.hintInit = tag.GetBool("hint");
+            ModContent.GetInstance<NPCs.Town.MechanicMinion>().justTalked = tag.GetBool("mechTalk");
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 objectiveStat[i] = tag.GetBool($"stat{i}");
@@ -883,6 +834,7 @@ namespace ArchaeaMod
             //  Extra
             writer.Write(spawnedCrystals);
             writer.Write(MagnoBiomeOriginX);
+            writer.Write(ModContent.GetInstance<NPCs.Town.MechanicMinion>().justTalked);
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 writer.Write(objectiveStat[i]);
@@ -895,6 +847,7 @@ namespace ArchaeaMod
             //  Extra
             spawnedCrystals = reader.ReadBoolean();
             MagnoBiomeOriginX = reader.ReadInt32();
+            ModContent.GetInstance<NPCs.Town.MechanicMinion>().justTalked = reader.ReadBoolean();
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 objectiveStat[i] = reader.ReadBoolean();
@@ -964,9 +917,11 @@ namespace ArchaeaMod
                 spawnedCrystals = true;
             }
         }
-        public static bool Inbounds(int i, int j)
+        public static bool Inbounds(int i, int j, bool toTileCoord = false)
         {
-            return i < Main.maxTilesX - 50 && i > 50 && j < Main.maxTilesY - 200 && j > 50;
+            if (toTileCoord)
+                 return i / 16 < Main.maxTilesX - 50 && i / 16 > 50 && j / 16 < Main.maxTilesY - 20 && j / 16 > 50;
+            else return i < Main.maxTilesX - 50 && i > 50 && j < Main.maxTilesY - 20 && j > 50;
         }
         public static void Clamp(ref int input, int min, int max, out int result)
         {
@@ -1184,6 +1139,36 @@ namespace ArchaeaMod
                         }
                     }
             return tiles;
+        }
+        public static Vector2[] GetFloor(int i, int j, int width, int height, ushort floorType)
+        {
+            if (!ArchaeaWorld.Inbounds(i, j))
+            {
+                return new Vector2[] { Vector2.Zero };
+            }
+            List<Vector2> list = new List<Vector2>();
+            for (int m = i; m < i + width; m++)
+            {
+                for (int n = j; n < j + height; n++)
+                {
+                    if (!ArchaeaWorld.Inbounds(i, j))
+                    {
+                        if (list.Count == 0)
+                        { 
+                            return new Vector2[] { Vector2.Zero };
+                        }
+                        else return list.ToArray();
+                    }
+                    if (Main.tile[m, n].TileType != 0)
+                    {
+                        if (!Main.tile[m, n - 1].HasTile)
+                        { 
+                            list.Add(new Vector2(m, n));
+                        }
+                    }
+                }
+            }
+            return list.ToArray();
         }
         public static Vector2[] GetCeiling(Vector2 region, int radius, bool overflow = false, ushort tileType = 0)
         {

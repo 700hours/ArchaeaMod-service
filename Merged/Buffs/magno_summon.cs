@@ -28,5 +28,9 @@ namespace ArchaeaMod.Merged.Buffs
                 player.buffTime[buffIndex] = 18000;
             }
         }
+        public override void Update(NPC npc, ref int buffIndex)
+        {
+            npc.buffTime[buffIndex] = 18000;
+        }
     }
 }

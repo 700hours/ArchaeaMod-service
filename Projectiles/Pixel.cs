@@ -8,10 +8,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 using ArchaeaMod.Items;
+using Terraria.Audio;
 
 namespace ArchaeaMod.Projectiles
 {
@@ -39,17 +41,32 @@ namespace ArchaeaMod.Projectiles
         {
             return Color.White * alpha;
         }
+        public override bool? CanCutTiles() 
+            => type != Drip && type != Diffusion;
         private bool direction;
         private int ai;
+        private bool factory => Projectile.localAI[0] == -100f;
         public const int
             None = -1,
             Default = 0,
             Sword = 1,
             Active = 2,
             Gravity = 3,
-            AntiGravity = 4;
+            AntiGravity = 4,
+            Diffusion = 5,
+            Drip = 6;
         private float rotate;
         private float alpha;
+        private float rand 
+        {
+            get {return Projectile.localAI[1]; }
+            set { Projectile.localAI[1] = value; }
+        }
+        private int type
+        {
+            get { return (int)Projectile.ai[1]; }
+            set { Projectile.ai[1] = value; }
+        }
         private Dust dust;
         private Player owner
         {
@@ -58,6 +75,23 @@ namespace ArchaeaMod.Projectiles
         private float endY;
         public override bool PreAI()
         {
+            if (ai == 0)
+            {
+                if (type == Drip)
+                { 
+                    SoundEngine.PlaySound(SoundID.Drip, Projectile.Center);
+                    Projectile.tileCollide = true;
+                    Projectile.damage = 30;
+                    ai = 3;
+                }
+                if (type == Diffusion)
+                {
+                    Projectile.timeLeft = 12;
+                    Projectile.tileCollide = false;
+                    Projectile.damage = 35;
+                    ai = 1;
+                }
+            }
             switch (ai)
             {
                 case 0:
@@ -69,12 +103,19 @@ namespace ArchaeaMod.Projectiles
                 case 1:
                     ai = 1;
                     break;
+                case 3:
+                    if (Projectile.velocity.Y < 6.12f)
+                    { 
+                        Projectile.velocity.Y += 0.917f;
+                    }
+                    else Projectile.velocity.Y = 6.12f;
+                    break;
             }
             return true;
         }
         public void _AIType()
         {
-            switch ((int)Projectile.ai[1])
+            switch (type)
             {
                 case None:
                     Projectile.alpha = 0;
@@ -101,6 +142,29 @@ namespace ArchaeaMod.Projectiles
                     }
                     Projectile.velocity.Y = -0.5f;
                     break;
+                case Drip:
+                    if (ArchaeaItem.Elapsed(5))
+                    { 
+                        Dust.NewDust(Projectile.Center, 1, 1, ModContent.DustType<Merged.Dusts.c_silver_dust>(), 0f, Projectile.velocity.Y, Scale: Math.Abs(Projectile.velocity.Y - 6.12f) / 1.5f + 3f);
+                    }
+                    if (Main.LocalPlayer.Hitbox.Contains(Projectile.Center.ToPoint()))
+                    {
+                        if (ArchaeaItem.Elapsed(20))
+                        {
+                            Main.LocalPlayer.Hurt(PlayerDeathReason.ByProjectile(Main.LocalPlayer.whoAmI, Projectile.whoAmI), Projectile.damage, Projectile.Center.X < Main.LocalPlayer.Center.X ? 1 : -1);
+                        }
+                    }
+                    break;
+                case Diffusion:
+                    Dust.NewDust(Projectile.Center, 1, 1, ModContent.DustType<Merged.Dusts.magno_dust>(), 0f, 0f, 0, default, 0.8f);
+                    if (Main.LocalPlayer.Hitbox.Contains(Projectile.Center.ToPoint()))
+                    {
+                        if (ArchaeaItem.Elapsed(20))
+                        {
+                            Main.LocalPlayer.Hurt(PlayerDeathReason.ByProjectile(Main.LocalPlayer.whoAmI, Projectile.whoAmI), Projectile.damage, Projectile.Center.X < Main.LocalPlayer.Center.X ? 1 : -1);
+                        }
+                    }
+                    break;
             }
         }
         public override void AI()
@@ -109,7 +173,7 @@ namespace ArchaeaMod.Projectiles
         }
         public override void Kill(int timeLeft)
         {
-            switch ((int)Projectile.ai[1])
+            switch (type)
             {
                 case Default:
                     break;
@@ -117,6 +181,17 @@ namespace ArchaeaMod.Projectiles
                     NPCs.ArchaeaNPC.DustSpread(Projectile.Center, 1, 1, 6, 4, 2f);
                     if (Projectile.ai[0] == Mercury)
                         Projectile.NewProjectileDirect(Projectile.GetSource_Death(), new Vector2(owner.position.X, owner.position.Y - 600f), Vector2.Zero, ModContent.ProjectileType<Mercury>(), 20, 4f, owner.whoAmI, Projectiles.Mercury.Falling, Projectile.position.X);
+                    break;
+                case Drip:
+                    int rand = Main.rand.Next(3, 6);
+                    for (int i = 0; i < rand; i++)
+                    {
+                        float randX = 6 * Main.rand.NextFloat() * Main.rand.Next(new[] {-1, 1});
+                        Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_Death(), Projectile.Center, new Vector2(randX, -4f * Main.rand.NextFloat()), Projectile.type, 30, 2f, Main.myPlayer, 0f, Diffusion);
+                        p.tileCollide = false;
+                        p.ignoreWater = true;
+                    }
+                    //SoundEngine.PlaySound(SoundID.Item8, Projectile.Center);
                     break;
             }
         }
@@ -140,11 +215,15 @@ namespace ArchaeaMod.Projectiles
                 case Mercury:
                     return Dust.NewDustDirect(Projectile.Center, 2, 2, 6, 0f, 0f, 0, default(Color), Main.rand.NextFloat(1f, 3f));
                 case Electric:
-                    Dust dust = Dust.NewDustDirect(Projectile.Center, 2, 2, 6, 0f, 0f, 0, default(Color), Main.rand.NextFloat(1f, 3f));
+                    Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, DustID.Electric, 0f, 0f, 0, default(Color), 0.2f);
                     dust.noGravity = true;
                     return dust;
             }
             return defaultDust;
+        }
+        public override bool? CanHitNPC(NPC target)
+        {
+            return type != Drip && type != Diffusion && !factory;
         }
     }
 

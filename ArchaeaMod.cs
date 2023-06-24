@@ -119,8 +119,10 @@ namespace ArchaeaMod
         public override int Music => MusicID.Eerie;
         public override bool IsBiomeActive(Player player)
         {
-            return Main.SceneMetrics.GetTileCount(ArchaeaWorld.factoryBrick) >= 150;
+            return Main.SceneMetrics.GetTileCount(ArchaeaWorld.factoryBrick) >= 100;
         }
+        //  Missing graphics
+        //public override ModWaterStyle WaterStyle => ModContent.GetModWaterStyle(ModContent.GetInstance<Waters.LiquidMetal>().Slot);
     }
     public class NetHandler
     {
