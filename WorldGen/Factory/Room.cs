@@ -38,9 +38,9 @@ namespace ArchaeaMod.Factory
         }
         public int type;
         public bool isHeated;
-        int Top => bound.Y + Factory.Top;
+        int Top => Factory.Top + bound.Y;
         int Right => bound.X + bound.Width;
-        int Bottom => bound.Y + bound.Height + Factory.Top;
+        int Bottom => Top + bound.Height;
         int Left => bound.X;
         Rectangle hitbox => new Rectangle(Left, Top, bound.Width, bound.Height);
         
@@ -50,10 +50,10 @@ namespace ArchaeaMod.Factory
             bool flag = Terraria.WorldGen.genRand.NextBool();
             int offX = 0;
             bool placed = false;
-            int X1 = bound.X;
-            int X2 = bound.Width + bound.X;
-            int Y1 = bound.Y;
-            int Y2 = bound.Height + bound.Y;
+            int X1 = Left;
+            int X2 = Right;
+            int Y1 = Top;
+            int Y2 = Bottom;
             for (int i = X1; i < X2; i++)
             {
                 for (int j = Y1; j < Y2; j++)

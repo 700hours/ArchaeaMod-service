@@ -22,7 +22,7 @@ using ArchaeaMod.Progression;
 
 namespace ArchaeaMod.Mode
 {
-    public sealed class ArchaeaMode
+    public sealed class ArchaeaMode : ModSystem
     {
         public enum Stat
         {
@@ -411,7 +411,7 @@ namespace ArchaeaMod.Mode
             return multiplier;
         }
 }
-    public class ModeToggle
+    public class ModeToggle : ModSystem
     {
         public bool loading = true;
         public override void OnWorldLoad()

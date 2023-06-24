@@ -11,25 +11,6 @@ using ArchaeaMod;
 
 namespace ArchaeaMod.Gen
 {
-    //public class FortGen : ModWorld
-    //{
-        //public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
-        //{
-        //    int index = tasks.FindIndex(pass => pass.Name.Equals("Lakes"));
-        //    if (index != -1)
-        //    {
-        //        tasks.Insert(index, new PassLegacy("Sky Generation", delegate (GenerationProgress progress)
-        //        {
-
-
-
-
-
-
-        //        }));
-        //    }
-        //}
-    //}
     public class Sector
     {
         internal class RoomID

@@ -167,6 +167,7 @@ namespace ArchaeaMod
         public static List<Vector2> origins = new List<Vector2>();
         private Treasures t;
         public static Vector2[] genPosition;
+        public bool[] flags = new bool[9];
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
             int CavesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Granite")); // Granite
@@ -218,8 +219,8 @@ namespace ArchaeaMod
                 }));
             }*/
             int originX = 0, originY = 0, mWidth = 800, mHeight = 450;
-            int Magno = tasks.FindIndex(genpass => genpass.Name.Equals("Corruption"));
-            if (Magno != -1)
+            //int Magno = tasks.FindIndex(genpass => genpass.Name.Equals("Corruption"));
+            if (CavesIndex != -1)
             {
                 //  NEW implementation
                 //tasks.Insert(CavesIndex, new PassLegacy("Magno Lair", delegate (GenerationProgress progress)
@@ -228,7 +229,7 @@ namespace ArchaeaMod
                 //}));
                 //  LEGACY implementation
                 //  miner = new Miner();
-                tasks.Insert(CavesIndex, new PassLegacy("Magno Caver", delegate (GenerationProgress progress, GameConfiguration c)
+                tasks.Insert(CavesIndex + 1, new PassLegacy("Magno Caver", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     originX = WorldGen.genRand.Next(200, Main.maxTilesX - 1000);
                     originY = Main.maxTilesY - 650;
@@ -245,14 +246,13 @@ namespace ArchaeaMod
                     //    miner.Update();
                     //genPosition = miner.genPos;
                     //progress.End();
-                }, 1f));
+                }));
             }
             int shinies = tasks.FindIndex(pass => pass.Name.Equals("Altars"));
             if (shinies != -1)
             {
-                tasks.Insert(shinies, new PassLegacy("Mod Shinies", delegate (GenerationProgress progress, GameConfiguration c)
+                tasks.Insert(shinies + 1, new PassLegacy("Mod Shinies", delegate (GenerationProgress progress, GameConfiguration c)
                 {
-                    progress.Start(1f);
                     for (int k = 0; k < (int)((4200 * 1200) * 6E-05); k++)
                     {
                         //  WorldGen.TileRunner(WorldGen.genRand.Next((int)(genPosition[0].X / 16) - miner.edge / 2, (int)(genPosition[1].X / 16) + miner.edge / 2), WorldGen.genRand.Next((int)genPosition[0].Y / 16 - miner.edge / 2, (int)genPosition[1].Y / 16 + miner.edge / 2), WorldGen.genRand.Next(15, 18), WorldGen.genRand.Next(2, 6), magnoDirt, false, 0f, 0f, false, true);
@@ -268,26 +268,23 @@ namespace ArchaeaMod
                         }
                         progress.Value = k / (float)((4200 * 1200) * 6E-05);
                     }
-                    progress.End();
-                }, 1f));
+                }));
             }
             int index1 = tasks.FindIndex(pass => pass.Name.Equals("Wet Jungle"));
             if (index1 != -1)
             {
-                tasks.Insert(index1, new PassLegacy("Halls", delegate (GenerationProgress progress, GameConfiguration c)
+                tasks.Insert(index1 + 1, new PassLegacy("Halls", delegate (GenerationProgress progress, GameConfiguration c)
                 {
-                    progress.Start(1f);
                     progress.Message = "Halls";
                     SkyHall hall = new SkyHall();
                     hall.SkyFortGen(skyBrick, skyBrickWall);
-                }, 1f));
+                }));
             }
-            int index2 = tasks.FindIndex(pass => pass.Name.Equals("Wet Jungle"));
+            int index2 = tasks.FindIndex(pass => pass.Name.Equals("Wet Jungle")) + 1;
             if (index2 != -1)
             {
-                tasks.Insert(index2, new PassLegacy("Sky Generation", delegate (GenerationProgress progress, GameConfiguration c)
+                tasks.Insert(index2 + 1, new PassLegacy("Sky Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
-                    progress.Start(1f);
                     progress.Message = "Fort";
                     //SkyHall hall = new SkyHall();
                     //hall.SkyFortGen();
@@ -298,16 +295,13 @@ namespace ArchaeaMod
                     } while (position.X < Main.spawnTileX + 300 && position.X > Main.spawnTileX - 450);
                     var s = new Structures(position, skyBrick, skyBrickWall);
                     s.InitializeFort();
-                    progress.Value = 1f;
-                    progress.End();
-                }, 1f));
+                }));
             }
             int index3 = tasks.FindIndex(pass => pass.Name.Equals("Remove Water From Sand"));
             if (index3 != -1)
             {
-                tasks.Insert(index3, new PassLegacy("Mod Generation", delegate (GenerationProgress progress, GameConfiguration c)
+                tasks.Insert(index3 + 1, new PassLegacy("Mod Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
-                    progress.Start(1f);
                     progress.Message = "Magno extras";
                     t = new Treasures();
                     int place = 0;
@@ -391,14 +385,12 @@ namespace ArchaeaMod
                                 }
                             }
                         }
-                    progress.Value = 1f;
-                    progress.End();
-                }, 1f));
+                }));
             }
             int index4 = tasks.FindIndex(pass => pass.Name.Equals("Jungle Temple"));
             if (index4 != -1)
             {
-                tasks.Insert(index4, new PassLegacy("Sorting Floating Tiles", delegate (GenerationProgress progress, GameConfiguration c)
+                tasks.Insert(index4 + 1, new PassLegacy("Sorting Floating Tiles", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     progress.Message = "Magno Sorting";
                     for (int j = 100; j < Main.maxTilesY - 250; j++)
@@ -426,50 +418,97 @@ namespace ArchaeaMod
                                 }
                             }
                         }
-                }, 1f));
+                }));
             }
             int index5 = tasks.FindIndex(pass => pass.Name.Equals("Hives"));
-            tasks.Insert(index5, new PassLegacy("Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
-            {
-                progress.Start(1f);
-                progress.Message = "More Magno";
-                var m = new Structures.Magno();
-                m.tileID = magnoBrick;
-                m.wallID = magnoBrickWall;
-                Vector2 origin = new Vector2(100, 100);
-                Vector2[] regions = Treasures.GetRegion(origin, Main.maxTilesX - 100, Main.maxTilesY - 250, false, true, new ushort[] { magnoStone });
-                int count = 0;
-                int total = (int)Math.Sqrt(regions.Length);
-                int max = WorldGen.genRand.Next(5, 8);
-                for (int i = 0; i < max; i++)
+            if (index5 != -1)
+            { 
+                tasks.Insert(index5 + 1, new PassLegacy("Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
-                    m.Initialize();
-                    while (!m.MagnoHouse(regions[WorldGen.genRand.Next(regions.Length)]))
+                    progress.Message = "More Magno";
+                    var m = new Structures.Magno();
+                    m.tileID = magnoBrick;
+                    m.wallID = magnoBrickWall;
+                    Vector2 origin = new Vector2(100, 100);
+                    Vector2[] regions = Treasures.GetRegion(origin, Main.maxTilesX - 100, Main.maxTilesY - 250, false, true, new ushort[] { magnoStone });
+                    int count = 0;
+                    int total = (int)Math.Sqrt(regions.Length);
+                    int max = WorldGen.genRand.Next(5, 8);
+                    for (int i = 0; i < max; i++)
                     {
-                        if (count < total)
-                            count++;
-                        else break;
+                        m.Initialize();
+                        while (!m.MagnoHouse(regions[WorldGen.genRand.Next(regions.Length)]))
+                        {
+                            if (count < total)
+                                count++;
+                            else break;
+                        }
+                        count = 0;
+                        progress.Value = (float)i / max;
                     }
-                    count = 0;
-                    progress.Value = (float)i / max;
-                }
-                progress.Value = 1f;
-                progress.End();
-            }, 1f));
+                }));
+            }
             int index6 = index5 + 1;
-            tasks.Insert(index6, new PassLegacy("More Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
-            {
-                progress.Start(1f);
-                progress.Message = "Even More Magno";
-                new Factory.Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, 280);
-                progress.Value = 1f;
-                progress.End();
-            }, 1f));
+            if (index6 != -1)
+            { 
+                tasks.Insert(index6 + 1, new PassLegacy("More Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
+                {
+                    progress.Message = "Even More Magno";
+                    int height = 200;
+                    new Factory.Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, height, nodeDistance: 30);
+                    int x = 0;
+                    int y = Factory.Factory.Top;
+                    for (int i = 0; i < tile.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < tile.GetLength(1); j++)
+                        {
+                            Tile _tile = Main.tile[x + i, y + j];
+                            if (tile[i, j] > 0)
+                            { 
+                                _tile.HasTile = false;
+                                _tile.TileType = TileID.Dirt;
+                            }
+                        }
+                    }
+                    for (int i = 0; i < tile.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < tile.GetLength(1); j++)
+                        {
+                            Tile _tile = Main.tile[x + i, y + j];
+                            if (tile[i, j] == Factory.Factory.Tile)
+                            {
+                                _tile.HasTile = true;
+                                _tile.TileType = Factory.Factory.Tile;
+                            }
+                            if (tile[i, j] == Factory.Factory.Tile2)
+                            {
+                                _tile.HasTile = true;
+                                _tile.TileType = Factory.Factory.Tile2;
+                            }
+                        }
+                    }
+                    for (int i = 0; i < wall.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < wall.GetLength(1); j++)
+                        {
+                            Tile _tile = Main.tile[x + i, y + j];
+                            if (wall[i, j] == Factory.Factory.Wall)
+                            {
+                                _tile.WallType = Factory.Factory.Wall;
+                            }
+                        }
+                    }
+                    foreach (var r in Factory.Factory.room)
+                    {
+                        r.Build();
+                    }
+                }));
+            }
 
             float PositionX;
             const int TileSize = 16;
             int buffer = 16, wellBuffer = 96, surfaceBuffer = 0;
-            int WellIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Smooth World"));
+            int WellIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Smooth World")) + 1;
             if (WellIndex != -1)
             {
                 tasks.Insert(WellIndex + 1, new PassLegacy("Digging Well", delegate (GenerationProgress progress, GameConfiguration c)
@@ -1438,7 +1477,7 @@ namespace ArchaeaMod
         }
     }
 
-    public class Miner : ModSystem
+    public class Miner
     {
         public Mod moda = ModLoader.GetMod("ArchaeaMod");
         public static string progressText = "";

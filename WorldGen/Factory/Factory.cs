@@ -33,7 +33,7 @@ namespace ArchaeaMod.Factory
         internal static int
             Top => Main.UnderworldLayer - Height;
         public static ushort
-            Air = 0,
+            Air = 1,
             Tile = ArchaeaWorld.factoryBrick,
             Wall = ArchaeaWorld.factoryBrickWallUnsafe,
             Tile2 = ArchaeaWorld.Ash;
@@ -84,7 +84,7 @@ namespace ArchaeaMod.Factory
                         int X2 = (int)node.X + W / 2;
                         int Y1 = (int)node.Y - H / 2;
                         int Y2 = (int)node.Y + H / 2;
-                        r.bound = new Rectangle(X1 - border, X2 - border, W + border, H + border);
+                        r.bound = new Rectangle(X1 - border, Y1 - border, W + border, H + border);
                         if (room.FirstOrDefault(t => t.bound.Intersects(r.bound)) != default)
                         {
                             continue;
@@ -98,6 +98,8 @@ namespace ArchaeaMod.Factory
                                 {
                                     if (i < brush.GetLength(0) && j < brush.GetLength(1))
                                     {
+                                        
+                                        brush[i, j] = Air;
                                         if (i < X1 || i > X2 || j < Y1 || j > Y2)
                                         {
                                             if (i > X1 && i < X2 && j > Y2)
@@ -110,7 +112,6 @@ namespace ArchaeaMod.Factory
                                             brush[i, j] = Tile;
                                             continue;
                                         }
-                                        brush[i, j] = Air;
                                     }
                                 }
                             }
@@ -142,17 +143,17 @@ namespace ArchaeaMod.Factory
 
                     while (Y++ <= (start.Y + end.Y) / 2 + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (X++ <= end.X + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (Y++ <= end.Y + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                 }
@@ -163,17 +164,17 @@ namespace ArchaeaMod.Factory
 
                     while (Y++ <= (start.Y + end.Y) / 2 + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (X++ <= end.X + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (Y++ <= end.Y + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                 }
@@ -184,17 +185,17 @@ namespace ArchaeaMod.Factory
 
                     while (X++ <= (start.X + end.X) / 2 + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (Y++ <= end.Y + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (X++ <= end.X + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                 }
@@ -205,17 +206,17 @@ namespace ArchaeaMod.Factory
 
                     while (X++ <= (start.X + end.X) / 2 + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (Y++ <= end.Y + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (X++ <= end.X + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                 }
@@ -231,16 +232,16 @@ namespace ArchaeaMod.Factory
 
                     while (Y++ <= (start.Y + end.Y) / 2 + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (X++ <= end.X + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                     }
                     while (Y++ <= end.Y + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                     }
                 }
                 else if (start.X > end.X && start.Y < end.Y)
@@ -250,15 +251,15 @@ namespace ArchaeaMod.Factory
 
                     while (Y++ <= (start.Y + end.Y) / 2 + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                     }
                     while (X++ <= end.X + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                     }
                     while (Y++ <= end.Y + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                     }
                 }
                 else if (start.X < end.X && start.Y > end.Y)
@@ -268,17 +269,17 @@ namespace ArchaeaMod.Factory
 
                     while (X++ <= (start.X + end.X) / 2 + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (Y++ <= end.Y + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (X++ <= end.X + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                 }
@@ -289,17 +290,17 @@ namespace ArchaeaMod.Factory
 
                     while (X++ <= (start.X + end.X) / 2 + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (Y++ <= end.Y + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                     while (X++ <= end.X + size)
                     {
-                        CarveHall(brush, background, X, Y);
+                        CarveHall(ref brush, ref background, X, Y);
                         
                     }
                 }
@@ -323,7 +324,7 @@ namespace ArchaeaMod.Factory
             //  Return value
             tile = brush;
         }
-        private void CarveHall(ushort[,] tile, ushort[,] wall, int x, int y, int size = 10)
+        private void CarveHall(ref ushort[,] tile, ref ushort[,] wall, int x, int y, int size = 10)
         {
             int border = 4;
             for (int i = -border; i < size + border; i++)
