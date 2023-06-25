@@ -14,7 +14,7 @@ namespace ArchaeaMod.Items
 {
     public class PossessedMusket : ModItem
     {
-        public override string Texture => "ArchaeaMod/Gores/Null";
+        public override string Texture => "ArchaeaMod/Gores/MagnoGun_3";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Possessed Musket");
@@ -58,7 +58,6 @@ namespace ArchaeaMod.Items
             sb.Draw(tex, Item.position - Main.screenPosition, new Rectangle(0, 0, tex.Width, tex.Height), Color.SkyBlue * 0.9f, 0f, default, scale, SpriteEffects.None, 0f);
             return false;
         }
-        public override string Texture => "ArchaeaMod/Gores/MagnoGun_3";
         public override Vector2? HoldoutOffset() => new Vector2(-3, 0);
     }
 }

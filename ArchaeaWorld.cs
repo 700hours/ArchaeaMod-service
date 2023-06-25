@@ -392,15 +392,31 @@ namespace ArchaeaMod
                 tasks.Insert(index6 + 1, new PassLegacy("More Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     progress.Message = "Even More Magno";
-                    int height = 150;
-                    new Factory.Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, height, size: 6, maxNodes: 100, nodeDistance: 30);
+                    float multiplier = 1f;
+                    switch (Main.maxTilesY)
+                    {
+                        case 1200:
+                            multiplier = 1f;
+                            break;
+                        case 1800:
+                            multiplier = 1.5f;
+                            break;
+                        case 2400:
+                            multiplier = 2f;
+                            break;
+                    }
+                    int height = (int)(150 * multiplier);
+                    new Factory.Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, height, size: 6, maxNodes: (int)(100 * multiplier), nodeDistance: 30);
                     int x = 0;
                     int y = Factory.Factory.Top;
+                    int buffer = 20;
                     for (int i = 0; i < tile.GetLength(0); i++)
                     {
                         for (int j = 0; j < tile.GetLength(1); j++)
                         {
-                            Tile _tile = Main.tile[x + i, y + j];
+                            int m = Math.Max(buffer, Math.Min(Main.maxTilesX - buffer, x + i));
+                            int n = Math.Max(buffer, Math.Min(Main.maxTilesY - buffer, y + j));
+                            Tile _tile = Main.tile[m, n];
                             if (tile[i, j] > 0)
                             { 
                                 _tile.HasTile = false;
@@ -414,22 +430,25 @@ namespace ArchaeaMod
                     {
                         for (int j = 0; j < tile.GetLength(1); j++)
                         {
-                            Tile _tile = Main.tile[x + i, y + j];
+                            int m = Math.Max(buffer, Math.Min(Main.maxTilesX - buffer, x + i));
+                            int n = Math.Max(buffer, Math.Min(Main.maxTilesY - buffer, y + j));
+
+                            Tile _tile = Main.tile[m, n];
                             if (tile[i, j] == Factory.Factory.Tile)
                             {
-                                WorldGen.PlaceTile(x + i, y + j, Factory.Factory.Tile, true, true);
+                                WorldGen.PlaceTile(m, n, Factory.Factory.Tile, true, true);
                             }
                             else if (tile[i, j] == Factory.Factory.Tile2)
                             {
-                                WorldGen.PlaceTile(x + i, y + j, Factory.Factory.Tile2, true, true);
+                                WorldGen.PlaceTile(m, n, Factory.Factory.Tile2, true, true);
                             }
                             else if (tile[i, j] == Factory.Factory.ConveyerL)
                             {
-                                WorldGen.PlaceTile(x + i, y + j, Factory.Factory.ConveyerL, true, true);
+                                WorldGen.PlaceTile(m, n, Factory.Factory.ConveyerL, true, true);
                             }
                             else if (tile[i, j] == Factory.Factory.ConveyerR)
                             {
-                                WorldGen.PlaceTile(x + i, y + j, Factory.Factory.ConveyerR, true, true);
+                                WorldGen.PlaceTile(m, n, Factory.Factory.ConveyerR, true, true);
                             }
                         }
                     }
@@ -437,23 +456,16 @@ namespace ArchaeaMod
                     {
                         for (int j = 0; j < wall.GetLength(1); j++)
                         {
-                            Tile _tile = Main.tile[x + i, y + j];
+                            int m = Math.Max(buffer, Math.Min(Main.maxTilesX - buffer, x + i));
+                            int n = Math.Max(buffer, Math.Min(Main.maxTilesY - buffer, y + j));
+
+                            Tile _tile = Main.tile[m, n];
                             if (wall[i, j] == Factory.Factory.Wall)
                             {
                                 _tile.WallType = Factory.Factory.Wall;
                             }
                         }
                     }
-                /*  Treasures t = new Treasures();
-                    var v2 = Treasures.GetCeiling(new Vector2(x, y), Main.maxTilesX, height, false, factoryBrick);
-                    for (int i = 0; i < v2.Length; i++)
-                    {
-                        if (Main.rand.NextBool(3))
-                        {
-                            t.PlaceTile((int)v2[i].X, (int)v2[i].Y - 1, factoryOilLeak, true, true, 30);
-                        }
-                    }
-                    t = null;*/
                 }));
             }
 

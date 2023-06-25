@@ -23,6 +23,7 @@ namespace ArchaeaMod.Projectiles
             Projectile.width = 10;
             Projectile.height = 10;
             Projectile.damage = 10;
+            Projectile.alpha = 255;
             Projectile.friendly = true;
             Projectile.ignoreWater = false;
             Projectile.tileCollide = true;
@@ -50,8 +51,10 @@ namespace ArchaeaMod.Projectiles
                 double cos  = Projectile.localAI[1] * Math.Cos(orbit);
                 double sine = Projectile.localAI[1] * Math.Sin(orbit);
                 Projectile.position = Main.player[Projectile.owner].Center + new Vector2((float)cos, (float)sine);
-                if (Projectile.position != Projectile.oldPosition)
+                if (Projectile.position.X <= Projectile.oldPosition.X || Projectile.position.X > Projectile.oldPosition.X || Projectile.position.Y <= Projectile.oldPosition.Y || Projectile.position.Y > Projectile.oldPosition.Y)
+                {
                     Projectile.netUpdate = true;
+                }
                 int d = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, dustType);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;

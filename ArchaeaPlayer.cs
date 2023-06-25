@@ -425,7 +425,8 @@ namespace ArchaeaMod
                 case ItemID.LesserHealingPotion:
                 case ItemID.HealingPotion: 
                 case ItemID.GreaterHealingPotion:
-                case ItemID.SuperHealingPotion:
+                case ItemID.SuperHealingPotion:         
+                    break;
                     Player.statLife += ArchaeaMode.HealPotion(item.healLife);
                     Player.ApplyItemAnimation(item);
                     item.stack--;
@@ -504,6 +505,7 @@ namespace ArchaeaMod
         Timer debugTimer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
         public override void OnEnterWorld(Player player)
         {
+            Main.NewText(ModContent.NPCType<NPCs.Bosses.factory_computer>());
             //  DEBUG
             //debugTimer.Enabled = true;
             //debugTimer.AutoReset = true;

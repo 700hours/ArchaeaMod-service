@@ -30,12 +30,13 @@ namespace ArchaeaMod.Items.Alternate
             Item.damage = 20;
             Item.crit = 15;
             Item.value = 3500;
-            Item.useTime = 30;
-            Item.useAnimation = 30;
+            Item.useTime = 90;
+            Item.useAnimation = 90;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.rare = ItemRarityID.Green;
         }
 
+        int ticks = 0;
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             if (Main.mouseLeftRelease && Main.mouseLeft)
@@ -55,9 +56,16 @@ namespace ArchaeaMod.Items.Alternate
         {
             if (Item.mana > 0)
             {
-                target = Target.GetClosest(player, Target.GetTargets(player, 240f).Where(t => t != null).ToArray());
-                if (target != null && ArchaeaItem.Elapsed(90))
-                    Shield.ShockTarget(hitbox.Center(), target.npc, Item.damage);
+                if (player.statMana > 0)
+                {
+                    target = Target.GetClosest(player, Target.GetTargets(player, 240f).Where(t => t != null).ToArray());
+                    if (target != null && ArchaeaItem.Elapsed(ref ticks, 3))
+                    { 
+                        Shield.ShockTarget(hitbox.Center(), target.npc, Item.damage);
+                        player.statMana--;
+                        ticks = 0;
+                    }
+                }
             }
         }
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
@@ -76,8 +84,9 @@ namespace ArchaeaMod.Items.Alternate
         {
             Item.damage = 20;
             Item.mana = 0;
-            Item.useTime = 30;
-            Item.useAnimation = 30;
+            Item.useTime = 60;
+            Item.useAnimation = 60;
+            Item.noMelee = false;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.autoReuse = false;
             Item.channel = false;
@@ -87,8 +96,8 @@ namespace ArchaeaMod.Items.Alternate
         {
             Item.damage = 10;
             Item.mana = 1;
-            Item.useTime = 30;
-            Item.useAnimation = 40;
+            Item.useTime = 60;
+            Item.useAnimation = 60;
             Item.useTurn = true;
             Item.autoReuse = true;
             Item.channel = true;
@@ -104,7 +113,7 @@ namespace ArchaeaMod.Items.Alternate
         public override bool PreDrawInWorld(SpriteBatch sb, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
         {
             Texture2D tex = Mod.Assets.Request<Texture2D>("Items/c_Sword").Value;
-            sb.Draw(tex, Item.position - Main.screenPosition, null, Color.Firebrick * 0.67f, 0f, new Vector2(tex.Width / 2, tex.Height / 2), 1f, SpriteEffects.None, 0f);
+            sb.Draw(tex, Item.position - Main.screenPosition + new Vector2(16, 32), null, Color.Firebrick * 0.67f, 0f, new Vector2(tex.Width / 2, tex.Height / 2), 1f, SpriteEffects.None, 0f);
             return false;
         }
     }

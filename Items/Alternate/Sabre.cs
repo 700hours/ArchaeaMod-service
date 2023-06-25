@@ -17,7 +17,7 @@ namespace ArchaeaMod.Items.Alternate
 {
     public class Sabre : ModItem
     {
-        public override string Texture => "ArchaeaMod/Gores/Null";
+        public override string Texture => "ArchaeaMod/Merged/Items/cinnabar_dagger";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Dagger");
@@ -31,8 +31,8 @@ namespace ArchaeaMod.Items.Alternate
             Item.knockBack = 3f;
             Item.value = 3000;
             Item.rare = ItemRarityID.Green;
-            Item.useTime = 20;
-            Item.useAnimation = 20;
+            Item.useTime = 90;
+            Item.useAnimation = 90;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useTurn = true;
         }
@@ -61,7 +61,7 @@ namespace ArchaeaMod.Items.Alternate
         public override bool PreDrawInWorld(SpriteBatch sb, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
         {
             Texture2D tex = Mod.Assets.Request<Texture2D>("Merged/Items/cinnabar_dagger").Value;
-            sb.Draw(tex, Item.position - Main.screenPosition, null, Color.Firebrick * 0.67f, 0f, new Vector2(tex.Width / 2, tex.Height / 2), 1f, SpriteEffects.None, 0f);
+            sb.Draw(tex, Item.position - Main.screenPosition + new Vector2(16, 32), null, Color.Firebrick * 0.67f, 0f, new Vector2(tex.Width / 2, tex.Height / 2), 1f, SpriteEffects.None, 0f);
             return false;
         }
     }

@@ -11,12 +11,14 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 using ArchaeaMod.Projectiles;
+using Terraria.Audio;
+using ArchaeaMod.NPCs;
 
 namespace ArchaeaMod.Items.Alternate
 {
     public class Staff : ModItem
     {
-        public override string Texture => "ArchaeaMod/Gores/Null";
+        public override string Texture => "ArchaeaMod/Items/c_Staff";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Charred Staff");
@@ -26,13 +28,14 @@ namespace ArchaeaMod.Items.Alternate
         {
             Item.width = 48;
             Item.height = 48;
-            Item.damage = 0;
-            Item.mana = 0;
+            Item.damage = 40;
+            Item.noMelee = true;
+            Item.mana = 10;
             Item.value = 5000;
             Item.rare = ItemRarityID.Green;
             Item.useTime = 60;
             Item.useAnimation = 5;
-            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useStyle = 5;
             Item.autoReuse = true;
             Item.channel = true;
             Item.DamageType = DamageClass.Magic;
@@ -66,6 +69,7 @@ namespace ArchaeaMod.Items.Alternate
         private Dust[] dust = new Dust[5];
         [CloneByReference]
         public Target[] targets;
+        public override Vector2? HoldoutOrigin() => new Vector2(18, 8);
         public override bool? UseItem(Player player)/* Suggestion: Return null instead of false */
         {
             if (player.statMana <= 0)
@@ -120,6 +124,15 @@ namespace ArchaeaMod.Items.Alternate
                 pixel.tileCollide = false;
                 pixel.timeLeft = 15;
             }
+            var npc = Main.npc.Where(t => t.active && !t.townNPC && !t.CountsAsACritter && t.Distance(player.Center) < 300f);
+            foreach (NPC n in npc)
+            { 
+                int direction = n.Center.X < player.Center.X ? -1 : 1;
+                n.StrikeNPC(40, 4f, direction, false, false, Main.netMode != 0);
+                n.velocity.Y += 5f;
+                n.velocity.X += 5f * direction;
+            }
+            SoundEngine.PlaySound(SoundID.Item14, player.Center);
         }
         protected void ResetItem()
         {
@@ -136,7 +149,7 @@ namespace ArchaeaMod.Items.Alternate
         public override bool PreDrawInWorld(SpriteBatch sb, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
         {
             Texture2D tex = Mod.Assets.Request<Texture2D>("Items/c_Staff").Value;
-            sb.Draw(tex, Item.position - Main.screenPosition, null, Color.Firebrick * 0.67f, 0f, new Vector2(tex.Width / 2, tex.Height / 2), 1f, SpriteEffects.None, 0f);
+            sb.Draw(tex, Item.position - Main.screenPosition + new Vector2(0, 32), null, Color.Firebrick * 0.67f, 0f, new Vector2(tex.Width / 2, tex.Height / 2), 1f, SpriteEffects.None, 0f);
             return false;
         }
     }

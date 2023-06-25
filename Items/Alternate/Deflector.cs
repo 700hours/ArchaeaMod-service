@@ -15,7 +15,7 @@ namespace ArchaeaMod.Items.Alternate
 {
     public class Deflector : ModItem
     {
-        public override string Texture => "ArchaeaMod/Gores/Null";
+        public override string Texture => "ArchaeaMod/Items/n_core";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Deflector");
@@ -240,12 +240,13 @@ namespace ArchaeaMod.Items.Alternate
             }
 
         }
-        public static void ShockTarget(Vector2 itemHitbox, NPC target, int damage)
+        public static void ShockTarget(Vector2 itemHitbox, NPC target, int damage, int dustID = 6)
         {
             float angle = NPCs.ArchaeaNPC.AngleTo(itemHitbox, target.Center);
             for (int d = 0; d < target.Distance(itemHitbox); d++)
             {
-                Dust dust = Dust.NewDustDirect(itemHitbox + NPCs.ArchaeaNPC.AngleToSpeed(angle, d), 1, 1, 6);
+                Dust dust = Dust.NewDustDirect(itemHitbox + NPCs.ArchaeaNPC.AngleToSpeed(angle, d), 1, 1, dustID);
+                dust.noGravity = true;
             }
             target.StrikeNPC(damage, 0f, 0);
         }

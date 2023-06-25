@@ -17,6 +17,7 @@ namespace ArchaeaMod.Items.Alternate
 {
     public class Calling : ModItem
     {
+        public override string Texture => "ArchaeaMod/Items/r_Catcher";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Staff of Calling");
@@ -74,6 +75,7 @@ namespace ArchaeaMod.Items.Alternate
 
     public class Minion : ModProjectile
     {
+        public override string Texture => "ArchaeaMod/Projectiles/CatcherMinion";
         private int time
         {
             get { return (int)Projectile.localAI[0]; }
@@ -117,11 +119,19 @@ namespace ArchaeaMod.Items.Alternate
         }
         public override bool PreAI()
         {
+            if (Projectile.Center.Distance(owner.Center) > Main.screenWidth)
+            {
+                Projectile.Center = owner.Center - new Vector2(0, owner.height);
+            }
             if (!owner.HasBuff(ModContent.BuffType<CallMinionBuff>()))
             {
                 owner.numMinions -= owner.ownedProjectileCounts[Projectile.type];
                 Projectile.active = false;
                 return false;
+            }
+            else
+            { 
+                Projectile.timeLeft = 2;
             }
             if (targets == null)
                 return true;
@@ -267,15 +277,21 @@ namespace ArchaeaMod.Items.Alternate
             public override void SetStaticDefaults()
             {
                 DisplayName.SetDefault("Minion Helper");
+                Main.buffNoSave[Type] = true;
+                Main.buffNoTimeDisplay[Type] = true;
             }
             public override void ModifyBuffTip(ref string tip, ref int rare)
             {
                 tip = "It eats ice";
             }
+            public override void Update(Player player, ref int buffIndex)
+            {
+                player.buffTime[buffIndex] = 360;
+            }
             public override bool PreDraw(SpriteBatch sb, int buffIndex, ref BuffDrawParams drawParams)
             {
                 Texture2D tex = Mod.Assets.Request<Texture2D>("Buffs/mercury").Value;
-                sb.Draw(tex, drawParams.Position, drawParams.SourceRectangle, Color.Firebrick * 0.67f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                sb.Draw(tex, drawParams.Position, new Rectangle(0, 0, 32, 32), Color.Firebrick * 0.67f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
                 return false;
             }
         }

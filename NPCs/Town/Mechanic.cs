@@ -17,40 +17,6 @@ using static Humanizer.In;
 
 namespace ArchaeaMod.NPCs.Town
 {
-    internal class NPCAI : GlobalNPC
-    {
-        public override void GetChat(NPC npc, ref string chat)
-        {
-            if (npc.TypeName == "Mechanic")
-            {
-                SpawnMechanicMinion(npc, npc.GetSource_FromAI());
-            }
-        }
-        public override void OnSpawn(NPC npc, IEntitySource source)
-        {
-            if (npc.TypeName == "Mechanic")
-            { 
-                SpawnMechanicMinion(npc, source);
-            }
-        }
-        public static void SpawnMechanicMinion(NPC npc, IEntitySource source)
-        {
-            if (Main.npc.FirstOrDefault(t => t.active && t.type == ModNPCID.MechanicMinion) == default)
-            {
-                //  Faux Mechanic 
-                //  Ran in the Faux minion chat dialog
-                //  Projectile.NewProjectile(source, (int)npc.position.X, (int)npc.position.Y, 0f, 0f, ModContent.ProjectileType<Mechanic>(), 20, 2f);
-                //  Faux minion
-                int index = NPC.NewNPC(source, (int)npc.position.X, (int)npc.position.Y, ModNPCID.MechanicMinion);
-                NPC n = Main.npc[index];
-                //  Real minion
-                int proj = Projectile.NewProjectile(source, npc.position, Vector2.Zero, ModContent.ProjectileType<Merged.Projectiles.magno_minion>(), 26, 1f, Main.myPlayer, npc.whoAmI);
-                Main.projectile[proj].localAI[0] = 26;
-                //  Set minion owner
-                n.ai[0] = proj;
-            }
-        }
-    }
     internal class MechanicMinion : ModNPC
     {
         public override void SetStaticDefaults()
@@ -160,6 +126,8 @@ namespace ArchaeaMod.NPCs.Town
             Projectile.alpha = 255;
             Projectile.friendly = true;
             Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.penetrate = -1;
         }
         bool beginMove = false;
         int ticks = 0;
