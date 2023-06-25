@@ -28,7 +28,7 @@ namespace ArchaeaMod.Factory
     public class Factory
     {
         private static int
-            Width, 
+            Width = 150, 
             Height;
         internal static int
             Top => Main.UnderworldLayer - Height;

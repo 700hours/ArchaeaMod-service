@@ -21,6 +21,7 @@ namespace ArchaeaMod.Tiles
             Main.tileFrameImportant[Type] = true;
             TileID.Sets.NotReallySolid[Type] = true;
             TileID.Sets.DrawsWalls[Type] = true;
+            TileID.Sets.CanBeSatOnForNPCs[Type] = true;
             TileObjectData.newTile.Width = 1;
             TileObjectData.newTile.Height = 2;
             TileObjectData.newTile.UsesCustomCanPlace = true;

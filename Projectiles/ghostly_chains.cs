@@ -14,6 +14,7 @@ namespace ArchaeaMod.Projectiles
 {
     public class ghostly_chains : ModProjectile
     {
+        public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Ghostly Chains");

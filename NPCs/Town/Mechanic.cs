@@ -35,10 +35,11 @@ namespace ArchaeaMod.NPCs.Town
         }
         public static void SpawnMechanicMinion(NPC npc, IEntitySource source)
         {
-            if (Main.npc.FirstOrDefault(t => t.active && t.type == ModNPCID.Mechanic) == default)
-            { 
+            if (Main.npc.FirstOrDefault(t => t.active && t.type == ModNPCID.MechanicMinion) == default)
+            {
                 //  Faux Mechanic 
-                NPC.NewNPC(source, (int)npc.position.X, (int)npc.position.Y, ModNPCID.Mechanic);
+                //  Ran in the Faux minion chat dialog
+                //  Projectile.NewProjectile(source, (int)npc.position.X, (int)npc.position.Y, 0f, 0f, ModContent.ProjectileType<Mechanic>(), 20, 2f);
                 //  Faux minion
                 int index = NPC.NewNPC(source, (int)npc.position.X, (int)npc.position.Y, ModNPCID.MechanicMinion);
                 NPC n = Main.npc[index];
@@ -80,15 +81,10 @@ namespace ArchaeaMod.NPCs.Town
             set { NPC.ai[0] = value; }
         }
         public Projectile Owner => Main.projectile[owner];
-        public override string Texture => "ArchaeaMod/Gores/Blank";
-        public bool flag 
-        { 
-            get { return ModContent.GetInstance<Mechanic>().following; }
-            set { ModContent.GetInstance<Mechanic>().following = value; } 
-        }
+        public override string Texture => "ArchaeaMod/Gores/Null";
         public bool justTalked = false;
         public override bool CanChat() => true;
-
+        public bool flag = false;
         public override void AI()
         {
             NPC.position = Owner.position;
@@ -117,6 +113,22 @@ namespace ArchaeaMod.NPCs.Town
             if (firstButton)
             {
                 flag = !flag;
+                if (flag)
+                {
+                    var npc = Main.npc.FirstOrDefault(t => t.active && t.TypeName == "Mechanic");
+                    if (npc != default)
+                    {
+                        Projectile.NewProjectile(Projectile.GetSource_TownSpawn(), (int)npc.position.X, (int)npc.position.Y, 0f, 0f, ModContent.ProjectileType<Mechanic>(), 20, 2f);
+                    }
+                }
+                else
+                {
+                    var proj = Main.projectile.FirstOrDefault(t => t.active && t.type == ModContent.ProjectileType<Mechanic>());
+                    if (proj != default)
+                    {
+                        proj.active = false;
+                    }
+                }
             }
         }
         public override bool? CanHitNPC(NPC target)
@@ -132,32 +144,22 @@ namespace ArchaeaMod.NPCs.Town
             return Owner.active;
         }
     }
-    internal class Mechanic : ModNPC
+    internal class Mechanic : ModProjectile
     {
-        public bool following = false;
-        public override string Texture => "ArchaeaMod/Gores/Blank";
+        public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Mechanic");
         }
         public override void SetDefaults()
         {
-            NPC.aiStyle = -1;
-            NPC.width = 28;
-            NPC.height = 42;
-            NPC.immortal = true;
-            NPC.dontTakeDamage = true;
-            NPC.dontTakeDamageFromHostiles = true;
-            NPC.lifeMax = 100;
-            NPC.defense = 10;
-            NPC.knockBackResist = 1f;
-            NPC.damage = 0;
-            NPC.value = 1000;
-            NPC.lavaImmune = true;
-            NPC.DeathSound = SoundID.NPCDeath1;
-            NPC.alpha = 255;
-            NPC.friendly = true;
-            NPC.noGravity = false;
+            Projectile.aiStyle = -1;
+            Projectile.width = 32;
+            Projectile.height = 42;
+            Projectile.damage = 0;
+            Projectile.alpha = 255;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
         }
         bool beginMove = false;
         int ticks = 0;
@@ -178,74 +180,73 @@ namespace ArchaeaMod.NPCs.Town
                 return;
             if (ArchaeaItem.Elapsed(ref ticks2, 20))
             { 
-                target.StrikeNPC(Main.hardMode ? 40 : 20, 2f, target.Center.X < NPC.Center.X ? -1 : 1, Main.rand.NextBool(), false, Main.netMode != 0);
+                target.StrikeNPC(Main.hardMode ? 40 : 20, 2f, target.Center.X < Projectile.Center.X ? -1 : 1, Main.rand.NextBool(), false, Main.netMode != 0);
                 ticks2 = 0;
             }
         }
-        public override bool? CanHitNPC(NPC target)
-        {
-            return !target.townNPC;
-        }
-        public override bool CanHitPlayer(Player target, ref int cooldownSlot)
-        {
-            return false;
-        }
         public override bool PreAI()
         {
-            owner.velocity = NPC.velocity;
-            owner.position = NPC.position;
-            if (NPC.position.X <= NPC.oldPosition.X || NPC.position.X > NPC.oldPosition.X || NPC.position.Y <= NPC.oldPosition.Y || NPC.position.Y > NPC.oldPosition.Y)
+            owner.velocity = Projectile.velocity;
+            owner.position = Projectile.position;
+            if (Projectile.position.X <= Projectile.oldPosition.X || Projectile.position.X > Projectile.oldPosition.X || Projectile.position.Y <= Projectile.oldPosition.Y || Projectile.position.Y > Projectile.oldPosition.Y)
             {
-                NPC.netUpdate = true;
+                Projectile.netUpdate = true;
             }
             return true;
         }
         public override void AI()
         {
-//          if (!following) return;
+            if (owner.active)
+            {
+                Projectile.timeLeft = 2;
+                Projectile.height = owner.height;
+            }
             Player player = Main.LocalPlayer;
-            NPC.direction = NPC.velocity.X < 0f ? -1 : 1;
             if (!PlayerNotControlMove(player) || PlayerMoving(player))
             {
-                oldVelocity.Add(player.position);
-                if (!beginMove && ArchaeaItem.Elapsed(ref ticks, 60))
+                oldVelocity.Add(player.position + new Vector2(0, player.height - owner.height));
+                if (!beginMove)
                 {
-                    ticks = 0;
-                    beginMove = true;
+                    if (ArchaeaItem.Elapsed(ref ticks, 60))
+                    { 
+                        ticks = 0;
+                        beginMove = true;
+                    }
+                    else
+                    {
+                        Projectile.position += ArchaeaNPC.AngleToSpeed(Projectile.AngleTo(oldVelocity[0]), player.moveSpeed);
+                    }
                 }
             }
             if (oldVelocity.Count > 0)
             { 
                 if (beginMove)
                 {
-                    NPC.velocity = player.velocity;
-                    NPC.position = oldVelocity[0];
+                    owner.direction = player.Center.X < owner.Center.X ? -1 : 1;
+                    Projectile.velocity = player.velocity;
+                    Projectile.position = oldVelocity[0];
                     oldVelocity.RemoveAt(0);
                 }
             }
             else 
             {
-                NPC.velocity = Vector2.Zero;
+                Projectile.velocity = Vector2.Zero;
                 beginMove = false;
             }
-            if (NPC.velocity.Y < 0f)
+            if (Projectile.velocity.Y < 0f)
             {
-                int d  = Dust.NewDust(NPC.position + new Vector2(0, NPC.height - 2), 1, 1, DustID.Torch, Scale: 1.5f);
+                int d  = Dust.NewDust(Projectile.position + new Vector2(0, Projectile.height - 2), 1, 1, DustID.Torch, Scale: 1.5f);
                 Main.dust[d].noLight = false;
                 Main.dust[d].noGravity = true;
-                int d2 = Dust.NewDust(NPC.position + new Vector2(NPC.width - 16, NPC.height - 2), 1, 1, DustID.Torch, Scale: 1.5f);
+                int d2 = Dust.NewDust(Projectile.position + new Vector2(Projectile.width - 16, Projectile.height - 2), 1, 1, DustID.Torch, Scale: 1.5f);
                 Main.dust[d2].noLight = false;
                 Main.dust[d2].noGravity = true;
                 if (ArchaeaItem.Elapsed(ref ticks2, 5))
                 {
-                    SoundEngine.PlaySound(SoundID.Item13, NPC.Center);
+                    SoundEngine.PlaySound(SoundID.Item13, Projectile.Center);
                     ticks2 = 0;
                 }
             }
-        }
-        public override bool CheckActive()
-        {
-            return owner.active;
         }
     }
 }

@@ -58,10 +58,7 @@ namespace ArchaeaMod.NPCs.Bosses
                 case -1:
                     bodyType = ModContent.NPCType<Magnoliac_body>();
                     tailType = ModContent.NPCType<Magnoliac_tail>();
-                    NPC.lifeMax = maxParts / 
-                        (int)(ModContent.GetInstance<ModeToggle>().archaeaMode ?
-                        ModContent.GetInstance<ModeToggle>().healthScale * 2 : 2) 
-                        * NPC.life;
+                    NPC.lifeMax = maxParts / 2 * NPC.life;
                     NPC.life = NPC.lifeMax;
                     goto case 0;
                 case 0:

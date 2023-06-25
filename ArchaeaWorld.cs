@@ -516,11 +516,6 @@ namespace ArchaeaMod
         {
             int[] t0 = new int[]
             {
-                //ModContent.ItemType<Broadsword>(),
-                //ModContent.ItemType<Calling>(),
-                //ModContent.ItemType<Deflector>(),
-                //ModContent.ItemType<Sabre>(),
-                //ModContent.ItemType<Staff>()
                 ModContent.ItemType<r_Catcher>(),
                 ModContent.ItemType<r_Flail>(),
                 ModContent.ItemType<r_Javelin>(),
@@ -550,6 +545,14 @@ namespace ArchaeaMod
                 ItemID.MiningPotion, 
                 ItemID.RecallPotion, 
                 ItemID.TeleportationPotion
+            };
+            int[] t4 = new int[]
+            {
+                ModContent.ItemType<Broadsword>(),
+                ModContent.ItemType<Calling>(),
+                ModContent.ItemType<Deflector>(),
+                ModContent.ItemType<Sabre>(),
+                ModContent.ItemType<Staff>()
             };
             int[] s0 = t0;
             int[] s1 = t1;
@@ -636,6 +639,46 @@ namespace ArchaeaMod
                                 break;
                             case 3:
                                 type = s3[Main.rand.Next(s3.Length)]; 
+                                chest.item[j].SetDefaults(type);
+                                chest.item[j].stack = Main.rand.Next(1, 4);
+                                break;
+                        }
+                    }
+                }
+                if (chest.y > Factory.Factory.Top && chest.y < Main.UnderworldLayer && Main.tile[chest.x, chest.y].TileFrameX == 0)
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        int type = 0;
+                        switch (j)
+                        {
+                            case 0:
+                                type = t4[Main.rand.Next(t4.Length)];
+                                chest.item[j].SetDefaults(type);
+                                break;
+                            case 1:
+                                type = s0[Main.rand.Next(s0.Length)];
+                                chest.item[j].SetDefaults(type);
+                                if (type == ModContent.ItemType<r_Javelin>())
+                                    chest.item[j].stack = Main.rand.Next(12, 24);
+                                else if (type == ModContent.ItemType<r_Tomohawk>())
+                                    chest.item[j].stack = Main.rand.Next(15, 24);
+                                break;
+                            case 2:
+                                type = s1[Main.rand.Next(s1.Length)];
+                                if (type == s1[0])
+                                {
+                                    chest.item[j].SetDefaults(t1[0]);
+                                    chest.item[j].stack = Main.rand.Next(8, 15);
+                                }
+                                break;
+                            case 3:
+                                type = s2[Main.rand.Next(s2.Length)];
+                                chest.item[j].SetDefaults(type);
+                                chest.item[j].stack = Main.rand.Next(6, 13);
+                                break;
+                            case 4:
+                                type = s3[Main.rand.Next(s3.Length)];
                                 chest.item[j].SetDefaults(type);
                                 chest.item[j].stack = Main.rand.Next(1, 4);
                                 break;
@@ -970,7 +1013,7 @@ namespace ArchaeaMod
                     int x = (int)ground.X;
                     int y = (int)ground.Y;
                     if (!ArchaeaWorld.Inbounds(x, y)) continue;
-                    if (Main.tile[x, y].WallType == wallID && WorldGen.genRand.Next(8) == 0)
+                    if (Main.tile[x, y].WallType == wallID && WorldGen.genRand.NextBool(8))
                         WorldGen.PlaceTile(x, y, newTileID, true, true);
                     if (Main.tile[x, y].TileType == newTileID)
                     {

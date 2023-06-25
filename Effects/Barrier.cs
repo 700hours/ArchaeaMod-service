@@ -50,6 +50,8 @@ namespace ArchaeaMod.Effects
             position = new Vector2(x, y);
             hitbox = new Rectangle(x, y, Size, Size);
         }
+        public int hits = 5;
+        public int npcDoor = 0;
         public bool active;
         public static bool hintInit = false;
         private float alpha = 0f;
@@ -77,10 +79,10 @@ namespace ArchaeaMod.Effects
         }
         public void Update(Player player)
         {
+            if (!active)// || ModContent.GetInstance<ArchaeaWorld>().downedMagno)
+                return;
             int originX = ModContent.GetInstance<ArchaeaWorld>().MagnoBiomeOriginX;
             if (originX == 0)
-                return;
-            if (!active || ModContent.GetInstance<ArchaeaWorld>().downedMagno)
                 return;
             if (player.position.Y + player.height >= position.Y) 
             {
@@ -98,6 +100,16 @@ namespace ArchaeaMod.Effects
                 SoundEngine.PlaySound(SoundID.Roar, new Vector2(player.position.X - Main.screenWidth / 2 * direction, player.Center.Y));
                 Main.NewText("Sounds resound from the direction of the magnoliac region...");
                 hintInit = true;
+            }
+            int plrX = (int)player.position.X / 16;
+            int centerX = Main.maxTilesX / 2;
+            if (plrX >= centerX - 25 && plrX <= centerX + 25)
+            {
+                var mechanic = Main.npc.FirstOrDefault(t => t.active && t.TypeName == "Mechanic" && t.Distance(player.Center) < Main.screenHeight);
+                if (mechanic != default)
+                {
+                    
+                }
             }
         }
         public void Draw(SpriteBatch sb, Player player)

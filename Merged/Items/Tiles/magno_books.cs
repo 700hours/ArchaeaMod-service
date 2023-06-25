@@ -8,6 +8,8 @@ namespace ArchaeaMod.Merged.Items.Tiles
 {
     public class magno_books : ModItem
     {
+        public override bool IsLoadingEnabled(Mod mod)
+            => false;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Book");

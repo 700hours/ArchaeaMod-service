@@ -66,10 +66,6 @@ namespace ArchaeaMod
         {
             get { return ModContent.NPCType<NPCs.Sky_3>(); }
         }
-        public static int Mechanic
-        {
-            get { return ModContent.NPCType<NPCs.Town.Mechanic>(); }
-        }
         public static int MechanicMinion
         {
             get { return ModContent.NPCType<NPCs.Town.MechanicMinion>(); }

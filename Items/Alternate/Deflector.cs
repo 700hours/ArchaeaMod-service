@@ -15,6 +15,7 @@ namespace ArchaeaMod.Items.Alternate
 {
     public class Deflector : ModItem
     {
+        public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Deflector");
@@ -92,6 +93,18 @@ namespace ArchaeaMod.Items.Alternate
                     if (s != null)
                         s.Break();
             }
+        }
+        public override bool PreDrawInInventory(SpriteBatch sb, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            Texture2D tex = Mod.Assets.Request<Texture2D>("Items/n_core").Value;
+            sb.Draw(tex, position, frame, Color.Firebrick * 0.67f, 0f, origin, 1f, SpriteEffects.None, 0f);
+            return false;
+        }
+        public override bool PreDrawInWorld(SpriteBatch sb, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+        {
+            Texture2D tex = Mod.Assets.Request<Texture2D>("Items/n_core").Value;
+            sb.Draw(tex, Item.position - Main.screenPosition, null, Color.Firebrick * 0.67f, 0f, new Vector2(tex.Width / 2, tex.Height / 2), 1f, SpriteEffects.None, 0f);
+            return false;
         }
 
         private int type;

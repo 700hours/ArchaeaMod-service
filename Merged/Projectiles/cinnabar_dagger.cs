@@ -25,7 +25,7 @@ namespace ArchaeaMod.Merged.Projectiles
             Projectile.tileCollide = true;
             Projectile.ignoreWater = false;
             Projectile.scale = 1f;
-            Projectile.CountsAsClass(DamageClass.Melee);
+            Projectile.CountsAsClass(DamageClass.Throwing);
         }
 
         public void Initialize()

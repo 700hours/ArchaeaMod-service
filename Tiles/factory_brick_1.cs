@@ -19,6 +19,7 @@ namespace ArchaeaMod.Tiles
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
+            TileID.Sets.Corrupt[Type] = true;
             ItemDrop = ModContent.ItemType<Items.Tiles.sky_brick>();
             AddMapEntry(Color.LightSlateGray);
             // soundStyle = 0;
@@ -41,6 +42,8 @@ namespace ArchaeaMod.Tiles
             return false;
         }
         bool flag = false;
+        int ticks = 0;
+        int count = 0;
         public override void NearbyEffects(int i, int j, bool closer)
         {
             for (int l = 1; l < 5; l++)
@@ -54,17 +57,31 @@ namespace ArchaeaMod.Tiles
             {     
                 Projectile.NewProjectile(Projectile.GetSource_NaturalSpawn(), new Vector2(x, y), Vector2.Zero, ModContent.ProjectileType<Projectiles.Pixel>(), 0, 0f, Main.myPlayer, 0f, Projectiles.Pixel.Drip);
             }
-            if (Main.rand.NextBool(400))
+            Vector2 start = Vector2.Zero;
+            Vector2 end = Vector2.Zero;
+            if (Main.rand.NextBool(Main.rand.Next(300, 800) + 1))
             {
                 if (!Main.tile[i - 1, j].HasTile || !Main.tile[i + 1, j].HasTile)
                 { 
-                    Vector2 start = new Vector2(x, y);
+                    start = new Vector2(x, y);
                     var list = Treasures.GetFloor(i - 10, j, 20, 30, Type).ToList();
                     if (list.Count < 2 || list[0] == Vector2.Zero)
                     { 
                         return;
                     }
-                    Vector2 end = list[Main.rand.Next(list.Count)] * 16;
+                    end = list[Main.rand.Next(list.Count)] * 16;
+                    flag = true;
+                }
+            }
+            if (flag)
+            {
+                if (ArchaeaItem.Elapsed(ref ticks, 10)) 
+                {
+                    flag = false;
+                    ticks = 0;
+                }
+                if (ticks % 2 == 0)
+                {
                     ArchaeaItem.Bolt(ref start, end, 20, 4, -100f);
                 }
             }

@@ -13,6 +13,7 @@ namespace ArchaeaMod.Projectiles
 {
     public class dust_diffusion : ModProjectile
     {
+        public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Blast wave");

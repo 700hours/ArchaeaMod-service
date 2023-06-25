@@ -14,6 +14,7 @@ namespace ArchaeaMod.Items
 {
     public class PossessedMusket : ModItem
     {
+        public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Possessed Musket");

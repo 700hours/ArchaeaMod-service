@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace ArchaeaMod.Items.Alternate
 {
@@ -55,6 +57,18 @@ namespace ArchaeaMod.Items.Alternate
                 count = player.ownedProjectileCounts[minion.type];
             }
             return true;
+        }
+        public override bool PreDrawInInventory(SpriteBatch sb, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            Texture2D tex = Mod.Assets.Request<Texture2D>("Items/r_Catcher").Value;
+            sb.Draw(tex, position, frame, Color.Firebrick * 0.67f, 0f, origin, 1f, SpriteEffects.None, 0f);
+            return false;
+        }
+        public override bool PreDrawInWorld(SpriteBatch sb, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+        {
+            Texture2D tex = Mod.Assets.Request<Texture2D>("Items/r_Catcher").Value;
+            sb.Draw(tex, Item.position - Main.screenPosition, null, Color.Firebrick * 0.67f, 0f, new Vector2(tex.Width / 2, tex.Height / 2), 1f, SpriteEffects.None, 0f);
+            return false;
         }
     }
 
@@ -214,6 +228,13 @@ namespace ArchaeaMod.Items.Alternate
             }
             NPCs.ArchaeaNPC.VelocityClamp(Projectile, -5f, 5f);
         }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            SpriteBatch sb = Main.spriteBatch;
+            Texture2D tex = Mod.Assets.Request<Texture2D>("Projectiles/CatcherMinion").Value;
+            sb.Draw(tex, Projectile.position - Main.screenPosition, null, lightColor, Projectile.rotation, new Vector2(tex.Width / 2, tex.Height / 2), 1.1f, SpriteEffects.None, 0f);
+            return false;
+        }
         public override void PostDraw(Color lightColor)
         {
             if (distance != 0f)
@@ -242,6 +263,7 @@ namespace ArchaeaMod.Items.Alternate
 
         public class CallMinionBuff : ModBuff
         {
+            public override string Texture => "ArchaeaMod/Gores/Null";
             public override void SetStaticDefaults()
             {
                 DisplayName.SetDefault("Minion Helper");
@@ -249,6 +271,12 @@ namespace ArchaeaMod.Items.Alternate
             public override void ModifyBuffTip(ref string tip, ref int rare)
             {
                 tip = "It eats ice";
+            }
+            public override bool PreDraw(SpriteBatch sb, int buffIndex, ref BuffDrawParams drawParams)
+            {
+                Texture2D tex = Mod.Assets.Request<Texture2D>("Buffs/mercury").Value;
+                sb.Draw(tex, drawParams.Position, drawParams.SourceRectangle, Color.Firebrick * 0.67f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                return false;
             }
         }
     }
