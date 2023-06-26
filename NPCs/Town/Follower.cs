@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArchaeaMod.Effects;
 using ArchaeaMod.Items;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -47,7 +48,7 @@ namespace ArchaeaMod.NPCs.Town
             if (Main.npc.FirstOrDefault(t => t.active && t.type == ModContent.NPCType<FollowerMenu>() && t.ai[1] == npc.type) == default)
             {
                 //  Town menu minion
-                NPC.NewNPC(source, (int)npc.position.X + npc.width / 2 - 8, (int)npc.position.Y - 32, ModContent.NPCType<FollowerMenu>(), 0, npc.whoAmI, npc.type);
+                NPC.NewNPC(source, (int)npc.position.X + npc.width / 2 - 8, (int)npc.position.Y - 32, ModContent.NPCType<FollowerMenu>(), 0, npc.whoAmI, npc.type, npc.FindClosestPlayer());
             }
         }
         public static void SpawnMechanicMinion(NPC npc, IEntitySource source)
@@ -105,6 +106,12 @@ namespace ArchaeaMod.NPCs.Town
             get { return (int)NPC.ai[1]; }
             set { NPC.ai[1] = value; }
         }
+        private int playerIndex
+        {
+            get { return (int)NPC.ai[2]; }
+            set { NPC.ai[2] = value; }
+        }
+        Player player => Main.player[playerIndex];
         NPC Owner => Main.npc[owner];
         Projectile leader => Main.projectile[projID];
         int projID;
@@ -120,6 +127,7 @@ namespace ArchaeaMod.NPCs.Town
         }
         public override void AI()
         {
+            NPC.alpha = (int)Math.Abs((255 * (Math.Min(player.Distance(NPC.Center), 300f) / 300f)) - 255);
             if (!Main.npc[owner].active)
             {
                 NPC.active = false;
@@ -175,6 +183,15 @@ namespace ArchaeaMod.NPCs.Town
         public override bool CheckActive()
         {
             return Main.npc[owner].active;
+        }
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            return false;
+        }
+        public override void PostDraw(SpriteBatch sb, Vector2 screenPos, Color drawColor)
+        {
+            Texture2D tex = Fx.BasicArrow();
+            sb.Draw(tex, NPC.position - screenPos + new Vector2(24, 8), null, drawColor * (NPC.alpha / 255f), MathHelper.ToRadians(90f), new Vector2(NPC.width, NPC.height), NPC.scale, SpriteEffects.None, 0f);
         }
     }
     internal class Follower : ModProjectile
@@ -238,7 +255,7 @@ namespace ArchaeaMod.NPCs.Town
                 return;
             if (ArchaeaItem.Elapsed(ref ticks2, 20))
             {
-                target.StrikeNPC(Main.hardMode ? 40 : 20, 2f, target.Center.X < Projectile.Center.X ? -1 : 1, Main.rand.NextBool(), false, Main.netMode != 0);
+                //target.StrikeNPC(Main.hardMode ? 40 : 20, 2f, target.Center.X < Projectile.Center.X ? -1 : 1, Main.rand.NextBool(), false, Main.netMode != 0);
                 ticks2 = 0;
             }
         }

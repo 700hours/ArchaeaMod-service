@@ -239,9 +239,9 @@ namespace ArchaeaMod.Mode
             multiplier -= 0.5f;
             Start = true;
             for (int i = 0; i < unlock.Length; i++)
-                unlock[i] = Color.Red;
+                unlock[i] = ModeUI.innactiveColor;
             multiplier -= scaling[start];
-            unlock[start] = Color.Green;
+            unlock[start] = ModeUI.activeColor;
             if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[start])
             {
                 Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat++;
@@ -255,7 +255,7 @@ namespace ArchaeaMod.Mode
                 {
                     if (Health || player.statLifeMax >= ArchaeaMode.LifeCrystal(20))
                     {
-                        unlock[health] = Color.Green;
+                        unlock[health] = ModeUI.activeColor;
                         if (!player.GetModPlayer<ArchaeaPlayer>().objectiveStat[health])
                         {
                             player.GetModPlayer<ArchaeaPlayer>().remainingStat++;
@@ -267,7 +267,7 @@ namespace ArchaeaMod.Mode
                     }
                     if (Mana || player.statManaMax >= 40 || player.statManaMax2 >= 40)
                     {
-                        unlock[mana] = Color.Green;
+                        unlock[mana] = ModeUI.activeColor;
                         if (!player.GetModPlayer<ArchaeaPlayer>().objectiveStat[mana])
                         {
                             player.GetModPlayer<ArchaeaPlayer>().remainingStat++;
@@ -277,9 +277,9 @@ namespace ArchaeaMod.Mode
                         multiplier -= scaling[mana];
                         Mana = true;
                     }
-                    if (Bottom || player.position.Y > Main.bottomWorld * 0.75f)
+                    if (Bottom || player.position.Y >= Main.maxTilesY * 16 - player.height)
                     {
-                        unlock[bottom] = Color.Green;
+                        unlock[bottom] = ModeUI.activeColor;
                         if (!player.GetModPlayer<ArchaeaPlayer>().objectiveStat[bottom])
                         {
                             player.GetModPlayer<ArchaeaPlayer>().remainingStat++;
@@ -297,7 +297,7 @@ namespace ArchaeaMod.Mode
             {
                 if (NPCs || Main.npc[i].townNPC && count++ > 4)
                 {
-                    unlock[npcs] = Color.Green;
+                    unlock[npcs] = ModeUI.activeColor;
                     if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[bottom])
                     {
                         Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat++;
@@ -311,7 +311,7 @@ namespace ArchaeaMod.Mode
             }
             if (Bosses)
             {
-                unlock[bosses] = Color.Green;
+                unlock[bosses] = ModeUI.activeColor;
                 if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[bosses])
                 {
                     Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat++;
@@ -322,7 +322,7 @@ namespace ArchaeaMod.Mode
             }
             if (Week || ModContent.GetInstance<ModeToggle>().dayCount > 6)
             {
-                unlock[week] = Color.Green;
+                unlock[week] = ModeUI.activeColor;
                 multiplier -= scaling[week];
                 if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[week])
                 {
@@ -334,7 +334,7 @@ namespace ArchaeaMod.Mode
             }
             if (Crafting || ModContent.GetInstance<ModeTile>().tileProgress)
             {
-                unlock[crafting] = Color.Green;
+                unlock[crafting] = ModeUI.activeColor;
                 multiplier -= scaling[crafting];
                 if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[crafting])
                 {
@@ -346,7 +346,7 @@ namespace ArchaeaMod.Mode
             }
             if (DownedMagno || ModContent.GetInstance<ArchaeaWorld>().downedMagno)
             {
-                unlock[downedMagno] = Color.Green;
+                unlock[downedMagno] = ModeUI.activeColor;
                 if (!Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().objectiveStat[downedMagno])
                 {
                     Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat++;

@@ -44,6 +44,9 @@ namespace ArchaeaMod.Tiles
         bool flag = false;
         int ticks = 0;
         int count = 0;
+        Vector2 start = Vector2.Zero;
+        Vector2 end = Vector2.Zero;
+
         public override void NearbyEffects(int i, int j, bool closer)
         {
             for (int l = 1; l < 5; l++)
@@ -57,9 +60,7 @@ namespace ArchaeaMod.Tiles
             {     
                 Projectile.NewProjectile(Projectile.GetSource_NaturalSpawn(), new Vector2(x, y), Vector2.Zero, ModContent.ProjectileType<Projectiles.Pixel>(), 0, 0f, Main.myPlayer, 0f, Projectiles.Pixel.Drip);
             }
-            Vector2 start = Vector2.Zero;
-            Vector2 end = Vector2.Zero;
-            if (Main.rand.NextBool(Main.rand.Next(300, 800) + 1))
+            if (!flag && Main.rand.NextBool(Main.rand.Next(300, 800) + 1))
             {
                 if (!Main.tile[i - 1, j].HasTile || !Main.tile[i + 1, j].HasTile)
                 { 
@@ -82,7 +83,7 @@ namespace ArchaeaMod.Tiles
                 }
                 if (ticks % 2 == 0)
                 {
-                    ArchaeaItem.Bolt(ref start, end, 20, 4, -100f);
+                    ArchaeaItem.Bolt(ref start, end, 20, 5, -100f, 0.25f);
                 }
             }
         }

@@ -22,8 +22,10 @@ using ArchaeaMod.Merged;
 using ArchaeaMod.Merged.Items;
 using ArchaeaMod.Merged.Tiles;
 using ArchaeaMod.Merged.Walls;
+using Steamworks;
+using IL.Terraria.GameContent.Shaders;
 
-namespace ArchaeaMod.Factory
+namespace ArchaeaMod.Structure
 {
     public class Factory
     {
@@ -328,6 +330,8 @@ namespace ArchaeaMod.Factory
         private void CarveHall(ref ushort[,] tile, ref ushort[,] wall, int x, int y, int size = 10)
         {
             int border = 4;
+            bool flag = WorldGen.genRand.NextBool(4);
+            bool flag2 = WorldGen.genRand.NextBool();
             for (int i = -border; i < size + border; i++)
             {
                 for (int j = -border; j < size + border; j++)
@@ -343,21 +347,261 @@ namespace ArchaeaMod.Factory
                     { 
                         tile[X, Y] = Tile;
                     }
-                }
-            }
-            bool flag = WorldGen.genRand.NextBool(4);
-            bool flag2 = WorldGen.genRand.NextBool();
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    int X = Math.Max(0, Math.Min(x + i, Width - 1));
-                    int Y = Math.Max(0, Math.Min(y + j, Height - 1));
-                    tile[X, Y] = Air;
-                    wall[X, Y] = Wall;
                     if (flag && j == size - 1)
                     {
                         tile[X, Y] = flag2 ? ConveyerL : ConveyerR;
+                    }
+                }
+            }
+            for (int j = 0; j < size; j++)
+            {
+                for (int i = 0; i < size; i++)
+                {
+                    int X = Math.Max(0, Math.Min(x + i, Width - 1));
+                    int Y = Math.Max(0, Math.Min(y + j, Height - 1));
+                    if (tile[X, Y] != ConveyerL && tile[X, Y] != ConveyerR)
+                    { 
+                        tile[X, Y] = Air;
+                        wall[X, Y] = Wall;
+                    }
+                }
+            }
+        }
+        //  Beams, steps, balconies, chains, platforms
+        static ushort[,] stepsRight = new ushort[,]
+        {
+            { 0, 1, 1, 1, 2 },
+            { 0, 0, 1, 1, 2 },
+            { 0, 0, 0, 1, 2 },
+            { 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0 }
+        };
+        static ushort[,] stepsLeft = new ushort[,]
+        {
+            { 0, 1, 1, 1, 2 },
+            { 0, 0, 1, 1, 2 },
+            { 0, 0, 0, 1, 2 },
+            { 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0 }
+        };
+        private static Tile GetSafely(int i, int j, int buffer = 20)
+        {
+            int m = Math.Max(buffer, Math.Min(Main.maxTilesX - buffer, i));
+            int n = Math.Max(buffer, Math.Min(Main.maxTilesY - buffer, j));
+            return Main.tile[m, n];
+        }
+        public static void Decorate(int x, int y, int width, int height)
+        {
+            Treasures t = new Treasures();
+            //  Beams
+            for (int i = 0; i < width; i++)
+            {
+                if (i % (WorldGen.genRand.Next(23, 31) + 1) == 0)
+                {
+                    for (int j = y; j < y + height; j++)
+                    {
+                        if (GetSafely(i, j).WallType == Wall && (!GetSafely(i - 1, j).HasTile || GetSafely(i + 1, j).HasTile))
+                        {
+                            if (GetSafely(i, j + 1).TileType != Tile && GetSafely(i, j + 1).TileType == Tile)
+                            {
+                                var _t = GetSafely(i, j + 1);
+                                _t.HasTile = false;
+                                WorldGen.PlaceTile(i, j + 1, TileID.Timers, true, true);
+                            }
+                            var tile = GetSafely(i, j);
+                            tile.HasTile = true;
+                            tile.TileType = TileID.AdamantiteBeam;
+                            tile.RedWire = true;
+                            tile.HasActuator = true;
+                            tile.IsActuated = true;
+                            var tile2 = GetSafely(i, j + 1);
+                            tile2.RedWire = true; 
+                        }
+                    }
+                }
+            }
+            //  Steps
+            int countLeftY = 0;
+            int countRightY = 0;
+            for (int i = 0; i < width; i++)
+            {
+                countLeftY  = 0;
+                countRightY = 0;
+                for (int j = y; j < y + height; j++)
+                {
+                    if (GetSafely(i, j).WallType == Wall && !GetSafely(i, j).HasTile && GetSafely(i - 1, j).HasTile && GetSafely(i - 1, j).TileType == Tile)
+                    {
+                        countLeftY++;
+                    }
+                }
+                if (countLeftY > 15)
+                {
+                    for (int j = y; j < y + height; j++)
+                    {
+                        if (j % 15 == 0)
+                        { 
+                            if (GetSafely(i, j).WallType == Wall && !GetSafely(i, j).HasTile && GetSafely(i - 1, j).HasTile && GetSafely(i - 1, j).TileType == Tile)
+                            {
+                                for (int m = 0; m < stepsLeft.GetLength(1); m++)
+                                {
+                                    for (int n = 0; n < stepsLeft.GetLength(0); n++)
+                                    {
+                                        switch (stepsLeft[m, n])
+                                        {
+                                            case 1:
+                                                WorldGen.PlaceTile(i + m, j + n, Tile2, true, true);
+                                                break;
+                                            case 2:
+                                                WorldGen.PlaceTile(i + m, j + n, Tile, true, true);
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                for (int j = y; j < y + height; j++)
+                {
+                    if (GetSafely(i, j).WallType == Wall && !GetSafely(i, j).HasTile && GetSafely(i + 1, j).HasTile && GetSafely(i + 1, j).TileType == Tile)
+                    {
+                        countRightY++;
+                    }
+                }
+                if (countRightY > 15)
+                {
+                    for (int j = y; j < y + height; j++)
+                    {
+                        if (j % 15 == 7)
+                        { 
+                            if (GetSafely(i, j).WallType == Wall && !GetSafely(i, j).HasTile && GetSafely(i + 1, j).HasTile && GetSafely(i + 1, j).TileType == Tile)
+                            {
+                                for (int m = 0; m < stepsRight.GetLength(1); m++)
+                                {
+                                    for (int n = 0; n < stepsRight.GetLength(0); n++)
+                                    {
+                                        switch (stepsRight[m, n])
+                                        {
+                                            case 1:
+                                                WorldGen.PlaceTile(i - m, j + n, Tile2, true, true);
+                                                break;
+                                            case 2:
+                                                WorldGen.PlaceTile(i - m, j + n, Tile, true, true);
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //  Balconies 
+            foreach (Room r in room)
+            {
+                int Top = y + r.bound.Y;
+                int Right = r.bound.Right;
+                int Bottom = y + r.bound.Bottom;
+                int Left = r.bound.X;
+                for (int i = Left; i < Right; i++)
+                {
+                    for (int j = Top; j < Bottom; j++)
+                    {
+                        if (WorldGen.genRand.NextBool())
+                        { 
+                            if (GetSafely(i, j - 8).HasTile && !GetSafely(i, j - 7).HasTile && GetSafely(i, j).WallType == Wall &&  GetSafely(i - 1, j).HasTile && GetSafely(i - 1, j).TileType == Tile && !GetSafely(i, j).HasTile)
+                            {
+                                for (int m = 0; m < 5; m++)
+                                {
+                                    WorldGen.PlaceTile(i + m, j, Tile, true, true);
+                                    WorldGen.PlaceTile(i - m, j + 1, Tile, true, true);
+                                }
+                                bool placed = false;
+                                for (int m = 0; m < 5; m++)
+                                {
+                                    if (!placed)
+                                    {
+                                        t.PlaceTile(i + m, j + 2, (ushort)ModContent.TileType<Tiles.m_chandelier>(), true, false, 4, false);
+                                        placed = Main.tile[i + m, j + 2].TileType == ModContent.TileType<Tiles.m_chandelier>();
+                                    }
+                                    if (m == 2) 
+                                    {
+                                        if (WorldGen.genRand.NextBool(8))
+                                        { 
+                                            WorldGen.PlaceTile(i + m, j - 1, ModContent.TileType<Tiles.m_chair>(), true, true);
+                                        }
+                                    }
+                                }
+                                goto END;
+                            }
+                        }
+                        if (WorldGen.genRand.NextBool())
+                        {
+                            if (GetSafely(i, j - 8).HasTile && !GetSafely(i, j - 7).HasTile && GetSafely(i, j).WallType == Wall && GetSafely(i + 1, j).HasTile && GetSafely(i + 1, j).TileType == Tile && !GetSafely(i, j).HasTile)
+                            {
+                                for (int m = 0; m < 5; m++)
+                                {
+                                    WorldGen.PlaceTile(i - m, j, Tile, true, true);
+                                    WorldGen.PlaceTile(i - m, j + 1, Tile, true, true);
+                                }
+                                bool placed = false;
+                                for (int m = 0; m < 5; m++)
+                                {
+                                    if (!placed)
+                                    { 
+                                        t.PlaceTile(i + m, j + 2, (ushort)ModContent.TileType<Tiles.m_chandelier>(), true, false, 4, false);
+                                        placed = Main.tile[i + m, j + 2].TileType == ModContent.TileType<Tiles.m_chandelier>();
+                                    }
+                                    if (m == 2)
+                                    {
+                                        if (WorldGen.genRand.NextBool(8))
+                                        {
+                                            WorldGen.PlaceTile(i - m, j - 1, ModContent.TileType<Tiles.m_chair>(), true, true);
+                                        }
+                                    }
+                                }
+                                goto END;
+                            }
+                        }
+                    }
+                }
+            END: { continue; }
+            } 
+            //  Chains
+            for (int i = 0; i < width; i++)
+            {
+                if (i % (WorldGen.genRand.Next(30, 40) + 1) == 0)
+                {
+                    for (int j = y; j < y + height; j++)
+                    {
+                        if ((GetSafely(i - 1, j).HasTile || GetSafely(i + 1, j).HasTile) && GetSafely(i, j).WallType == Wall)
+                        {
+                            WorldGen.PlaceTile(i, j, TileID.Chain);
+                        }
+                    }
+                }
+            }
+            //  Platforms
+            bool flag = false;
+            for (int j = y; j < y + height; j++)
+            {
+                for (int i = 0; i < width; i++)
+                {
+                    if (GetSafely(i + 1, j).WallType == Wall && GetSafely(i, j).TileType == Tile && GetSafely(i, j).HasTile && !GetSafely(i, j - 1).HasTile && !GetSafely(i + 1, j).HasTile)
+                    {
+                        flag = true;
+                    }
+                    if (flag)
+                    {
+                        for (int m = 0; m < 10; m++)
+                        {
+                            WorldGen.PlaceTile(i + m, j, TileID.Platforms, true, false); 
+                            if (GetSafely(i + m + 1, j).HasTile)
+                            {
+                                break;
+                            }
+                        }
+                        flag = false;
                     }
                 }
             }

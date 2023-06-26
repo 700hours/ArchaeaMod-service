@@ -36,6 +36,10 @@ namespace ArchaeaMod.Effects
     }
     public class Fx
     {
+        private static Mod mod
+        {
+            get { return ModLoader.GetMod("ArchaeaMod"); }
+        }
         public static Particle[] particle = new Particle[20];
 #pragma warning disable CA1416 // Validate platform compatibility
         public static PointF[] GenerateImage(int width, int height, bool inUse, Color transparency, bool style = true)
@@ -106,6 +110,25 @@ namespace ArchaeaMod.Effects
             }
             return new PointF[] { new PointF(0, 0) };
             #endregion
+        }
+        public static Texture2D BasicArrow()
+        {
+            Texture2D tex = mod.Assets.Request<Texture2D>("Gores/arrow").Value;
+            Texture2D result = null;
+            using (MemoryStream res = new MemoryStream())
+            {
+                using (MemoryStream mem = new MemoryStream())
+                {
+                    tex.SaveAsPng(mem, tex.Width, tex.Height);
+                    using (Bitmap bmp = (Bitmap)Bitmap.FromStream(mem))
+                    {
+                        bmp.MakeTransparent(System.Drawing.Color.Black);
+                        bmp.Save(res, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                }
+                result = Fx.FromStream(res);
+            }
+            return result;
         }
         public static MemoryStream GenerateImage(byte index, int width, int height, Brush bg, Color transparency, PointF[] point = null)
         {

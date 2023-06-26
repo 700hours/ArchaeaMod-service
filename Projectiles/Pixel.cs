@@ -215,7 +215,7 @@ namespace ArchaeaMod.Projectiles
                 case Mercury:
                     return Dust.NewDustDirect(Projectile.Center, 2, 2, 6, 0f, 0f, 0, default(Color), Main.rand.NextFloat(1f, 3f));
                 case Electric:
-                    Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, DustID.Electric, 0f, 0f, 0, default(Color), 0.2f);
+                    Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, DustID.Electric, 0f, 0f, 0, default(Color), Projectile.localAI[1]);
                     dust.noGravity = true;
                     return dust;
             }

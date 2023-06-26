@@ -15,6 +15,7 @@ using Terraria.ModLoader;
 using ArchaeaMod.Buffs;
 using ArchaeaMod.Items.Alternate;
 using ArchaeaMod.Projectiles;
+using ArchaeaMod.NPCs;
 
 namespace ArchaeaMod
 {
@@ -104,7 +105,7 @@ namespace ArchaeaMod.Items
                 }
             }
         }
-        public static void Bolt(ref Vector2 start, Vector2 end, int damage = 20, int arcs = 30, float localAI0 = 0f)
+        public static void Bolt(ref Vector2 start, Vector2 end, int damage = 20, int arcs = 30, float localAI0 = 0f, float localAI1 = 0f)
         {
             float max = end.Distance(start);
             for (int k = 0; k < max; k++)
@@ -118,25 +119,39 @@ namespace ArchaeaMod.Items
                     Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_None(), start, Vector2.Zero, ModContent.ProjectileType<Pixel>(), damage, 0f, Main.myPlayer, Pixel.Electric, Pixel.Active);
                     proj.timeLeft = 3;
                     proj.localAI[0] = localAI0;
+                    proj.localAI[1] = localAI1;
                 }
             }
         }
-        public static void Bolt(ref Vector2 start, Vector2 end, float angle, int damage = 20, int arcs = 30, int timeLeft = 3, float localAI0 = 0f, float localAI1 = 0f)
+        public static void Bolt(ref Vector2 start, Vector2 end, float angle, int arcs = 30, int timeLeft = 3, float ai0 = 0f, float ai1 = 0f)
         {
+            bool flag = false;
+            List<Vector2> list = new List<Vector2>();
             float max = end.Distance(start);
-            for (int k = 0; k < max; k++)
+            for (int k = 1; k < max; k++)
             {
                 for (int i = 0; i < arcs; i++)
                 {
                     if (start.Y > end.Y)
-                        return;
-                    float _angle = Main.rand.NextFloat(angle - Draw.radian * 90f, angle + Draw.radian * 90f);
+                    {
+                        flag = true;
+                        break;
+                    }
+                    float _angle = Main.rand.NextFloat(0f, (float)Math.PI);
                     start += NPCs.ArchaeaNPC.AngleToSpeed(_angle, k);
-                    Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_None(), start, Vector2.Zero, ModContent.ProjectileType<Pixel>(), damage, 0f, Main.myPlayer, Pixel.Electric, Pixel.Active);
-                    proj.timeLeft = timeLeft;
-                    proj.localAI[0] = localAI0;
-                    proj.localAI[1] = localAI1;
+                    list.Add(ArchaeaNPC.AngleBased(start, angle, k));
                 }
+                if (flag)
+                {
+                    break;
+                }
+            }
+            foreach (Vector2 v2 in list)
+            { 
+                Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_None(), v2, Vector2.Zero, ModContent.ProjectileType<Pixel>(), 20, 0f, Main.myPlayer, Pixel.Electric, Pixel.Active);
+                proj.timeLeft = timeLeft;
+                proj.localAI[0] = ai0;
+                proj.localAI[1] = ai1;
             }
         }
 

@@ -607,3 +607,44 @@ version 1.3.19.68 -> 1.3.20.70
 # Changed
 -> Progress menu now loads on world enter instead of timer
 -> Magno minion AI revised
+
+version 1.3.20.70 -> 1.4
+==============================
+# Added
+-> Biome and effects
+-> Mechanic interactions
+-> Town NPC followers
+-> Inclusion of a set of items
+-> Add keybind for double jump and wall jump
+-> Add text hint for setting key binds
+# Added?
+-> Follower NPC menu alpha based on distance to player
+# Fixed
+-> Duplicating worldgen steps
+-> Magno chair can't be sat on
+-> Health potions get autoconsumed
+-> Magno ash makes tink sound when hit
+-> Life healing scales with mode
+-> Resetting life values set life to max on player reload
+# Fixed
+-> Worldgen sometimes messes with spawn
+-> Make heart pickups scale with mode
+# Changed
+-> More tile merging
+-> Disable debug features
+-> Change summoner traits to only use when using non-building items
+-> Make digging to bottom of world satisfy "Dug too deep"
+-> Make mode linked to world once enabled
+-> UI text color innactive set to gray, active set to light blue
+# Removed:
+-> Many blank placeholder graphics
+
+version 1.4 -> 1.4.0.1
+==============================
+# Fixed
+-> NPC town follower icon
+
+version 1.4.0.1 -> 1.4.0.2
+==============================
+# Fixed
+-> Biome effect error

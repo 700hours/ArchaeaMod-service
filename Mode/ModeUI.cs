@@ -38,8 +38,10 @@ namespace ArchaeaMod.Mode
         private ListBox[] page;
         private Button[] tab;
         private Button close;
+        public static Color innactiveColor = Color.Gray;
+        public static Color activeColor = Color.LightBlue;
         private int classChoice = 0;
-        public int ticks = 0;
+        public int ticks = 300;
 
         public override void OnModLoad()
         {
@@ -99,7 +101,7 @@ namespace ArchaeaMod.Mode
                 trait[i].bgColor = Color.Transparent;
                 trait[i].scroll = new Scroll(objective.hitbox);
                 trait[i].active = false;
-                trait[i].textColor = new Color[] { Color.Red, Color.Red, Color.Red, Color.Red, Color.Red, Color.Red };
+                trait[i].textColor = new Color[] { innactiveColor, innactiveColor, innactiveColor, innactiveColor, innactiveColor, innactiveColor };
             }
             tab = new Button[]
             {
@@ -216,7 +218,7 @@ namespace ArchaeaMod.Mode
                     page[3].Draw(sb, FontAssets.MouseText.Value, 8, 8, 32);
                     break;
                 }
-                if (page[0].active)
+                else if (page[0].active)
                 {
                     page[0].Draw(sb, FontAssets.MouseText.Value, 8, 8, 32);
                     page[0].scroll.Draw(sb, Color.White);
@@ -289,16 +291,7 @@ namespace ArchaeaMod.Mode
             {
                 Utils.DrawBorderString(sb, $"{ClassName()} class traits", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
             }
-            if (ticks > 0)
-            {
-                ticks--;
-                int cOffset = Main.player[Main.myPlayer].height * 2;
-                int xOffset = 8;
-                int yOffset = 8;
-                var rect = UiHelper.CenterBox(Main.screenWidth, Main.screenHeight + cOffset, 140, 36);
-                Utils.DrawInvBG(sb, rect, Color.Transparent);
-                Utils.DrawBorderString(sb, "Trait acquired!", new Vector2(rect.X + xOffset, rect.Y + yOffset), Color.CornflowerBlue);
-            }
+            DrawTextUI(sb, 0, "Trait acquired!", ref ticks);
         }
         public override void UpdateUI(GameTime gameTime)
         {
@@ -430,7 +423,7 @@ namespace ArchaeaMod.Mode
                         {
                             trait[TraitIndex()].textColor[n] = 
                                     ArchaeaPlayer.CheckHasTrait(n + TraitIndex() * 6, TraitIndex() + 1, Main.LocalPlayer.whoAmI)
-                                    ? Color.Green : Color.Red;
+                                    ? activeColor : innactiveColor;
                         }
                         break;
                 }
@@ -458,6 +451,21 @@ namespace ArchaeaMod.Mode
             InBoundsUI(stat);
             InBoundsUI(trait[TraitIndex()]);
             InBoundsUI(page[3]);
+        }
+        public static void DrawTextUI(SpriteBatch sb, int y, string text, ref int ticks, int maxTicks = 300)
+        {
+            if (ticks < maxTicks)
+            { 
+                ticks++;
+                string placeholder = "Trait acquired!";
+                float width = 140 * text.Length / placeholder.Length;
+                int cOffset = Main.player[Main.myPlayer].height * 2 + y;
+                int xOffset = 8;
+                int yOffset = 8;
+                var rect = UiHelper.CenterBox(Main.screenWidth, Main.screenHeight + cOffset, (int)width, 36);
+                Utils.DrawInvBG(sb, rect, Color.Transparent);
+                Utils.DrawBorderString(sb, text, new Vector2(rect.X + xOffset, rect.Y + yOffset), Color.CornflowerBlue);
+            }
         }
         private void InBoundsUI(ListBox listBox)
         {

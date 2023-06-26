@@ -422,8 +422,9 @@ namespace ArchaeaMod.GenLegacy
     {
         private int bottom = 500;
         private int top = 100;
-        private int width = 500;
-        public int progress;
+        public int width = 500;
+        public int start;
+        public float progress;
         public int[][,] rooms = new int[20][,];
         private Vector2[] centers = new Vector2[20];
         private Mod mod = ModLoader.GetMod("ArchaeaMod");
@@ -432,7 +433,7 @@ namespace ArchaeaMod.GenLegacy
             int roomX = WorldGen.genRand.Next(300);
             int roomY = 0;
             float maxTiles = WorldGen.genRand.Next(200, (int)(Main.maxTilesX / 1.5));
-            int start = (int)maxTiles;//(int)(maxTiles / WorldGen.genRand.NextFloat(1.5f, 4f));
+            start = (int)maxTiles;//(int)(maxTiles / WorldGen.genRand.NextFloat(1.5f, 4f));
             for (int i = 0; i < rooms.Length; i++)
             {
                 progress = i;

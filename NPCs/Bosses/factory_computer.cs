@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using ArchaeaMod.Items;
@@ -32,12 +33,13 @@ namespace ArchaeaMod.NPCs.Bosses
             NPC.boss = true;
             NPC.damage = 30;
             NPC.defense = 12;
-            NPC.knockBackResist = 1f;
+            NPC.knockBackResist = 1;
             NPC.lavaImmune = true;
             NPC.lifeMax = 10000;
             NPC.npcSlots = 10f;
-            NPC.noGravity = true;
-            NPC.value = 50000;
+            NPC.noGravity = false;
+            NPC.noTileCollide = false;
+            NPC.value = 50000;     
         }
         AIStyle ai
         {
@@ -56,10 +58,13 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         float divisor => NPC.life < NPC.lifeMax / 2 ? 1.5f : 1f;
         const float Speed = 3f;
-        const float Radius = 300f;
+        const float Radius = 800f;
+        Player target => Main.player[NPC.target];
         
         public override void AI()
         {
+            ai = AIStyle.ElectricArc;
+            NPC.velocity.X = 0f;
             if (ai > 0)
             {
                 ticks++;
@@ -79,7 +84,9 @@ namespace ArchaeaMod.NPCs.Bosses
                     if (ticks % 20 == 0)
                     {
                         rotation += 22.5f / 2;
-                        Projectile.NewProjectile(Projectile.GetSource_None(), NPC.Center, ArchaeaNPC.AngleBased(rotation, Speed), ProjectileID.RocketI, 50, 3f, NPC.whoAmI);
+                        rotation = MathHelper.WrapAngle(rotation);
+                        int proj = Projectile.NewProjectile(Projectile.GetSource_None(), NPC.Center, ArchaeaNPC.AngleBased(rotation, Speed), ProjectileID.RocketI, 50, 3f, Main.myPlayer);
+                        Main.projectile[proj].timeLeft = 180;
                     }
                     if (ticks > 180)
                     {
@@ -89,34 +96,29 @@ namespace ArchaeaMod.NPCs.Bosses
                     } 
                     break;
                 case AIStyle.ElectricArc:
-                    for (float i = 0; i < 1f; i += 0.1f)
+                    for (int i = 0; i < 360; i += 45)
                     { 
-                        rotation = (float)Math.PI * 2f * i;
                         Vector2 start = NPC.Center;
-                        Vector2 end = start + ArchaeaNPC.AngleBased(rotation, Radius);
-                        ArchaeaItem.Bolt(ref start, end, rotation, 50, 5, 5, -100F);
+                        Vector2 end = start + new Vector2(0, Radius);
+                        ArchaeaItem.Bolt(ref start, end, i + (rotation += Draw.radian * 5f), 20, 8, -100F, 0.5f);
                     }
                     if (ticks > 300)
                     {
                         ai = AIStyle.BurningSteam;
+                        rotation = 0f;
                         ticks = 0;
+                        NPC.ai[3] = 0f;
                         NPC.netUpdate = true;
+                        rotation = NPC.Center.AngleTo(target.position);
                     }
                     break;
                 case AIStyle.BurningSteam:
-                    if (ArchaeaItem.Elapsed(time(60)))
+                    if (ArchaeaItem.Elapsed(time(40)))
                     {
-                        Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.SteampunkSteam);
+                        Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Smoke, 0, 0, 0, default, 3);
                     }
-                    if (ArchaeaItem.Elapsed(ref NPC.ai[3], time(180)))
-                    {
-                        NPC.ai[3] = 0f;
-                        if (ticks % time(60) == 0)
-                        {
-                            rotation -= 22.5f;
-                            Projectile.NewProjectile(Projectile.GetSource_None(), NPC.Center, ArchaeaNPC.AngleBased(rotation, Speed), ModContent.ProjectileType<BurningSteam>(), 30, 0.5f, Main.myPlayer);
-                        }
-                    }
+                    rotation -= Draw.radian * 9f;
+                    Projectile.NewProjectile(Projectile.GetSource_None(), NPC.Center, ArchaeaNPC.AngleBased(rotation, Speed * 2f), ModContent.ProjectileType<BurningSteam>(), 30, 0.5f, Main.myPlayer);
                     if (ticks > 480)
                     {
                         ai = AIStyle.LavaGlobs;
@@ -133,8 +135,8 @@ namespace ArchaeaMod.NPCs.Bosses
                     {
                         if (ArchaeaItem.Elapsed(20))
                         { 
-                            int i = (int)NPC.position.X + NPC.width / 2 / 16;
-                            int j = (int)NPC.position.Y + NPC.height - 8 / 16;
+                            int i = (int)(NPC.position.X + NPC.width) / 2 / 16;
+                            int j = (int)(NPC.position.Y + NPC.height - 8) / 16;
                             Main.tile[i, j].LiquidAmount = 0;
                         }
                     }
@@ -164,24 +166,33 @@ namespace ArchaeaMod.NPCs.Bosses
             Projectile.aiStyle = -1;
             Projectile.width = 1;
             Projectile.height = 1;
+            Projectile.scale = 1 / 128f;
             Projectile.alpha = 255;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.damage = 35;
             Projectile.timeLeft = 20;
         }
+        bool init = false;
         public override void AI()
         {
+            if (!init)
+            {
+                Projectile.velocity.Y -= 5f;
+                init = true;
+            }
             if (Projectile.position.X <= Projectile.oldPosition.X || Projectile.position.X > Projectile.oldPosition.X || Projectile.position.Y <= Projectile.oldPosition.Y || Projectile.position.Y > Projectile.oldPosition.Y)
             {
                 Projectile.netUpdate = true;
             }
-            Dust.NewDust(Projectile.position, 1, 1, DustID.Water, 0, 0, Scale: 2f);
+            Projectile.velocity += new Vector2(0.917f);
+            int dust = Dust.NewDust(Projectile.position, 1, 1, DustID.Water, 0, 0, Scale: 1.5f);
+            Main.dust[dust].noGravity = true;
             if (Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height))
             {
                 for (int i = 0; i < 5; i++)
                 { 
-                    int proj = Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<dust_diffusion>(), 24, 0f, Main.myPlayer, DustID.Water);
+                    int proj = Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.position, ArchaeaNPC.AngleToSpeed(ArchaeaNPC.RandAngle(), 5f), ModContent.ProjectileType<dust_diffusion>(), 24, 0f, Main.myPlayer, DustID.Water);
                     Main.projectile[proj].localAI[0] = 10f;
                 }
                 Lighting.AddLight(Projectile.position, TorchID.Blue);
@@ -205,18 +216,26 @@ namespace ArchaeaMod.NPCs.Bosses
             Projectile.tileCollide = false;
             Projectile.ignoreWater = false;
             Projectile.damage = 35;
+            Projectile.scale = 1 / 128f;
             Projectile.timeLeft = 20;
         }
+        bool init = false;
         public override void AI()
         {
+            if (!init)
+            {
+                Projectile.velocity.Y -= 5f;
+                init = true;
+            }
             if (Projectile.position.X <= Projectile.oldPosition.X || Projectile.position.X > Projectile.oldPosition.X || Projectile.position.Y <= Projectile.oldPosition.Y || Projectile.position.Y > Projectile.oldPosition.Y)
             {
                 Projectile.netUpdate = true;
             }
+            Projectile.velocity += new Vector2(0.917f);
             Dust.NewDust(Projectile.position, 1, 1, DustID.SilverFlame, 0, 0, Scale: 2f);
             if (Projectile.wet || Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height))
             {
-                WorldGen.PlaceLiquid((int)Projectile.position.X / 16, (int)Projectile.position.Y / 16, LiquidID.Water, 50);
+                WorldGen.PlaceLiquid((int)Projectile.position.X / 16, (int)Projectile.position.Y / 16 - 1, LiquidID.Water, 255);
                 Projectile.active = false;
             }
             Lighting.AddLight(Projectile.position, TorchID.White);

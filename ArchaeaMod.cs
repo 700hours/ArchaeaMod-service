@@ -24,6 +24,8 @@ namespace ArchaeaMod
         public static ModKeybind progressKey;
         public static ModKeybind leapBind;
         public static ModKeybind leapAttackBind;
+        public static ModKeybind doubleJump;
+        public static ModKeybind wallJump;
         public override void Load()
         {
             AddBossHeadTexture(magnoHead, ModNPCID.MagnoliacHead);
@@ -35,8 +37,10 @@ namespace ArchaeaMod
                 MusicLoader.AddMusicBox(this, MusicLoader.GetMusicSlot(this, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma"), ModContent.ItemType<Items.Tiles.mbox_magno_2>(), ModContent.TileType<Tiles.music_boxes_alt>(), 36);
             }
             progressKey    = KeybindLoader.RegisterKeybind(this, "Progress diaglog visible", Keys.Q);
-            leapBind       = KeybindLoader.RegisterKeybind(this, "Melee class leap", Keys.Space);
-            leapAttackBind = KeybindLoader.RegisterKeybind(this, "Melee class leap attack", Keys.None);
+            leapBind       = KeybindLoader.RegisterKeybind(this, "Leap", Keys.None);
+            leapAttackBind = KeybindLoader.RegisterKeybind(this, "Leap attack", Keys.None);
+            doubleJump     = KeybindLoader.RegisterKeybind(this, "Double jump", Keys.Space);
+            wallJump       = KeybindLoader.RegisterKeybind(this, "Wall Jump", Keys.Space);
             //for (int i = 0; i < macro.Length; i++)
             //{
             //    macro[i] = RegisterHotKey($"Macro {i + 1}", "");
@@ -103,14 +107,7 @@ namespace ArchaeaMod
         }
         public int UpdateMusic()
         {
-            if ((int)Main.time == (int)Main.dayLength / 2)
-                triggerSwap = true;
-            if (triggerSwap)
-            {
-                swapTracks = !swapTracks;
-                triggerSwap = false;
-            }
-            return swapTracks ? MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma") : MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Magno_Biome");
+            return Main.dayTime == false ? MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Dark_and_Evil_with_a_hint_of_Magma") : MusicLoader.GetMusicSlot(this.Mod, "Sounds/Music/Magno_Biome");
         }
     }
     public class FactoryBiome : ModBiome

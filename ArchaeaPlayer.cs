@@ -30,7 +30,7 @@ using System.Security.Policy;
 using ArchaeaMod.NPCs;
 using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using ArchaeaMod.Factory;
+using ArchaeaMod.Structure;
 using ArchaeaMod.Items;
 
 namespace ArchaeaMod
@@ -98,6 +98,8 @@ namespace ArchaeaMod
         public bool classChecked;
         Effects.Polygon polygon = new Effects.Polygon();
         public bool loadComplete;
+        public bool onEnterWorldStart = false;
+        public int enterWorldTicks = 0;
 
         //  Stat variables
         //  Increase
@@ -142,6 +144,8 @@ namespace ArchaeaMod
         public override void clientClone(ModPlayer clientClone)
         {
             ArchaeaPlayer modPlayer = (ArchaeaPlayer)clientClone;
+            //  World
+            modPlayer.enterWorldTicks = enterWorldTicks;
             //  Trait variables
             modPlayer.trait = trait;
             modPlayer.placedPylon = placedPylon;
@@ -175,6 +179,8 @@ namespace ArchaeaMod
         public override void SendClientChanges(ModPlayer clientPlayer)
         {
             ArchaeaPlayer modPlayer = (ArchaeaPlayer)clientPlayer;
+            //  World
+            enterWorldTicks = modPlayer.enterWorldTicks;
             //  Traits variables
             trait = modPlayer.trait;
             placedPylon = modPlayer.placedPylon;
@@ -202,6 +208,7 @@ namespace ArchaeaMod
             merchantDiscount = modPlayer.merchantDiscount;
             percentDamageTaken = modPlayer.percentDamageTaken;
             ammoReduction = modPlayer.ammoReduction;
+            //  End
         }
 
         private void InitStatRemaining()
@@ -215,6 +222,7 @@ namespace ArchaeaMod
         }
         public override void LoadData(TagCompound tag)
         {
+            //  Class selction
             playerUID = tag.GetInt("PlayerID");
             if (playerUID == 0)
                 playerUID = GetHashCode();
@@ -254,9 +262,13 @@ namespace ArchaeaMod
             {
                 trait[i] = tag.GetBool($"trait{i}");
             }
+            //  World
+            enterWorldTicks = tag.GetInt("enterWorldStart");
+
         }
         public override void SaveData(TagCompound tag)
         {
+            //  Class selction
             tag.Add("PlayerID", playerUID);
             tag.Add("Chosen", classChosen);
             //  Progression stat poins
@@ -294,6 +306,8 @@ namespace ArchaeaMod
             {
                 tag.Add($"trait{i}", trait[i]);
             }
+            //  World
+            tag.Add("enterWorldStart", enterWorldTicks);
         }
 
         public bool HasClassTrait(int index, int classID)
@@ -364,6 +378,10 @@ namespace ArchaeaMod
         public int AmmoReduction;
         */
 
+        public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
+        {
+            healValue = ArchaeaMode.HealPotion(item.healLife);
+        }
         public override bool CanUseItem(Item item)
         {
             //if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
@@ -468,11 +486,13 @@ namespace ArchaeaMod
         }
         public void PreSavePlayer(Player Player)
         {
+            return;
             Player.statLifeMax2 = ModeOffResetStats(Player.statLifeMax2);
             Player.statLifeMax = Player.statLifeMax2;
         }
         public void PostSavePlayer(Player Player)
         {
+            return;
             Player.statLifeMax2 = LifeMaxMode(Player.statLifeMax2);
             Player.statLifeMax = Player.statLifeMax2;
             //Player.statLife = Player.statLifeMax;
@@ -481,6 +501,9 @@ namespace ArchaeaMod
         }
         public override void PreSavePlayer()
         {
+            //  Turn off life scaling
+            Player.statLifeMax2 = ModeOffResetStats(Player.statLifeMax2);
+            Player.statLifeMax = Player.statLifeMax2;
             return; //  This is not necessary and turning on or off Archaea Mode sets the values manually
             Player.statLifeMax2 = ModeOffResetStats(Player.statLifeMax2);
             Player.statLifeMax = Player.statLifeMax2;
@@ -505,19 +528,23 @@ namespace ArchaeaMod
         Timer debugTimer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
         public override void OnEnterWorld(Player player)
         {
-            Main.NewText(ModContent.NPCType<NPCs.Bosses.factory_computer>());
+            //Main.NewText(ModContent.NPCType<NPCs.Bosses.factory_computer>());
             //  DEBUG
             //debugTimer.Enabled = true;
             //debugTimer.AutoReset = true;
             //debugTimer.Elapsed += DebugTimer_Elapsed;
             //debugTimer.Start();
-
             SetModeStats(ModContent.GetInstance<ModeToggle>().archaeaMode);
             InitStat(player);
             if (Effects.Barrier.barrier == null)
             {
                 Effects.Barrier.Initialize();
             }
+        }
+
+        public static void NewText(string text)
+        {
+            Main.NewText(text, Color.LightBlue);
         }
 
         public override void ModifyWeaponDamage(Item item, ref StatModifier damage)
@@ -609,6 +636,22 @@ namespace ArchaeaMod
         }
         public override void PostUpdateMiscEffects()
         {
+            if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+            {
+                if (Player.statLifeMax2 > 100 && Player.statLifeMax2 <= 500)
+                { 
+                    Player.statLifeMax2 = LifeMaxMode(Player.statLifeMax2);
+                    Player.statLifeMax = Player.statLifeMax2;
+                }
+            }
+            else
+            {
+                if (Player.statLifeMax >= 600)
+                {
+                    Player.statLifeMax2 = ModeOffResetStats(Player.statLifeMax2);
+                    Player.statLifeMax = Player.statLifeMax2;
+                }
+            }
             if (Player.wet && Player.breath < Player.breathMax && breathTimer-- < breathTime)
             {
                 Player.breath += 10;
@@ -950,6 +993,8 @@ namespace ArchaeaMod
                     NetHandler.Send(Packet.TeleportPlayer, -1, -1, Player.whoAmI, Main.MouseWorld.X, Main.MouseWorld.Y);
                 else Player.Teleport(Main.MouseWorld);
             }
+
+            return;
             //string chat = (string)Main.chatText.Clone();
             //bool enteredCommand = KeyPress(Keys.Tab);
             //if (chat.StartsWith("/info") && KeyHold(Keys.LeftControl))
@@ -1248,7 +1293,7 @@ namespace ArchaeaMod
         private int counter = 0;
         public override void PostUpdate()
         {
-            foreach (Room r in ArchaeaMod.Factory.Factory.room)
+            foreach (Room r in ArchaeaMod.Structure.Factory.room)
             {
                 r.Update(Player);
             }
@@ -1264,7 +1309,7 @@ namespace ArchaeaMod
                 Tile tRight = Main.tile[iRight, j];
                 if (tLeft.HasTile && Main.tileSolid[tLeft.TileType])
                 {
-                    if (KeyPress(Keys.Space) && Player.controlRight && Player.velocity.Y != 0)
+                    if (ArchaeaMain.wallJump.JustPressed && Player.controlRight && Player.velocity.Y != 0)
                     {
                         Player.velocity.Y = -Player.jumpSpeed * 2f;
                         Player.fallStart = (int)Player.position.Y;
@@ -1273,7 +1318,7 @@ namespace ArchaeaMod
                 }
                 if (tRight.HasTile && Main.tileSolid[tRight.TileType])
                 {
-                    if (KeyPress(Keys.Space) && Player.controlLeft && Player.velocity.Y != 0)
+                    if (ArchaeaMain.wallJump.JustPressed && Player.controlLeft && Player.velocity.Y != 0)
                     {
                         Player.velocity.Y = -Player.jumpSpeed * 2f;
                         Player.fallStart = (int)Player.position.Y;
@@ -1286,7 +1331,7 @@ namespace ArchaeaMod
             {
                 if (Player.velocity.Y != 0f)
                 {
-                    if (KeyPress(Keys.Space) && counter == 0)
+                    if (ArchaeaMain.doubleJump.JustPressed && counter == 0)
                     {
                         counter++;
                         Player.DoubleJumpVisuals();
@@ -1644,6 +1689,11 @@ namespace ArchaeaMod
                         Effects.Barrier.barrier[i]?.Draw(sb, Player);
                 }
             }
+            if (drawInfo.drawPlayer.active)
+            { 
+                ModeUI.DrawTextUI(sb, Main.screenHeight - 200, "Set hotkeys in the Control settings.", ref enterWorldTicks, 1800);
+            }
+            return;
             if (debugMenu)
                 DebugMenu();
             if (spawnMenu)

@@ -26,10 +26,12 @@ using ArchaeaMod.Merged.Items;
 using ArchaeaMod.Merged.Tiles;
 using ArchaeaMod.Merged.Walls;
 using System.IO;
+using ArchaeaMod.Structure;
 using ArchaeaMod.Tiles;
 using ArchaeaMod.Walls;
 using Terraria.GameContent.Shaders;
 using System.Globalization;
+using ArchaeaMod.Mode;
 
 namespace ArchaeaMod
 {
@@ -173,10 +175,26 @@ namespace ArchaeaMod
         public static List<Vector2> origins = new List<Vector2>();
         private Treasures t;
         public static Vector2[] genPosition;
-        public bool[] flags = new bool[9];
+        public bool _archaeaMode = false;
         
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
+            float multiplier = 1f;
+            switch (Main.maxTilesY)
+            {
+                case 1200:
+                    multiplier = 1f;
+                    break;
+                case 1800:
+                    multiplier = 1.5f;
+                    break;
+                case 2400:
+                    multiplier = 2f;
+                    break;
+            }
+            int height = (int)(150 * multiplier);
+            int buffer = 20;
+            int worldCenter = Main.maxTilesX / 2;
             int CavesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Granite")); // Granite
             int originX = 0, originY = 0, mWidth = 800, mHeight = 450;
             if (CavesIndex != -1)
@@ -215,6 +233,14 @@ namespace ArchaeaMod
                 {
                     progress.Message = "Halls";
                     SkyHall hall = new SkyHall();
+                    while (hall.start + hall.width > worldCenter)
+                    {
+                        hall.start -= 10;
+                    }
+                    while (hall.start - 5 < worldCenter)
+                    {
+                        hall.start += 10;
+                    }
                     hall.SkyFortGen(skyBrick, skyBrickWall);
                 }));
             }
@@ -230,7 +256,7 @@ namespace ArchaeaMod
                     do
                     {
                         position = new Vector2(WorldGen.genRand.Next(200, Main.maxTilesX - 600), Structures.YCoord);
-                    } while (position.X < Main.spawnTileX + 300 && position.X > Main.spawnTileX - 450);
+                    } while (position.X < worldCenter + 600 && position.X > worldCenter - 600);
                     var s = new Structures(position, skyBrick, skyBrickWall);
                     s.InitializeFort();
                 }));
@@ -392,24 +418,9 @@ namespace ArchaeaMod
                 tasks.Insert(index6 + 1, new PassLegacy("More Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     progress.Message = "Even More Magno";
-                    float multiplier = 1f;
-                    switch (Main.maxTilesY)
-                    {
-                        case 1200:
-                            multiplier = 1f;
-                            break;
-                        case 1800:
-                            multiplier = 1.5f;
-                            break;
-                        case 2400:
-                            multiplier = 2f;
-                            break;
-                    }
-                    int height = (int)(150 * multiplier);
-                    new Factory.Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, height, size: 6, maxNodes: (int)(100 * multiplier), nodeDistance: 30);
+                    new Structure.Factory().CastleGen(out ushort[,] tile, out ushort[,] wall, Main.maxTilesX, height, size: 6, maxNodes: (int)(100 * multiplier), nodeDistance: 30);
                     int x = 0;
-                    int y = Factory.Factory.Top;
-                    int buffer = 20;
+                    int y = Structure.Factory.Top;
                     for (int i = 0; i < tile.GetLength(0); i++)
                     {
                         for (int j = 0; j < tile.GetLength(1); j++)
@@ -434,21 +445,21 @@ namespace ArchaeaMod
                             int n = Math.Max(buffer, Math.Min(Main.maxTilesY - buffer, y + j));
 
                             Tile _tile = Main.tile[m, n];
-                            if (tile[i, j] == Factory.Factory.Tile)
+                            if (tile[i, j] == Structure.Factory.Tile)
                             {
-                                WorldGen.PlaceTile(m, n, Factory.Factory.Tile, true, true);
+                                WorldGen.PlaceTile(m, n, Structure.Factory.Tile, true, true);
                             }
-                            else if (tile[i, j] == Factory.Factory.Tile2)
+                            else if (tile[i, j] == Structure.Factory.Tile2)
                             {
-                                WorldGen.PlaceTile(m, n, Factory.Factory.Tile2, true, true);
+                                WorldGen.PlaceTile(m, n, Structure.Factory.Tile2, true, true);
                             }
-                            else if (tile[i, j] == Factory.Factory.ConveyerL)
+                            else if (tile[i, j] == Structure.Factory.ConveyerL)
                             {
-                                WorldGen.PlaceTile(m, n, Factory.Factory.ConveyerL, true, true);
+                                WorldGen.PlaceTile(m, n, Structure.Factory.ConveyerL, true, true);
                             }
-                            else if (tile[i, j] == Factory.Factory.ConveyerR)
+                            else if (tile[i, j] == Structure.Factory.ConveyerR)
                             {
-                                WorldGen.PlaceTile(m, n, Factory.Factory.ConveyerR, true, true);
+                                WorldGen.PlaceTile(m, n, Structure.Factory.ConveyerR, true, true);
                             }
                         }
                     }
@@ -460,18 +471,19 @@ namespace ArchaeaMod
                             int n = Math.Max(buffer, Math.Min(Main.maxTilesY - buffer, y + j));
 
                             Tile _tile = Main.tile[m, n];
-                            if (wall[i, j] == Factory.Factory.Wall)
+                            if (wall[i, j] == Structure.Factory.Wall)
                             {
-                                _tile.WallType = Factory.Factory.Wall;
+                                _tile.WallType = Structure.Factory.Wall;
                             }
                         }
                     }
+                    
                 }));
             }
 
             float PositionX;
             const int TileSize = 16;
-            int buffer = 16, wellBuffer = 96, surfaceBuffer = 0;
+            int wellBuffer = 96, surfaceBuffer = 0;
             int WellIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Smooth World")) + 1;
             if (WellIndex != -1)
             {
@@ -506,10 +518,10 @@ namespace ArchaeaMod
                         }
                     }
 
-                    buffer = 3;
+                    int buffer2 = 3;
                     float distance = Vector2.Distance(new Vector2(PositionX, 10 + surfaceBuffer) - new Vector2(PositionX, originY - (int)Main.worldSurface - 25/*miner.genPos[1].Y / 16*/), Vector2.Zero);
                     // comment out '/ 3' for max well length
-                    PlaceWell((int)PositionX, Math.Abs(surfaceBuffer) - buffer, distance);
+                    PlaceWell((int)PositionX, Math.Abs(surfaceBuffer) - buffer2, distance);
                 }));
             }
             int RoomIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Remove Broken Traps"));
@@ -517,10 +529,11 @@ namespace ArchaeaMod
             {
                 tasks.Insert(RoomIndex, new PassLegacy("Room Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
-                    foreach (var r in Factory.Factory.room)
+                    foreach (var r in Structure.Factory.room)
                     {
                         r.Build();
                     }
+                    Factory.Decorate(buffer, Factory.Top, Main.maxTilesX - buffer, height);
                 }));
             }
         }
@@ -657,7 +670,7 @@ namespace ArchaeaMod
                         }
                     }
                 }
-                if (chest.y > Factory.Factory.Top && chest.y < Main.UnderworldLayer && Main.tile[chest.x, chest.y].TileFrameX == 0)
+                if (chest.y > Structure.Factory.Top && chest.y < Main.UnderworldLayer && Main.tile[chest.x, chest.y].TileFrameX == 0)
                 {
                     for (int j = 0; j < 5; j++)
                     {
@@ -861,6 +874,7 @@ namespace ArchaeaMod
             tag.Add("OriginX", MagnoBiomeOriginX);
             tag.Add("hint", Effects.Barrier.hintInit);
             tag.Add("mechTalk", ModContent.GetInstance<NPCs.Town.MechanicMinion>().justTalked);
+            tag.Add("archaeaMode", _archaeaMode);
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 tag.Add($"stat{i}", objectiveStat[i]);
@@ -877,6 +891,7 @@ namespace ArchaeaMod
             MagnoBiomeOriginX = tag.GetInt("OriginX");
             Effects.Barrier.hintInit = tag.GetBool("hint");
             ModContent.GetInstance<NPCs.Town.MechanicMinion>().justTalked = tag.GetBool("mechTalk");
+            _archaeaMode = tag.GetBool("archaeaMode");
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 objectiveStat[i] = tag.GetBool($"stat{i}");
@@ -890,6 +905,7 @@ namespace ArchaeaMod
             writer.Write(spawnedCrystals);
             writer.Write(MagnoBiomeOriginX);
             writer.Write(ModContent.GetInstance<NPCs.Town.MechanicMinion>().justTalked);
+            writer.Write(_archaeaMode);
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 writer.Write(objectiveStat[i]);
@@ -903,6 +919,7 @@ namespace ArchaeaMod
             spawnedCrystals = reader.ReadBoolean();
             MagnoBiomeOriginX = reader.ReadInt32();
             ModContent.GetInstance<NPCs.Town.MechanicMinion>().justTalked = reader.ReadBoolean();
+            _archaeaMode = reader.ReadBoolean();
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 objectiveStat[i] = reader.ReadBoolean();
@@ -928,6 +945,14 @@ namespace ArchaeaMod
                 {
                     first = true;
                 }
+            }
+            if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+            {
+                _archaeaMode = true;
+            }
+            if (_archaeaMode && !ModContent.GetInstance<ModeToggle>().archaeaMode)
+            {
+                ModContent.GetInstance<ModeToggle>().archaeaMode = true;
             }
             if (ArchaeaPlayer.KeyPress(Keys.E))
                 begin = false;

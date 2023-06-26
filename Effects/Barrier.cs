@@ -144,21 +144,8 @@ namespace ArchaeaMod.Effects
             int layer = Main.UnderworldLayer * 16;
             if (player.position.Y > layer - Main.screenHeight * 3)
             {
-                Texture2D tex = mod.Assets.Request<Texture2D>("Gores/arrow").Value;
-                Texture2D result = null;
-                using (MemoryStream res = new MemoryStream())
-                { 
-                    using (MemoryStream mem = new MemoryStream())
-                    { 
-                        tex.SaveAsPng(mem, tex.Width, tex.Height);
-                        using (Bitmap bmp = (Bitmap)Bitmap.FromStream(mem))
-                        {
-                            bmp.MakeTransparent(System.Drawing.Color.Black);
-                            bmp.Save(res, System.Drawing.Imaging.ImageFormat.Png);
-                        }
-                    }
-                    result = Fx.FromStream(res);
-                }
+                //  Arrow effect Moved to Fx class
+                Texture2D result = Fx.BasicArrow();
                 Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
                 if (Main.drawToScreen)
                 {

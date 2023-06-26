@@ -304,28 +304,29 @@ namespace ArchaeaMod.Progression.Global
         {
             BeginUseItem(item, player);
             //  Assigning trait effects
-            if (Main.rand.NextFloat() < 0.01f)
+            bool notTile = item.damage > 0 && !item.noMelee;
+            if (notTile && Main.rand.NextFloat() < 0.01f)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_ThrowBoulder, ClassID.Summoner, player.whoAmI))
                 {
                     Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.Boulder, Main.hardMode ? 20 : 10, 5f, player.whoAmI);
                 }
             }
-            if (Main.rand.NextFloat() < 0.01f)
+            if (notTile && Main.rand.NextFloat() < 0.01f)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_ThrowBones, ClassID.Summoner, player.whoAmI))
                 {
                     Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.BoneGloveProj, Main.hardMode ? 25 : 12, 3f, player.whoAmI);
                 }
             }
-            if (Main.rand.NextFloat() < 0.01f)
+            if (notTile && Main.rand.NextFloat() < 0.01f)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_ThrowStar, ClassID.Summoner, player.whoAmI))
                 {
                     Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.StarCannonStar, Main.hardMode ? 30 : 15, 2f, player.whoAmI);
                 }
             }
-            if (Main.rand.NextFloat() < 0.5f)
+            if (notTile && Main.rand.NextFloat() < 0.5f)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.ALL_FallingStarAtk, ClassID.All, player.whoAmI))
                 {
