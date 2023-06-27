@@ -40,6 +40,7 @@ namespace ArchaeaMod.Mode
         private Button close;
         public static Color innactiveColor = Color.Gray;
         public static Color activeColor = Color.LightBlue;
+        public static Color bgColor = default;
         private int classChoice = 0;
         public int ticks = 300;
 
@@ -60,7 +61,7 @@ namespace ArchaeaMod.Mode
                 "Magnoliac's bane"
             }, null, ArchaeaMode.unlock);
             objective.scroll = new Scroll(objective.hitbox);
-            objective.bgColor = Color.Transparent;
+            objective.bgColor = bgColor * 0.5f;
             
             stat = new ListBox(objective.hitbox, default, new Button[]
             {
@@ -78,7 +79,7 @@ namespace ArchaeaMod.Mode
             for (int i = 0; i < stat.item.Length; i++) {
                 stat.item[i].texture = TextureAssets.MagicPixel.Value;
             }
-            stat.bgColor = Color.Transparent;
+            stat.bgColor = bgColor * 0.5f;
             stat.scroll = new Scroll(objective.hitbox);
             stat.active = false;
 
@@ -89,7 +90,7 @@ namespace ArchaeaMod.Mode
                 "that scale difficulty."
             }, null, new [] { Color.Gray });
             mode.scroll = new Scroll(mode.hitbox);
-            mode.bgColor = Color.Transparent;
+            mode.bgColor = bgColor * 0.5f;
 
             trait[ClassID.Melee - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Melee - 1, 0), null, new Color[5]);
             trait[ClassID.Ranged - 1] = new ListBox(objective.hitbox, default,  ClassArray(ClassID.Ranged - 1, 0), null, new Color[5]);
@@ -204,6 +205,10 @@ namespace ArchaeaMod.Mode
         {
             return (int)Math.Max(Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice - 1, 0);
         }
+        private Rectangle AdjustY(Rectangle box, int offY)
+        {
+            return new Rectangle(box.X, box.Y + offY, box.Width, box.Height);
+        }
         public override void PostDrawInterface(SpriteBatch sb)
         {
             if (ModContent.GetInstance<ModeToggle>().loading)
@@ -234,9 +239,11 @@ namespace ArchaeaMod.Mode
                     trait[TraitIndex()].scroll.Draw(sb, Color.White);
                 }
             }
-            
+            int offY = 8;
+            page[2] = trait[TraitIndex()];
             if (tab[0].active)
             {
+                Utils.DrawInvBG(sb, new Rectangle(tab[0].box.X - 8, tab[0].box.Y, tab[0].box.Width + 16, tab[0].box.Height * 3 + 36));
                 tab[0].HoverPlaySound(SoundID.MenuTick);
                 if (TextureAssets.Item[ItemID.Book].Value.Name.Contains("Dummy")) { 
                     int t =Item.NewItem(Item.GetSource_None(), Rectangle.Empty, ItemID.Book);
@@ -245,7 +252,7 @@ namespace ArchaeaMod.Mode
                         NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
                     }
                 }
-                sb.Draw(TextureAssets.Item[ItemID.Book].Value, tab[0].box, Color.White);
+                sb.Draw(TextureAssets.Item[ItemID.Book].Value, AdjustY(tab[0].box, offY), page[0].active ? Color.White : Color.White * 0.5f);
             }
             if (tab[1].active)
             {
@@ -257,7 +264,7 @@ namespace ArchaeaMod.Mode
                         NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
                     }
                 }
-                sb.Draw(TextureAssets.Item[ItemID.IronBroadsword].Value, tab[1].box, Color.White);
+                sb.Draw(TextureAssets.Item[ItemID.IronBroadsword].Value, AdjustY(tab[1].box, offY), page[1].active ? Color.White : Color.White * 0.5f);
             }
             if (tab[2].active)
             {
@@ -270,10 +277,9 @@ namespace ArchaeaMod.Mode
                         NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
                     }
                 }
-                sb.Draw(TextureAssets.Item[ItemID.AvengerEmblem].Value, tab[2].box, Color.White);
+                sb.Draw(TextureAssets.Item[ItemID.AvengerEmblem].Value, AdjustY(tab[2].box, offY), page[2].active ? Color.White : Color.White * 0.5f);
             }
-            page[2] = trait[TraitIndex()];
-
+                                         
             if (page[0].active)
             {
                 Utils.DrawBorderString(sb, "Progress checklist", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
@@ -371,10 +377,10 @@ namespace ArchaeaMod.Mode
                         for (int n = 0; n < page[i].item.Length; n++)
                         {
                             page[i].item[n].active = true;
-                            switch (classChoice)
+                            switch (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice)
                             {
                                 case ClassID.None:
-                                    classChoice = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice;
+                                    //classChoice = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice;
                                     break;
                                 case ClassID.Melee:
                                     if (n == 2 || n == 5)

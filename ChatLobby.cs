@@ -36,7 +36,7 @@ namespace ArchaeaMod
                 button = new Button("Connect", new Rectangle(Main.screenWidth - 400, Main.screenHeight - 100, 10 * 10, 24));
                 mute = new Button("Mute", new Rectangle(Main.screenWidth - 295, Main.screenHeight - 100, 5 * 10 + 5, 24));
                 host = new Button("Host", new Rectangle(Main.screenWidth - 295, Main.screenHeight - 130, 5 * 10 + 5, 24));
-                lobbyButton = new Button("Chat Lobby", new Rectangle(20, 256, 10 * 10, 24));
+                lobbyButton = new Button("Chat Lobby", new Rectangle(20, 340, 10 * 10, 24));
                 details = new TextBox[]
                 {
                     new TextBox(new Rectangle(Main.screenWidth - 400, Main.screenHeight - 70, 16 * 10, 24)),

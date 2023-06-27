@@ -143,9 +143,14 @@ namespace ArchaeaMod.NPCs.Town
         }
         public override string GetChat()
         {
-            return flag ?
-                $"Would you like to have the {Main.npc[owner].TypeName} follow you? She's really cool, isn't she?" :
-                $"Would you like to have the {Main.npc[owner].TypeName} stop following you? She weird, isn't she?";
+            if (!flag)
+            { 
+                return $"Would you like to have the {Main.npc[owner].TypeName} follow you?";
+            }
+            else
+            { 
+                return $"Would you like to have the {Main.npc[owner].TypeName} stop following you?";
+            }
         }
         public override void SetChatButtons(ref string button, ref string button2)
         {
@@ -168,7 +173,12 @@ namespace ArchaeaMod.NPCs.Town
                     leader.active = false;
                     return;
                 }
-                projID = Projectile.NewProjectile(Projectile.GetSource_TownSpawn(), (int)Owner.position.X, (int)Owner.position.Y, 0f, 0f, ModContent.ProjectileType<Follower>(), 20, 2f, Main.myPlayer, owner, Main.LocalPlayer.ownedProjectileCounts[ModContent.ProjectileType<Follower>()]);
+                if (Main.LocalPlayer.ownedProjectileCounts[ModContent.ProjectileType<Follower>()] > 1)
+                {
+                    flag = false;
+                    return;
+                }
+                projID = Projectile.NewProjectile(Projectile.GetSource_TownSpawn(), (int)Owner.position.X, (int)Owner.position.Y, 0f, 0f, ModContent.ProjectileType<Follower>(), 0, 0f, Main.LocalPlayer.whoAmI, owner, Main.LocalPlayer.ownedProjectileCounts[ModContent.ProjectileType<Follower>()]);
                 Main.projectile[projID].localAI[0] = type;
             }
         }
@@ -310,6 +320,14 @@ namespace ArchaeaMod.NPCs.Town
                     }
                 }
             }
+            //  Reposition to remove floating when waiting
+            if (!PlayerMoving(player))
+            {
+                while (!Collision.SolidTiles(Projectile.position, owner.width, owner.height + 1))
+                {
+                    Projectile.position.Y++;
+                }
+            }
             if (oldVelocity.Count > 0)
             {
                 if (beginMove)
@@ -356,6 +374,14 @@ namespace ArchaeaMod.NPCs.Town
                     {
                         Projectile.position += ArchaeaNPC.AngleToSpeed(Projectile.AngleTo(oldVelocity2[0]), player.moveSpeed);
                     }
+                }
+            }
+            //  Reposition to remove floating when waiting
+            if (!FollowerMoving(npc))
+            {
+                while (!Collision.SolidTiles(Projectile.position, owner.width, owner.height + 1))
+                { 
+                    Projectile.position.Y++;
                 }
             }
             if (oldVelocity2.Count > 0)

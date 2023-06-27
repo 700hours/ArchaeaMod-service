@@ -58,10 +58,11 @@ namespace ArchaeaMod.Structure
             {
                 for (int j = Y1; j < Y2; j++)
                 {
-                    //  Set wall type for room
+                    //  Get safe coordinates
                     i = Math.Max(buffer, Math.Min(Main.maxTilesX - buffer, i));
                     j = Math.Max(buffer, Math.Min(Main.maxTilesY - buffer, j));
-
+                    
+                    //  Set wall type for room
                     Main.tile[i, j].WallType = Factory.Wall;
 
                     switch (type)

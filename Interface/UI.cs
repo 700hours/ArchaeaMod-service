@@ -48,8 +48,6 @@ namespace ArchaeaMod.Interface.UI
         private static SpriteBatch sb { get { return Main.spriteBatch; } }
         public static void Initialize()
         {
-            mainOptions = new Element[categories.Length];
-            classOptions = new Element[classes.Length];
             apply = new Element(Rectangle.Empty);
             back = new Element(Rectangle.Empty);
             oldWidth = Main.screenWidth;
@@ -151,7 +149,7 @@ namespace ArchaeaMod.Interface.UI
                     sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, mainOptions[i].bounds, new Rectangle(44 * i, 0, 44, 44), mainOptions[i].color);
                     if (mainOptions[i].HoverOver())
                     {
-                        if (i == 0 && mainOptions[0].LeftClick())
+                        if (mainOptions[0].color != Color.Blue && i == 0 && mainOptions[0].LeftClick())
                         {
                             flag = true;
                             classSelect = true;
@@ -179,8 +177,13 @@ namespace ArchaeaMod.Interface.UI
                     }
                 }
                 //currently without designation
-                foreach (Element opt in mainOptions)
+                for (int i = 0; i < mainOptions.Length; i++)
                 {
+                    Element opt = mainOptions[i];
+                    if (i == 2 && mainOptions[i].color == Color.Blue)
+                    {
+                        continue;
+                    }
                     if (opt.LeftClick() && opt.ticks++ == 0)
                     {
                         opt.active = !opt.active;
@@ -198,7 +201,24 @@ namespace ArchaeaMod.Interface.UI
                     mainOptions[2].color = mainOptions[2].active ? Color.Blue : Color.White;
                 }
                 */
-                sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, apply.bounds, new Rectangle(44 * 4, 0, 44, 44), apply.color = selected != null ? Color.White : Color.Gray);
+                sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, apply.bounds, new Rectangle(44 * 4, 0, 44, 44), apply.color);
+                #region options already set
+                //  has selected any class
+                if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice != ClassID.None)
+                {
+                    mainOptions[0].color = Color.Blue;
+                }
+                //  has selected mode
+                if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+                {
+                    mainOptions[2].color = Color.Blue;
+                }
+                //  apply set to white
+                if (mainOptions[0].color == Color.Blue)
+                { 
+                    apply.color = Color.White;
+                }
+                #endregion
                 if (apply.HoverOver())
                     sb.DrawString(FontAssets.MouseText.Value, "Apply", new Vector2(apply.bounds.X, apply.bounds.Bottom), Color.White);
                 if (apply.LeftClick() && apply.color != Color.Gray && back.ticks == 0)

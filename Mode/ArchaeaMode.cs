@@ -19,6 +19,8 @@ using ArchaeaMod.Interface.UI;
 using Terraria.DataStructures;
 using System.Timers;
 using ArchaeaMod.Progression;
+using ArchaeaMod.NPCs.Town;
+using Terraria.Audio;
 
 namespace ArchaeaMod.Mode
 {
@@ -516,6 +518,7 @@ namespace ArchaeaMod.Mode
         */
         private bool init;
         private Button objectiveButton;
+        private Button followerButton;
         public override void PostUpdateEverything()
         {
             totalTime += Main.frameRate / 60f;
@@ -524,11 +527,23 @@ namespace ArchaeaMod.Mode
                 return;
             if (!init)
             {
-                objectiveButton = new Button("Mode Status", new Rectangle(20, 284, 10 * 11, 24));
+                objectiveButton = new Button("Mode Status",    new Rectangle(20, 284, 10 * 11, 24));
+                followerButton  = new Button("Stop followers", new Rectangle(20, 312, 10 * 12, 24));
                 init = true;
             }
             if (objectiveButton.LeftClick() && Main.playerInventory)
+            { 
                 progress = !progress;
+                SoundEngine.PlaySound(SoundID.MenuTick, Main.LocalPlayer.Center);
+            }
+            if (followerButton.LeftClick() && Main.playerInventory)
+            {
+                Main.projectile
+                    .Where(t => t.active && t.owner == Main.LocalPlayer.whoAmI && t.type == ModContent.ProjectileType<Follower>())
+                    .ToList()
+                    .ForEach(t => t.active = false);
+                SoundEngine.PlaySound(SoundID.MenuTick, Main.LocalPlayer.Center);
+            }
             if (loading)
             {
                 LoadObjectivesMenu();
@@ -572,6 +587,7 @@ namespace ArchaeaMod.Mode
                 }
                 if (archaeaMode)
                     objectiveButton.Draw();
+                followerButton.Draw();
             }
             sb.End();
         }

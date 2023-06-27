@@ -195,8 +195,8 @@ namespace ArchaeaMod
             int height = (int)(150 * multiplier);
             int buffer = 20;
             int worldCenter = Main.maxTilesX / 2;
-            int CavesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Granite")); // Granite
             int originX = 0, originY = 0, mWidth = 800, mHeight = 450;
+            int CavesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Granite")); // Granite
             if (CavesIndex != -1)
             {
                 tasks.Insert(CavesIndex + 1, new PassLegacy("Magno Caver", delegate (GenerationProgress progress, GameConfiguration c)
@@ -412,7 +412,7 @@ namespace ArchaeaMod
                     }
                 }));
             }
-            int index6 = tasks.FindIndex(pass => pass.Name.Equals("Dungeon")) - 1;
+            int index6 = tasks.FindIndex(pass => pass.Name.Equals("Slush")) - 1;
             if (index6 != -1)
             { 
                 tasks.Insert(index6 + 1, new PassLegacy("More Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
@@ -534,6 +534,17 @@ namespace ArchaeaMod
                         r.Build();
                     }
                     Factory.Decorate(buffer, Factory.Top, Main.maxTilesX - buffer, height);
+                }));
+            }
+            if (RoomIndex != -1)
+            {
+                tasks.Insert(RoomIndex + 1, new PassLegacy("Reset Spawn Tile", delegate (GenerationProgress progress, GameConfiguration c)
+                {
+                    Main.spawnTileY = (int)Main.worldSurface;
+                    while (Main.tile[Main.spawnTileX, Main.spawnTileY].WallType != WallID.None)
+                    {
+                        Main.spawnTileY--;
+                    }
                 }));
             }
         }
@@ -863,6 +874,7 @@ namespace ArchaeaMod
         public static int worldID;
         public static List<int> classes = new List<int>();
         public static List<int> playerIDs = new List<int>();
+        public static List<PlayerClass> playerClass = new List<PlayerClass>();
         public override void SaveWorldData(TagCompound tag)/* Edit tag parameter rather than returning new TagCompound */
         {
             tag.Add("m_downed", downedMagno);
@@ -878,6 +890,12 @@ namespace ArchaeaMod
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 tag.Add($"stat{i}", objectiveStat[i]);
+            }
+            tag.Add("ClassCount", playerClass.Count);
+            for (int i = 0; i < playerClass.Count; i++)
+            { 
+                tag.Add($"playerClass{i}", playerClass[i].classChoice);
+                tag.Add($"playerUID{i}", playerClass[i].playerUID);
             }
         }
         public override void LoadWorldData(TagCompound tag)
@@ -895,6 +913,13 @@ namespace ArchaeaMod
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 objectiveStat[i] = tag.GetBool($"stat{i}");
+            }
+            int count = tag.GetInt("ClassCount");
+            for (int i = 0; i < count; i++)
+            { 
+                int classChoice = tag.GetInt($"playerClass{i}");
+                int plrUID = tag.GetInt($"playerUID{i}");
+                playerClass.Add(PlayerClass.NewPlayer(classChoice, plrUID, 255));
             }
         }
         public override void NetSend(BinaryWriter writer)

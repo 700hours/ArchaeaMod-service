@@ -330,7 +330,7 @@ namespace ArchaeaMod.Structure
         private void CarveHall(ref ushort[,] tile, ref ushort[,] wall, int x, int y, int size = 10)
         {
             int border = 4;
-            bool flag = WorldGen.genRand.NextBool(4);
+            bool flag = WorldGen.genRand.NextBool(8);
             bool flag2 = WorldGen.genRand.NextBool();
             for (int i = -border; i < size + border; i++)
             {
@@ -359,11 +359,13 @@ namespace ArchaeaMod.Structure
                 {
                     int X = Math.Max(0, Math.Min(x + i, Width - 1));
                     int Y = Math.Max(0, Math.Min(y + j, Height - 1));
-                    if (tile[X, Y] != ConveyerL && tile[X, Y] != ConveyerR)
-                    { 
-                        tile[X, Y] = Air;
-                        wall[X, Y] = Wall;
+                    
+                    if (!GetSafely(X, Y - 1).HasTile && GetSafely(X, Y + 1).HasTile && (tile[X, Y] == ConveyerL || tile[X, Y] == ConveyerR))
+                    {
+                        continue;
                     }
+                    tile[X, Y] = Air;
+                    wall[X, Y] = Wall;
                 }
             }
         }
