@@ -174,6 +174,26 @@ namespace ArchaeaMod.Items
                 NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile.whoAmI);
             }
         }
+        public static void DustCircle(Vector2 origin, int dustID)
+        {
+            for (float r = 0f; r < Math.PI * 2f; r += 0.017f * (45f / 15f))
+            {
+                Vector2 velocity = NPCs.ArchaeaNPC.AngleToSpeed(r, 15f);
+                int index = Dust.NewDust(origin, 1, 1, dustID, velocity.X, velocity.Y, 0, default, 1.2f);
+                Main.dust[index].noGravity = true;
+            }
+        }
+        public static void ProjectileCircle(Vector2 origin, int damage, int projID, int timeLeft)
+        {
+            for (float r = 0f; r < Math.PI * 2f; r += 0.017f * (45f / 15f))
+            {
+                Vector2 velocity = NPCs.ArchaeaNPC.AngleToSpeed(r, 15f);
+                int index = Projectile.NewProjectile(Projectile.GetSource_None(), origin, velocity, projID, damage, 0f, Main.myPlayer);
+                Main.projectile[index].timeLeft = timeLeft;
+                Main.projectile[index].tileCollide = false;
+                Main.projectile[index].ignoreWater = true;
+            }
+        }
     }
 
     public class ArchaeaItem_Global : GlobalItem

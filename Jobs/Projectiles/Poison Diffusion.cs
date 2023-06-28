@@ -16,7 +16,7 @@ public void AI()
 		Rectangle MB = new Rectangle((int)projectile.position.X+(int)projectile.velocity.X,(int)projectile.position.Y+(int)projectile.velocity.Y,projectile.width,projectile.height);
 		Rectangle NB = new Rectangle((int)N.position.X,(int)N.position.Y,N.width,N.height);
 		if(MB.Intersects(NB))
-		{
+		{			  //Buffs.Plague
 			N.AddBuff(20,600,false);
 		}
 	}

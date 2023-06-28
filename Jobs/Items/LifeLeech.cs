@@ -1,4 +1,6 @@
+using ArchaeaMod.Items;
 using ArchaeaMod.Jobs.Global;
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;
 using Terraria;
@@ -14,6 +16,7 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
+		//	Blessed Ankh casts Life Leech
             DisplayName.SetDefault("Life Leech");
             Tooltip.SetDefault("Absorb life from your enemies\n" +
 				"1 mana per 1 life");
@@ -57,13 +60,16 @@ namespace ArchaeaMod.Jobs.Items
 							player.statLife++;
 							nPC.life--;
 							if(nPC.life <= 5){
-								nPC.StrikeNPC(6, 0f, player.direction, true, false, Main.netMode == 2);
+								nPC.StrikeNPC(6, 0f, player.direction, true, false, Main.netMode == 1);
 							}
 							player.statMana--;
 							player.manaRegenDelay = (int)player.maxRegenDelay;
 							Color newColor = default(Color);
 							int a = Dust.NewDust(new Vector2(nPC.position.X, nPC.position.Y), nPC.width, nPC.height, 5, 0f, 0f, 100, newColor, 1f);
-							Main.dust[a].noGravity = false;
+							Main.dust[a].noGravity = false;			   
+							Vector2 speed = ArchaeaNPC.AngleToSpeed(nPC.AngleTo(player.Center), 8f);
+							int b = Dust.NewDust(nPC.Center, 1, 1, 5, speed.X, speed.Y, 0, default, 3f);
+							Main.dust[b].noGravity = true;
 							SoundEngine.PlaySound(SoundID.Item39, player.Center);
                             nPC.netUpdate = true;
                             if (Main.netMode == 1) 
@@ -71,6 +77,11 @@ namespace ArchaeaMod.Jobs.Items
                                 NetMessage.SendData(16, player.whoAmI);
 								NetMessage.SendData(23, -1, -1, null, nPC.whoAmI);
 							}
+							if (ArchaeaItem.Elapsed(10))
+							{
+                                int index = Dust.NewDust(player.position + new Vector2(player.width / 2, player.height - 1), 1, 1, DustID.AncientLight, ArchaeaNPC.RandAngle() * 3f, 0f, 0, default, 1f);
+                                Main.dust[index].noGravity = true;
+                            }
 							break;
 						}
 					}
@@ -89,14 +100,12 @@ namespace ArchaeaMod.Jobs.Items
 				.AddIngredient(ItemID.Book)
 				.AddIngredient(ItemID.Deathweed, 25)
 				.AddIngredient(ItemID.RottenChunk)
-				.AddIngredient(ItemID.DemoniteOre)
 				.AddTile(ItemID.Bookcase)
 				.Register();
             CreateRecipe()
                 .AddIngredient(ItemID.Book)
                 .AddIngredient(ItemID.Deathweed, 25)
                 .AddIngredient(ItemID.Vertebrae)
-                .AddIngredient(ItemID.DemoniteOre)
                 .AddTile(ItemID.Bookcase)
                 .Register();
         }

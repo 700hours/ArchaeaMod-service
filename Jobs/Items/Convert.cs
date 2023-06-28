@@ -12,6 +12,7 @@ namespace ArchaeaMod.Jobs.Items
 { 
 	public class Convert : ModItem
 	{
+        //  The power to turn any NPC into a follower
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Convert");
@@ -68,7 +69,6 @@ namespace ArchaeaMod.Jobs.Items
                 .AddTile(TileID.Bookcases)
                 .AddIngredient(ItemID.Book, 1)
                 .AddIngredient(ItemID.Sunflower, 10)
-                .AddIngredient(ItemID.DemoniteOre)
                 .Register();
         }
     }

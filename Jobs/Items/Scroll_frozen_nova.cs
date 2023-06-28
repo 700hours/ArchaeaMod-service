@@ -1,4 +1,7 @@
+using ArchaeaMod.Items;
 using ArchaeaMod.Jobs.Global;
+using ArchaeaMod.NPCs;
+using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;
 using System.Runtime.Intrinsics.X86;
 using Terraria;
@@ -12,12 +15,12 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace ArchaeaMod.Jobs.Items
 {
-    internal class Scroll_firestorm : ModItem
+    internal class Scroll_frozen : ModItem
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scroll of Firestorm");
-            Tooltip.SetDefault("Blast from the above.\n" +
+            DisplayName.SetDefault("Scrollof Frozen Nova");
+            Tooltip.SetDefault("Create a blast of frost around you.\n" +
                 "One use.");
         }
         public override void SetDefaults()
@@ -27,6 +30,7 @@ namespace ArchaeaMod.Jobs.Items
             Item.useStyle = 2;
             Item.useAnimation = 30;
             Item.useTime = 30;
+            Item.damage = 40;
             Item.maxStack = 10;
             Item.consumable = true;
             Item.autoReuse = false;
@@ -34,24 +38,19 @@ namespace ArchaeaMod.Jobs.Items
             Item.noMelee = true;
             Item.scale = 1;
             Item.value = 0;
-            Item.rare = 3;
+            Item.rare = 2;
         }
         public override bool? UseItem(Player player)
-        {                  
+        {
             if (player.whoAmI == Main.myPlayer)
             { 
-                var modPlayer = player.GetModPlayer<ArchaeaPlayer>();
-                if (!modPlayer.fireStorm)
-                { 
-                    modPlayer.fireStorm = true;
-                    SoundEngine.PlaySound(SoundID.Item8, player.Center);
-                    if (Main.netMode == 1)
-                    {
-                        NetHandler.Send(Packet.CastFireStorm, i: player.whoAmI, b: true);
-                    }
-                    return true;
+                for (int i = 0; i < 10; i++)
+                {
+                    int index = Dust.NewDust(player.position, player.width, player.height, DustID.AncientLight, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 2f);
+                    Main.dust[index].noGravity = true;
                 }
-                else return false;
+                ArchaeaItem.ProjectileCircle(Main.MouseWorld, Item.damage, ModContent.ProjectileType<Projectiles.Frost>(), 20);
+				return true;
             }
             return false;
 		}
@@ -59,8 +58,8 @@ namespace ArchaeaMod.Jobs.Items
         {
             CreateRecipe()
                 .AddIngredient(ItemID.Book)
-                .AddIngredient(ItemID.Fireblossom, 7)
-                .AddTile(ItemID.Bookcase)
+                .AddIngredient(ItemID.Waterleaf, 4)
+                .AddTile(TileID.Bookcases)
                 .Register();
         }
     }

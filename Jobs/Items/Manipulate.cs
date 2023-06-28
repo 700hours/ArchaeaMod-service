@@ -1,3 +1,4 @@
+using ArchaeaMod.Items;
 using ArchaeaMod.Jobs.Global;
 using ArchaeaMod.Jobs.Projectiles;
 using ArchaeaMod.NPCs;
@@ -56,6 +57,16 @@ namespace ArchaeaMod.Jobs.Items
                     target = default(NPC);
                     return false;
                 }
+                if (Main.rand.NextBool(60))
+                {
+                    int index = Dust.NewDust(player.Center, 1, 1, DustID.AncientLight, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 2f);
+                    Main.dust[index].noGravity = true;
+                }
+                if (ArchaeaItem.Elapsed(10))
+                {
+                    int index = Dust.NewDust(player.position + new Vector2(player.width / 2, player.height - 1), 1, 1, DustID.AncientLight, ArchaeaNPC.RandAngle() * 3f, 0f, 0, default, 1f);
+                    Main.dust[index].noGravity = true;
+                }
                 if (target == default(NPC))
                 { 
 			        NPC[] npc = Main.npc;
@@ -72,14 +83,24 @@ namespace ArchaeaMod.Jobs.Items
 			        }
                 }
                 else
-                { 
+                {
                     if (Main.mouseLeft && Collision.CanHitLine(target.Center, target.width, target.height, player.Center, player.width, player.height))
                     {
                         target.position = new Vector2(mousev.X - (float)target.width / 2, mousev.Y - (float)target.height / 2);
                         player.statMana--;
                         player.manaRegenDelay = (int)player.maxRegenDelay;
                         if (ArchaeaNPC.IsNotOldPosition(target))
-                        { 
+                        {
+                            float angle = target.oldPos[2].AngleTo(mousev);
+                            float distance = target.oldPos[2].Distance(target.position);
+                            target.rotation = angle;
+                            if (distance > 20f)
+                            {
+                                if (Collision.SolidCollision(target.position, target.width, target.height))
+                                {
+                                    target.StrikeNPC((int)distance / 2, 0f, 0, fromNet: Main.netMode == 1);
+                                }
+                            }
                             target.netUpdate = true;
                         }
                     }
@@ -98,7 +119,6 @@ namespace ArchaeaMod.Jobs.Items
                 .AddIngredient(ItemID.Book)
                 .AddIngredient(ItemID.Sunflower, 5)
                 .AddIngredient(ItemID.Deathweed, 5)
-                .AddIngredient(ItemID.DemoniteOre, 1)
                 .AddTile(ItemID.Bookcase)
                 .Register();
             

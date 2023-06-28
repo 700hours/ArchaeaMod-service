@@ -1,25 +1,112 @@
-public void UseItem(Player player, int playerID)
+using ArchaeaMod.Jobs.Global;
+using ArchaeaMod.NPCs;
+using Microsoft.Xna.Framework;
+using MonoMod.RuntimeDetour;
+using System.Drawing;
+using System.Runtime.Intrinsics.X86;
+using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
+using Terraria.ModLoader;
+using static Humanizer.In;
+using static System.Formats.Asn1.AsnWriter;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
+
+namespace ArchaeaMod.Jobs.Items
 {
-	Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y);
-	Rectangle mouse = new Rectangle((int)(mousev.X - 16f), (int)(mousev.Y - 16f), 32, 32);
-	Player[] plr = Main.player;
-	if(player.statMana >= 3){
-		for(int m = 0; m < plr.Length-1; m++)
-		{
-			Player P = plr[m];
-			if(!P.active) continue;
-			if(P.statLife <= 0) continue;
-			Vector2 pv = new Vector2(P.position.X, P.position.Y);
-			Rectangle pBox = new Rectangle((int)pv.X, (int)pv.Y, P.width, P.height);
-			if(mouse.Intersects(pBox) && Main.mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && Main.oldMouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released)
-			{
-			Color newColor = default(Color);
-			int a = Dust.NewDust(new Vector2(pv.X, pv.Y), P.width, P.height, 29, 0f, 0f, 100, newColor, 2f);
-			Main.dust[a].noGravity = true;
-			//	Main.PlaySound(2,(int)player.position.X,(int)player.position.Y,SoundHandler.soundID["curse"]);
-				P.AddBuff("Fortitude",7200,false);
-				if(Main.dedServ || Main.netMode != 0) NetMessage.SendData(23, -1, -1, "", P.whoAmi, 0f, 0f, 0f, 0);
+    internal class Scroll_fortitude : ModItem
+	{
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Scroll of Fortitude");
+			Tooltip.SetDefault("Increases a player's defense by 20.\n" +
+				"Strengthens melee damage by 3x.");
+        }
+        public override void SetDefaults()
+        {
+            Item.width = 28;
+            Item.height = 32;
+            Item.useStyle = 5;
+            Item.useAnimation = 30;
+            Item.useTime = 30;
+            Item.maxStack = 10;
+            Item.consumable = true;
+            Item.autoReuse = false;
+            Item.useTurn = false;
+            Item.noMelee = true;
+            Item.scale = 1;
+            Item.value = 0;
+            Item.rare = 2;
+        }
+        public override bool? UseItem(Player player)
+        {
+			if (player.whoAmI == Main.myPlayer)
+			{ 
+				Vector2 mousev = Main.MouseWorld;
+				Player[] plr = Main.player;
+                for (int m = 0; m < plr.Length-1; m++)
+				{
+					Player P = plr[m];
+					if (!P.active) continue;
+					if (P.statLife <= 0) continue;
+					if (P.HasBuff(ModContent.BuffType<Buffs.Fortitude>())) continue;
+					if (!P.Hitbox.Contains(mousev.ToPoint())) continue;
+					Vector2 pv = new Vector2(P.position.X, P.position.Y);
+					if (Main.mouseLeft)
+					{
+						for (int i = 0; i < 10; i++)
+						{
+							int index = Dust.NewDust(player.position, player.width, player.height, DustID.AncientLight, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 2f);
+							Main.dust[index].noGravity = true;
+						}
+                        for (int i = 0; i < 10; i++)
+                        {
+                            int index = Dust.NewDust(pv, P.width, P.height, DustID.Blood, 0f, 0f, 0, default, 2f);
+                            Main.dust[index].noGravity = true;
+                        }
+                        P.AddBuff(ModContent.BuffType<Buffs.Fortitude>(), Buffs.Fortitude.MaxTime, Main.netMode == 1);
+						SoundEngine.PlaySound(SoundID.Item8, player.Center);
+						return true;
+					}
+				}
+                NPC[] npc = Main.npc;
+                for (int m = 0; m < npc.Length - 1; m++)
+                {
+                    NPC nPC = npc[m];
+                    if (!nPC.active) continue;
+                    if (nPC.life <= 0) continue;
+                    if (nPC.HasBuff(ModContent.BuffType<Buffs.Fortitude>())) continue;
+                    if (!nPC.Hitbox.Contains(mousev.ToPoint())) continue;
+                    if (!nPC.townNPC) continue;
+                    Vector2 pv = new Vector2(nPC.position.X, nPC.position.Y);
+                    if (Main.mouseLeft)
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            int index = Dust.NewDust(player.position, player.width, player.height, DustID.AncientLight, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 2f);
+                            Main.dust[index].noGravity = true;
+                        }
+                        for (int i = 0; i < 10; i++)
+                        {
+                            int index = Dust.NewDust(pv, nPC.width, nPC.height, DustID.Blood, 0f, 0f, 0, default, 2f);
+                            Main.dust[index].noGravity = true;
+                        }
+                        nPC.AddBuff(ModContent.BuffType<Buffs.Fortitude>(), Buffs.Fortitude.MaxTime, Main.netMode == 1);
+                        SoundEngine.PlaySound(SoundID.Item8, player.Center);
+                        return true;
+                    }
+                }
 			}
-		}
-	}
+            return false;
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Book)
+                .AddIngredient(ItemID.IronskinPotion)
+                .AddIngredient(ItemID.IronOre)
+                .AddTile(TileID.Bookcases)
+                .Register();
+        }
+    }
 }

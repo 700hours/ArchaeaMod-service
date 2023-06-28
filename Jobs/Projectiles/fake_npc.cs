@@ -1,215 +1,31 @@
-﻿using System;
+﻿using ArchaeaMod.Items;
+using ArchaeaMod.NPCs;
+using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ArchaeaMod.Effects;
-using ArchaeaMod.Items;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Mono.Cecil;
-using Steamworks;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Humanizer.In;
 
-namespace ArchaeaMod.NPCs.Town
+namespace ArchaeaMod.Jobs.Projectiles
 {
-    internal class NPCAI : GlobalNPC
+    internal static class FollowID
     {
-        public override void GetChat(NPC npc, ref string chat)
-        {
-            if (npc.TypeName == "Mechanic")
-            {
-                SpawnMechanicMinion(npc, npc.GetSource_FromAI());
-            }
-            else if (npc.townNPC)
-            {
-                SpawnFollowMenu(npc, npc.GetSource_FromAI());
-            }
-        }
-        public override void OnSpawn(NPC npc, IEntitySource source)
-        {
-            if (npc.TypeName == "Mechanic")
-            {
-                SpawnMechanicMinion(npc, source);
-            }
-            else if (npc.townNPC)
-            {
-                SpawnFollowMenu(npc, source);
-            }
-        }
-        public static void SpawnFollowMenu(NPC npc, IEntitySource source)
-        {
-            if (Main.npc.FirstOrDefault(t => t.active && t.type == ModContent.NPCType<FollowerMenu>() && t.ai[1] == npc.type) == default)
-            {
-                //  Town menu minion
-                NPC.NewNPC(source, (int)npc.position.X + npc.width / 2 - 8, (int)npc.position.Y - 32, ModContent.NPCType<FollowerMenu>(), 0, npc.whoAmI, npc.type, npc.FindClosestPlayer());
-            }
-        }
-        public static void SpawnMechanicMinion(NPC npc, IEntitySource source)
-        {
-            if (Main.npc.FirstOrDefault(t => t.active && t.type == ModNPCID.MechanicMinion) == default)
-            {
-                //  Faux Mechanic 
-                //  Ran in the Faux minion chat dialog
-                //  Projectile.NewProjectile(source, (int)npc.position.X, (int)npc.position.Y, 0f, 0f, ModContent.ProjectileType<Mechanic>(), 20, 2f);
-                //  Faux minion
-                int index = NPC.NewNPC(source, (int)npc.position.X, (int)npc.position.Y, ModNPCID.MechanicMinion);
-                NPC n = Main.npc[index];
-                //  Real minion
-                int proj = Projectile.NewProjectile(source, npc.position, Vector2.Zero, ModContent.ProjectileType<Merged.Projectiles.magno_minion>(), 26, 1f, Main.myPlayer, npc.whoAmI);
-                Main.projectile[proj].localAI[0] = 26;
-                //  Set minion owner
-                n.ai[0] = proj;
-            }
-        }
+        public const int
+            Minion = 0,
+            Follower = 1,
+            Replace = 2;
     }
-    internal class FollowerMenu : ModNPC
-    {
-        public override string Texture => "ArchaeaMod/Gores/arrow";
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Follower Menu");
-        }
-        public override void SetDefaults()
-        {
-            NPC.aiStyle = -1;
-            NPC.scale = 24 / 128f;
-            NPC.rotation = (float)(90 * (decimal)Draw.radian);
-            NPC.width = 128;
-            NPC.height = 128;
-            NPC.immortal = true;
-            NPC.dontTakeDamage = true;
-            NPC.dontTakeDamageFromHostiles = true;
-            NPC.lifeMax = 100;
-            NPC.defense = 10;
-            NPC.knockBackResist = 1f;
-            NPC.damage = 10;
-            NPC.value = 1000;
-            NPC.lavaImmune = true;
-            NPC.DeathSound = SoundID.NPCDeath1;
-            NPC.alpha = 0;
-            NPC.friendly = true;
-        }
-        private int owner
-        {
-            get { return (int)NPC.ai[0]; }
-            set { NPC.ai[0] = value; }
-        }
-        private int type
-        {
-            get { return (int)NPC.ai[1]; }
-            set { NPC.ai[1] = value; }
-        }
-        private int playerIndex
-        {
-            get { return (int)NPC.ai[2]; }
-            set { NPC.ai[2] = value; }
-        }
-        Player player => Main.player[playerIndex];
-        NPC Owner => Main.npc[owner];
-        Projectile leader => Main.projectile[projID];
-        int projID;
-        public override bool CanChat() => true;
-        public bool flag = false;
-        public override void DrawEffects(ref Color drawColor)
-        {
-            drawColor = Color.LightGray;
-        }
-        public override void ModifyHoverBoundingBox(ref Rectangle boundingBox)
-        {
-            boundingBox = new Rectangle((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height);
-        }
-        public override void AI()
-        {
-            NPC.alpha = (int)Math.Abs((255 * (Math.Min(player.Distance(NPC.Center), 300f) / 300f)) - 255);
-            if (!Main.npc[owner].active)
-            {
-                NPC.active = false;
-            }
-            else
-            {                                            
-                NPC.position = new Vector2(Owner.position.X + Owner.width / 2 - NPC.width / 2, Owner.Hitbox.Top - NPC.height * 2);
-            }
-            if (NPC.position.X <= NPC.oldPosition.X || NPC.position.X > NPC.oldPosition.X || NPC.position.Y <= NPC.oldPosition.Y || NPC.position.Y > NPC.oldPosition.Y)
-            {
-                NPC.netUpdate = true;
-            }
-        }
-        public override string GetChat()
-        {
-            if (!flag)
-            { 
-                return $"Would you like to have the {Main.npc[owner].TypeName} follow you?";
-            }
-            else
-            { 
-                return $"Would you like to have the {Main.npc[owner].TypeName} stop following you?";
-            }
-        }
-        public override void SetChatButtons(ref string button, ref string button2)
-        {
-            if (flag)
-            {
-                button = "Stop following";
-            }
-            else
-            {
-                button = "Follow";
-            } 
-        }
-        public override void OnChatButtonClicked(bool firstButton, ref bool shop)
-        {
-            if (firstButton)
-            {
-                flag = !flag;
-                if (!flag && leader != default)
-                {
-                    leader.active = false;
-                    return;
-                }
-                if (Main.LocalPlayer.ownedProjectileCounts[ModContent.ProjectileType<Follower>()] > 1)
-                {
-                    flag = false;
-                    return;
-                }
-                projID = Projectile.NewProjectile(Projectile.GetSource_TownSpawn(), (int)Owner.position.X, (int)Owner.position.Y, 0f, 0f, ModContent.ProjectileType<Follower>(), 0, 0f, Main.LocalPlayer.whoAmI, owner, Main.LocalPlayer.ownedProjectileCounts[ModContent.ProjectileType<Follower>()]);
-                Main.projectile[projID].localAI[0] = type;
-            }
-        }
-        public override bool? CanHitNPC(NPC target)
-        {
-            return !target.townNPC;
-        }
-        public override bool CanHitPlayer(Player target, ref int cooldownSlot)
-        {
-            return false;
-        }
-        public override bool CheckActive()
-        {
-            return Main.npc[owner].active;
-        }
-        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-            return false;
-        }
-        public override void PostDraw(SpriteBatch sb, Vector2 screenPos, Color drawColor)
-        {
-            Texture2D tex = Fx.BasicArrow();
-            sb.Draw(tex, NPC.position - screenPos + new Vector2(24, 8), null, drawColor * (NPC.alpha / 255f), MathHelper.ToRadians(90f), new Vector2(NPC.width, NPC.height), NPC.scale, SpriteEffects.None, 0f);
-        }
-    }
-    internal class Follower : ModProjectile
+    internal class fake_npc : ModProjectile
     {
         public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Follower");
+            DisplayName.SetDefault("fake_npc");
         }
         public override void SetDefaults()
         {
@@ -226,7 +42,7 @@ namespace ArchaeaMod.NPCs.Town
         int ownerIndex
         {
             get { return (int)Projectile.ai[0]; }
-            set { Projectile.ai[0] = value;}
+            set { Projectile.ai[0] = value; }
         }
         int followerID
         {
@@ -238,6 +54,11 @@ namespace ArchaeaMod.NPCs.Town
             get { return (int)Projectile.localAI[0]; }
             set { Projectile.localAI[0] = value; }
         }
+        int followType
+        {
+            get { return (int)Projectile.localAI[1]; }
+            set { Projectile.localAI[1] = value; }
+        }
         bool init = false;
         bool beginMove = false;
         float rand = 0f;
@@ -247,6 +68,10 @@ namespace ArchaeaMod.NPCs.Town
         IList<Vector2> oldVelocity = new List<Vector2>();
         IList<Vector2> oldVelocity2 = new List<Vector2>();
         public override bool? CanCutTiles() => false;
+        public static int SetFollowType(Projectile projectile, int type)
+        {
+            return (int)(projectile.localAI[1] = type);
+        }
         private bool PlayerNotControlMove(Player player)
         {
             return player != null && !player.controlUp && !player.controlRight && !player.controlDown && !player.controlLeft && !player.controlJump;
@@ -265,7 +90,7 @@ namespace ArchaeaMod.NPCs.Town
                 return;
             if (ArchaeaItem.Elapsed(ref ticks2, 20))
             {
-                //target.StrikeNPC(Main.hardMode ? 40 : 20, 2f, target.Center.X < Projectile.Center.X ? -1 : 1, Main.rand.NextBool(), false, Main.netMode != 0);
+                target.StrikeNPC(Main.hardMode ? 40 : 20, 2f, target.Center.X < Projectile.Center.X ? -1 : 1, Main.rand.NextBool(), false, Main.netMode != 0);
                 ticks2 = 0;
             }
         }
@@ -275,6 +100,7 @@ namespace ArchaeaMod.NPCs.Town
             {
                 rand = Main.rand.Next(-50, 50) + 1;
                 init = true;
+                owner.friendly = true;
             }
             owner.velocity = Projectile.velocity;
             owner.position = Projectile.position;
@@ -289,8 +115,16 @@ namespace ArchaeaMod.NPCs.Town
         {
             if (owner.active)
             {
-                Projectile.timeLeft = 10;
+                if (followType != FollowID.Replace)
+                { 
+                    Projectile.timeLeft = 10;
+                }
                 Projectile.height = owner.height;
+            }
+            else
+            {
+                Projectile.active = false;
+                return;
             }
             Player player = Main.LocalPlayer;
             var follower = Main.projectile.Where(t => t.active && t.owner == player.whoAmI && t.type == Type && t.localAI[0] != ownerType).ToArray();
@@ -305,6 +139,18 @@ namespace ArchaeaMod.NPCs.Town
         }
         public void Follow(Player player)
         {
+            if (followType == FollowID.Replace)
+            {
+                if (owner.height < player.height)
+                { 
+                    owner.position = player.position + new Vector2(0, Math.Abs(player.height - owner.height));
+                }
+                else
+                {
+                    owner.position = player.position - new Vector2(0, Math.Abs(player.height - owner.height));
+                }
+                return;
+            }
             if (!PlayerNotControlMove(player) || PlayerMoving(player))
             {
                 oldVelocity.Add(player.position + new Vector2(rand, Math.Abs(player.height - owner.height)));
@@ -381,7 +227,7 @@ namespace ArchaeaMod.NPCs.Town
             if (!FollowerMoving(npc))
             {
                 while (!Collision.SolidTiles(Projectile.position, owner.width, owner.height + 1))
-                { 
+                {
                     Projectile.position.Y++;
                 }
             }

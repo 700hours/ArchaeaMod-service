@@ -544,6 +544,10 @@ namespace ArchaeaMod
         {
             //if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
             //    return ClassItemCheck();
+            if (Player.HasBuff<Jobs.Buffs.Zombie>())
+            {
+                return false;
+            }
             switch (item.type)
             {
                 case ItemID.LifeCrystal:
@@ -688,11 +692,18 @@ namespace ArchaeaMod
 
         public override void ModifyWeaponDamage(Item item, ref StatModifier damage)
         {
-            if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, Main.myPlayer))
+            if (CheckHasTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, Main.myPlayer))
             {
                 if (item.DamageType == DamageClass.Summon)
                 {
                     damage.Base = 1.2f;
+                }
+            }
+            if (Player.HasBuff<Jobs.Buffs.Fortitude>())
+            {
+                if (item.DamageType == DamageClass.Melee)
+                {
+                    damage.Base *= 3;
                 }
             }
         }
@@ -2147,8 +2158,8 @@ namespace ArchaeaMod
                     float kb = (float)i - 0.5f;                                                                                                                                                                                                                             //  Add FireRain projectile
                     int FireRain = Projectile.NewProjectile(Projectile.GetSource_None(), new Vector2(Player.position.X + (float)Main.rand.Next(-100 * k, 100 * k), Player.position.Y - 800f + (float)Main.rand.Next(-50, 50)), new Vector2(Main.rand.Next(-2 * i, 2 * i), 12f), 0, dmg, kb, Player.whoAmI);
                     Main.projectile[FireRain].aiStyle = 0;
-                    Main.projectile[FireRain].timeLeft = 2000;
-                    Main.projectile[FireRain].tileCollide = true;
+                    Main.projectile[FireRain].timeLeft = 300;
+                    Main.projectile[FireRain].tileCollide = false;
                     Main.projectile[FireRain].scale *= i - 0.5f;
                     Main.projectile[FireRain].velocity.Y *= Main.rand.Next(1, 2) * 0.75f;
                     Main.projectile[FireRain].hostile = false;
@@ -2157,7 +2168,7 @@ namespace ArchaeaMod
                     Main.projectile[FireRain].netUpdate = true;
                     if (Main.rand.NextBool(3))
                     { 
-                        //Main.PlaySound(2, (int)player.position.X, (int)player.position.Y, SoundHandler.soundID["firestorm single"]);
+                        SoundEngine.PlaySound(SoundID.Item8, Main.projectile[FireRain].Center);
                     }
                     numProjectiles--;
                 }
