@@ -194,8 +194,20 @@ namespace ArchaeaMod.Effects
                 }
             }
         }
-        #pragma warning restore CA1416 // Validate platform compatibility
         public static Texture2D FromStream(MemoryStream stream) => Texture2D.FromStream(Main.graphics.GraphicsDevice, stream);
+        public static Texture2D FromBitmap(Bitmap map)
+        {
+            Texture2D tex = default;
+            using (MemoryStream stream = new MemoryStream())
+            { 
+                using (map)
+                { 
+                    map.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                    tex = FromStream(stream);
+                }
+            }
+            return tex;
+        }
         private static float[] _Buffer(int length)
         {
             try
@@ -263,5 +275,79 @@ namespace ArchaeaMod.Effects
                 particle[i].position += NPCs.ArchaeaNPC.AngleToSpeed(particle[i].angle, particle[i].speed);
             }
         }
+    }
+    public class Geometric
+    {
+        ~Geometric()
+        {
+        }
+        const float radian = 0.017f;
+        public static Geometric NewEffect(Vector2[][] vertex, Vector2 origin, float[] angle)
+        {
+            var geo = new Geometric();
+            geo.point = vertex[0];
+            geo.point2 = vertex[1];
+            geo.angle = angle;
+            geo.origin = origin;
+            return geo;
+        }
+        float[] angle;
+        int[] direction = new int[2] { -1, 1 };
+        float radius = 1f;
+        public float Rotation => angle[0];
+        public Vector2 origin;
+        public Vector2[] point;
+        public Vector2[] point2;
+
+        public void UpdateRotation(float radius)
+        {
+            this.radius = radius * 1.2f;
+            for (int i = 0; i < 3; i++)
+            {
+                SortRotation(ref angle[i], radian);
+                point[i] = OrbitAngle(origin, angle[i], radius);
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                SortRotation(ref angle[i], radian, -1);
+                point2[i] = OrbitAngle(origin, angle[i], radius * 1.2f);
+            }
+        }
+        //  Draw a Color.Lerp using rotation wrapped and divided by PI
+        public Texture2D DrawTexture()
+        {
+            using (Bitmap map = new Bitmap((int)radius, (int)radius))
+            { 
+                using (Graphics g = Graphics.FromImage(map))
+                {
+                    g.DrawPolygon(Pens.Blue, ToPointF(point));
+                    g.DrawPolygon(Pens.Gray, ToPointF(point2));
+                }
+                return Fx.FromBitmap(map);
+            }
+        }
+        PointF[] ToPointF(Vector2[] input)
+        {
+            PointF[] result = new PointF[input.Length];
+            for (int i = 0; i < input.Length; i++)
+            {
+                result[i] = new PointF(input[i].X, input[i].Y);
+            }
+            return result;
+        }
+        float SortRotation(ref float angle, float speed, int direction = 1)
+        {
+            const float radian = 0.017f;
+            angle += speed * direction;
+            angle = MathHelper.WrapAngle(angle);
+            return angle / radian;
+        }
+        Vector2 OrbitAngle(Vector2 origin, float angle, float radius)
+        {
+            float cos = (float)(radius * Math.Cos(angle));
+            float sine = (float)(radius * Math.Sin(angle));
+            return new Vector2(origin.X + cos, origin.Y + sine);
+        }
+#pragma warning restore CA1416 // Validate platform compatibility
     }
 }

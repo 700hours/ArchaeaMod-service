@@ -1199,8 +1199,10 @@ namespace ArchaeaMod
                                     break;
                                 case ID.Lamp:
                                     if (Main.rand.NextBool(4))
-                                    { 
-                                        WorldGen.PlaceTile(m, n, TileID.HangingLanterns);
+                                    {
+                                        //  Changing to chandelier
+                                        //WorldGen.PlaceTile(m, n, TileID.HangingLanterns);
+                                        WorldGen.PlaceTile(m, n, ModContent.TileType<Tiles.m_chandelier>());
                                     }
                                     break;
                                 case ID.Chest:

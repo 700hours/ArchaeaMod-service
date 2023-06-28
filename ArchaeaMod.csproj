@@ -16,6 +16,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Jobs\Buff\" />
     <Folder Include="WorldGen\Factory\" />
   </ItemGroup>
 </Project>

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
+using ArchaeaMod.Items;
+using ArchaeaMod.Structure;
+using IL.Terraria.GameContent.Bestiary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -22,9 +26,8 @@ namespace ArchaeaMod.Tiles
             Main.tileFrameImportant[Type] = true;
             TileID.Sets.NotReallySolid[Type] = true;
             TileID.Sets.DrawsWalls[Type] = true;
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2Top);
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
             TileObjectData.newTile.AnchorValidTiles = new int[] { ArchaeaWorld.magnoStone };
-            //TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidBottom | AnchorType.SolidTile, 0, 0);
             TileObjectData.newTile.RandomStyleRange = 3;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.WaterDeath = false;

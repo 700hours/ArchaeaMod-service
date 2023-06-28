@@ -496,6 +496,10 @@ namespace ArchaeaMod.NPCs
             if (npc.velocity.Y > max)
                 npc.velocity.Y = max;
         }
+        public static bool IsNotOldPosition(NPC npc)
+        {
+            return npc.position.X < 0f && npc.oldPosition.X >= 0f || npc.position.X > 0f && npc.oldPosition.X <= 0f || npc.position.Y < 0f && npc.oldPosition.Y >= 0f || npc.position.Y > 0f && npc.oldPosition.Y <= 0f;
+        }
 
         protected static bool SolidGround(Tile[] tiles)
         {
@@ -517,6 +521,7 @@ namespace ArchaeaMod.NPCs
         {
             return (!tile.HasTile && Main.tileSolid[tile.TileType]) || (tile.HasTile && !Main.tileSolid[tile.TileType]);
         }
+        
 
         #region out of view
         /*

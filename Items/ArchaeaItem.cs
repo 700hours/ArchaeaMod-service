@@ -69,6 +69,10 @@ namespace ArchaeaMod.Items
         {
             return Math.Round(Main.time, 0) % interval == 0;
         }
+        public static bool Elapsed(int interval, int remainder)
+        {
+            return interval % remainder == 0;
+        }
         public static bool Elapsed(ref int interval, int time)
         {
             return ++interval >= time;

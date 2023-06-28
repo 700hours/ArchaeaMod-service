@@ -386,7 +386,7 @@ namespace ArchaeaMod.Structure
             { 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0 }
         };
-        private static Tile GetSafely(int i, int j, int buffer = 20)
+        public static Tile GetSafely(int i, int j, int buffer = 20)
         {
             int m = Math.Max(buffer, Math.Min(Main.maxTilesX - buffer, i));
             int n = Math.Max(buffer, Math.Min(Main.maxTilesY - buffer, j));

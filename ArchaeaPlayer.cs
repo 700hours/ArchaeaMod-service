@@ -32,6 +32,7 @@ using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ArchaeaMod.Structure;
 using ArchaeaMod.Items;
+using System.Security.Cryptography;
 
 namespace ArchaeaMod
 {
@@ -81,6 +82,82 @@ namespace ArchaeaMod
         public int whoAmI;
         public int playerUID;
         public int classChoice;
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public sealed class JobID
+    {
+        public static class Sets
+        {
+            public static bool[] IsMelee = new bool[]
+            {
+
+            };
+        }
+        public static string[] Name = new string[]
+        {
+            NAME_None,
+            NAME_Botanist,
+            NAME_Bowsman,
+            NAME_BusinessMan,
+            NAME_Contractor,
+            NAME_CorporateUsurper,
+            NAME_Entrepreneur,
+            NAME_Merchant,
+            NAME_Necromancer,
+            NAME_Outlaw,
+            NAME_ScienceTeacher,
+            NAME_Smith,
+            NAME_Surveyor,
+            NAME_Warrior,
+            NAME_WhiteKnight,
+            NAME_Witch,
+            NAME_Wizard
+        };
+        public const string
+            NAME_None = "None",
+            NAME_Botanist = "Botanist",
+            NAME_Bowsman = "Bowsman",
+            NAME_BusinessMan = "Business Man",
+            NAME_Contractor = "Contractor",
+            NAME_CorporateUsurper = "Corporate Usurper",
+            NAME_Entrepreneur = "Entrepreneur",
+            NAME_Merchant = "Merchant",
+            NAME_Necromancer = "Necromancer",
+            NAME_Outlaw = "Outlaw",
+            NAME_ScienceTeacher = "Science Teacher",
+            NAME_Smith = "Smith",
+            NAME_Surveyor = "Surveyor",
+            NAME_Warrior = "Warrior",
+            NAME_WhiteKnight = "White Knight",
+            NAME_Witch = "Witch",
+            NAME_Wizard = "Wizard";
+        public const int
+            TYPE_None = 0,
+            TYPE_Botanist = 1,
+            TYPE_Bowsman = 2,
+            TYPE_BusinessMan = 3,
+            TYPE_Contractor = 4,
+            TYPE_CorporateUsurper = 5,
+            TYPE_Entrepreneur = 6,
+            TYPE_Merchant = 7,
+            TYPE_Necromancer = 8,
+            TYPE_Outlaw = 9,
+            TYPE_ScienceTeacher = 10,
+            TYPE_Smith = 11,
+            TYPE_Surveyor = 12,
+            TYPE_Warrior = 13,
+            TYPE_WhiteKnight = 14,
+            TYPE_Witch = 15,
+            TYPE_Wizard = 16;
     }
     public class ArchaeaPlayer : ModPlayer
     {
@@ -128,6 +205,9 @@ namespace ArchaeaMod
         public bool loadComplete;
         public bool onEnterWorldStart = false;
         public int enterWorldTicks = 0;
+        public short extraLife = 0;
+        public int dungeonLocatorTicks = 0;
+        public int locatorDirection = -1;
 
         //  Stat variables
         //  Increase
@@ -168,7 +248,17 @@ namespace ArchaeaMod
         private Rectangle box;
         private TextBox[] input;
         private Button[] button;
+
+        //  Blueprints
+        public Rectangle blueprint = Rectangle.Empty;
+        public Button cancel = new Button("Cancel", new Rectangle(0, 0, 10 * 6, 32));
+        public Button accept = new Button("Accept", new Rectangle(0, 0, 10 * 6, 32));
         
+        private Rectangle SetXY(Rectangle bound, int x, int y)
+        {
+            return new Rectangle(x, y, bound.Width, bound.Height);
+        }
+
         public override void clientClone(ModPlayer clientClone)
         {
             ArchaeaPlayer modPlayer = (ArchaeaPlayer)clientClone;
@@ -201,6 +291,11 @@ namespace ArchaeaMod
             modPlayer.merchantDiscount = merchantDiscount;
             modPlayer.percentDamageTaken = percentDamageTaken;
             modPlayer.ammoReduction = ammoReduction;
+            //  Items
+            modPlayer.extraLife = extraLife;
+            modPlayer.dungeonLocatorTicks = dungeonLocatorTicks;
+            modPlayer.locatorDirection = locatorDirection;
+            modPlayer.fireStorm = fireStorm;
             //  End
             clientClone = modPlayer;
         }
@@ -236,6 +331,11 @@ namespace ArchaeaMod
             merchantDiscount = modPlayer.merchantDiscount;
             percentDamageTaken = modPlayer.percentDamageTaken;
             ammoReduction = modPlayer.ammoReduction;
+            //  Items
+            extraLife = modPlayer.extraLife;
+            dungeonLocatorTicks = modPlayer.dungeonLocatorTicks;
+            locatorDirection = modPlayer.locatorDirection;
+            fireStorm = modPlayer.fireStorm;
             //  End
         }
 
@@ -293,6 +393,8 @@ namespace ArchaeaMod
             }
             //  World
             enterWorldTicks = tag.GetInt("enterWorldStart");
+            //  Items
+            extraLife = tag.GetShort("extraLives");
 
         }
         public override void SaveData(TagCompound tag)
@@ -337,6 +439,8 @@ namespace ArchaeaMod
             }
             //  World
             tag.Add("enterWorldStart", enterWorldTicks);
+            //  Items
+            tag.Add("extraLives", extraLife);
         }
 
         public bool HasClassTrait(int index, int classID)
@@ -406,6 +510,28 @@ namespace ArchaeaMod
         public int PercentDamageTaken;
         public int AmmoReduction;
         */
+        public bool FakeUseLifeCrystal(Item item)
+        {
+            if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+            {
+                if (Player.statLifeMax < 9999)
+                {
+                    Player.statLifeMax += ArchaeaMode.LifeCrystal();
+                    Player.statLifeMax = Math.Min(Player.statLifeMax, 9999);
+                    item.stack--;
+                }
+                Player.ApplyItemAnimation(item);
+                SoundEngine.PlaySound(SoundID.Item4, Player.Center);
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                    NetMessage.SendData(MessageID.PlayerLifeMana);
+            }
+            if ((ModContent.GetInstance<ModeToggle>().archaeaMode && Player.statLifeMax2 >= 9499)
+                || Player.statLifeMax2 >= 380)
+            {
+                SetClassTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, true);
+            }
+            return false;
+        }
 
         public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
         {
@@ -421,26 +547,7 @@ namespace ArchaeaMod
             switch (item.type)
             {
                 case ItemID.LifeCrystal:
-                    if (ModContent.GetInstance<ModeToggle>().archaeaMode)
-                    { 
-                        if (Player.statLifeMax < 9999)
-                        {
-                            Player.statLifeMax += ArchaeaMode.LifeCrystal();
-                            Player.statLifeMax = Math.Min(Player.statLifeMax, 9999);
-                            item.stack--;
-                        }
-                        Player.ApplyItemAnimation(item);
-                        SoundEngine.PlaySound(SoundID.Item4, Player.Center);
-                        if (Main.netMode == NetmodeID.MultiplayerClient)
-                            NetMessage.SendData(MessageID.PlayerLifeMana);
-                        return false;
-                    }
-                    if ((ModContent.GetInstance<ModeToggle>().archaeaMode && Player.statLifeMax2 >= 9499) 
-                        || Player.statLifeMax2 >= 380)
-                    {
-                        SetClassTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, true);
-                    }
-                    break;
+                    return FakeUseLifeCrystal(item);
                 case ItemID.LifeFruit:
                     if (ModContent.GetInstance<ModeToggle>().archaeaMode)
                     { 
@@ -903,6 +1010,9 @@ namespace ArchaeaMod
                     }
                 }
             }
+            //  Fire storm scroll effect
+            FireStorm();
+
             //  Leap and Leap attack
             if (ground == Vector2.Zero)
             {
@@ -963,7 +1073,6 @@ namespace ArchaeaMod
                     }
                 }
             }
-
             if (Main.dedServ || Effects.Barrier.barrier == null)
                 return;
             for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
@@ -1734,6 +1843,38 @@ namespace ArchaeaMod
         }
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
+            //  Need a little bit of engineering to resize
+         /* if (blueprint != Rectangle.Empty)
+            {
+                if (blueprint.Resize())
+                { 
+                    blueprint.Width  = blueprint.Width  + (blueprint.Width % 16);
+                    blueprint.Height = blueprint.Height + (blueprint.Height % 16);
+                }
+                sb.Draw(TextureAssets.MagicPixel.Value, blueprint, Color.CornflowerBlue * 0.2f);
+                sb.DrawString(FontAssets.MouseText.Value, (blueprint.Width * 2 / 16 + blueprint.Height * 2 / 16).ToString(), blueprint.TopLeft(), Color.White);
+                SetXY(accept.box, blueprint.Left, blueprint.Bottom - accept.box.Height * 2 - 4);
+                SetXY(cancel.box, blueprint.Left, blueprint.Bottom - cancel.box.Height);
+                accept.Draw();
+                cancel.Draw();
+                if (accept.LeftClick())
+                {
+                    int i = (int)(blueprint.X + Main.screenPosition.X) / 16;
+                    int j = (int)(blueprint.Y + Main.screenPosition.Y) / 16;
+                    int w = blueprint.Width  / 16;
+                    int h = blueprint.Height / 16;
+                    for (int m = i; m < i + w; m++)
+                    {
+                        for (int n = j; n < j + h; n++)
+                        {
+                        }
+                    }
+                }
+                if (cancel.LeftClick())
+                {
+                    blueprint = Rectangle.Empty;
+                }
+            }   */
             if (/*classChoice == ClassID.None &&*/ drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI && !drawInfo.drawPlayer.dead)
             {
                 var c = ArchaeaWorld.playerClass.FirstOrDefault(t => t.playerUID == playerUID);
@@ -1755,6 +1896,11 @@ namespace ArchaeaMod
             if (drawInfo.drawPlayer.active)
             { 
                 ModeUI.DrawTextUI(sb, Main.screenHeight - 200, "Set hotkeys in the Control settings.", ref enterWorldTicks, 1800);
+            }
+            if (dungeonLocatorTicks > 0 && dungeonLocatorTicks < 900)
+            {
+                string text = locatorDirection == -1 ? "Dungeon left." : "Dungeon right.";
+                ModeUI.DrawTextUI(sb, Main.screenHeight - 200, text, ref locatorDirection, 900);
             }
             return;
             if (debugMenu)
@@ -1986,6 +2132,41 @@ namespace ArchaeaMod
         public static bool AccIsEquipped(Player player, int type)
         {
             return player.armor.Where(t => t.type == type).Count() > 0;
+        }
+        int numProjectiles = 0;
+        public bool fireStorm = false;
+        public void FireStorm()
+        {
+            if (Main.rand.NextBool(3))
+            {
+                if (fireStorm)
+                {
+                    int i = Main.rand.Next(1, 3);
+                    int k = Main.rand.Next(0 + i, 10 + i);
+                    int dmg = (int)(15 * (float)i - 0.5f);
+                    float kb = (float)i - 0.5f;                                                                                                                                                                                                                             //  Add FireRain projectile
+                    int FireRain = Projectile.NewProjectile(Projectile.GetSource_None(), new Vector2(Player.position.X + (float)Main.rand.Next(-100 * k, 100 * k), Player.position.Y - 800f + (float)Main.rand.Next(-50, 50)), new Vector2(Main.rand.Next(-2 * i, 2 * i), 12f), 0, dmg, kb, Player.whoAmI);
+                    Main.projectile[FireRain].aiStyle = 0;
+                    Main.projectile[FireRain].timeLeft = 2000;
+                    Main.projectile[FireRain].tileCollide = true;
+                    Main.projectile[FireRain].scale *= i - 0.5f;
+                    Main.projectile[FireRain].velocity.Y *= Main.rand.Next(1, 2) * 0.75f;
+                    Main.projectile[FireRain].hostile = false;
+                    Main.projectile[FireRain].friendly = true;
+                    Main.projectile[FireRain].penetrate = -1;
+                    Main.projectile[FireRain].netUpdate = true;
+                    if (Main.rand.NextBool(3))
+                    { 
+                        //Main.PlaySound(2, (int)player.position.X, (int)player.position.Y, SoundHandler.soundID["firestorm single"]);
+                    }
+                    numProjectiles--;
+                }
+            }
+            if (numProjectiles <= 0)
+            {
+                fireStorm = false;
+                numProjectiles = 150;
+            }
         }
     }
 

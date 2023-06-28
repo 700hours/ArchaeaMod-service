@@ -145,6 +145,10 @@ namespace ArchaeaMod
         {
             get { return (ushort)ModContent.TileType<m_book>(); }
         }
+        public static ushort steamVent
+        {
+            get { return (ushort)ModContent.TileType<steam_vent>(); }
+        }
         public class ColorID
         {
             public static byte
@@ -287,7 +291,7 @@ namespace ArchaeaMod
                             if (top.TileType == magnoStone && top.HasTile)
                             {
                                 style = 0;
-                                if (WorldGen.genRand.Next(10) == 0)
+                                if (WorldGen.genRand.NextBool(10))
                                 {
                                     if (WorldGen.genRand.NextBool())
                                         t.PlaceTile(i, j, ambientRocksTopLarge, true, false, 4, false, style = WorldGen.genRand.Next(3));
@@ -306,7 +310,9 @@ namespace ArchaeaMod
                                 style = 3;
                                 if (WorldGen.genRand.NextBool())
                                     t.PlaceTile(i, j, ambientRocksLarge, true, false, 4, false, style = WorldGen.genRand.Next(3));
-                                else t.PlaceTile(i, j, ambientRocksSmall, true, false, 4, false, style = WorldGen.genRand.Next(3));
+                                else if (WorldGen.genRand.NextBool())
+                                    t.PlaceTile(i, j, ambientRocksSmall, true, false, 4, false, style = WorldGen.genRand.Next(3));
+                                else t.PlaceTile(i, j, steamVent, true, false, 8, false, style = WorldGen.genRand.Next(3));
                                 //if (WorldGen.genRand.Next(10) == 0)
                                 //{
                                 //    t.PlaceTile(i, j, ambientRocks, true, false, 3, false, style = WorldGen.genRand.Next(3));

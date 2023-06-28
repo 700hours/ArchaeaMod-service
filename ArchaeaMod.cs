@@ -293,6 +293,37 @@ namespace ArchaeaMod
                         Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SetModeStats(b);
                     }
                     break;
+                case Packet.SetExtraLife:
+                    if (Main.netMode == NetmodeID.Server)
+                        NetHandler.Send(Packet.SetExtraLife, i, b: b);
+                    else
+                    {
+                        if (b)
+                        {
+                            var modPlayer = Main.player[i].GetModPlayer<ArchaeaPlayer>();
+                            if (modPlayer.extraLife < 3)
+                            {
+                                modPlayer.extraLife++;
+                            }
+                        }
+                    }
+                    break;
+                case Packet.CastFireStorm:
+                    if (Main.netMode == NetmodeID.Server)
+                        NetHandler.Send(Packet.CastFireStorm, i, b: b);
+                    else
+                    {
+                        if (b)
+                        {
+                            var modPlayer = Main.player[i].GetModPlayer<ArchaeaPlayer>();
+                            if (!modPlayer.fireStorm)
+                            {
+                                modPlayer.fireStorm = true;
+                            }
+                        }
+                    }
+                    break;
+                    break;
             }
         }
     }
@@ -320,5 +351,7 @@ namespace ArchaeaMod
         [Obsolete("Mode scaling happens in GlobalNPC.SetDefaults().")]
         public const byte ModeNPCLife = 18;
         public const byte SetModeLife = 19;
+        public const byte SetExtraLife = 20;
+        public const byte CastFireStorm = 21;
     }
 }

@@ -16,6 +16,7 @@ namespace ArchaeaMod.Tiles
 {
     public class sky_portal : ModTile
     {
+        public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
