@@ -19,9 +19,14 @@ namespace ArchaeaMod.Buffs
         {
             DisplayName.SetDefault("Frozen");
         }
+        public override void ModifyBuffTip(ref string tip, ref int rare)
+        {
+            tip = "\"I can't move!\"";
+        }
         public override void Update(NPC npc, ref int buffIndex)
         {
             npc.velocity.X /= 2f;
+            npc.damage = 0;
             Dust dust = Dust.NewDustDirect(npc.position, npc.width, npc.height, DustID.t_Frozen);
             dust.noGravity = true;
             dust.noLight = false;

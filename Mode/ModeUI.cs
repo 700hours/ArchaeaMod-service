@@ -41,8 +41,11 @@ namespace ArchaeaMod.Mode
         public static Color innactiveColor = Color.Gray;
         public static Color activeColor = Color.LightBlue;
         public static Color bgColor = default;
+        public Color textColor = default;
         private int classChoice = 0;
         public int ticks = 300;
+        public int ticks2 = 300;
+        public string text;
 
         public override void OnModLoad()
         {
@@ -297,7 +300,8 @@ namespace ArchaeaMod.Mode
             {
                 Utils.DrawBorderString(sb, $"{ClassName()} class traits", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
             }
-            DrawTextUI(sb, 0, "Trait acquired!", ref ticks);
+            DrawTextUI(sb, 0, "Trait acquired!", ref ticks, color: Color.CornflowerBlue);
+            DrawTextUI(sb, 0, text, ref ticks2, color: textColor);
         }
         public override void UpdateUI(GameTime gameTime)
         {
@@ -458,7 +462,7 @@ namespace ArchaeaMod.Mode
             InBoundsUI(trait[TraitIndex()]);
             InBoundsUI(page[3]);
         }
-        public static void DrawTextUI(SpriteBatch sb, int y, string text, ref int ticks, int maxTicks = 300)
+        public static void DrawTextUI(SpriteBatch sb, int y, string text, ref int ticks, int maxTicks = 300, Color color = default)
         {
             if (ticks < maxTicks)
             { 
@@ -472,6 +476,12 @@ namespace ArchaeaMod.Mode
                 Utils.DrawInvBG(sb, rect, Color.Transparent);
                 Utils.DrawBorderString(sb, text, new Vector2(rect.X + xOffset, rect.Y + yOffset), Color.CornflowerBlue);
             }
+        }
+        public static void NewText(string text, Color color)
+        {
+            ModContent.GetInstance<ModeUI>().text = text;
+            ModContent.GetInstance<ModeUI>().ticks2 = 0;
+            ModContent.GetInstance<ModeUI>().textColor = color;
         }
         private void InBoundsUI(ListBox listBox)
         {

@@ -1,27 +1,18 @@
 using ArchaeaMod.Items;
-using ArchaeaMod.Jobs.Buffs;
-using ArchaeaMod.Jobs.Global;
-using ArchaeaMod.Jobs.Projectiles;
 using ArchaeaMod.NPCs;
-using Microsoft.Xna.Framework;
-using MonoMod.RuntimeDetour;
-using System.Runtime.Intrinsics.X86;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Humanizer.In;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace ArchaeaMod.Jobs.Items
-{
-    internal class Scroll_incognito : ModItem
-	{
+{ 
+    internal class Scroll_plague_nova : ModItem
+    {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scroll of Incognito");
-            Tooltip.SetDefault("Put on a zombie disguise." +
-                "Enemies won't recognize you!");
+            DisplayName.SetDefault("Scroll of Plague Nova");
+            Tooltip.SetDefault("Create a blast of poison around you.\n" + 
+                "One use.");
         }
         public override void SetDefaults()
         {
@@ -30,6 +21,7 @@ namespace ArchaeaMod.Jobs.Items
             Item.useStyle = ItemUseStyleID.HoldUp;
             Item.useAnimation = 30;
             Item.useTime = 30;
+            Item.damage = 60;
             Item.maxStack = 10;
             Item.consumable = true;
             Item.autoReuse = false;
@@ -43,25 +35,22 @@ namespace ArchaeaMod.Jobs.Items
         {
             if (player.whoAmI == Main.myPlayer)
             {
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < 10; i++)
                 {
-                    int index = Dust.NewDust(player.Center, 1, 1, DustID.GreenMoss, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 1.2f);
+                    int index = Dust.NewDust(player.position, player.width, player.height, DustID.AncientLight, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 2f);
                     Main.dust[index].noGravity = true;
-                    Main.dust[index].noLight = false;
                 }
-                player.AddBuff(ModContent.BuffType<Buffs.Zombie>(), Buffs.Zombie.MaxTime, Main.netMode == 1);
-                SoundEngine.PlaySound(SoundID.ZombieMoan, player.Center);
+                ArchaeaItem.ProjectileCircle(Main.MouseWorld, Item.damage, ModContent.ProjectileType<Projectiles.diffusion>(), 20, 61, ModContent.BuffType<Buffs.Plague>(), 300, 0);
                 return true;
             }
             return false;
-		}
+        }
         public override void AddRecipes()
         {
             CreateRecipe()
                 .AddIngredient(ItemID.Book)
-                .AddIngredient(ItemID.Shackle)
-                .AddIngredient(ItemID.Deathweed, 2)
-                .AddIngredient(ItemID.DemoniteOre)
+                .AddIngredient(ItemID.Deathweed, 4)
+                .AddIngredient(ItemID.Meteorite)
                 .AddTile(TileID.CrystalBall)
                 .Register();
         }

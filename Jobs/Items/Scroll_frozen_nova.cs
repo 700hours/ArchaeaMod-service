@@ -20,14 +20,14 @@ namespace ArchaeaMod.Jobs.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Scrollof Frozen Nova");
-            Tooltip.SetDefault("Create a blast of frost around you.\n" +
+            Tooltip.SetDefault("Create a blast of frost at target.\n" +
                 "One use.");
         }
         public override void SetDefaults()
         {
             Item.width = 28;
             Item.height = 32;
-            Item.useStyle = 2;
+            Item.useStyle = ItemUseStyleID.HoldUp;
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.damage = 40;
@@ -49,7 +49,7 @@ namespace ArchaeaMod.Jobs.Items
                     int index = Dust.NewDust(player.position, player.width, player.height, DustID.AncientLight, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 2f);
                     Main.dust[index].noGravity = true;
                 }
-                ArchaeaItem.ProjectileCircle(Main.MouseWorld, Item.damage, ModContent.ProjectileType<Projectiles.Frost>(), 20);
+                ArchaeaItem.ProjectileCircle(Main.MouseWorld, Item.damage, ModContent.ProjectileType<Projectiles.diffusion>(), 20, 59, ModContent.BuffType<ArchaeaMod.Buffs.frozen>(), 300, 0);
 				return true;
             }
             return false;
@@ -59,7 +59,8 @@ namespace ArchaeaMod.Jobs.Items
             CreateRecipe()
                 .AddIngredient(ItemID.Book)
                 .AddIngredient(ItemID.Waterleaf, 4)
-                .AddTile(TileID.Bookcases)
+                .AddIngredient(ItemID.Meteorite)
+                .AddTile(TileID.CrystalBall)
                 .Register();
         }
     }

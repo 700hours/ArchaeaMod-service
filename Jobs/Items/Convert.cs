@@ -66,7 +66,7 @@ namespace ArchaeaMod.Jobs.Items
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddTile(TileID.Bookcases)
+                .AddTile(TileID.CrystalBall)
                 .AddIngredient(ItemID.Book, 1)
                 .AddIngredient(ItemID.Sunflower, 10)
                 .Register();

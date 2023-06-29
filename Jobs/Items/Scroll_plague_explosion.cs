@@ -5,13 +5,10 @@ using ArchaeaMod.Jobs.Projectiles;
 using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;
-using System.Runtime.Intrinsics.X86;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Humanizer.In;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace ArchaeaMod.Jobs.Items
 {
@@ -20,6 +17,25 @@ namespace ArchaeaMod.Jobs.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Scroll of Plague Explosion");
+			Tooltip.SetDefault("Strikes an enemy with poison.\n" +
+				"One use.");
+        }
+        public override void SetDefaults()
+        {
+            Item.width = 28;
+            Item.height = 32;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.useAnimation = 30;
+            Item.useTime = 30;
+			Item.damage = 45;
+            Item.maxStack = 10;
+			Item.consumable = true;
+            Item.autoReuse = false;
+            Item.useTurn = false;
+            Item.noMelee = true;
+            Item.scale = 1;
+            Item.value = 0;
+            Item.rare = 3;
         }
         public override bool? UseItem(Player player)
         {
@@ -50,20 +66,33 @@ namespace ArchaeaMod.Jobs.Items
 						}
 						for (int i = 0; i < 20; i++) 
 						{
-							int num54 = Projectile.NewProjectile(Projectile.GetSource_None(), npcv.X+(nPC.width/2), npcv.Y+(nPC.height/2), Main.rand.Next(10)-5, Main.rand.Next(10)-5, ModContent.ProjectileType<Projectiles.poison_diffusion>(), 5, 0, player.whoAmI);
+							int num54 = Projectile.NewProjectile(Projectile.GetSource_None(), npcv.X+(nPC.width/2), npcv.Y+(nPC.height/2), Main.rand.Next(10)-5, Main.rand.Next(10)-5, ModContent.ProjectileType<Projectiles.diffusion>(), 5, 0, player.whoAmI, 61, ModContent.BuffType<Plague>());
 							Main.projectile[num54].timeLeft = 90;
 							Main.projectile[num54].tileCollide = false;
 							Main.projectile[num54].ignoreWater = false;
-						}
+							Main.projectile[num54].localAI[0] = 300;
+							Main.projectile[num54].localAI[1] = 1;
+                        }
 						if (Main.netMode == 1) 
 						{
-							nPC.netUpdate = true;
+						 	nPC.netUpdate = true;
 						}
+						SoundEngine.PlaySound(SoundID.Item8, mousev);
 						return true;
 					}
 				}
 			}
 			return false;
 		}
-	}
+        public override void AddRecipes()
+        {
+			CreateRecipe()
+				.AddIngredient(ItemID.Book)
+				.AddIngredient(ItemID.Deathweed, 2)
+				.AddIngredient(ItemID.Grenade)
+                .AddIngredient(ItemID.Meteorite)
+                .AddTile(TileID.CrystalBall)
+				.Register();
+        }
+    }
 }

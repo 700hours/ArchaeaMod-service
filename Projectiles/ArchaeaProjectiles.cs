@@ -116,6 +116,10 @@ namespace ArchaeaMod.Projectiles
                 TimerAI = 0;
             }
         }
+        public static bool IsNotOldPosition(Projectile proj)
+        {
+            return proj.position.X < 0f && proj.oldPosition.X >= 0f || proj.position.X > 0f && proj.oldPosition.X <= 0f || proj.position.Y < 0f && proj.oldPosition.Y >= 0f || proj.position.Y > 0f && proj.oldPosition.Y <= 0f;
+        }
     }
     public class MathProjectile
     {

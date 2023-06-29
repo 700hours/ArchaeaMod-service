@@ -26,7 +26,7 @@ namespace ArchaeaMod.Jobs.Items
         {
             Item.width = 28;
             Item.height = 32;
-            Item.useStyle = 5;
+            Item.useStyle = ItemUseStyleID.HoldUp;
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.maxStack = 10;
@@ -105,7 +105,7 @@ namespace ArchaeaMod.Jobs.Items
                 .AddIngredient(ItemID.Book)
                 .AddIngredient(ItemID.IronskinPotion)
                 .AddIngredient(ItemID.IronOre)
-                .AddTile(TileID.Bookcases)
+                .AddTile(TileID.CrystalBall)
                 .Register();
         }
     }

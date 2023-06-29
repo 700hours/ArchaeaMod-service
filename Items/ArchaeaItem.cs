@@ -16,6 +16,7 @@ using ArchaeaMod.Buffs;
 using ArchaeaMod.Items.Alternate;
 using ArchaeaMod.Projectiles;
 using ArchaeaMod.NPCs;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace ArchaeaMod
 {
@@ -192,6 +193,21 @@ namespace ArchaeaMod.Items
                 Main.projectile[index].timeLeft = timeLeft;
                 Main.projectile[index].tileCollide = false;
                 Main.projectile[index].ignoreWater = true;
+            }
+        }
+        public static void ProjectileCircle(Vector2 origin, int damage, int projID, int timeLeft, int ai0, int ai1, int localai0, int localai1)
+        {
+            for (float r = 0f; r < Math.PI * 2f; r += 0.017f * (45f / 15f))
+            {
+                Vector2 velocity = NPCs.ArchaeaNPC.AngleToSpeed(r, 15f);
+                int index = Projectile.NewProjectile(Projectile.GetSource_None(), origin, velocity, projID, damage, 0f, Main.myPlayer);
+                Main.projectile[index].timeLeft = timeLeft;
+                Main.projectile[index].tileCollide = false;
+                Main.projectile[index].ignoreWater = true;
+                Main.projectile[index].ai[0] = ai0;
+                Main.projectile[index].ai[1] = ai1;
+                Main.projectile[index].localAI[0] = localai0;
+                Main.projectile[index].localAI[1] = localai1;
             }
         }
     }
