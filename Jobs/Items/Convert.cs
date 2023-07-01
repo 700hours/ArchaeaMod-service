@@ -32,7 +32,7 @@ namespace ArchaeaMod.Jobs.Items
             Item.noMelee = true;
 			Item.mana = 35;
             Item.scale = 1;
-            Item.value = 0;
+            Item.value = 3000;
             Item.rare = 2;
         }
         public override bool? UseItem(Player player)
@@ -69,6 +69,7 @@ namespace ArchaeaMod.Jobs.Items
                 .AddTile(TileID.CrystalBall)
                 .AddIngredient(ItemID.Book, 1)
                 .AddIngredient(ItemID.Sunflower, 10)
+                .AddIngredient(ItemID.DemoniteOre)
                 .Register();
         }
     }

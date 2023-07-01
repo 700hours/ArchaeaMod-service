@@ -1,0 +1,92 @@
+using ArchaeaMod.Items;
+using ArchaeaMod.Jobs.Global;
+using ArchaeaMod.NPCs;
+using ArchaeaMod.NPCs.Bosses;
+using Humanizer;
+using Microsoft.Xna.Framework;
+using MonoMod.RuntimeDetour;
+using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
+using Terraria.ModLoader;
+using static IL.Terraria.ID.ArmorIDs;
+using static On.Terraria.ID.ArmorIDs;
+using static System.Formats.Asn1.AsnWriter;
+
+namespace ArchaeaMod.Jobs.Items
+{
+    internal class Tome_of_soften : ModItem
+	{
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Tome of Soften");
+			Tooltip.SetDefault("Weakens an enemy's defenses, including bosses.\n" +
+				"Costs mana directionally proportional to NPC size.");
+        }
+        public override void SetDefaults()
+        {
+            Item.width = 28;
+            Item.height = 32;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useAnimation = 30;
+            Item.useTime = 30;
+            Item.maxStack = 1;
+            Item.consumable = false;
+            Item.autoReuse = false;
+            Item.useTurn = false;
+            Item.noMelee = true;
+            Item.scale = 1;
+            Item.value = 2000;
+            Item.rare = 3;
+        }
+        public override bool? UseItem(Player player)
+        {
+            Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y);
+			Rectangle mouse = new Rectangle((int)(mousev.X - 16f), (int)(mousev.Y - 16f), 32, 32);
+			NPC[] npc = Main.npc;
+			for(int m = 0; m < npc.Length-1; m++)
+			{
+				NPC nPC = npc[m];
+				if(!nPC.active) continue;
+				if(nPC.life <= 0) continue;
+				if(nPC.friendly) continue;
+				if(nPC.dontTakeDamage) continue;
+                if(!Collision.CanHitLine(nPC.Center, nPC.width, nPC.height, player.Center, player.width, player.height)) continue;
+                Vector2 npcv = new Vector2(nPC.position.X, nPC.position.Y);
+				Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, nPC.width, nPC.height);
+				if(mouse.Intersects(npcBox) && player.statMana >= nPC.width/4 && Main.mouseLeft)
+				{
+                    int cost = nPC.width / 4;
+                    if (cost > player.statManaMax2)
+                    {
+                        cost = player.statManaMax2;
+                    }
+                    if (player.statMana < cost)
+                    {
+                        return false;
+                    }
+					player.statMana -= cost;
+					player.manaRegenDelay = (int)player.maxRegenDelay;
+					Color newColor = default(Color);
+					int a = Dust.NewDust(new Vector2(mousev.X - 10f, mousev.Y - 10f), 20, 20, 19, 0f, 0f, 100, newColor, 2f);
+					Main.dust[a].noGravity = true;
+                    SoundEngine.PlaySound(SoundID.Item8, mousev);
+                    nPC.AddBuff(ModContent.BuffType<Buffs.Soft>(), Buffs.Soft.MaxTime, Main.netMode == 0);
+					nPC.netUpdate = true;
+					return true;
+				}
+			}
+			return false;
+		}
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Book)
+                .AddIngredient(ItemID.Daybloom, 10)
+                .AddIngredient(ItemID.Silk, 10)
+                .AddIngredient(ItemID.DemoniteOre)
+                .AddTile(ItemID.CrystalBall)
+                .Register();
+        }
+    }
+}

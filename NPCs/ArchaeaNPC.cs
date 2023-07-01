@@ -70,6 +70,15 @@ namespace ArchaeaMod
         {
             get { return ModContent.NPCType<NPCs.Town.MechanicMinion>(); }
         }
+        public static int FollowerMenu
+        {
+            get { return ModContent.NPCType<NPCs.Town.FollowerMenu>(); }
+        }
+        public static bool Follower(int type)
+        {
+            return type != ModContent.NPCType<NPCs.Town.FollowerMenu>() && 
+                type != ModContent.NPCType<NPCs.Town.MechanicMinion>(); 
+        }
     }
 }
 
@@ -280,9 +289,8 @@ namespace ArchaeaMod.NPCs
             y = (y - (y % 16));
             return new Vector2(x, y);
         }
-        public static Vector2 AllSolidFloors(Player target)
+        public static Vector2 AllSolidFloors(Player target, int range = 400)
         {
-            int range = 400;
             int x = (int)target.Center.X;
             int y = (int)target.Center.Y;
             int right = x + range;

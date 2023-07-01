@@ -32,9 +32,8 @@ namespace ArchaeaMod.Jobs.Items
             Item.useTurn = false;
             Item.noMelee = true;
             Item.scale = 1;
-            Item.value = 0;
+            Item.value = 1000;
             Item.rare = 2;
-
         }
         public override bool? UseItem(Player player)
         {
@@ -101,6 +100,14 @@ namespace ArchaeaMod.Jobs.Items
                 default:
                     return "No";
             }
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.GPS)
+                .AddIngredient(ItemID.Compass)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
 }

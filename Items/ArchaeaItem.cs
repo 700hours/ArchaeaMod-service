@@ -184,6 +184,15 @@ namespace ArchaeaMod.Items
                 Main.dust[index].noGravity = true;
             }
         }
+        public static void DustCircle(Vector2 origin, float radius, int dustID)
+        {
+            for (float r = 0f; r < Math.PI * 2f; r += 0.017f * (45f / 15f))
+            {
+                Vector2 position = NPCs.ArchaeaNPC.AngleBased(origin, r, radius);
+                int index = Dust.NewDust(position, 1, 1, dustID, 0, 0, 0, default, 1.2f);
+                Main.dust[index].noGravity = true;
+            }
+        }
         public static void ProjectileCircle(Vector2 origin, int damage, int projID, int timeLeft)
         {
             for (float r = 0f; r < Math.PI * 2f; r += 0.017f * (45f / 15f))

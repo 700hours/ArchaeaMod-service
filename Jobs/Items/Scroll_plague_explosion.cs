@@ -9,6 +9,9 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using tUserInterface.ModUI;
+using static Humanizer.On;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace ArchaeaMod.Jobs.Items
 {
@@ -16,7 +19,7 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scroll of Plague Explosion");
+            DisplayName.SetDefault("Tome of Plague Explosion");
 			Tooltip.SetDefault("Strikes an enemy with poison.\n" +
 				"One use.");
         }
@@ -24,9 +27,10 @@ namespace ArchaeaMod.Jobs.Items
         {
             Item.width = 28;
             Item.height = 32;
-            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.useStyle = ItemUseStyleID.Swing;
             Item.useAnimation = 30;
             Item.useTime = 30;
+			Item.mana = 
 			Item.damage = 45;
             Item.maxStack = 10;
 			Item.consumable = true;
@@ -34,7 +38,7 @@ namespace ArchaeaMod.Jobs.Items
             Item.useTurn = false;
             Item.noMelee = true;
             Item.scale = 1;
-            Item.value = 0;
+            Item.value = 5000;
             Item.rare = 3;
         }
         public override bool? UseItem(Player player)
@@ -87,11 +91,10 @@ namespace ArchaeaMod.Jobs.Items
         public override void AddRecipes()
         {
 			CreateRecipe()
-				.AddIngredient(ItemID.Book)
-				.AddIngredient(ItemID.Deathweed, 2)
-				.AddIngredient(ItemID.Grenade)
-                .AddIngredient(ItemID.Meteorite)
-                .AddTile(TileID.CrystalBall)
+				.AddIngredient(ItemID.SpellTome)
+				.AddIngredient(ModContent.ItemType<Scroll_plague_explosion>(), 3)
+				.AddIngredient(ItemID.Fireblossom, 5)
+				.AddTile(TileID.CrystalBall)
 				.Register();
         }
     }

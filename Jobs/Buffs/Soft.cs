@@ -1,21 +1,63 @@
-int OldNPCdef = 0;
-public void NPCEffectsStart(NPC N,int buffIndex,int buffType,int buffTime)
+using ArchaeaMod.Items;
+using ArchaeaMod.Jobs.Buffs;
+using ArchaeaMod.Jobs.Global;
+using ArchaeaMod.Jobs.Projectiles;
+using ArchaeaMod.NPCs;
+using Microsoft.Xna.Framework;
+using MonoMod.RuntimeDetour;
+using System.Runtime.Intrinsics.X86;
+using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace ArchaeaMod.Jobs.Buffs
 {
-	buffTime = 600;
-	buffType = -1;
-	OldNPCdef = N.defense;
-	if(Main.dedServ || Main.netMode != 0) NetMessage.SendData(23, -1, -1, "", N.whoAmI, 0f, 0f, 0f, 0);
-}
-public void NPCEffects(NPC N,int buffIndex,int buffType,int buffTime)
-{
-	N.defense /= 2;
-	Color color = new Color(0, 255, 200, 220);
-	N.color = color;
-	if(Main.dedServ || Main.netMode != 0) NetMessage.SendData(23, -1, -1, "", N.whoAmI, 0f, 0f, 0f, 0);
-}
-public void NPCEffectsEnd(NPC N,int buffIndex,int buffType,int buffTime)
-{
-	N.color = default(Color);
-	N.defense = OldNPCdef;
-	if(Main.dedServ || Main.netMode != 0) NetMessage.SendData(23, -1, -1, "", N.whoAmI, 0f, 0f, 0f, 0);
+    internal class Soft : ModBuff
+	{
+		public const int MaxTime = 600;
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Soft");
+        }
+        public override void Update(NPC npc, ref int buffIndex)
+        {
+			int buffTime = npc.buffTime[buffIndex];
+            if (buffTime == MaxTime)
+			{
+				NPCEffectsStart(npc, buffIndex, Type, 0);
+			}
+			else if (buffTime < MaxTime && buffTime > 1)
+			{
+				NPCEffects(npc, buffIndex, Type, 0);
+			}
+			else if (buffTime == 1)
+			{
+				NPCEffectsEnd(npc, buffIndex, Type, 0);
+			}
+			float radius = (float)(buffTime / MaxTime) * npc.width;
+			ArchaeaItem.DustCircle(npc.Center, radius, DustID.Sunflower);
+        }
+        int OldNPCdef = 0;
+		public void NPCEffectsStart(NPC N,int buffIndex,int buffType,int buffTime)
+		{
+			buffTime = 600;
+			buffType = -1;
+			OldNPCdef = N.defense;
+			N.netUpdate = true;
+		}
+		public void NPCEffects(NPC N,int buffIndex,int buffType,int buffTime)
+		{
+			N.defense /= 2;
+			Color color = new Color(0, 255, 200, 220);
+			N.color = color;
+            N.netUpdate = true;
+        }
+		public void NPCEffectsEnd(NPC N,int buffIndex,int buffType,int buffTime)
+		{
+			N.color = default(Color);
+			N.defense = OldNPCdef;
+            N.netUpdate = true;
+        }
+	}
 }
