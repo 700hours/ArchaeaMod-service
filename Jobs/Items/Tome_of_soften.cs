@@ -1,17 +1,8 @@
-using ArchaeaMod.Items;
-using ArchaeaMod.Jobs.Global;
-using ArchaeaMod.NPCs;
-using ArchaeaMod.NPCs.Bosses;
-using Humanizer;
 using Microsoft.Xna.Framework;
-using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static IL.Terraria.ID.ArmorIDs;
-using static On.Terraria.ID.ArmorIDs;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace ArchaeaMod.Jobs.Items
 {
@@ -84,8 +75,8 @@ namespace ArchaeaMod.Jobs.Items
                 .AddIngredient(ItemID.Book)
                 .AddIngredient(ItemID.Daybloom, 10)
                 .AddIngredient(ItemID.Silk, 10)
-                .AddIngredient(ItemID.DemoniteOre)
-                .AddTile(ItemID.CrystalBall)
+                .AddIngredient(ItemID.BlackInk, 1)
+                .AddTile(TileID.Bookcases)
                 .Register();
         }
     }

@@ -1,4 +1,5 @@
 using ArchaeaMod.Items;
+using ArchaeaMod.Jobs.Buffs;
 using ArchaeaMod.Jobs.Global;
 using ArchaeaMod.NPCs;
 using ArchaeaMod.NPCs.Bosses;
@@ -15,7 +16,7 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace ArchaeaMod.Jobs.Items
 {
-    internal class Tome_of_teleportation : ModItem
+    internal class Tome_of_phase : ModItem
 	{
         public override void SetStaticDefaults()
         {
@@ -44,20 +45,22 @@ namespace ArchaeaMod.Jobs.Items
             Item.mana = player.statManaMax2 / 3;
             if (player.statMana >= player.statManaMax2 / 3)
 			{
-                Vector2 tilev = new Vector2((Main.mouseX + Main.screenPosition.X - player.width) / 16, (Main.mouseY + Main.screenPosition.Y - player.height) / 16);
-                Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X - (player.width / 2), Main.mouseY + Main.screenPosition.Y - (player.height / 2));
-                if (!Collision.CanHitLine(mousev, 1, 1, player.Center, player.width, player.height))
-                {
-                    return false;
-                }
-				Color newColor = default(Color);
-				int a = Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, 20, 0f, 0f, 100, newColor, 2.5f);
-				Main.dust[a].noGravity = true;
+                player.AddBuff(ModContent.BuffType<Phase>(), Phase.MaxTime, Main.netMode == 1);
                 player.statMana -= player.statManaMax2 / 3;
 				player.manaRegenDelay = (int)player.maxRegenDelay;
                 return true;
 			}
 			return false;
 		}
-	}
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Book)
+                .AddIngredient(ItemID.Blinkroot, 20)
+                .AddIngredient(ItemID.HolyWater, 10)
+                .AddIngredient(ItemID.BlackInk, 1)
+                .AddTile(TileID.Bookcases)
+                .Register();
+        }
+    }
 }

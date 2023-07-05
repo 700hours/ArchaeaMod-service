@@ -13,6 +13,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Humanizer.On;
 using static IL.Terraria.ID.ArmorIDs;
+using static On.Terraria.ID.ArmorIDs;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace ArchaeaMod.Jobs.Items
@@ -51,8 +52,10 @@ namespace ArchaeaMod.Jobs.Items
                 {
                     return false;
                 }
+                int tries = 0;
+                int count = Main.npc.Count(t => t.active && !t.friendly && !t.boss && !t.townNPC && !t.CountsAsACritter && !ModNPCID.Follower(t.type));
                 do
-				{
+                {
 					bool any = Main.npc.Any(t => t.active && !t.friendly && !t.boss && !t.townNPC && !t.CountsAsACritter && !ModNPCID.Follower(t.type));
 					if (!any)
 					{
@@ -63,10 +66,14 @@ namespace ArchaeaMod.Jobs.Items
 					{
 						break;
 					}
-				} while (true);
+				} while (++tries < count);
+                if (tries == count)
+                { 
+                    return false;
+                }
 				player.statMana -= player.statManaMax/3;
 				player.manaRegenDelay = (int)player.maxRegenDelay;
-                nPC.AddBuff(ModContent.BuffType<Buffs.Summoned>(), Buffs.Summoned.MaxTime, Main.netMode == 1);
+                nPC.AddBuff(ModContent.BuffType<Buffs.Summoned>(), Buffs.Transmogrify.MaxTime, Main.netMode == 1);
                 nPC.Center = mousev;
                 nPC.netUpdate = true;
                 SoundEngine.PlaySound(SoundID.Item25, mousev);
@@ -86,5 +93,15 @@ namespace ArchaeaMod.Jobs.Items
 			}
 			return false;
 		}
-	}
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Book)
+                .AddIngredient(ItemID.Deathweed, 10)
+                .AddIngredient(ItemID.CorruptSeeds, 5)
+                .AddIngredient(ItemID.BlackInk)
+                .AddTile(TileID.Bookcases)
+                .Register();
+        }
+    }
 }

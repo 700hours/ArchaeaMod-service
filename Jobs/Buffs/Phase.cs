@@ -47,6 +47,11 @@ namespace ArchaeaMod.Jobs.Buffs
                 floor.Y -= player.height;
             }
             float weight = ((float)buffTime / MaxTime - 1f) * -1;
+            if (weight == 0 || weight == 1)
+            {
+                int a = Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, 20, 0f, 0f, 100, newColor, 2.5f);
+                Main.dust[a].noGravity = true;
+            }
             if (weight > 0)
             {
                 player.lavaImmune = player.lavaWet; 
