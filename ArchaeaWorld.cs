@@ -176,7 +176,7 @@ namespace ArchaeaMod
         private Treasures t;
         public static Vector2[] genPosition;
         public bool _archaeaMode = false;
-        
+
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
             float multiplier = 1f;
@@ -195,8 +195,8 @@ namespace ArchaeaMod
             int height = (int)(150 * multiplier);
             int buffer = 20;
             int worldCenter = Main.maxTilesX / 2;
-            int CavesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Granite")); // Granite
             int originX = 0, originY = 0, mWidth = 800, mHeight = 450;
+            int CavesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Granite")); // Granite
             if (CavesIndex != -1)
             {
                 tasks.Insert(CavesIndex + 1, new PassLegacy("Magno Caver", delegate (GenerationProgress progress, GameConfiguration c)
@@ -386,7 +386,7 @@ namespace ArchaeaMod
             }
             int index5 = tasks.FindIndex(pass => pass.Name.Equals("Hives"));
             if (index5 != -1)
-            { 
+            {
                 tasks.Insert(index5 + 1, new PassLegacy("Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     progress.Message = "More Magno";
@@ -412,9 +412,9 @@ namespace ArchaeaMod
                     }
                 }));
             }
-            int index6 = tasks.FindIndex(pass => pass.Name.Equals("Dungeon")) - 1;
+            int index6 = tasks.FindIndex(pass => pass.Name.Equals("Slush")) - 1;
             if (index6 != -1)
-            { 
+            {
                 tasks.Insert(index6 + 1, new PassLegacy("More Structure Generation", delegate (GenerationProgress progress, GameConfiguration c)
                 {
                     progress.Message = "Even More Magno";
@@ -429,7 +429,7 @@ namespace ArchaeaMod
                             int n = Math.Max(buffer, Math.Min(Main.maxTilesY - buffer, y + j));
                             Tile _tile = Main.tile[m, n];
                             if (tile[i, j] > 0)
-                            { 
+                            {
                                 _tile.HasTile = false;
                                 _tile.TileType = TileID.Dirt;
                                 _tile.LiquidType = LiquidID.Water;
@@ -477,7 +477,7 @@ namespace ArchaeaMod
                             }
                         }
                     }
-                    
+
                 }));
             }
 
@@ -499,7 +499,8 @@ namespace ArchaeaMod
                     //}
                     //else PositionX = miner.genPos[0].X / 16;
                     int tries = 0;
-                    do { 
+                    do
+                    {
                         PositionX = WorldGen.genRand.Next(originX, originX + mWidth);
                     } while (PositionX < Main.rightWorld / 16f - mWidth && tries++ < 200);
 
@@ -508,8 +509,8 @@ namespace ArchaeaMod
                     bool dirtWall = Main.tile[(int)PositionX, surfaceBuffer].WallType == WallID.DirtUnsafe || Main.tile[(int)PositionX, surfaceBuffer].WallType == WallID.DirtUnsafe1 || Main.tile[(int)PositionX, surfaceBuffer].WallType == WallID.DirtUnsafe2 || Main.tile[(int)PositionX, surfaceBuffer].WallType == WallID.DirtUnsafe3 || Main.tile[(int)PositionX, surfaceBuffer].WallType == WallID.DirtUnsafe4;
                     for (int i = 0; i < MaxTries; i++)
                     {
-                        if (Main.tile[(int)PositionX + gap, surfaceBuffer].HasTile) 
-                        { 
+                        if (Main.tile[(int)PositionX + gap, surfaceBuffer].HasTile)
+                        {
                             surfaceBuffer--;
                         }
                         if (!Main.tile[(int)PositionX + gap, surfaceBuffer].HasTile && Main.tile[(int)PositionX + gap, surfaceBuffer].WallType == 0)
@@ -536,6 +537,17 @@ namespace ArchaeaMod
                     Factory.Decorate(buffer, Factory.Top, Main.maxTilesX - buffer, height);
                 }));
             }
+            if (RoomIndex != -1)
+            {
+                tasks.Insert(RoomIndex + 1, new PassLegacy("Reset Spawn Tile", delegate (GenerationProgress progress, GameConfiguration c)
+                {
+                    Main.spawnTileY = (int)Main.worldSurface;
+                    while (Main.tile[Main.spawnTileX, Main.spawnTileY].WallType != WallID.None)
+                    {
+                        Main.spawnTileY--;
+                    }
+                }));
+            }
         }
         public override void PostWorldGen()
         {
@@ -560,15 +572,15 @@ namespace ArchaeaMod
             };
             int[] t3 = new int[]
             {
-                ItemID.ArcheryPotion, 
-                ItemID.BattlePotion, 
-                ItemID.CalmingPotion, 
-                ItemID.GravitationPotion, 
-                ItemID.HunterPotion, 
-                ItemID.LesserHealingPotion, 
-                ItemID.IronskinPotion, 
-                ItemID.MiningPotion, 
-                ItemID.RecallPotion, 
+                ItemID.ArcheryPotion,
+                ItemID.BattlePotion,
+                ItemID.CalmingPotion,
+                ItemID.GravitationPotion,
+                ItemID.HunterPotion,
+                ItemID.LesserHealingPotion,
+                ItemID.IronskinPotion,
+                ItemID.MiningPotion,
+                ItemID.RecallPotion,
                 ItemID.TeleportationPotion
             };
             int[] t4 = new int[]
@@ -586,7 +598,7 @@ namespace ArchaeaMod
                 ModContent.ItemType<ArchaeaMod.Items.Materials.r_plate>()
             };
             int[] s3 = t3;
-            
+
             for (int i = 0; i < Main.chest.Length; i++)
             {
                 Chest chest = Main.chest[i];
@@ -597,15 +609,15 @@ namespace ArchaeaMod
                     for (int j = 0; j < 4; j++)
                     {
                         int type = 0;
-                        int fossils = 0; 
+                        int fossils = 0;
                         switch (j)
                         {
                             case 0:
-                                type = t0[Main.rand.Next(t0.Length)]; 
+                                type = t0[Main.rand.Next(t0.Length)];
                                 chest.item[j].SetDefaults(type);
                                 break;
                             case 1:
-                                type = t1[Main.rand.Next(t1.Length)]; 
+                                type = t1[Main.rand.Next(t1.Length)];
                                 if (type == t1[0])
                                 {
                                     chest.item[j].SetDefaults(t1[0]);
@@ -622,12 +634,12 @@ namespace ArchaeaMod
                                 }
                                 break;
                             case 2:
-                                type = t2[Main.rand.Next(t2.Length)]; 
+                                type = t2[Main.rand.Next(t2.Length)];
                                 chest.item[j].SetDefaults(type);
                                 chest.item[j].stack = Main.rand.Next(6, 13);
                                 break;
                             case 3:
-                                type = t3[Main.rand.Next(t3.Length)]; 
+                                type = t3[Main.rand.Next(t3.Length)];
                                 chest.item[j].SetDefaults(type);
                                 chest.item[j].stack = Main.rand.Next(1, 4);
                                 break;
@@ -642,7 +654,7 @@ namespace ArchaeaMod
                         switch (j)
                         {
                             case 0:
-                                type = s0[Main.rand.Next(s0.Length)]; 
+                                type = s0[Main.rand.Next(s0.Length)];
                                 chest.item[j].SetDefaults(type);
                                 if (type == ModContent.ItemType<r_Javelin>())
                                     chest.item[j].stack = Main.rand.Next(12, 24);
@@ -650,7 +662,7 @@ namespace ArchaeaMod
                                     chest.item[j].stack = Main.rand.Next(15, 24);
                                 break;
                             case 1:
-                                type = s1[Main.rand.Next(s1.Length)]; 
+                                type = s1[Main.rand.Next(s1.Length)];
                                 if (type == s1[0])
                                 {
                                     chest.item[j].SetDefaults(t1[0]);
@@ -658,12 +670,12 @@ namespace ArchaeaMod
                                 }
                                 break;
                             case 2:
-                                type = s2[Main.rand.Next(s2.Length)]; 
+                                type = s2[Main.rand.Next(s2.Length)];
                                 chest.item[j].SetDefaults(type);
                                 chest.item[j].stack = Main.rand.Next(6, 13);
                                 break;
                             case 3:
-                                type = s3[Main.rand.Next(s3.Length)]; 
+                                type = s3[Main.rand.Next(s3.Length)];
                                 chest.item[j].SetDefaults(type);
                                 chest.item[j].stack = Main.rand.Next(1, 4);
                                 break;
@@ -716,7 +728,7 @@ namespace ArchaeaMod
         public override void OnWorldUnload()
         {
             if (Effects.Barrier.barrier != null)
-            { 
+            {
                 for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
                 {
                     Effects.Barrier.barrier[i] = null;
@@ -863,6 +875,7 @@ namespace ArchaeaMod
         public static int worldID;
         public static List<int> classes = new List<int>();
         public static List<int> playerIDs = new List<int>();
+        public static List<PlayerClass> playerClass = new List<PlayerClass>();
         public override void SaveWorldData(TagCompound tag)/* Edit tag parameter rather than returning new TagCompound */
         {
             tag.Add("m_downed", downedMagno);
@@ -878,6 +891,12 @@ namespace ArchaeaMod
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 tag.Add($"stat{i}", objectiveStat[i]);
+            }
+            tag.Add("ClassCount", playerClass.Count);
+            for (int i = 0; i < playerClass.Count; i++)
+            {
+                tag.Add($"playerClass{i}", playerClass[i].classChoice);
+                tag.Add($"playerUID{i}", playerClass[i].playerUID);
             }
         }
         public override void LoadWorldData(TagCompound tag)
@@ -895,6 +914,13 @@ namespace ArchaeaMod
             for (int i = 0; i < objectiveStat.Length; i++)
             {
                 objectiveStat[i] = tag.GetBool($"stat{i}");
+            }
+            int count = tag.GetInt("ClassCount");
+            for (int i = 0; i < count; i++)
+            {
+                int classChoice = tag.GetInt($"playerClass{i}");
+                int plrUID = tag.GetInt($"playerUID{i}");
+                playerClass.Add(PlayerClass.NewPlayer(classChoice, plrUID, 255));
             }
         }
         public override void NetSend(BinaryWriter writer)
@@ -1000,7 +1026,7 @@ namespace ArchaeaMod
         public static bool Inbounds(int i, int j, bool toTileCoord = false)
         {
             if (toTileCoord)
-                 return i / 16 < Main.maxTilesX - 50 && i / 16 > 50 && j / 16 < Main.maxTilesY - 20 && j / 16 > 50;
+                return i / 16 < Main.maxTilesX - 50 && i / 16 > 50 && j / 16 < Main.maxTilesY - 20 && j / 16 > 50;
             else return i < Main.maxTilesX - 50 && i > 50 && j < Main.maxTilesY - 20 && j > 50;
         }
         public static void Clamp(ref int input, int min, int max, out int result)
@@ -1012,7 +1038,7 @@ namespace ArchaeaMod
             result = input;
         }
     }
-    
+
     public class Treasures
     {
         public int offset;
@@ -1164,7 +1190,7 @@ namespace ArchaeaMod
         }
         public static Vector2[] FindAll(Vector2 region, int width, int height, bool overflow = false, ushort[] floorIDs = null)
         {
-             int index = width * height * floorIDs.Length;
+            int index = width * height * floorIDs.Length;
             int amount = (int)Math.Sqrt(index) / 10;
             int count = 0;
             var tiles = new Vector2[index];
@@ -1180,9 +1206,9 @@ namespace ArchaeaMod
                         Tile right = Main.tile[i + 1, j];
                         Tile ieft = Main.tile[i - 1, j];
                         if (origin.HasTile && Main.tileSolid[origin.TileType]) continue;
-                        if (ceiling.HasTile && Main.tileSolid[ceiling.TileType] && ceiling.TileType == floorType || 
-                            ground.HasTile && Main.tileSolid[ground.TileType] && ground.TileType == floorType || 
-                            right.HasTile && Main.tileSolid[right.TileType] && right.TileType == floorType || 
+                        if (ceiling.HasTile && Main.tileSolid[ceiling.TileType] && ceiling.TileType == floorType ||
+                            ground.HasTile && Main.tileSolid[ground.TileType] && ground.TileType == floorType ||
+                            right.HasTile && Main.tileSolid[right.TileType] && right.TileType == floorType ||
                             ieft.HasTile && Main.tileSolid[ieft.TileType] && ieft.TileType == floorType)
                         {
                             if (count < tiles.Length)
@@ -1234,7 +1260,7 @@ namespace ArchaeaMod
                     if (!ArchaeaWorld.Inbounds(i, j))
                     {
                         if (list.Count == 0)
-                        { 
+                        {
                             return new Vector2[] { Vector2.Zero };
                         }
                         else return list.ToArray();
@@ -1242,7 +1268,7 @@ namespace ArchaeaMod
                     if (Main.tile[m, n].TileType != 0)
                     {
                         if (!Main.tile[m, n - 1].HasTile)
-                        { 
+                        {
                             list.Add(new Vector2(m, n));
                         }
                     }

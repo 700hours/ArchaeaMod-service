@@ -40,6 +40,7 @@ namespace ArchaeaMod.Mode
         private Button close;
         public static Color innactiveColor = Color.Gray;
         public static Color activeColor = Color.LightBlue;
+        public static Color bgColor = default;
         private int classChoice = 0;
         public int ticks = 300;
 
@@ -47,8 +48,8 @@ namespace ArchaeaMod.Mode
         {
             if (Main.dedServ) return;
             //start = 0, health = 1, mana = 2, bosses = 3, bottom = 4, npcs = 5, week = 6, crafting = 7, downedMagno = 8;
-            objective = new ListBox(new Rectangle(200, 200, 240, 200), default, new[] 
-            { 
+            objective = new ListBox(new Rectangle(200, 200, 240, 200), default, new[]
+            {
                 "World start begins",
                 "Heart crystal used",
                 "Mana crystal used",
@@ -60,8 +61,8 @@ namespace ArchaeaMod.Mode
                 "Magnoliac's bane"
             }, null, ArchaeaMode.unlock);
             objective.scroll = new Scroll(objective.hitbox);
-            objective.bgColor = Color.Transparent;
-            
+            objective.bgColor = bgColor * 0.5f;
+
             stat = new ListBox(objective.hitbox, default, new Button[]
             {
                 new Button("", default, Color.White) { text2 = "Arrow speed", innactiveDrawText = true },         // ranged
@@ -75,10 +76,11 @@ namespace ArchaeaMod.Mode
                 new Button("", default, Color.White) { text2 = "% damage reduction", innactiveDrawText = true },  // mage
                 new Button("", default, Color.White) { text2 = "Ammo use reduction", innactiveDrawText = true }   // ranged
             });
-            for (int i = 0; i < stat.item.Length; i++) {
+            for (int i = 0; i < stat.item.Length; i++)
+            {
                 stat.item[i].texture = TextureAssets.MagicPixel.Value;
             }
-            stat.bgColor = Color.Transparent;
+            stat.bgColor = bgColor * 0.5f;
             stat.scroll = new Scroll(objective.hitbox);
             stat.active = false;
 
@@ -87,15 +89,15 @@ namespace ArchaeaMod.Mode
                 "Optional: Archaea Mode",
                 "enables objectives",
                 "that scale difficulty."
-            }, null, new [] { Color.Gray });
+            }, null, new[] { Color.Gray });
             mode.scroll = new Scroll(mode.hitbox);
-            mode.bgColor = Color.Transparent;
+            mode.bgColor = bgColor * 0.5f;
 
-            trait[ClassID.Melee - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Melee - 1, 0), null, new Color[5]);
-            trait[ClassID.Ranged - 1] = new ListBox(objective.hitbox, default,  ClassArray(ClassID.Ranged - 1, 0), null, new Color[5]);
-            trait[ClassID.Magic - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Magic - 1, 0), null, new Color[5]);
-            trait[ClassID.Summoner -1] = new ListBox(objective.hitbox, default, ClassArray(ClassID.Summoner - 1, 0), null, new Color[5]);;
-            trait[ClassID.All - 1] = new ListBox(objective.hitbox, default,     ClassArray(ClassID.All - 1, 0), null, new Color[5]);
+            trait[ClassID.Melee - 1] = new ListBox(objective.hitbox, default, ClassArray(ClassID.Melee - 1, 0), null, new Color[5]);
+            trait[ClassID.Ranged - 1] = new ListBox(objective.hitbox, default, ClassArray(ClassID.Ranged - 1, 0), null, new Color[5]);
+            trait[ClassID.Magic - 1] = new ListBox(objective.hitbox, default, ClassArray(ClassID.Magic - 1, 0), null, new Color[5]);
+            trait[ClassID.Summoner - 1] = new ListBox(objective.hitbox, default, ClassArray(ClassID.Summoner - 1, 0), null, new Color[5]); ;
+            trait[ClassID.All - 1] = new ListBox(objective.hitbox, default, ClassArray(ClassID.All - 1, 0), null, new Color[5]);
             for (int i = 0; i < trait.Length; i++)
             {
                 trait[i].bgColor = Color.Transparent;
@@ -113,11 +115,11 @@ namespace ArchaeaMod.Mode
         }
         private string[] ClassArray(int index, int num = 0, int num2 = 0)
         {
-            switch (index) 
+            switch (index)
             {
                 case 0:     // Melee
-                    return new[] 
-                    { 
+                    return new[]
+                    {
                         "Defeat each invasion once\n" +
                         "   Double swing",
                         $"Place {Math.Min(num, 250)}/250 solid tiles\n" +
@@ -148,7 +150,7 @@ namespace ArchaeaMod.Mode
                         "   Cinnabar arrows"
                     };
                 case 2:     // Magic
-                    return new[] 
+                    return new[]
                     {
                         "Make Ankh Shield\n" +
                         "   50% double attack chance",
@@ -164,7 +166,7 @@ namespace ArchaeaMod.Mode
                         "   20% reduced mana cost"
                     };
                 case 3:     // Summoner
-                    return new[] 
+                    return new[]
                     {
                         "Acquire Giant Harpy Feather\n" +
                         "   +2 minion count",
@@ -204,6 +206,10 @@ namespace ArchaeaMod.Mode
         {
             return (int)Math.Max(Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice - 1, 0);
         }
+        private Rectangle AdjustY(Rectangle box, int offY)
+        {
+            return new Rectangle(box.X, box.Y + offY, box.Width, box.Height);
+        }
         public override void PostDrawInterface(SpriteBatch sb)
         {
             if (ModContent.GetInstance<ModeToggle>().loading)
@@ -234,30 +240,34 @@ namespace ArchaeaMod.Mode
                     trait[TraitIndex()].scroll.Draw(sb, Color.White);
                 }
             }
-            
+            int offY = 8;
+            page[2] = trait[TraitIndex()];
             if (tab[0].active)
             {
+                Utils.DrawInvBG(sb, new Rectangle(tab[0].box.X - 8, tab[0].box.Y, tab[0].box.Width + 16, tab[0].box.Height * 3 + 36));
                 tab[0].HoverPlaySound(SoundID.MenuTick);
-                if (TextureAssets.Item[ItemID.Book].Value.Name.Contains("Dummy")) { 
-                    int t =Item.NewItem(Item.GetSource_None(), Rectangle.Empty, ItemID.Book);
-                    if (Main.netMode != 0) 
-                    { 
-                        NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
-                    }
-                }
-                sb.Draw(TextureAssets.Item[ItemID.Book].Value, tab[0].box, Color.White);
-            }
-            if (tab[1].active)
-            {
-                tab[1].HoverPlaySound(SoundID.MenuTick);
-                if (TextureAssets.Item[ItemID.Book].Value.Name.Contains("Dummy")) { 
-                    int t = Item.NewItem(Item.GetSource_None(), Rectangle.Empty, ItemID.IronBroadsword);
-                    if (Main.netMode != 0) 
+                if (TextureAssets.Item[ItemID.Book].Value.Name.Contains("Dummy"))
+                {
+                    int t = Item.NewItem(Item.GetSource_None(), Rectangle.Empty, ItemID.Book);
+                    if (Main.netMode != 0)
                     {
                         NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
                     }
                 }
-                sb.Draw(TextureAssets.Item[ItemID.IronBroadsword].Value, tab[1].box, Color.White);
+                sb.Draw(TextureAssets.Item[ItemID.Book].Value, AdjustY(tab[0].box, offY), page[0].active ? Color.White : Color.White * 0.5f);
+            }
+            if (tab[1].active)
+            {
+                tab[1].HoverPlaySound(SoundID.MenuTick);
+                if (TextureAssets.Item[ItemID.Book].Value.Name.Contains("Dummy"))
+                {
+                    int t = Item.NewItem(Item.GetSource_None(), Rectangle.Empty, ItemID.IronBroadsword);
+                    if (Main.netMode != 0)
+                    {
+                        NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
+                    }
+                }
+                sb.Draw(TextureAssets.Item[ItemID.IronBroadsword].Value, AdjustY(tab[1].box, offY), page[1].active ? Color.White : Color.White * 0.5f);
             }
             if (tab[2].active)
             {
@@ -270,9 +280,8 @@ namespace ArchaeaMod.Mode
                         NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
                     }
                 }
-                sb.Draw(TextureAssets.Item[ItemID.AvengerEmblem].Value, tab[2].box, Color.White);
+                sb.Draw(TextureAssets.Item[ItemID.AvengerEmblem].Value, AdjustY(tab[2].box, offY), page[2].active ? Color.White : Color.White * 0.5f);
             }
-            page[2] = trait[TraitIndex()];
 
             if (page[0].active)
             {
@@ -281,7 +290,7 @@ namespace ArchaeaMod.Mode
             if (page[1].active)
             {
                 Utils.DrawBorderString(sb, "Player stat bonuses", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
-                if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat >= 0) 
+                if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat >= 0)
                 {
                     Utils.DrawBorderString(sb, $"Stat points: {Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().remainingStat} / {Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().overallMaxStat}", new Vector2(objective.hitbox.X, objective.hitbox.Bottom), Color.MediumPurple);
                     Utils.DrawBorderString(sb, "Click items to assign points", new Vector2(objective.hitbox.X, objective.hitbox.Bottom + 24), Color.Gray);
@@ -298,12 +307,12 @@ namespace ArchaeaMod.Mode
             #region active states
             if (ArchaeaMain.progressKey.JustPressed)
             {
-                if (!stat.active && !trait[TraitIndex()].active) 
-                { 
+                if (!stat.active && !trait[TraitIndex()].active)
+                {
                     objective.active = !objective.active;
                 }
                 else stat.active = false;
-                if (!objective.active) 
+                if (!objective.active)
                 {
                     stat.active = false;
                 }
@@ -316,13 +325,13 @@ namespace ArchaeaMod.Mode
             tab[0].active = objective.active || stat.active || trait[TraitIndex()].active;
             tab[1].active = objective.active || stat.active || trait[TraitIndex()].active;
             tab[2].active = objective.active || stat.active || trait[TraitIndex()].active;
-            if (tab[0].LeftClick()) 
+            if (tab[0].LeftClick())
             {
                 objective.active = true;
                 stat.active = false;
                 trait[TraitIndex()].active = false;
             }
-            if (tab[1].LeftClick()) 
+            if (tab[1].LeftClick())
             {
                 objective.active = false;
                 stat.active = true;
@@ -334,8 +343,8 @@ namespace ArchaeaMod.Mode
                 stat.active = false;
                 trait[TraitIndex()].active = true;
             }
-            if (objective.active) 
-            { 
+            if (objective.active)
+            {
                 stat.hitbox = objective.hitbox;
                 trait[TraitIndex()].hitbox = objective.hitbox;
             }
@@ -361,7 +370,7 @@ namespace ArchaeaMod.Mode
                 if (page[i] == null) continue;
                 page[i].Update(true);
                 switch (i)
-                { 
+                {
                     case 0:
                         page[i].textColor = ArchaeaMode.unlock;
                         break;
@@ -371,10 +380,10 @@ namespace ArchaeaMod.Mode
                         for (int n = 0; n < page[i].item.Length; n++)
                         {
                             page[i].item[n].active = true;
-                            switch (classChoice)
+                            switch (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice)
                             {
                                 case ClassID.None:
-                                    classChoice = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice;
+                                    //classChoice = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice;
                                     break;
                                 case ClassID.Melee:
                                     if (n == 2 || n == 5)
@@ -406,8 +415,9 @@ namespace ArchaeaMod.Mode
                             if (page[i].item[n].LeftClick())
                             {
                                 if (page[i].item[n].reserved == 0)
-                                { 
-                                    if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SpendStatPoint(n)) {
+                                {
+                                    if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SpendStatPoint(n))
+                                    {
                                         SoundEngine.PlaySound(SoundID.Item4, Main.LocalPlayer.Center);
                                     }
                                     page[i].item[n].reserved = 1;
@@ -421,7 +431,7 @@ namespace ArchaeaMod.Mode
                     case 2:
                         for (int n = 0; n < 6; n++)
                         {
-                            trait[TraitIndex()].textColor[n] = 
+                            trait[TraitIndex()].textColor[n] =
                                     ArchaeaPlayer.CheckHasTrait(n + TraitIndex() * 6, TraitIndex() + 1, Main.LocalPlayer.whoAmI)
                                     ? activeColor : innactiveColor;
                         }
@@ -455,7 +465,7 @@ namespace ArchaeaMod.Mode
         public static void DrawTextUI(SpriteBatch sb, int y, string text, ref int ticks, int maxTicks = 300)
         {
             if (ticks < maxTicks)
-            { 
+            {
                 ticks++;
                 string placeholder = "Trait acquired!";
                 float width = 140 * text.Length / placeholder.Length;
@@ -482,12 +492,12 @@ namespace ArchaeaMod.Mode
         private string ClassName()
         {
             switch (TraitIndex() + 1)
-            { 
-                case ClassID.Melee:     return "Melee";
-                case ClassID.Ranged:    return "Ranged";
-                case ClassID.Magic:     return "Magic";
-                case ClassID.Summoner:  return "Summoner";
-                default:                return "All";
+            {
+                case ClassID.Melee: return "Melee";
+                case ClassID.Ranged: return "Ranged";
+                case ClassID.Magic: return "Magic";
+                case ClassID.Summoner: return "Summoner";
+                default: return "All";
             }
         }
     }

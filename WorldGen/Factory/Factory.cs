@@ -30,7 +30,7 @@ namespace ArchaeaMod.Structure
     public class Factory
     {
         private static int
-            Width = 150, 
+            Width = 150,
             Height;
         internal static int
             Top => Main.UnderworldLayer - Height;
@@ -147,17 +147,17 @@ namespace ArchaeaMod.Structure
                     while (Y++ <= (start.Y + end.Y) / 2 + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (X++ <= end.X + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (Y++ <= end.Y + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                 }
                 else if (start.X > end.X && start.Y < end.Y)
@@ -168,17 +168,17 @@ namespace ArchaeaMod.Structure
                     while (Y++ <= (start.Y + end.Y) / 2 + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (X++ <= end.X + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (Y++ <= end.Y + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                 }
                 else if (start.X < end.X && start.Y > end.Y)
@@ -189,17 +189,17 @@ namespace ArchaeaMod.Structure
                     while (X++ <= (start.X + end.X) / 2 + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (Y++ <= end.Y + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (X++ <= end.X + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                 }
                 else if (start.X > end.X && start.Y > end.Y)
@@ -210,17 +210,17 @@ namespace ArchaeaMod.Structure
                     while (X++ <= (start.X + end.X) / 2 + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (Y++ <= end.Y + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (X++ <= end.X + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                 }
                 #endregion
@@ -236,7 +236,7 @@ namespace ArchaeaMod.Structure
                     while (Y++ <= (start.Y + end.Y) / 2 + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (X++ <= end.X + size)
                     {
@@ -273,17 +273,17 @@ namespace ArchaeaMod.Structure
                     while (X++ <= (start.X + end.X) / 2 + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (Y++ <= end.Y + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (X++ <= end.X + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                 }
                 else if (start.X > end.X && start.Y > end.Y)
@@ -294,17 +294,17 @@ namespace ArchaeaMod.Structure
                     while (X++ <= (start.X + end.X) / 2 + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (Y++ <= end.Y + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                     while (X++ <= end.X + size)
                     {
                         CarveHall(ref brush, ref background, X, Y, 6);
-                        
+
                     }
                 }
                 #endregion
@@ -315,7 +315,7 @@ namespace ArchaeaMod.Structure
             {
                 for (int j = 0; j < brush.GetLength(1); j++)
                 {
-                    int cx  = brush.GetLength(0) / 2 - 10;
+                    int cx = brush.GetLength(0) / 2 - 10;
                     int cx2 = brush.GetLength(0) / 2 + 10;
                     if (i >= cx && i <= cx2)
                     {
@@ -323,14 +323,14 @@ namespace ArchaeaMod.Structure
                     }
                 }
             }
-            
+
             //  Return value
             tile = brush;
         }
         private void CarveHall(ref ushort[,] tile, ref ushort[,] wall, int x, int y, int size = 10)
         {
             int border = 4;
-            bool flag = WorldGen.genRand.NextBool(4);
+            bool flag = WorldGen.genRand.NextBool(8);
             bool flag2 = WorldGen.genRand.NextBool();
             for (int i = -border; i < size + border; i++)
             {
@@ -344,7 +344,7 @@ namespace ArchaeaMod.Structure
                         continue;
                     }
                     if (wall[X, Y] != Wall)
-                    { 
+                    {
                         tile[X, Y] = Tile;
                     }
                     if (flag && j == size - 1)
@@ -359,11 +359,13 @@ namespace ArchaeaMod.Structure
                 {
                     int X = Math.Max(0, Math.Min(x + i, Width - 1));
                     int Y = Math.Max(0, Math.Min(y + j, Height - 1));
-                    if (tile[X, Y] != ConveyerL && tile[X, Y] != ConveyerR)
-                    { 
-                        tile[X, Y] = Air;
-                        wall[X, Y] = Wall;
+
+                    if (!GetSafely(X, Y - 1).HasTile && GetSafely(X, Y + 1).HasTile && (tile[X, Y] == ConveyerL || tile[X, Y] == ConveyerR))
+                    {
+                        continue;
                     }
+                    tile[X, Y] = Air;
+                    wall[X, Y] = Wall;
                 }
             }
         }
@@ -415,7 +417,7 @@ namespace ArchaeaMod.Structure
                             tile.HasActuator = true;
                             tile.IsActuated = true;
                             var tile2 = GetSafely(i, j + 1);
-                            tile2.RedWire = true; 
+                            tile2.RedWire = true;
                         }
                     }
                 }
@@ -425,7 +427,7 @@ namespace ArchaeaMod.Structure
             int countRightY = 0;
             for (int i = 0; i < width; i++)
             {
-                countLeftY  = 0;
+                countLeftY = 0;
                 countRightY = 0;
                 for (int j = y; j < y + height; j++)
                 {
@@ -439,7 +441,7 @@ namespace ArchaeaMod.Structure
                     for (int j = y; j < y + height; j++)
                     {
                         if (j % 15 == 0)
-                        { 
+                        {
                             if (GetSafely(i, j).WallType == Wall && !GetSafely(i, j).HasTile && GetSafely(i - 1, j).HasTile && GetSafely(i - 1, j).TileType == Tile)
                             {
                                 for (int m = 0; m < stepsLeft.GetLength(1); m++)
@@ -473,7 +475,7 @@ namespace ArchaeaMod.Structure
                     for (int j = y; j < y + height; j++)
                     {
                         if (j % 15 == 7)
-                        { 
+                        {
                             if (GetSafely(i, j).WallType == Wall && !GetSafely(i, j).HasTile && GetSafely(i + 1, j).HasTile && GetSafely(i + 1, j).TileType == Tile)
                             {
                                 for (int m = 0; m < stepsRight.GetLength(1); m++)
@@ -508,8 +510,8 @@ namespace ArchaeaMod.Structure
                     for (int j = Top; j < Bottom; j++)
                     {
                         if (WorldGen.genRand.NextBool())
-                        { 
-                            if (GetSafely(i, j - 8).HasTile && !GetSafely(i, j - 7).HasTile && GetSafely(i, j).WallType == Wall &&  GetSafely(i - 1, j).HasTile && GetSafely(i - 1, j).TileType == Tile && !GetSafely(i, j).HasTile)
+                        {
+                            if (GetSafely(i, j - 8).HasTile && !GetSafely(i, j - 7).HasTile && GetSafely(i, j).WallType == Wall && GetSafely(i - 1, j).HasTile && GetSafely(i - 1, j).TileType == Tile && !GetSafely(i, j).HasTile)
                             {
                                 for (int m = 0; m < 5; m++)
                                 {
@@ -524,10 +526,10 @@ namespace ArchaeaMod.Structure
                                         t.PlaceTile(i + m, j + 2, (ushort)ModContent.TileType<Tiles.m_chandelier>(), true, false, 4, false);
                                         placed = Main.tile[i + m, j + 2].TileType == ModContent.TileType<Tiles.m_chandelier>();
                                     }
-                                    if (m == 2) 
+                                    if (m == 2)
                                     {
                                         if (WorldGen.genRand.NextBool(8))
-                                        { 
+                                        {
                                             WorldGen.PlaceTile(i + m, j - 1, ModContent.TileType<Tiles.m_chair>(), true, true);
                                         }
                                     }
@@ -548,7 +550,7 @@ namespace ArchaeaMod.Structure
                                 for (int m = 0; m < 5; m++)
                                 {
                                     if (!placed)
-                                    { 
+                                    {
                                         t.PlaceTile(i + m, j + 2, (ushort)ModContent.TileType<Tiles.m_chandelier>(), true, false, 4, false);
                                         placed = Main.tile[i + m, j + 2].TileType == ModContent.TileType<Tiles.m_chandelier>();
                                     }
@@ -566,7 +568,7 @@ namespace ArchaeaMod.Structure
                     }
                 }
             END: { continue; }
-            } 
+            }
             //  Chains
             for (int i = 0; i < width; i++)
             {
@@ -595,7 +597,7 @@ namespace ArchaeaMod.Structure
                     {
                         for (int m = 0; m < 10; m++)
                         {
-                            WorldGen.PlaceTile(i + m, j, TileID.Platforms, true, false); 
+                            WorldGen.PlaceTile(i + m, j, TileID.Platforms, true, false);
                             if (GetSafely(i + m + 1, j).HasTile)
                             {
                                 break;
