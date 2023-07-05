@@ -648,3 +648,22 @@ version 1.4.0.1 -> 1.4.0.2
 ==============================
 # Fixed
 -> Biome effect error
+
+version 1.4.0.4 -> 1.4.0.5
+==============================
+# Added
+-> "Stop followers" button
+-> Archaea mode and class options not changeable once options selected per world/character respectively
+# Fixed
+-> Class player data defaulting to Melee on world join
+-> Classes saved into world and player objects
+-> Class switching messing up player traits and bonuses
+-> Traits get set to melee even if different class
+-> Chat Lobby button repositioned
+-> Apply button colored correctly
+
+version 1.4.25.116
+==============================
+# Changed
+-> Version number put back into semantics
+-> Classes bound to world and player (to stop errors and defaulting to melee)

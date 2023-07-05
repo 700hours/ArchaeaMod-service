@@ -1,4 +1,5 @@
-version 1.4.0.1 -> 1.4.0.2
+version 1.4.25.116
 ==============================
-# Fixed
--> Biome effect error
+# Changed
+-> Version number put back into semantics
+-> Classes bound to world and player (to stop errors and defaulting to melee)
