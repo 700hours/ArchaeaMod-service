@@ -473,6 +473,10 @@ namespace ArchaeaMod.Mode
                 int xOffset = 8;
                 int yOffset = 8;
                 var rect = UiHelper.CenterBox(Main.screenWidth, Main.screenHeight + cOffset, (int)width, 36);
+                if (Main.mouseLeft && rect.Contains(Main.MouseScreen.ToPoint()))
+                {
+                    ticks = maxTicks;
+                }
                 Utils.DrawInvBG(sb, rect, Color.Transparent);
                 Utils.DrawBorderString(sb, text, new Vector2(rect.X + xOffset, rect.Y + yOffset), Color.CornflowerBlue);
             }

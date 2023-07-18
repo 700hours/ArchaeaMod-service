@@ -263,7 +263,7 @@ namespace ArchaeaMod
         {
             ArchaeaPlayer modPlayer = (ArchaeaPlayer)clientClone;
             //  World
-            modPlayer.enterWorldTicks = enterWorldTicks;
+            //modPlayer.enterWorldTicks = enterWorldTicks;
             //  Trait variables
             modPlayer.trait = trait;
             modPlayer.placedPylon = placedPylon;
@@ -303,7 +303,7 @@ namespace ArchaeaMod
         {
             ArchaeaPlayer modPlayer = (ArchaeaPlayer)clientPlayer;
             //  World
-            enterWorldTicks = modPlayer.enterWorldTicks;
+            //enterWorldTicks = modPlayer.enterWorldTicks;
             //  Traits variables
             trait = modPlayer.trait;
             placedPylon = modPlayer.placedPylon;
