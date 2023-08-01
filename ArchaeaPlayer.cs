@@ -1399,11 +1399,11 @@ namespace ArchaeaMod
         {
             if (Factory && Player.wet)
             {
-                Player.velocity /= 1.5f;
+                Player.velocity /= 1.05f;
                 if (ArchaeaItem.Elapsed(90))
                 {
-                    Player.Hurt(PlayerDeathReason.LegacyDefault(), 40, Player.direction);
-                    Player.AddBuff(BuffID.Burning, 300, false);
+                    Player.Hurt(PlayerDeathReason.LegacyDefault(), 10, Player.direction);
+                    Player.AddBuff(BuffID.Burning, 2, false);
                 }
             }
         }

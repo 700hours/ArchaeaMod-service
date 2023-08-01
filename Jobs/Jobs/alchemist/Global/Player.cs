@@ -3,7 +3,7 @@ using Terraria;
 
 namespace ArchaeaMod.Jobs.Global
 {
-    public class necromancer
+    public class alchemist
 	{ 
 		public static void CreatePlayer(Player player)
 		{

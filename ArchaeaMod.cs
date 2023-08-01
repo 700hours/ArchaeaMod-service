@@ -118,8 +118,7 @@ namespace ArchaeaMod
         {
             return Main.SceneMetrics.GetTileCount(ArchaeaWorld.factoryBrick) >= 100;
         }
-        //  Missing graphics
-        //public override ModWaterStyle WaterStyle => ModContent.GetModWaterStyle(ModContent.GetInstance<Waters.LiquidMetal>().Slot);
+        public override ModWaterStyle WaterStyle => ModContent.GetModWaterStyle(ModContent.GetInstance<Waters.LiquidMetalWaterStyle>().Slot);
     }
     public class NetHandler
     {

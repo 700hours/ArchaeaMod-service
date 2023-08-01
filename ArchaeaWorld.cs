@@ -180,6 +180,7 @@ namespace ArchaeaMod
         private Treasures t;
         public static Vector2[] genPosition;
         public bool _archaeaMode = false;
+        public int elevatorCount = 0;
         
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
@@ -903,6 +904,7 @@ namespace ArchaeaMod
                 tag.Add($"playerClass{i}", playerClass[i].classChoice);
                 tag.Add($"playerUID{i}", playerClass[i].playerUID);
             }
+            tag.Add("elevatorCount", elevatorCount);
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -927,6 +929,7 @@ namespace ArchaeaMod
                 int plrUID = tag.GetInt($"playerUID{i}");
                 playerClass.Add(PlayerClass.NewPlayer(classChoice, plrUID, 255));
             }
+            elevatorCount = tag.GetInt("elevatorCount");
         }
         public override void NetSend(BinaryWriter writer)
         {
@@ -941,6 +944,7 @@ namespace ArchaeaMod
             {
                 writer.Write(objectiveStat[i]);
             }
+            writer.Write(elevatorCount);
         }
         public override void NetReceive(BinaryReader reader)
         {
@@ -955,6 +959,7 @@ namespace ArchaeaMod
             {
                 objectiveStat[i] = reader.ReadBoolean();
             }
+            elevatorCount = reader.ReadInt32();
         }
         private bool begin;
         private bool first;

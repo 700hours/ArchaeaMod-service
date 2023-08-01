@@ -9,8 +9,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="archive\**" />
+    <Compile Remove="Jobs\Jobs\Tiles\**" />
     <EmbeddedResource Remove="archive\**" />
+    <EmbeddedResource Remove="Jobs\Jobs\Tiles\**" />
     <None Remove="archive\**" />
+    <None Remove="Jobs\Jobs\Tiles\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
@@ -21,6 +24,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Jobs\Projectiles\art\" />
     <Folder Include="WorldGen\Factory\" />
   </ItemGroup>
 </Project>

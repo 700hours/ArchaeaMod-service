@@ -30,13 +30,11 @@ using System.Runtime.CompilerServices;
 
 namespace ArchaeaMod.Waters
 {
-    internal class LiquidMetal : ModWaterStyle
+    internal class LiquidMetalWaterStyle : ModWaterStyle
     {
-        //  Missing graphics
-        public override bool IsLoadingEnabled(Mod mod) => false;
         public override int ChooseWaterfallStyle()
         {
-            return ModContent.GetInstance<LiquidMetalStyle>().Slot;
+            return ModContent.GetInstance<LiquidMetalWaterfallStyle>().Slot;
         }
         public override int GetDropletGore()
         {
@@ -58,10 +56,8 @@ namespace ArchaeaMod.Waters
             return Color.Silver;
         }
     }
-    internal class LiquidMetalStyle : ModWaterfallStyle
+    internal class LiquidMetalWaterfallStyle : ModWaterfallStyle
     {
-        //  Missing graphics
-        public override bool IsLoadingEnabled(Mod mod) => false;
         public override void AddLight(int i, int j)
         {
             Lighting.AddLight(new Vector2(i * 16 + 8, j * 16 + 8), Color.Silver.ToVector3());

@@ -1,8 +1,12 @@
+using ArchaeaMod.Jobs.Global;
 using Microsoft.Xna.Framework;
+using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Humanizer.On;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace ArchaeaMod.Jobs.Items
 {
@@ -11,7 +15,23 @@ namespace ArchaeaMod.Jobs.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Transmogrify");
-			Tooltip.SetDefault("");
+			Tooltip.SetDefault("Cost 1/3 max mana");
+        }
+        public override void SetDefaults()
+        {
+            Item.width = 28;
+            Item.height = 32;
+            Item.useStyle = 1;
+            Item.useAnimation = 20;
+            Item.useTime = 20;
+            Item.maxStack = 1;
+            Item.consumable = false;
+            Item.autoReuse = false;
+            Item.useTurn = false;
+            Item.noMelee = true;
+            Item.scale = 1;
+            Item.value = 0;
+            Item.rare = 2;
         }
         public override bool? UseItem(Player player)
         {
@@ -23,15 +43,29 @@ namespace ArchaeaMod.Jobs.Items
 				NPC nPC = npc[m];
 				Vector2 npcv = new Vector2(nPC.position.X, nPC.position.Y);
 				Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, nPC.width, nPC.height);
-				if(mouse.Intersects(npcBox) && !nPC.boss && player.statMana >= player.statManaMax/3 &&Main.mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+				if(mouse.Intersects(npcBox) && !nPC.boss && player.statMana >= player.statManaMax/3 && Main.mouseLeft)
 				{
 					nPC.Transform(m);
 					player.statMana -= player.statManaMax/3;
 					player.manaRegenDelay = (int)player.maxRegenDelay;
-					if(Main.dedServ || Main.netMode != 0) NetMessage.SendData(23, -1, -1, "", nPC.whoAmI, 0f, 0f, 0f, 0);
+					if(Main.netMode == 1)
+                    {
+                        nPC.netUpdate = true;
+                    }
+                    return true;
 				}
 			}
 			return false;
 		}
-	}
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Book)
+                .AddIngredient(ItemID.Deathweed, 15)
+                .AddIngredient(ItemID.CorruptSeeds, 2)
+                .AddIngredient(ItemID.BlackInk)
+                .AddTile(TileID.Bookcases)
+                .Register();
+        }
+    }
 }
