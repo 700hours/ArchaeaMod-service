@@ -9,11 +9,54 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="archive\**" />
-    <Compile Remove="Jobs\Jobs\Tiles\**" />
+    <Compile Remove="Jobs\Items\Armor\**" />
+    <Compile Remove="Jobs\Items\art\**" />
+    <Compile Remove="Jobs\Items\Weapon\**" />
+    <Compile Remove="Jobs\Jobs\**" />
     <EmbeddedResource Remove="archive\**" />
-    <EmbeddedResource Remove="Jobs\Jobs\Tiles\**" />
+    <EmbeddedResource Remove="Jobs\Items\Armor\**" />
+    <EmbeddedResource Remove="Jobs\Items\art\**" />
+    <EmbeddedResource Remove="Jobs\Items\Weapon\**" />
+    <EmbeddedResource Remove="Jobs\Jobs\**" />
     <None Remove="archive\**" />
-    <None Remove="Jobs\Jobs\Tiles\**" />
+    <None Remove="Jobs\Items\Armor\**" />
+    <None Remove="Jobs\Items\art\**" />
+    <None Remove="Jobs\Items\Weapon\**" />
+    <None Remove="Jobs\Jobs\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Jobs\Buffs\_Frozen.cs" />
+    <Compile Remove="Jobs\Items\Seeded_dirt.cs" />
+    <Compile Remove="Jobs\Items\Tome.cs" />
+    <Compile Remove="Jobs\Projectiles\Box Diffusion.cs" />
+    <Compile Remove="Jobs\Projectiles\Box Shield.cs" />
+    <Compile Remove="Jobs\Projectiles\FourBox.cs" />
+    <Compile Remove="Jobs\Projectiles\Frost.cs" />
+    <Compile Remove="Jobs\Projectiles\OneBox.cs" />
+    <Compile Remove="Jobs\Projectiles\Poison.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Jobs\Buffs\_Frozen.ini" />
+    <None Remove="Jobs\Buffs\_Frozen.png" />
+    <None Remove="Jobs\Items\Seeded_dirt.ini" />
+    <None Remove="Jobs\Items\Tome.ini" />
+    <None Remove="Jobs\Items\Tome.png" />
+    <None Remove="Jobs\Projectiles\Box Diffusion.ini" />
+    <None Remove="Jobs\Projectiles\Box Diffusion.png" />
+    <None Remove="Jobs\Projectiles\Box Shield.ini" />
+    <None Remove="Jobs\Projectiles\Box Shield.png" />
+    <None Remove="Jobs\Projectiles\FourBox Shadow.ini" />
+    <None Remove="Jobs\Projectiles\FourBox Shadow.png" />
+    <None Remove="Jobs\Projectiles\FourBox.ini" />
+    <None Remove="Jobs\Projectiles\FourBox.png" />
+    <None Remove="Jobs\Projectiles\Frost.ini" />
+    <None Remove="Jobs\Projectiles\Frost.png" />
+    <None Remove="Jobs\Projectiles\OneBox Shadow.ini" />
+    <None Remove="Jobs\Projectiles\OneBox Shadow.png" />
+    <None Remove="Jobs\Projectiles\OneBox.ini" />
+    <None Remove="Jobs\Projectiles\OneBox.png" />
+    <None Remove="Jobs\Projectiles\Poison.ini" />
+    <None Remove="Jobs\Projectiles\Poison.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />

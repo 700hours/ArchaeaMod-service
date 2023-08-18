@@ -1,5 +1,5 @@
 using ArchaeaMod.Items;
-using ArchaeaMod.Jobs.Global;
+
 using ArchaeaMod.NPCs;
 using Humanizer;
 using Microsoft.Xna.Framework;

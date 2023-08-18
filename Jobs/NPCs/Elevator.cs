@@ -1,5 +1,5 @@
 using System;
-using ArchaeaMod.Jobs.Global;
+
 using ArchaeaMod.NPCs.Bosses;
 using Terraria.ID;
 using Microsoft.Xna.Framework;

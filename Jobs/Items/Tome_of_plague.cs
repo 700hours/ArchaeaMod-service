@@ -1,5 +1,5 @@
 using ArchaeaMod.Jobs.Buffs;
-using ArchaeaMod.Jobs.Global;
+
 using ArchaeaMod.Jobs.Projectiles;
 using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;

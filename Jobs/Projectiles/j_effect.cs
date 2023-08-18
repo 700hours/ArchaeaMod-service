@@ -1,5 +1,5 @@
 ﻿using ArchaeaMod.Effects;
-using ArchaeaMod.Jobs.Global;
+
 using ArchaeaMod.NPCs;
 using IL.Terraria.GameContent.NetModules;
 using Microsoft.Xna.Framework;

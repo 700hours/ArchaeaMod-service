@@ -1,4 +1,4 @@
-using ArchaeaMod.Jobs.Global;
+
 using MonoMod.RuntimeDetour;
 using System.Runtime.Intrinsics.X86;
 using Terraria;

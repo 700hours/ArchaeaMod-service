@@ -1,4 +1,4 @@
-using ArchaeaMod.Jobs.Global;
+
 using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;

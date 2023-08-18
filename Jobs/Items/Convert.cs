@@ -1,4 +1,4 @@
-using ArchaeaMod.Jobs.Global;
+
 using Humanizer;
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;

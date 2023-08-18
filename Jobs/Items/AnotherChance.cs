@@ -1,5 +1,5 @@
 using ArchaeaMod.Effects;
-using ArchaeaMod.Jobs.Global;
+
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

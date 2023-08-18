@@ -44,7 +44,7 @@ namespace ArchaeaMod.Jobs.Buffs
             {
                 npcIndex = NPC.NewNPC(NPC.GetSource_None(), (int)player.position.X, (int)player.position.Y, Main.rand.Next(new[] { NPCID.Zombie, NPCID.ZombieDoctor, NPCID.ZombieElf, NPCID.ZombieElfBeard, NPCID.ZombieEskimo, NPCID.ZombieMerman, NPCID.ZombieMushroom, NPCID.ZombiePixie, NPCID.ZombieRaincoat, NPCID.ZombieSuperman, NPCID.ZombieSweater }));
                 Main.npc[npcIndex].friendly = true;
-                int projType = Projectile.NewProjectile(Projectile.GetSource_None(), player.position, Vector2.Zero, ModContent.ProjectileType<fake_npc>(), 0, 0f, player.whoAmI, index, 0);
+                int projType = Projectile.NewProjectile(Projectile.GetSource_None(), player.position, Vector2.Zero, ModContent.ProjectileType<fake_npc>(), 0, 0f, player.whoAmI, npcIndex, 0);
                 fake_npc.SetFollowType(Main.projectile[projType], FollowID.Replace);
             }
             player.moveSpeed /= 2f;

@@ -1,5 +1,5 @@
 using ArchaeaMod.Items;
-using ArchaeaMod.Jobs.Global;
+
 using ArchaeaMod.Jobs.Projectiles;
 using ArchaeaMod.NPCs;
 using IL.Terraria.GameContent.NetModules;
