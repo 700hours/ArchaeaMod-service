@@ -151,9 +151,15 @@ namespace ArchaeaMod.NPCs
                 float angle = start.AngleTo(end);
                 double cos = start.X + n * Math.Cos(angle);
                 double sine = start.Y + n * Math.Sin(angle);
+                float light = Lighting.Brightness((int)cos / 16, (int)sine / 16);
+                Color lightColor = Color.White;
+                Color _light = Color.White;
+                _light.R = (byte)(lightColor.R * Math.Min(light, 1f));
+                _light.G = (byte)(lightColor.G * Math.Min(light, 1f));
+                _light.B = (byte)(lightColor.B * Math.Min(light, 1f));
                 sb.Draw(tex,
                     new Vector2((float)cos, (float)sine) - Main.screenPosition,
-                    new Rectangle(0, 0, len, (int)(len * f)), Color.White, angle - Draw.radian * 90f, Vector2.Zero,
+                    new Rectangle(0, 0, len, (int)(len * f)), _light, angle - Draw.radian * 90f, Vector2.Zero,
                     1f, SpriteEffects.None, 0f);
             }
         }
@@ -523,7 +529,11 @@ namespace ArchaeaMod.NPCs
         }
         public static bool IsNotOldPosition(NPC npc)
         {
-            return npc.position.X < 0f && npc.oldPosition.X >= 0f || npc.position.X > 0f && npc.oldPosition.X <= 0f || npc.position.Y < 0f && npc.oldPosition.Y >= 0f || npc.position.Y > 0f && npc.oldPosition.Y <= 0f;
+            return npc.position.X < npc.oldPosition.X || npc.position.X > npc.oldPosition.X || npc.position.Y < npc.oldPosition.Y || npc.position.Y > npc.oldPosition.Y;
+        }
+        public static bool IsNotOldPosition(Projectile proj)
+        {
+            return proj.position.X < proj.oldPosition.X || proj.position.X > proj.oldPosition.X || proj.position.Y < proj.oldPosition.Y || proj.position.Y > proj.oldPosition.Y;
         }
 
         protected static bool SolidGround(Tile[] tiles)

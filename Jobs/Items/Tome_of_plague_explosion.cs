@@ -14,7 +14,7 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scroll of Plague Explosion");
+            DisplayName.SetDefault("Tome of Plague Explosion");
             Tooltip.SetDefault("Strikes an enemy with poison.");
         }
         public override void SetDefaults()
@@ -25,7 +25,6 @@ namespace ArchaeaMod.Jobs.Items
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.damage = 45;
-            Item.mana = 30;
             Item.maxStack = 10;
             Item.consumable = true;
             Item.autoReuse = false;
@@ -37,7 +36,7 @@ namespace ArchaeaMod.Jobs.Items
         }
         public override bool? UseItem(Player player)
         {
-            if (player.statMana < Item.mana)
+            if (player.statMana < 30)
                 return false;
             if (player.whoAmI == Main.myPlayer)
             {
@@ -78,6 +77,7 @@ namespace ArchaeaMod.Jobs.Items
                             nPC.netUpdate = true;
                         }
                         SoundEngine.PlaySound(SoundID.Item8, mousev);
+                        player.statMana -= 30;
                         return true;
                     }
                 }

@@ -25,7 +25,6 @@ namespace ArchaeaMod.Jobs.Buffs
             float timeLeft = npc.buffTime[buffIndex];
             if (npc.oldPosition != Vector2.Zero)
             { 
-                npc.position = npc.oldPosition;
                 npc.velocity = Vector2.Zero;
                 npc.scale = (timeLeft / MaxTime - 1f) * -1;
                 npc.color = Color.Lerp(Color.Black, Color.White, npc.scale);

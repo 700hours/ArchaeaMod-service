@@ -41,7 +41,7 @@ namespace ArchaeaMod.Jobs.Items
             Item.scale = 1;
             Item.value = 0;
             //  Create elevator tile
-            //Item.createTile = -1
+            Item.createTile = ModContent.TileType<Jobs.Tiles.Elevator>();
         }
         public override void AddRecipes()
         {

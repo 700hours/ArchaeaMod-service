@@ -40,6 +40,11 @@ namespace ArchaeaMod.Jobs.Items
             Item.scale = 1;
             Item.value = 0;
         }
+        public override bool CanUseItem(Player player)
+        {
+            SoundEngine.PlaySound(SoundID.Item4, player.Center);
+            return true;
+        }
         public override bool? UseItem(Player player)
         {
             if (player.whoAmI == Main.myPlayer)
@@ -47,7 +52,6 @@ namespace ArchaeaMod.Jobs.Items
                 var modPlayer = player.GetModPlayer<ArchaeaPlayer>();
                 modPlayer.locatorDirection = Main.dungeonX * 16 < player.position.X ? -1 : 1;
                 modPlayer.dungeonLocatorTicks = 1;
-                SoundEngine.PlaySound(SoundID.Item4, player.Center);
             }
             return null;
         }

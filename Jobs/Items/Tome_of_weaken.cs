@@ -48,7 +48,7 @@ namespace ArchaeaMod.Jobs.Items
             Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y);
 			Rectangle mouse = new Rectangle((int)(mousev.X - 16f), (int)(mousev.Y - 16f), 32, 32);
 			NPC[] npc = Main.npc;
-			if(player.statMana >= 7)
+			if(player.statMana >= 5)
 			{
 				for(int m = 0; m < npc.Length-1; m++)
 				{

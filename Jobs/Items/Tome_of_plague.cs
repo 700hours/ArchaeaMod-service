@@ -27,7 +27,7 @@ namespace ArchaeaMod.Jobs.Items
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.maxStack = 1;
-			Item.mana = 10;
+            Item.consumable = false;
             Item.consumable = false;
             Item.autoReuse = false;
             Item.useTurn = false;
@@ -68,6 +68,7 @@ namespace ArchaeaMod.Jobs.Items
 						int proj = Projectile.NewProjectile(Item.GetSource_ItemUse(Item), player.Center, Vector2.Zero, ModContent.ProjectileType<t_effect>(), 0, 0f, Main.myPlayer, 0, nPC.whoAmI);
 						Main.projectile[proj].localAI[0] = ModContent.BuffType<Plague>();
                         Main.projectile[proj].localAI[1] = DustID.GreenTorch;
+                        player.statMana -= 10;
                         return null;
 					}
 				}

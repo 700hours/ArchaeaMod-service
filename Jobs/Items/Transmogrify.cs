@@ -1,6 +1,7 @@
 
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -43,9 +44,14 @@ namespace ArchaeaMod.Jobs.Items
 				NPC nPC = npc[m];
 				Vector2 npcv = new Vector2(nPC.position.X, nPC.position.Y);
 				Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, nPC.width, nPC.height);
-				if(mouse.Intersects(npcBox) && !nPC.boss && player.statMana >= player.statManaMax/3 && Main.mouseLeft)
+				if(mouse.Intersects(npcBox) && !nPC.boss && !nPC.townNPC && player.statMana >= player.statManaMax/3 && Main.mouseLeft)
 				{
-					nPC.Transform(m);
+                    do
+                    {
+                        var n = npc.Where(t => t.active && !t.boss && !t.townNPC).ToArray();
+                        int len = npc.Count(t => t.active && !t.boss && !t.townNPC);
+                        nPC.Transform(n[Main.rand.Next(len)].type);
+                    } while (nPC.boss);
 					player.statMana -= player.statManaMax/3;
 					player.manaRegenDelay = (int)player.maxRegenDelay;
 					if(Main.netMode == 1)

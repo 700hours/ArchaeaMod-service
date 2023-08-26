@@ -13,9 +13,8 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static System.Formats.Asn1.AsnWriter;
 
-namespace ArchaeaMod.Jobs
+namespace ArchaeaMod.Jobs.Projectiles
 { 
 	public class FireRain : ModProjectile
 	{

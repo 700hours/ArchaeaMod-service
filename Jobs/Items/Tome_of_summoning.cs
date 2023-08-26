@@ -48,21 +48,19 @@ namespace ArchaeaMod.Jobs.Items
 			NPC nPC = default;
             if (player.statMana >= player.statManaMax / 3)
             {
-                if (!Collision.CanHitLine(mousev, 1, 1, player.Center, player.width, player.height))
-                {
-                    return false;
-                }
                 int tries = 0;
-                int count = Main.npc.Count(t => t.active && !t.friendly && !t.boss && !t.townNPC && !t.CountsAsACritter && !ModNPCID.Follower(t.type));
+                int count = Main.npc.Count(t => t.active && !t.friendly && !t.boss && !t.townNPC && !t.CountsAsACritter);
                 do
                 {
-					bool any = Main.npc.Any(t => t.active && !t.friendly && !t.boss && !t.townNPC && !t.CountsAsACritter && !ModNPCID.Follower(t.type));
+					bool any = Main.npc.Any(t => t.active && !t.friendly && !t.boss && !t.townNPC && !t.CountsAsACritter);
 					if (!any)
 					{
 						return false;
 					}
-					nPC = Main.npc[Main.rand.Next(Main.npc.Length)];
-					if (nPC.active && !nPC.friendly && !nPC.boss && !nPC.townNPC && !nPC.CountsAsACritter && !ModNPCID.Follower(nPC.type))
+                    var n = Main.npc.Where(t => t.active && !t.boss && !t.townNPC && !t.CountsAsACritter).ToArray();
+                    int len = n.Length;
+                    nPC = n[Main.rand.Next(len)];
+					if (nPC.active && !nPC.boss && !nPC.townNPC && !nPC.CountsAsACritter)
 					{
 						break;
 					}
@@ -75,7 +73,7 @@ namespace ArchaeaMod.Jobs.Items
 				player.manaRegenDelay = (int)player.maxRegenDelay;
                 nPC.AddBuff(ModContent.BuffType<Buffs.Summoned>(), Buffs.Transmogrify.MaxTime, Main.netMode == 1);
                 nPC.Center = mousev;
-                nPC.netUpdate = true;
+                if (Main.netMode != 0) nPC.netUpdate = true;
                 SoundEngine.PlaySound(SoundID.Item25, mousev);
                 //int CreatePlayered = NPC.NewNPC(Item.GetSource_ItemUse(Item), (int)mousev.X, (int)mousev.Y, m);
                 #region dust

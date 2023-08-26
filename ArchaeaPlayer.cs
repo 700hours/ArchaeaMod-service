@@ -33,6 +33,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ArchaeaMod.Structure;
 using ArchaeaMod.Items;
 using System.Security.Cryptography;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ArchaeaMod
 {
@@ -173,6 +174,7 @@ namespace ArchaeaMod
             get { return classData.classChoice; }
             set { classData.classChoice = value; }
         }
+        public bool elevatorConnected = false;
         public int playerUID = 0;
         public int _classChoice = 0;
         private bool classChosen;
@@ -544,6 +546,10 @@ namespace ArchaeaMod
         {
             //if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
             //    return ClassItemCheck();
+            if (elevatorConnected)
+            {
+                return false;
+            }
             if (Player.HasBuff<Jobs.Buffs.Zombie>())
             {
                 return false;
@@ -1088,7 +1094,6 @@ namespace ArchaeaMod
                 return;
             for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
                 Effects.Barrier.barrier[i]?.Update(Player);
-            return;
             #region debug
             if (setModeStats)
             {
@@ -1124,7 +1129,7 @@ namespace ArchaeaMod
             //        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("Input /info and use [Tab] to list commands"), textColor);
             //    start = true;
             //}
-            return;
+            
             if (!start && KeyHold(Keys.LeftAlt))
             {
                 if (KeyPress(Keys.LeftControl))
@@ -1163,7 +1168,7 @@ namespace ArchaeaMod
                 else Player.Teleport(Main.MouseWorld);
             }
 
-            return;
+            
             //string chat = (string)Main.chatText.Clone();
             //bool enteredCommand = KeyPress(Keys.Tab);
             //if (chat.StartsWith("/info") && KeyHold(Keys.LeftControl))
@@ -1913,7 +1918,11 @@ namespace ArchaeaMod
                 string text = locatorDirection == -1 ? "Dungeon left." : "Dungeon right.";
                 ModeUI.DrawTextUI(sb, Main.screenHeight - 200, text, ref locatorDirection, 900);
             }
-            return;
+            if (ArchaeaMain.extraLife.Current)
+            {
+                int t = 3;
+                ModeUI.DrawTextUI(sb, Main.screenHeight - 200, $"Extra lives: {extraLife}", ref t, 3);
+            }
             if (debugMenu)
                 DebugMenu();
             if (spawnMenu)

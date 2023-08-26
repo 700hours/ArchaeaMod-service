@@ -54,7 +54,6 @@ namespace ArchaeaMod.Jobs.Buffs
             }
             if (npc.oldPosition != Vector2.Zero)
             {
-                npc.position = npc.oldPosition;
                 npc.velocity = Vector2.Zero;
                 npc.scale = timeLeft / MaxTime;
                 npc.color = Color.Lerp(Color.Black, Color.White, npc.scale);

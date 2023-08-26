@@ -21,7 +21,7 @@ namespace ArchaeaMod.Jobs.Tiles
     {
         public override void SetStaticDefaults()
         {
-            AnimationFrameHeight = 64;
+            AnimationFrameHeight = 74;
             Main.tileSolid[Type] = false;
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = false;
@@ -51,7 +51,6 @@ namespace ArchaeaMod.Jobs.Tiles
             TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, 2, 0);
             TileObjectData.addAlternate(2);
             TileObjectData.addTile(Type);
-            ItemDrop = ModContent.ItemType<Jobs.Items.Elevator>();
             MinPick = 15;
             HitSound = SoundID.Dig;
             DustType = 1;
@@ -59,25 +58,32 @@ namespace ArchaeaMod.Jobs.Tiles
             name.SetDefault("Elevator");
             AddMapEntry(Color.BurlyWood, name);
         }
+        bool init = false;
         NPC elevator;
         public override void NearbyEffects(int i, int j, bool closer)
         {
             int x = i * 16;
             int y = j * 16;
-            if (elevator == default(NPC) || !elevator.active)
+            if (!init)
             {
-                elevator = NPC.NewNPCDirect(NPC.GetSource_None(), new Vector2(x + 24, y + 80 - 64), ModContent.NPCType<NPCs.Elevator>(), 0, y + 80 - 64);
+                Projectile.NewProjectileDirect(Projectile.GetSource_None(), new Vector2(x + 24, y + 80 - 64), Vector2.Zero, ModContent.ProjectileType<Projectiles.Elevator>(), 0, 0);
+                init = true;
             }
         }
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
         {
-            if (ArchaeaItem.Elapsed(80))
-            {
-                float scale = Main.rand.NextFloat() + 1f;
-                var v2 = new Vector2((i + 1)* 16 + 16, (j + 3) * 16);
-                var dust = Dust.NewDust(v2, 2, 3, DustID.Smoke, ArchaeaNPC.RandAngle(), 3 * scale, 0, default, 3 * scale);
-                Main.dust[dust].noLight = false;
-                Main.dust[dust].noGravity = true;
+            if (Main.tile[i,j].TileFrameX == 0 && Main.tile[i, j].TileFrameY == 2*18)
+            { 
+                if (Main.rand.NextBool(6))
+                {
+                    Vector2 position = new Vector2(i * 16, j * 16);
+                    int num123 = Dust.NewDust(position, 16, 16, 31, 0f, 0f, 80, default(Color), 1.4f);
+                    Dust expr_5B99_cp_0 = Main.dust[num123];
+                    expr_5B99_cp_0.position.X = expr_5B99_cp_0.position.X - 4f;
+                    Main.dust[num123].noGravity = true;
+                    Main.dust[num123].velocity *= 0.2f;
+                    Main.dust[num123].velocity.Y = (float)(-(float)Main.rand.Next(7, 13)) * 0.15f;
+                }
             }
         }
         public override void PlaceInWorld(int i, int j, Item item)
@@ -86,11 +92,12 @@ namespace ArchaeaMod.Jobs.Tiles
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
+            Item.NewItem(Item.GetSource_None(), i * 16, j * 16, 64, 64, ModContent.ItemType<Jobs.Items.Elevator>());
             ModContent.GetInstance<ArchaeaWorld>().elevatorCount--;
         }
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
-            int interval = 3;
+            int interval = 6;
             int maxFrames = 3;
             if (frameCounter++ % interval == 0)
             {

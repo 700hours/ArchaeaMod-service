@@ -19,7 +19,7 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Tome of Plague Explosion");
+            DisplayName.SetDefault("Scroll of Plague Explosion");
 			Tooltip.SetDefault("Strikes an enemy with poison.\n" +
 				"One use.");
         }

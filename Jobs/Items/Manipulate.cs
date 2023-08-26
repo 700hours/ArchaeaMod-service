@@ -33,7 +33,8 @@ namespace ArchaeaMod.Jobs.Items
             Item.height = 32;
             Item.useStyle = 1;
             Item.useAnimation = 20;
-            Item.useTime = 0;
+            Item.useTime = 20;
+            Item.channel = true;
             Item.maxStack = 1;
             Item.consumable = false;
             Item.autoReuse = true;
@@ -49,7 +50,7 @@ namespace ArchaeaMod.Jobs.Items
         {
             if (player.whoAmI == Main.myPlayer)
             {
-                Vector2 mousev = Main.MouseWorld;
+                Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y);
                 Rectangle mouse = new Rectangle((int)(mousev.X - 16f), (int)(mousev.Y - 16f), 32, 32);
 
                 if (player.statMana <= 0)
@@ -59,12 +60,12 @@ namespace ArchaeaMod.Jobs.Items
                 }
                 if (Main.rand.NextBool(60))
                 {
-                    int index = Dust.NewDust(player.Center, 1, 1, DustID.AncientLight, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 2f);
+                    int index = Dust.NewDust(player.Center, 1, 1, DustID.AncientLight, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * (Main.rand.NextFloat() - 0.5f) * 4f, 0, default, 2f);
                     Main.dust[index].noGravity = true;
                 }
                 if (ArchaeaItem.Elapsed(10))
                 {
-                    int index = Dust.NewDust(player.position + new Vector2(player.width / 2, player.height - 1), 1, 1, DustID.AncientLight, ArchaeaNPC.RandAngle() * 3f, 0f, 0, default, 1f);
+                    int index = Dust.NewDust(player.position + new Vector2(player.width / 2, player.height - 1), 1, 1, DustID.AncientLight, ArchaeaNPC.RandAngle() * ((Main.rand.NextFloat() - 0.5f) * 2f) * 3f, 0f, 0, default, 1f);
                     Main.dust[index].noGravity = true;
                 }
                 if (target == default(NPC))
@@ -73,8 +74,9 @@ namespace ArchaeaMod.Jobs.Items
 			        for(int m = 0; m < npc.Length; m++)
 			        {
 				        NPC nPC = npc[m];
-				        Rectangle npcBox = nPC.Hitbox;
-				        if (mouse.Intersects(npcBox) && !nPC.boss && player.statMana > 0 && Main.mouseLeft && Collision.CanHitLine(nPC.Center, nPC.width, nPC.height, player.Center, player.width, player.height))
+                        Vector2 npcv = new Vector2(nPC.position.X, nPC.position.Y);
+                        Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, nPC.width, nPC.height);
+                        if (npcBox.Intersects(mouse) && !nPC.boss && player.statMana > 0 && Main.mouseLeft)
 				        {
                             target = nPC;
                             effect = Projectile.NewProjectileDirect(Projectile.GetSource_None(), target.Center, Vector2.Zero, ModContent.ProjectileType<j_effect>(), 0, 0f, Main.myPlayer, EffectID.Polygon, target.whoAmI);
@@ -84,17 +86,17 @@ namespace ArchaeaMod.Jobs.Items
                 }
                 else
                 {
-                    if (Main.mouseLeft && Collision.CanHitLine(target.Center, target.width, target.height, player.Center, player.width, player.height))
+                    if (Main.mouseLeft)
                     {
                         target.position = new Vector2(mousev.X - (float)target.width / 2, mousev.Y - (float)target.height / 2);
                         player.statMana--;
                         player.manaRegenDelay = (int)player.maxRegenDelay;
                         if (ArchaeaNPC.IsNotOldPosition(target))
                         {
-                            float angle = target.oldPos[2].AngleTo(mousev);
-                            float distance = target.oldPos[2].Distance(target.position);
+                            float angle = target.oldPosition.AngleTo(mousev);
+                            float distance = target.oldPosition.Distance(target.position);
                             target.rotation = angle;
-                            if (distance > 20f)
+                            if (distance > 6f)
                             {
                                 if (Collision.SolidCollision(target.position, target.width, target.height))
                                 {

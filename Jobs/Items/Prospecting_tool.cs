@@ -46,32 +46,32 @@ namespace ArchaeaMod.Jobs.Items
                         ModeUI.NewText($"{SetText(TileID.Platinum)} Ore: Yes", SetColor(200, 190, 140)); // Platinum
                         return true;
 					case 8:
-						ModeUI.NewText($"{SetText(8)} Ore: Yes", SetColor(200, 190, 140));			 // gold
-						return true;
-					case TileID.Tungsten:
+						ModeUI.NewText($"{SetText(8)} Ore: Yes", SetColor(200, 190, 140));           // gold
+                        return true;
+                    case TileID.Tungsten:
                         ModeUI.NewText($"{SetText(TileID.Tungsten)} Ore: Yes", SetColor(200, 190, 140)); // Tungsten
                         return true;
-					case 9:
-						ModeUI.NewText($"{SetText(9)} Ore: Yes", SetColor(165, 165, 175));			 // silver
-						return true;
+                    case 9:
+						ModeUI.NewText($"{SetText(9)} Ore: Yes", SetColor(165, 165, 175));           // silver
+                        return true;
                     case TileID.Lead:
                         ModeUI.NewText($"{SetText(TileID.Lead)} Ore: Yes", SetColor(200, 190, 140)); // Lead
                         return true;
                     case 6:
-						ModeUI.NewText($"{SetText(6)} Ore: Yes", SetColor(200, 175, 140));		     // iron
-						return true;
+						ModeUI.NewText($"{SetText(6)} Ore: Yes", SetColor(200, 175, 140));           // iron
+                        return true;
                     case TileID.Tin:
                         ModeUI.NewText($"{SetText(TileID.Tin)} Ore: Yes", SetColor(200, 190, 140));  // Tin
                         return true;
                     case 7:
-						ModeUI.NewText($"{SetText(7)} Ore: Yes", SetColor(255, 170, 120));		     // copper
-						return true;
-					default:
-                        ModeUI.NewText($"{SetText(default)} Ore", SetColor(255, 255, 255));			 // none
+						ModeUI.NewText($"{SetText(7)} Ore: Yes", SetColor(255, 170, 120));           // copper
                         return true;
+                    default:
+                        ModeUI.NewText($"{SetText(default)} Ore", SetColor(255, 255, 255));			 // none
+                        break;
 				}
-			}
-			return false;
+            }
+            return null;
 		}
         Color SetColor(byte r, byte g, byte b)
         {

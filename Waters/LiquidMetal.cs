@@ -40,6 +40,7 @@ namespace ArchaeaMod.Waters
         {
             return ModContent.Find<ModGore>("ArchaeaMod/Gores/MagicPixel").Type;
         }
+        public override string BlockTexture => "ArchaeaMod/Waters/LiquidMetalWaterStyle_Block";
         public override int GetSplashDust()
         {
             return ModContent.DustType<Merged.Dusts.c_silver_dust>();

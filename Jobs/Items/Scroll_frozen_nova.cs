@@ -15,7 +15,7 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace ArchaeaMod.Jobs.Items
 {
-    internal class Scroll_frozen : ModItem
+    internal class Scroll_frozen_nova : ModItem
 	{
         public override void SetStaticDefaults()
         {
