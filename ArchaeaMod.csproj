@@ -27,7 +27,6 @@
   <ItemGroup>
     <Compile Remove="Jobs\Buffs\_Frozen.cs" />
     <Compile Remove="Jobs\Items\IronWorkbench.cs" />
-    <Compile Remove="Jobs\Items\Manipulate.cs" />
     <Compile Remove="Jobs\Items\Seeded_dirt.cs" />
     <Compile Remove="Jobs\Items\Tome.cs" />
     <Compile Remove="Jobs\Projectiles\Box Diffusion.cs" />
@@ -42,8 +41,6 @@
     <None Remove="Jobs\Buffs\_Frozen.png" />
     <None Remove="Jobs\Items\IronWorkbench.ini" />
     <None Remove="Jobs\Items\IronWorkbench.png" />
-    <None Remove="Jobs\Items\Manipulate.ini" />
-    <None Remove="Jobs\Items\Manipulate.png" />
     <None Remove="Jobs\Items\Seeded_dirt.ini" />
     <None Remove="Jobs\Items\Tome.ini" />
     <None Remove="Jobs\Items\Tome.png" />

@@ -31,7 +31,6 @@ namespace ArchaeaMod.Jobs.Projectiles
 			Projectile.penetrate = -1;
 			Projectile.tileCollide = true;
 			Projectile.ignoreWater = false;
-			Projectile.MaxUpdates = 3;
 			Projectile.DamageType = DamageClass.Ranged;
         }
         private Rectangle plrB, prjB;
@@ -41,9 +40,9 @@ namespace ArchaeaMod.Jobs.Projectiles
 			ticks++;
 			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X);
 			Lighting.AddLight((int)(Projectile.position.X + Projectile.width/2)/16, (int)(Projectile.position.Y + Projectile.height)/16, 0.7f, 0.2f, 0.1f);
-			Color newColor = default(Color);
-			int c = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y + Projectile.height - 4f), 10, 10, 6, 0f, 0f, 100, newColor, 1.5f);
-			Main.dust[c].noGravity = true;
+			//Color newColor = default(Color);
+			//int c = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y + Projectile.height - 4f), 10, 10, 6, 0f, 0f, 100, newColor, 1.5f);
+			//Main.dust[c].noGravity = true;
 			if(ticks%30 == 0) {
 				SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot, Projectile.Center);
 			}

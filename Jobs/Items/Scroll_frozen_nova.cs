@@ -19,7 +19,7 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scrollof Frozen Nova");
+            DisplayName.SetDefault("Scroll of Frozen Nova");
             Tooltip.SetDefault("Create a blast of frost at target.\n" +
                 "One use.");
         }

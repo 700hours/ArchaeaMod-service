@@ -201,7 +201,7 @@ namespace ArchaeaMod.Effects
             using (MemoryStream stream = new MemoryStream())
             { 
                 using (map)
-                { 
+                {
                     map.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
                     tex = FromStream(stream);
                 }
@@ -316,7 +316,7 @@ namespace ArchaeaMod.Effects
         //  Draw a Color.Lerp using rotation wrapped and divided by PI
         public Texture2D DrawTexture()
         {
-            using (Bitmap map = new Bitmap((int)radius, (int)radius))
+            using (Bitmap map = new Bitmap(72, 72))
             { 
                 using (Graphics g = Graphics.FromImage(map))
                 {
@@ -338,7 +338,7 @@ namespace ArchaeaMod.Effects
         float SortRotation(ref float angle, float speed, int direction = 1)
         {
             const float radian = 0.017f;
-            angle += speed * direction;
+            angle += speed * 15f * direction;
             angle = MathHelper.WrapAngle(angle);
             return angle / radian;
         }

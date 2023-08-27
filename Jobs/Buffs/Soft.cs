@@ -36,7 +36,6 @@ namespace ArchaeaMod.Jobs.Buffs
 				NPCEffectsEnd(npc, buffIndex, Type, 0);
 			}
 			float radius = (float)(buffTime / MaxTime) * npc.width;
-			ArchaeaItem.DustCircle(npc.Center, radius, DustID.Sunflower);
         }
         int OldNPCdef = 0;
 		public void NPCEffectsStart(NPC N,int buffIndex,int buffType,int buffTime)

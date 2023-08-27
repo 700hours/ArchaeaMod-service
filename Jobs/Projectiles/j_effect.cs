@@ -51,7 +51,7 @@ namespace ArchaeaMod.Jobs.Projectiles
         {
             if (ai == EffectID.Polygon)
             {
-                polygon = Geometric.NewEffect(GetVertices(), Projectile.position, new float[] { 120f * Draw.radian, 240f * Draw.radian, 360f * Draw.radian });
+                polygon = Geometric.NewEffect(GetVertices(), new Vector2(30, 30), new float[] { 120f * Draw.radian, 240f * Draw.radian, 360f * Draw.radian });
             }
         }
         public override bool PreAI()
@@ -64,7 +64,6 @@ namespace ArchaeaMod.Jobs.Projectiles
             switch (ai)
             {
                 case EffectID.Polygon:
-                    polygon.origin = Projectile.position.ToScreenPosition();
                     Projectile.timeLeft = 2;
                     break;
             }
@@ -72,13 +71,14 @@ namespace ArchaeaMod.Jobs.Projectiles
         }
         public override void AI()
         {
+            Projectile.Center = Main.npc[npcIndex].Center;
             polygon.UpdateRotation(target.height);
         }
         public override void PostDraw(Color lightColor)
         {
             Texture2D tex = polygon.DrawTexture();
             SpriteBatch sb = Main.spriteBatch;
-            sb.Draw(tex, polygon.origin, null, Color.Lerp(lightColor, Color.Red, (float)(polygon.Rotation / Math.PI)));
+            sb.Draw(tex, Projectile.Center - new Vector2(30, 30) - Main.screenPosition, null, Color.Lerp(lightColor, Color.Red, (float)(polygon.Rotation / Math.PI)));
         }
         Vector2[][] GetVertices()
         {
@@ -86,15 +86,15 @@ namespace ArchaeaMod.Jobs.Projectiles
             {
                 new Vector2[]
                 {
-                    Projectile.position + new Vector2(-30),
-                    Projectile.position + new Vector2(30, 0),
-                    Projectile.position + new Vector2(-30, 30)
+                    new Vector2(-30),
+                    new Vector2(30, 0),
+                    new Vector2(-30, 30)
                 },
                 new Vector2[]
                 {
-                    Projectile.position + new Vector2(30),
-                    Projectile.position + new Vector2(-30, 0),
-                    Projectile.position + new Vector2(30, -30)
+                    new Vector2(30),
+                    new Vector2(-30, 0),
+                    new Vector2(30, -30)
                 }
             };
         }

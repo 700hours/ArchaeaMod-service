@@ -49,7 +49,7 @@ namespace ArchaeaMod.Jobs.Projectiles
 			    Projectile.velocity.Y += Gravity;
             }
 			Color color = new Color();
-			int dust = Dust.NewDust(new Vector2((float) Projectile.position.X, (float) Projectile.position.Y), Projectile.width, Projectile.height, dustType, 0, 0, 100, color, 3.0f);
+			int dust = Dust.NewDust(new Vector2((float) Projectile.position.X, (float) Projectile.position.Y), Projectile.width, Projectile.height, dustType, Projectile.velocity.X, Projectile.velocity.Y, 100, color, 1.0f);
 			Main.dust[dust].noGravity = true;
             if (ArchaeaProjectiles.IsNotOldPosition(Projectile))
             {

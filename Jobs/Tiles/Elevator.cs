@@ -14,6 +14,8 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using ArchaeaMod.Items;
 using ArchaeaMod.NPCs;
+using Terraria.Localization;
+using System.Timers;
 
 namespace ArchaeaMod.Jobs.Tiles
 {
@@ -59,15 +61,15 @@ namespace ArchaeaMod.Jobs.Tiles
             AddMapEntry(Color.BurlyWood, name);
         }
         bool init = false;
-        NPC elevator;
+        Projectile elevator;
         public override void NearbyEffects(int i, int j, bool closer)
         {
             int x = i * 16;
             int y = j * 16;
-            if (!init)
+            if (elevator == default(Projectile) || !elevator.active)
             {
-                Projectile.NewProjectileDirect(Projectile.GetSource_None(), new Vector2(x + 24, y + 80 - 64), Vector2.Zero, ModContent.ProjectileType<Projectiles.Elevator>(), 0, 0);
-                init = true;
+                Dust.NewDust(new Vector2(x + 24, y + 80 - 64), 24, 80, 31, Scale: 1.4f);
+                elevator = Projectile.NewProjectileDirect(Projectile.GetSource_None(), new Vector2(x + 24, y + 80 - 64), Vector2.Zero, ModContent.ProjectileType<Projectiles.Elevator>(), 0, 0);
             }
         }
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)

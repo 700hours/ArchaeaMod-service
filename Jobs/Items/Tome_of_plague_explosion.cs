@@ -26,7 +26,7 @@ namespace ArchaeaMod.Jobs.Items
             Item.useTime = 30;
             Item.damage = 45;
             Item.maxStack = 10;
-            Item.consumable = true;
+            Item.consumable = false;
             Item.autoReuse = false;
             Item.useTurn = false;
             Item.noMelee = true;
@@ -51,7 +51,6 @@ namespace ArchaeaMod.Jobs.Items
                     if (nPC.friendly) continue;
                     if (nPC.dontTakeDamage) continue;
                     if (nPC.boss) continue;
-                    if (!Collision.CanHitLine(nPC.Center, nPC.width, nPC.height, player.Center, player.width, player.height)) continue;
                     Vector2 npcv = new Vector2(nPC.position.X, nPC.position.Y);
                     Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, nPC.width, nPC.height);
                     if (mouse.Intersects(npcBox) && Main.mouseLeft)

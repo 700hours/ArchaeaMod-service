@@ -40,7 +40,7 @@ namespace ArchaeaMod.Jobs.Buffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            if (player.buffTime[buffIndex] == MaxTime)
+            if (player.buffTime[buffIndex] == MaxTime - 1)
             {
                 npcIndex = NPC.NewNPC(NPC.GetSource_None(), (int)player.position.X, (int)player.position.Y, Main.rand.Next(new[] { NPCID.Zombie, NPCID.ZombieDoctor, NPCID.ZombieElf, NPCID.ZombieElfBeard, NPCID.ZombieEskimo, NPCID.ZombieMerman, NPCID.ZombieMushroom, NPCID.ZombiePixie, NPCID.ZombieRaincoat, NPCID.ZombieSuperman, NPCID.ZombieSweater }));
                 Main.npc[npcIndex].friendly = true;
@@ -50,7 +50,8 @@ namespace ArchaeaMod.Jobs.Buffs
             player.moveSpeed /= 2f;
             player.statDefense = 0;
             player.immune = true;
-            player.immuneAlpha = 0;
+            player.immuneAlpha = 255;
+            player.invis = true;
             foreach (NPC npc in Main.npc)
             {
                 if (!npc.active) continue;

@@ -34,6 +34,7 @@ using ArchaeaMod.Structure;
 using ArchaeaMod.Items;
 using System.Security.Cryptography;
 using static System.Net.Mime.MediaTypeNames;
+using ArchaeaMod.Jobs.Projectiles;
 
 namespace ArchaeaMod
 {
@@ -2165,7 +2166,7 @@ namespace ArchaeaMod
                     int k = Main.rand.Next(0 + i, 10 + i);
                     int dmg = (int)(15 * (float)i - 0.5f);
                     float kb = (float)i - 0.5f;                                                                                                                                                                                                                             //  Add FireRain projectile
-                    int FireRain = Projectile.NewProjectile(Projectile.GetSource_None(), new Vector2(Player.position.X + (float)Main.rand.Next(-100 * k, 100 * k), Player.position.Y - 800f + (float)Main.rand.Next(-50, 50)), new Vector2(Main.rand.Next(-2 * i, 2 * i), 12f), 0, dmg, kb, Player.whoAmI);
+                    int FireRain = Projectile.NewProjectile(Projectile.GetSource_None(), new Vector2(Player.position.X + (float)Main.rand.Next(-100 * k, 100 * k), Player.position.Y - 800f + (float)Main.rand.Next(-50, 50)), new Vector2(Main.rand.Next(-2 * i, 2 * i), 12f), ModContent.ProjectileType<FireRain>(), dmg, kb, Player.whoAmI);
                     Main.projectile[FireRain].aiStyle = 0;
                     Main.projectile[FireRain].timeLeft = 300;
                     Main.projectile[FireRain].tileCollide = false;

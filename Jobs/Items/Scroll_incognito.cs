@@ -21,7 +21,7 @@ namespace ArchaeaMod.Jobs.Items
         {
             DisplayName.SetDefault("Scroll of Incognito");
             Tooltip.SetDefault("Put on a zombie disguise." +
-                "Enemies won't recognize you!");
+                "Enemies do no damage for 2 minutes.");
         }
         public override void SetDefaults()
         {
@@ -46,7 +46,7 @@ namespace ArchaeaMod.Jobs.Items
                 for (int i = 0; i < 20; i++)
                 {
                     int index = Dust.NewDust(player.Center, 1, 1, DustID.GreenMoss, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 1.2f);
-                    Main.dust[index].noGravity = true;
+                    Main.dust[index].noGravity = false;
                     Main.dust[index].noLight = false;
                 }
                 player.AddBuff(ModContent.BuffType<Buffs.Zombie>(), Buffs.Zombie.MaxTime, Main.netMode == 1);

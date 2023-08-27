@@ -53,8 +53,9 @@ namespace ArchaeaMod.Jobs.Items
                 Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y);
                 Rectangle mouse = new Rectangle((int)(mousev.X - 16f), (int)(mousev.Y - 16f), 32, 32);
 
-                if (player.statMana <= 0)
-                { 
+                if (player.statMana <= 1)
+                {
+                    effect.active = false;
                     target = default(NPC);
                     return false;
                 }

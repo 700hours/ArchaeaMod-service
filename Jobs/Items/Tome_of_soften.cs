@@ -30,6 +30,7 @@ namespace ArchaeaMod.Jobs.Items
             Item.value = 2000;
             Item.rare = 3;
         }
+        int ticks = 0;
         public override bool? UseItem(Player player)
         {
             Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y);
@@ -42,7 +43,6 @@ namespace ArchaeaMod.Jobs.Items
 				if(nPC.life <= 0) continue;
 				if(nPC.friendly) continue;
 				if(nPC.dontTakeDamage) continue;
-                if(!Collision.CanHitLine(nPC.Center, nPC.width, nPC.height, player.Center, player.width, player.height)) continue;
                 Vector2 npcv = new Vector2(nPC.position.X, nPC.position.Y);
 				Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, nPC.width, nPC.height);
 				if(mouse.Intersects(npcBox) && player.statMana >= nPC.width/4 && Main.mouseLeft)
@@ -59,8 +59,11 @@ namespace ArchaeaMod.Jobs.Items
 					player.statMana -= cost;
 					player.manaRegenDelay = (int)player.maxRegenDelay;
 					Color newColor = default(Color);
-					int a = Dust.NewDust(new Vector2(mousev.X - 10f, mousev.Y - 10f), 20, 20, 19, 0f, 0f, 100, newColor, 2f);
-					Main.dust[a].noGravity = true;
+                    if (ticks++ % 5 == 0)
+                    {
+					    int a = Dust.NewDust(new Vector2(mousev.X - 10f, mousev.Y - 10f), nPC.width, nPC.height, 19, 0f, 0f, 100, newColor, 2f);
+					    Main.dust[a].noGravity = true;
+                    }
                     SoundEngine.PlaySound(SoundID.Item8, mousev);
                     nPC.AddBuff(ModContent.BuffType<Buffs.Soft>(), Buffs.Soft.MaxTime, Main.netMode == 0);
 					nPC.netUpdate = true;

@@ -30,12 +30,13 @@ namespace ArchaeaMod.Jobs.Projectiles
             Projectile.height = 1;
             Projectile.alpha = 255;
             Projectile.scale = 1;
-            Projectile.timeLeft = 200;
+            Projectile.timeLeft = 400;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = false;
         }
+        int ticks    = 0;
         int ai       => (int)Projectile.ai[0];
         int target   => (int)Projectile.ai[1];
         int buffType => (int)Projectile.localAI[0];
@@ -46,18 +47,21 @@ namespace ArchaeaMod.Jobs.Projectiles
         {
             if (!init)
             {
-                Projectile.velocity.X += ArchaeaNPC.RandAngle() * 4f;
-                Projectile.velocity.Y += ArchaeaNPC.RandAngle() * 4f;
+                Projectile.velocity.X += ArchaeaNPC.RandAngle() * 2f;
+                Projectile.velocity.Y += ArchaeaNPC.RandAngle() * 2f;
                 init = true;
             }
             return init;
         }
         public override void AI()
         {
-            Projectile.velocity += ArchaeaNPC.AngleToSpeed(Projectile.AngleTo(N.Center), 0.1f);
-            ArchaeaNPC.VelocityClamp(Projectile, 0f, 4f);
-            Dust.NewDust(Projectile.position, 1, 1, dustType);
-            if (!N.active || N.life <= 0 || N.friendly || N.dontTakeDamage)
+            if (ticks++ > 10)
+            { 
+                Projectile.velocity = ArchaeaNPC.AngleToSpeed(Projectile.AngleTo(N.Center), 4f);
+            }
+            //ArchaeaNPC.VelocityClamp(Projectile, 0f, 4f);
+            Dust.NewDust(Projectile.position, 2, 2, dustType);
+            if (N.active && N.life > 0 && !N.friendly && !N.dontTakeDamage)
             { 
                 Rectangle MB = new Rectangle((int)Projectile.position.X+(int)Projectile.velocity.X,(int)Projectile.position.Y+(int)Projectile.velocity.Y,Projectile.width,Projectile.height);
 				Rectangle NB = new Rectangle((int)N.position.X,(int)N.position.Y,N.width,N.height);

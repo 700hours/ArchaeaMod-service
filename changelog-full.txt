@@ -695,3 +695,8 @@ version 1.4.25.116 -> 1.4.26.117
 ================================
 # Fixed
 -> Clicking on UI timed message puts timer to max to close the element
+
+version 1.4.25.116 -> 1.4.30.137
+================================
+# Added
+-> 25 items

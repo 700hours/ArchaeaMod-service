@@ -113,6 +113,7 @@ namespace ArchaeaMod.Jobs.Projectiles
         }
         public override void AI()
         {
+            owner.aiStyle = -1;
             if (owner.active)
             {
                 if (followType != FollowID.Replace)
@@ -127,6 +128,10 @@ namespace ArchaeaMod.Jobs.Projectiles
                 return;
             }
             Player player = Main.LocalPlayer;
+            owner.direction = player.direction;
+            owner.position = player.position;
+            owner.velocity = player.velocity;
+            owner.knockBackResist = 1f;
             var follower = Main.projectile.Where(t => t.active && t.owner == player.whoAmI && t.type == Type && t.localAI[0] != ownerType).ToArray();
             if (followerID == 0)
             {
