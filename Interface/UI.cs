@@ -183,7 +183,7 @@ namespace ArchaeaMod.Interface.UI
                 for (int i = 0; i < mainOptions.Length; i++)
                 {
                     Element opt = mainOptions[i];
-                    if (i == 2 && mainOptions[i].color == Color.Blue)
+                    if (i == 2 && ModContent.GetInstance<ModeToggle>().notFirstJoin)
                     {
                         continue;
                     }
@@ -214,10 +214,10 @@ namespace ArchaeaMod.Interface.UI
                         mainOptions[0].color = Color.Blue;
                     }
                     //  has selected mode
-                    if (ModContent.GetInstance<ModeToggle>().archaeaMode)
-                    {
-                        mainOptions[2].color = Color.Blue;
-                    }
+                    //if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+                    //{
+                    //    mainOptions[2].color = Color.Blue;
+                    //}
                     //  apply set to white
                     if (mainOptions[0].color == Color.Blue)
                     { 
@@ -252,6 +252,7 @@ namespace ArchaeaMod.Interface.UI
                             .SetModeStats(ModContent.GetInstance<ModeToggle>().archaeaMode, player.whoAmI);
                     }
                     Toggled = false;
+                    ModContent.GetInstance<ModeToggle>().notFirstJoin = true;
                     return true;
                 }
                 back.ticks = 0;
@@ -259,7 +260,7 @@ namespace ArchaeaMod.Interface.UI
             // experimental to fix coloring bug
             if (forceDraw)
             {
-                if (Mode.LeftClick() && !ModContent.GetInstance<ModeToggle>().archaeaMode)
+                if (Mode.LeftClick() && !ModContent.GetInstance<ModeToggle>().notFirstJoin)
                 {
                     Mode.active = !Mode.active;
                     Mode.color = Mode.active ? Color.Blue : Color.White;
@@ -271,6 +272,7 @@ namespace ArchaeaMod.Interface.UI
                     apply.color = Color.White;
                 }
             }
+            mainOptions[2].color = mainOptions[2].active ? Color.Blue : Color.White;
             //
             return false;
         }

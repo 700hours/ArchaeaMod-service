@@ -456,6 +456,7 @@ namespace ArchaeaMod.Mode
             Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SetModeStats(false);
         }
 
+        public bool notFirstJoin = false;
         public bool archaeaMode;
         public bool progress;
         public float healthScale;
@@ -466,7 +467,8 @@ namespace ArchaeaMod.Mode
 
         
         public override void SaveWorldData(TagCompound tag)/* Edit tag parameter rather than returning new TagCompound */
-        {
+        {                                       
+            tag.Add("Init", notFirstJoin);
             tag.Add("ArchaeaMode", archaeaMode);
             tag.Add("HealthScale", healthScale);
             tag.Add("DamageScale", damageScale);
@@ -475,17 +477,25 @@ namespace ArchaeaMod.Mode
         }
         public override void LoadWorldData(TagCompound tag)
         {
-            archaeaMode = tag.GetBool("ArchaeaMode");
-            healthScale = tag.GetFloat("HealthScale");
-            damageScale = tag.GetFloat("DamageScale");
-            dayCount = tag.GetFloat("DayCount");
-            totalTime = tag.GetFloat("TotalTime");
+            notFirstJoin = tag.GetBool("Init");
+            if (tag.ContainsKey("ArchaeaMode"))
+            {
+                archaeaMode = tag.GetBool("ArchaeaMode");
+                healthScale = tag.GetFloat("HealthScale");
+                damageScale = tag.GetFloat("DamageScale");
+                dayCount = tag.GetFloat("DayCount");
+                totalTime = tag.GetFloat("TotalTime");
+            }
+            if (!notFirstJoin)
+            {
+                archaeaMode = false;
+            }
         }
         public void SetArchaeaMode(bool flag)
         {
-            if (ModContent.GetInstance<ModeToggle>().archaeaMode != flag)
+            if (archaeaMode != flag)
             { 
-                ModContent.GetInstance<ModeToggle>().archaeaMode = flag;
+                archaeaMode = flag;
                 if (Main.netMode == NetmodeID.MultiplayerClient)
                     NetHandler.Send(Packet.ArchaeaMode, 256, -1, 0, healthScale, damageScale, 0, archaeaMode, dayCount, totalTime);
             }

@@ -987,14 +987,14 @@ namespace ArchaeaMod
                     first = true;
                 }
             }
-            if (ModContent.GetInstance<ModeToggle>().archaeaMode)
-            {
-                _archaeaMode = true;
-            }
-            if (_archaeaMode && !ModContent.GetInstance<ModeToggle>().archaeaMode)
-            {
-                ModContent.GetInstance<ModeToggle>().archaeaMode = true;
-            }
+            //if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+            //{
+            //    _archaeaMode = true;
+            //}
+            //if (_archaeaMode && !ModContent.GetInstance<ModeToggle>().archaeaMode)
+            //{
+            //    ModContent.GetInstance<ModeToggle>().archaeaMode = true;
+            //}
             if (ArchaeaPlayer.KeyPress(Keys.E))
                 begin = false;
             if (ArchaeaPlayer.KeyPress(Keys.Q))
