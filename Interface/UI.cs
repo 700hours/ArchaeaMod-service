@@ -18,6 +18,7 @@ using Terraria.UI.Chat;
 using ArchaeaMod.Mode;
 using Terraria.ID;
 using System.Timers;
+using Mono.Cecil;
 
 namespace ArchaeaMod.Interface.UI
 {
@@ -87,6 +88,8 @@ namespace ArchaeaMod.Interface.UI
         internal static bool Toggled = false;
         static bool flag = false;
         static bool flag2 = false;
+        static Element Mode => mainOptions[2];
+        static Element Classes => mainOptions[0];
         public static bool MainOptions(Player player, bool forceDraw = false)
         {
             if (reset)
@@ -204,19 +207,22 @@ namespace ArchaeaMod.Interface.UI
                 sb.Draw(mod.Assets.Request<Texture2D>("Gores/config_icons").Value, apply.bounds, new Rectangle(44 * 4, 0, 44, 44), apply.color);
                 #region options already set
                 //  has selected any class
-                if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice != ClassID.None)
+                if (!forceDraw)
                 {
-                    mainOptions[0].color = Color.Blue;
-                }
-                //  has selected mode
-                if (ModContent.GetInstance<ModeToggle>().archaeaMode)
-                {
-                    mainOptions[2].color = Color.Blue;
-                }
-                //  apply set to white
-                if (mainOptions[0].color == Color.Blue)
-                { 
-                    apply.color = Color.White;
+                    if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice != ClassID.None)
+                    {
+                        mainOptions[0].color = Color.Blue;
+                    }
+                    //  has selected mode
+                    if (ModContent.GetInstance<ModeToggle>().archaeaMode)
+                    {
+                        mainOptions[2].color = Color.Blue;
+                    }
+                    //  apply set to white
+                    if (mainOptions[0].color == Color.Blue)
+                    { 
+                        apply.color = Color.White;
+                    }
                 }
                 #endregion
                 if (apply.HoverOver())
@@ -250,7 +256,27 @@ namespace ArchaeaMod.Interface.UI
                 }
                 back.ticks = 0;
             }
+            // experimental to fix coloring bug
+            if (forceDraw)
+            {
+                if (Mode.LeftClick() && !ModContent.GetInstance<ModeToggle>().archaeaMode)
+                {
+                    Mode.active = !Mode.active;
+                    Mode.color = Mode.active ? Color.Blue : Color.White;
+                }
+                Classes.active = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice != ClassID.None;
+                Classes.color = Classes.active ? Color.Blue : Color.White;
+                if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice != ClassID.None || choiceName != "")
+                {
+                    apply.color = Color.White;
+                }
+            }
+            //
             return false;
+        }
+        public static void Unload()
+        {
+            choiceName = "";
         }
         public static void SetMainOption(Element opt, bool flag)
         {

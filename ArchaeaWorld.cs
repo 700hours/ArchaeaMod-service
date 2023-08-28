@@ -32,6 +32,7 @@ using ArchaeaMod.Walls;
 using Terraria.GameContent.Shaders;
 using System.Globalization;
 using ArchaeaMod.Mode;
+using ArchaeaMod.Interface.UI;
 
 namespace ArchaeaMod
 {
@@ -864,6 +865,10 @@ namespace ArchaeaMod
                 }
             }
             return true;
+        }
+        public override void PreSaveAndQuit()
+        {
+            OptionsUI.Unload();
         }
         public bool MagnoBiome;
         public bool SkyFort;

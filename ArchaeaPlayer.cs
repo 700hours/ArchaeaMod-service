@@ -1678,7 +1678,6 @@ namespace ArchaeaMod
                 Main.projectile[index].netUpdate = true;
             }
         }
-
         public bool ClassItemCheck()
         {
             Item item = Player.inventory[Player.selectedItem];
