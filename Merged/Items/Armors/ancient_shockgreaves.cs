@@ -12,7 +12,7 @@ namespace ArchaeaMod.Merged.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ancient Shock Greaves");
+            // DisplayName.SetDefault("Ancient Shock Greaves");
         }
         public override void SetDefaults()
         {

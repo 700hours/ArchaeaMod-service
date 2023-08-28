@@ -1,7 +1,7 @@
 ﻿using ArchaeaMod.Effects;
 
 using ArchaeaMod.NPCs;
-using IL.Terraria.GameContent.NetModules;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.RuntimeDetour;
@@ -26,7 +26,7 @@ namespace ArchaeaMod.Jobs.Projectiles
         public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("j_Effect");
+            // DisplayName.SetDefault("j_Effect");
         }
         public override void SetDefaults()
         {

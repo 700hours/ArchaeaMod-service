@@ -1,5 +1,5 @@
 ﻿using ArchaeaMod.NPCs;
-using IL.Terraria.DataStructures;
+
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

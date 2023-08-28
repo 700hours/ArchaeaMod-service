@@ -18,7 +18,7 @@ namespace ArchaeaMod.NPCs
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position) => false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Possessed Bullet");
+            // DisplayName.SetDefault("Possessed Bullet");
         }
         public override void SetDefaults()
         {

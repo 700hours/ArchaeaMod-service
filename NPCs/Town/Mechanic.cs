@@ -21,7 +21,7 @@ namespace ArchaeaMod.NPCs.Town
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mechanic's Minion");
+            // DisplayName.SetDefault("Mechanic's Minion");
         }
         public override void SetDefaults()
         {
@@ -74,7 +74,7 @@ namespace ArchaeaMod.NPCs.Town
         {
             button = flag ? "Stop following" : "Follow";
         }
-        public override void OnChatButtonClicked(bool firstButton, ref bool shop)
+        public override void OnChatButtonClicked(bool firstButton, ref string shopName)
         {
             if (firstButton)
             {
@@ -97,7 +97,7 @@ namespace ArchaeaMod.NPCs.Town
                 }
             }
         }
-        public override bool? CanHitNPC(NPC target)
+        public override bool CanHitNPC(NPC target)/* tModPorter Suggestion: Return true instead of null */
         {
             return !target.townNPC;
         }
@@ -115,7 +115,7 @@ namespace ArchaeaMod.NPCs.Town
         public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mechanic");
+            // DisplayName.SetDefault("Mechanic");
         }
         public override void SetDefaults()
         {
@@ -142,7 +142,7 @@ namespace ArchaeaMod.NPCs.Town
         {
             return player.velocity.X != 0f && player.velocity.Y != 0f;
         }
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (target.townNPC || target.friendly || target.CountsAsACritter)
                 return;

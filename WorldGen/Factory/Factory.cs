@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.GameContent.Generation;
+using Terraria.GameContent.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -23,7 +24,6 @@ using ArchaeaMod.Merged.Items;
 using ArchaeaMod.Merged.Tiles;
 using ArchaeaMod.Merged.Walls;
 using Steamworks;
-using IL.Terraria.GameContent.Shaders;
 
 namespace ArchaeaMod.Structure
 {

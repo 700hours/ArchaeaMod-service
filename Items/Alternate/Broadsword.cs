@@ -20,8 +20,8 @@ namespace ArchaeaMod.Items.Alternate
         public override string Texture => "ArchaeaMod/Items/c_Sword";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Crystal Broadsword");
-            Tooltip.SetDefault("Shocks weakened enemies");
+            // DisplayName.SetDefault("Crystal Broadsword");
+            // Tooltip.SetDefault("Shocks weakened enemies");
         }
         public override void SetDefaults()
         {
@@ -68,7 +68,7 @@ namespace ArchaeaMod.Items.Alternate
                 }
             }
         }
-        public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
+        public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (crit)
             {

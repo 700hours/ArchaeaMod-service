@@ -9,8 +9,8 @@ namespace ArchaeaMod.Merged.Items.Walls
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Stone Wall");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Magno Stone Wall");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {

@@ -17,7 +17,7 @@ namespace ArchaeaMod.NPCs.Bosses
         public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno");
+            // DisplayName.SetDefault("Magno");
         }
         public override void SetDefaults()
         {

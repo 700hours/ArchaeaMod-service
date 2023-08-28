@@ -2,7 +2,7 @@ using ArchaeaMod.Effects;
 
 using ArchaeaMod.NPCs;
 using ArchaeaMod.NPCs.Bosses;
-using IL.Terraria.GameContent.NetModules;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.RuntimeDetour;
@@ -20,7 +20,7 @@ namespace ArchaeaMod.Jobs.Projectiles
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fire Rain");
+            // DisplayName.SetDefault("Fire Rain");
         }
         public override void SetDefaults()
         {

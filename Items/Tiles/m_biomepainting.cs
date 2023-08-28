@@ -15,8 +15,8 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magnoliac Biome");
-            Tooltip.SetDefault("R.A.");
+            // DisplayName.SetDefault("Magnoliac Biome");
+            // Tooltip.SetDefault("R.A.");
         }
         public override void SetDefaults()
         {

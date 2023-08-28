@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
-using IL.Terraria.DataStructures;
+
 
 namespace ArchaeaMod.Tiles
 {
@@ -19,7 +19,7 @@ namespace ArchaeaMod.Tiles
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
-            ItemDrop = ModContent.ItemType<Items.Tiles.factory_brick_1>();
+            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Tiles.factory_brick_1>();
             AddMapEntry(Color.LightSlateGray);
             // soundStyle = 0;
             HitSound = SoundID.Tink;

@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -29,10 +30,10 @@ namespace ArchaeaMod.Merged.Tiles
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
             DustType = 1;
-            ItemDrop = ModContent.ItemType<Items.Materials.magno_bar>();
+            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Materials.magno_bar>();
             //  UI map tile color
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Rubidium Bar");
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Rubidium Bar");
             AddMapEntry(new Color(151, 102, 65), name);
             MineResist = 1.2f;
             MinPick = 35;

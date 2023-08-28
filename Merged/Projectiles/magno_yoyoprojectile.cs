@@ -12,7 +12,7 @@ namespace ArchaeaMod.Merged.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mango Yoyo");
+            // DisplayName.SetDefault("Mango Yoyo");
             ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 8.5f;
             ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 240f;
             ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 13.5f;
@@ -30,7 +30,7 @@ namespace ArchaeaMod.Merged.Projectiles
             Projectile.extraUpdates = 0;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             bool random = Main.rand.Next(5) == 0;
             if (random)

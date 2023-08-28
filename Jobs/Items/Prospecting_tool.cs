@@ -16,8 +16,8 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Prospecting Tool");
-            Tooltip.SetDefault("Use to locate ore within 100 tiles below you");
+            // DisplayName.SetDefault("Prospecting Tool");
+            // Tooltip.SetDefault("Use to locate ore within 100 tiles below you");
         }
         public override void SetDefaults()
         {

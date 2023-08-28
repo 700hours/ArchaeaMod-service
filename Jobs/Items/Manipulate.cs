@@ -2,7 +2,7 @@ using ArchaeaMod.Items;
 
 using ArchaeaMod.Jobs.Projectiles;
 using ArchaeaMod.NPCs;
-using IL.Terraria.GameContent.NetModules;
+
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;
 using rail;
@@ -12,7 +12,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Humanizer.In;
-using static IL.Terraria.WorldBuilding.Searches;
+
 using static System.Formats.Asn1.AsnWriter;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -22,10 +22,10 @@ namespace ArchaeaMod.Jobs.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Manipulate");
-            Tooltip.SetDefault("Make enemies do figure 8's, or something.\n" +
+            // DisplayName.SetDefault("Manipulate");
+            /* Tooltip.SetDefault("Make enemies do figure 8's, or something.\n" +
                 "Drains mana quickly.\n" +
-                "Requires line of sight.");
+                "Requires line of sight."); */
         }
         public override void SetDefaults()
         {

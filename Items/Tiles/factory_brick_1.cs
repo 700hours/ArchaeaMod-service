@@ -13,7 +13,7 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Factory Brick");
+            // DisplayName.SetDefault("Factory Brick");
         }
         public override void SetDefaults()
         {

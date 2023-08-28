@@ -15,11 +15,11 @@ namespace ArchaeaMod.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cluster Count");
+            // DisplayName.SetDefault("Cluster Count");
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
         }
-        public override void ModifyBuffTip(ref string tip, ref int rare)
+        public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {
             int stacks = Main.LocalPlayer.GetModPlayer<Items.AccPlayer>().stack;
             tip = stacks > 1 ? stacks +" stacks" : "1 stack";

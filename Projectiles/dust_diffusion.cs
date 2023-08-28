@@ -16,7 +16,7 @@ namespace ArchaeaMod.Projectiles
         public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Blast wave");
+            // DisplayName.SetDefault("Blast wave");
         }
         public override void SetDefaults()
         {

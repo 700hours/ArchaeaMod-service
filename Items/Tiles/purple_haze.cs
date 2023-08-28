@@ -16,8 +16,8 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Purple Haze");
-            Tooltip.SetDefault("Fever dreams coalesced into a tangible essence");
+            // DisplayName.SetDefault("Purple Haze");
+            // Tooltip.SetDefault("Fever dreams coalesced into a tangible essence");
         }
         public override void SetDefaults()
         {

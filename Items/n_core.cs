@@ -13,8 +13,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Dark Aura");
-            Tooltip.SetDefault("For use in the dark sky portal chamber.");
+            // DisplayName.SetDefault("Dark Aura");
+            // Tooltip.SetDefault("For use in the dark sky portal chamber.");
         }
         public override void SetDefaults()
         {
@@ -47,7 +47,7 @@ namespace ArchaeaMod.Items
                 }
                 else
                 {
-                    NetMessage.SendData(MessageID.SpawnBoss, number: player.whoAmI, number2: bossType);
+                    NetMessage.SendData(MessageID.SpawnBossUseLicenseStartEvent, number: player.whoAmI, number2: bossType);
                 }
                 SoundEngine.PlaySound(SoundID.Roar, player.Center);
                 return true;

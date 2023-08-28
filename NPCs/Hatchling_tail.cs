@@ -16,7 +16,7 @@ namespace ArchaeaMod.NPCs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hatchling");
+            // DisplayName.SetDefault("Hatchling");
         }
         public override void SetDefaults()
         {

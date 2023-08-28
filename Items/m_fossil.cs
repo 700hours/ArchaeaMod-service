@@ -18,8 +18,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scorched Fossil");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Scorched Fossil");
+            // Tooltip.SetDefault("");
             ItemID.Sets.SortingPriorityBossSpawns[Type] = 12;
         }
         public override void SetDefaults()
@@ -53,7 +53,7 @@ namespace ArchaeaMod.Items
                 }
                 else
                 {
-                    NetMessage.SendData(MessageID.SpawnBoss, number: player.whoAmI, number2: bossType);
+                    NetMessage.SendData(MessageID.SpawnBossUseLicenseStartEvent, number: player.whoAmI, number2: bossType);
                 }
                 SoundEngine.PlaySound(SoundID.Roar, player.Center);
                 return true;

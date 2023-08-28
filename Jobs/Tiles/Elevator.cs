@@ -56,8 +56,8 @@ namespace ArchaeaMod.Jobs.Tiles
             MinPick = 15;
             HitSound = SoundID.Dig;
             DustType = 1;
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Elevator");
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Elevator");
             AddMapEntry(Color.BurlyWood, name);
         }
         bool init = false;

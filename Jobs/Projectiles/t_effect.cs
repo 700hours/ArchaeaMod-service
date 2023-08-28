@@ -22,7 +22,7 @@ namespace ArchaeaMod.Jobs.Projectiles
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("t_effect");
+            // DisplayName.SetDefault("t_effect");
         }
         public override void SetDefaults()
         {

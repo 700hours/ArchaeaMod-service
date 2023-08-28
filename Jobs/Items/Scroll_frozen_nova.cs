@@ -9,7 +9,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Humanizer.In;
-using static IL.Terraria.WorldBuilding.Searches;
+
 using static System.Formats.Asn1.AsnWriter;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -19,9 +19,9 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scroll of Frozen Nova");
-            Tooltip.SetDefault("Create a blast of frost at target.\n" +
-                "One use.");
+            // DisplayName.SetDefault("Scroll of Frozen Nova");
+            /* Tooltip.SetDefault("Create a blast of frost at target.\n" +
+                "One use."); */
         }
         public override void SetDefaults()
         {

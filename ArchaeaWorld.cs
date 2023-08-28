@@ -181,8 +181,8 @@ namespace ArchaeaMod
         public static Vector2[] genPosition;
         public bool _archaeaMode = false;
         public int elevatorCount = 0;
-        
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
             float multiplier = 1f;
             switch (Main.maxTilesY)

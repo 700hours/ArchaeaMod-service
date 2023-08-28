@@ -15,7 +15,7 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hatchling banner");
+            // DisplayName.SetDefault("Hatchling banner");
         }
         public override void SetDefaults()
         {

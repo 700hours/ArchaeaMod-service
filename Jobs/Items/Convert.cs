@@ -15,8 +15,8 @@ namespace ArchaeaMod.Jobs.Items
         //  The power to turn any NPC into a follower
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Convert");
-			Tooltip.SetDefault("Use to convert friends or foes");
+            // DisplayName.SetDefault("Convert");
+			// Tooltip.SetDefault("Use to convert friends or foes");
         }
         public override void SetDefaults()
         {

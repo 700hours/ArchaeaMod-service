@@ -21,7 +21,7 @@ namespace ArchaeaMod.NPCs.Bosses
         public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Necrosis");
+            // DisplayName.SetDefault("Necrosis");
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
         }
@@ -204,7 +204,7 @@ namespace ArchaeaMod.NPCs.Bosses
         }
 
         Vector2 lastHit = Vector2.Zero;
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
             lastHit = NPC.Center;
         }
@@ -361,7 +361,7 @@ namespace ArchaeaMod.NPCs.Bosses
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Orb");
+            // DisplayName.SetDefault("Orb");
             Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()
@@ -439,7 +439,7 @@ namespace ArchaeaMod.NPCs.Bosses
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flame");
+            // DisplayName.SetDefault("Flame");
         }
         public override void SetDefaults()
         {
@@ -478,7 +478,7 @@ namespace ArchaeaMod.NPCs.Bosses
                 Projectile.netUpdate = true;
             Projectile.velocity.Y += 0.0917f;
         }
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             target.AddBuff(BuffID.ShadowFlame, 300);
             if (Main.netMode == 2)

@@ -11,6 +11,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -35,8 +36,8 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.WaterDeath = false;
             TileObjectData.addTile(Type);
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Steam vent");
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Steam vent");
             AddMapEntry(new Color(210, 110, 110), name);
             DustType = ModContent.DustType<Merged.Dusts.magno_dust>(); 
             MineResist = 1.2f;

@@ -12,7 +12,7 @@ namespace ArchaeaMod.Merged.Items.Vanity
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Mask");
+            // DisplayName.SetDefault("Magno Mask");
         }
         public override void SetDefaults()
         {

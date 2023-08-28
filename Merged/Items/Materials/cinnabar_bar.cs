@@ -10,7 +10,7 @@ namespace ArchaeaMod.Merged.Items.Materials
         public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Bar");
+            // DisplayName.SetDefault("Cinnabar Bar");
         }
         public override void SetDefaults()
         {

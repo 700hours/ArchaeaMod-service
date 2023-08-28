@@ -11,7 +11,7 @@ namespace ArchaeaMod.Merged.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Orb");
+            // DisplayName.SetDefault("Cinnabar Orb");
         }
         public override void SetDefaults()
         {

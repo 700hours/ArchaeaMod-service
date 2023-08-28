@@ -21,7 +21,7 @@ namespace ArchaeaMod.NPCs
         public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Resentful Spirit");
+            // DisplayName.SetDefault("Resentful Spirit");
             Main.npcFrameCount[NPC.type] = 4;
         }
         public override void SetDefaults()
@@ -147,7 +147,7 @@ namespace ArchaeaMod.NPCs
         {
             return NPC.alpha == 0;
         }
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
             target.AddBuff(BuffID.Darkness, 480);
             if (Main.netMode == 2)

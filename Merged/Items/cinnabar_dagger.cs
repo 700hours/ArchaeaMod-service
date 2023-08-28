@@ -11,8 +11,8 @@ namespace ArchaeaMod.Merged.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Dagger");
-            Tooltip.SetDefault("Mercury-tipped blade");
+            // DisplayName.SetDefault("Cinnabar Dagger");
+            // Tooltip.SetDefault("Mercury-tipped blade");
         }
         public override void SetDefaults()
         {

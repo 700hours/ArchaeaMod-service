@@ -17,7 +17,7 @@ namespace ArchaeaMod.Jobs.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Plague");
+            // DisplayName.SetDefault("Plague");
         }
         int ticks = 0;
         public override void Update(NPC npc, ref int buffIndex)

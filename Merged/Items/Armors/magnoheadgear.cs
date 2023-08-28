@@ -12,8 +12,8 @@ namespace ArchaeaMod.Merged.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Headgear");
-            Tooltip.SetDefault("10% increased arrow damage");
+            // DisplayName.SetDefault("Magno Headgear");
+            // Tooltip.SetDefault("10% increased arrow damage");
         }
         public override void SetDefaults()
         {

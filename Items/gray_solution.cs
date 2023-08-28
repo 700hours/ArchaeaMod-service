@@ -15,8 +15,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scorched Solution");
-            Tooltip.SetDefault("Transforms stone into Magno stone");
+            // DisplayName.SetDefault("Scorched Solution");
+            // Tooltip.SetDefault("Transforms stone into Magno stone");
         }
         public override void SetDefaults()
         {
@@ -34,7 +34,7 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Gray solution");
+            // DisplayName.SetDefault("Gray solution");
         }
         public override void SetDefaults()
         {

@@ -20,7 +20,7 @@ namespace ArchaeaMod.NPCs
         public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hatchling");
+            // DisplayName.SetDefault("Hatchling");
         }
         public override void SetDefaults()
         {

@@ -10,7 +10,7 @@ namespace ArchaeaMod.Merged.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Pickaxe");
+            // DisplayName.SetDefault("Cinnabar Pickaxe");
         }
         public override void SetDefaults()
         {

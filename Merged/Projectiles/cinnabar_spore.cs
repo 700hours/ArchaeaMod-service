@@ -11,7 +11,7 @@ namespace ArchaeaMod.Merged.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Spore");
+            // DisplayName.SetDefault("Cinnabar Spore");
             Main.projFrames[Projectile.type] = 8;
         }
         public override void SetDefaults()
@@ -62,11 +62,11 @@ namespace ArchaeaMod.Merged.Projectiles
         float rot = 0;
         const float radians = 0.017f;
         Vector2 npcCenter;
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.AddBuff(ModContent.BuffType<ArchaeaMod.Buffs.mercury>(), 450);
             if (Main.netMode == 2)
-                NetMessage.SendData(MessageID.SendNPCBuffs, -1, -1, null, target.whoAmI);
+                NetMessage.SendData(MessageID.NPCBuffs, -1, -1, null, target.whoAmI);
         }
         public override void AI()
         {

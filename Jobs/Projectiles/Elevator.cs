@@ -18,7 +18,7 @@ namespace ArchaeaMod.Jobs.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Elevator");
+            // DisplayName.SetDefault("Elevator");
         }
         public override void SetDefaults()
         {

@@ -21,8 +21,8 @@ namespace ArchaeaMod.Items.Alternate
         public override string Texture => "ArchaeaMod/Items/c_Staff";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Charred Staff");
-            Tooltip.SetDefault("Casts fire wave");
+            // DisplayName.SetDefault("Charred Staff");
+            // Tooltip.SetDefault("Casts fire wave");
         }
         public override void SetDefaults()
         {

@@ -12,9 +12,9 @@ namespace ArchaeaMod.Merged.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Bow");
-            Tooltip.SetDefault("Transforms wooden"
-                + "\narrows into mercury arrows");
+            // DisplayName.SetDefault("Cinnabar Bow");
+            /* Tooltip.SetDefault("Transforms wooden"
+                + "\narrows into mercury arrows"); */
         }
         public override void SetDefaults()
         {

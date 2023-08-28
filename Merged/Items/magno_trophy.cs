@@ -10,7 +10,7 @@ namespace ArchaeaMod.Merged.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magnoliac Trophy");
+            // DisplayName.SetDefault("Magnoliac Trophy");
         }
         public override void SetDefaults()
         {

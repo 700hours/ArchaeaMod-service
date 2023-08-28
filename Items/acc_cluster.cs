@@ -16,9 +16,9 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Soul Cluster");
-            Tooltip.SetDefault("Adds a damage boost per successful enemy hit" +
-                "\nResets after taking damage");
+            // DisplayName.SetDefault("Soul Cluster");
+            /* Tooltip.SetDefault("Adds a damage boost per successful enemy hit" +
+                "\nResets after taking damage"); */
         }
         public override void SetDefaults()
         {
@@ -39,11 +39,11 @@ namespace ArchaeaMod.Items
     public class AccPlayer : ModPlayer
     {
         public int stack;
-        public override void OnHitByNPC(NPC npc, int damage, bool crit)
+        public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
         {
             stack = 0;
         }
-        public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
+        public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
         {
             stack = 0;
         }
@@ -64,7 +64,7 @@ namespace ArchaeaMod.Items
                 }
             }
         }
-        public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+        public override void ModifyHitNPCWithItem(Item item, NPC target, ref NPC.HitModifiers modifiers)/* tModPorter If you don't need the Item, consider using ModifyHitNPC instead */
         {
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -76,7 +76,7 @@ namespace ArchaeaMod.Items
             }
             damage += stack;
         }
-        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)/* tModPorter If you don't need the Projectile, consider using ModifyHitNPC instead */
         {
             for (int i = 0; i < Player.armor.Length; i++)
             {

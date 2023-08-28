@@ -22,7 +22,7 @@ namespace ArchaeaMod.Jobs.Projectiles
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Diffusion");
+            // DisplayName.SetDefault("Diffusion");
         }
         public override void SetDefaults()
         {

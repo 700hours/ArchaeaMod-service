@@ -18,7 +18,7 @@ namespace ArchaeaMod.Jobs.Buffs
 		public const int MaxTime = 600;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Soft");
+            // DisplayName.SetDefault("Soft");
         }
         public override void Update(NPC npc, ref int buffIndex)
         {

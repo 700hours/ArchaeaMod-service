@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -30,9 +31,9 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16 };
             TileObjectData.addTile(Type);
-            ItemDrop = ModContent.ItemType<Items.Tiles.banner_hatchling>();
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Banner");
+            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Tiles.banner_hatchling>();
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Banner");
             AddMapEntry(new Color(8f, 0.6f, 0.6f), name);
         }
 

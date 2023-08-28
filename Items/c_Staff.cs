@@ -17,8 +17,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Staff");
-            Tooltip.SetDefault("Emits mercury dust");
+            // DisplayName.SetDefault("Cinnabar Staff");
+            // Tooltip.SetDefault("Emits mercury dust");
         }
         public override void SetDefaults()
         {

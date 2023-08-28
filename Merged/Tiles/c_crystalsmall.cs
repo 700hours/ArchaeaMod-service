@@ -7,6 +7,7 @@ using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -37,9 +38,9 @@ namespace ArchaeaMod.Merged.Tiles
             TileObjectData.newAlternate.AnchorRight = new AnchorData(AnchorType.SolidSide, 1, 0);
             TileObjectData.addAlternate(2);
             TileObjectData.addTile(Type);
-            ItemDrop = ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>();
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Cinnabar Crystal");
+            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>();
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Cinnabar Crystal");
             AddMapEntry(new Color(210, 110, 110), name);
             TileID.Sets.DisableSmartCursor[Type] = true;
             MineResist = 1.2f;

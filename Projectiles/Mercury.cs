@@ -19,7 +19,7 @@ namespace ArchaeaMod.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mercury Shards");
+            // DisplayName.SetDefault("Mercury Shards");
         }
         public override void SetDefaults()
         {

@@ -10,8 +10,8 @@ namespace ArchaeaMod.Merged.Items.Materials
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Crystal");
-            Tooltip.SetDefault("Glows with a crimson aura");
+            // DisplayName.SetDefault("Cinnabar Crystal");
+            // Tooltip.SetDefault("Glows with a crimson aura");
         }
         public override void SetDefaults()
         {

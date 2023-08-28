@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Materials
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rusty Plate");
+            // DisplayName.SetDefault("Rusty Plate");
         }
         public override void SetDefaults()
         {

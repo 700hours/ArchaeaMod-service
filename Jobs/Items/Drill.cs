@@ -12,8 +12,8 @@ namespace ArchaeaMod.Jobs.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Drill");
-            Tooltip.SetDefault("Only digs vertically and breaks two tiles at once");
+            // DisplayName.SetDefault("Drill");
+            // Tooltip.SetDefault("Only digs vertically and breaks two tiles at once");
         }
         public override void SetDefaults()
         {

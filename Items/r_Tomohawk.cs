@@ -16,8 +16,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rusty Tomohawk");
-            Tooltip.SetDefault("Was once shiny");
+            // DisplayName.SetDefault("Rusty Tomohawk");
+            // Tooltip.SetDefault("Was once shiny");
         }
         public override void SetDefaults()
         {

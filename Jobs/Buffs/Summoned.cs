@@ -18,7 +18,7 @@ namespace ArchaeaMod.Jobs.Buffs
         public const int MaxTime = 180;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Just Summoned");
+            // DisplayName.SetDefault("Just Summoned");
         }
         public override void Update(NPC npc, ref int buffIndex)
         {

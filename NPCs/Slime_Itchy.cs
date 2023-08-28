@@ -21,7 +21,7 @@ namespace ArchaeaMod.NPCs
         public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Itchy Slime");
+            // DisplayName.SetDefault("Itchy Slime");
             Main.npcFrameCount[NPC.type] = 3;
         }
         public override void SetDefaults()
@@ -60,7 +60,7 @@ namespace ArchaeaMod.NPCs
                     }
             base.AI();
         }
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
             target.AddBuff(BuffID.Darkness, 600);
             NetMessage.SendData(MessageID.AddPlayerBuff, target.whoAmI, -1, null, BuffID.Darkness);

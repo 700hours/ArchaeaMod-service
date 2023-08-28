@@ -15,11 +15,11 @@ namespace ArchaeaMod.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rusty Catcher minion");
+            // DisplayName.SetDefault("Rusty Catcher minion");
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
         }
-        public override void ModifyBuffTip(ref string tip, ref int rare)
+        public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {
             tip = "Junky Rust";
         }

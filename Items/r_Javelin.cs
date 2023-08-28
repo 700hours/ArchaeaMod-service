@@ -16,8 +16,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rusty Spearhead");
-            Tooltip.SetDefault("Rusty but still useful");
+            // DisplayName.SetDefault("Rusty Spearhead");
+            // Tooltip.SetDefault("Rusty but still useful");
         }
         public override void SetDefaults()
         {

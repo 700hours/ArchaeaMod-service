@@ -7,11 +7,8 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
-using static Humanizer.In;
-using static IL.Terraria.WorldBuilding.Searches;
-using static System.Formats.Asn1.AsnWriter;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace ArchaeaMod.Jobs.Buffs
 {
@@ -19,11 +16,11 @@ namespace ArchaeaMod.Jobs.Buffs
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Incognito");
             Main.buffNoSave[Type] = false;
         }
-        public override void ModifyBuffTip(ref string tip, ref int rare)
+        public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {
+            buffName = "Incognito";
             tip = "\"Groan\"";
         }
         public const int MaxTime = 7200;
@@ -48,7 +45,6 @@ namespace ArchaeaMod.Jobs.Buffs
                 fake_npc.SetFollowType(Main.projectile[projType], FollowID.Replace);
             }
             player.moveSpeed /= 2f;
-            player.statDefense = 0;
             player.immune = true;
             player.immuneAlpha = 255;
             player.invis = true;

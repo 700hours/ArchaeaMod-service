@@ -13,7 +13,7 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magnoliac Chair");
+            // DisplayName.SetDefault("Magnoliac Chair");
         }
         public override void SetDefaults()
         {

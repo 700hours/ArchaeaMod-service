@@ -17,9 +17,9 @@ namespace ArchaeaMod.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Frozen");
+            // DisplayName.SetDefault("Frozen");
         }
-        public override void ModifyBuffTip(ref string tip, ref int rare)
+        public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {
             tip = "\"I can't move!\"";
         }

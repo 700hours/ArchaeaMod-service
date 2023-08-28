@@ -25,8 +25,8 @@ namespace ArchaeaMod.Items.Alternate
         public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Cannon");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Magno Cannon");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {

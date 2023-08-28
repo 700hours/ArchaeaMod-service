@@ -18,7 +18,7 @@ namespace ArchaeaMod.NPCs.Legacy
         public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sky_boss_legacy");
+            // DisplayName.SetDefault("Sky_boss_legacy");
         }
         public override void SetDefaults()
         {

@@ -20,8 +20,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rusty Thrasher");
-            Tooltip.SetDefault("Scatters rust");
+            // DisplayName.SetDefault("Rusty Thrasher");
+            // Tooltip.SetDefault("Scatters rust");
         }
         public override void SetDefaults()
         {

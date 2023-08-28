@@ -17,8 +17,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Sword");
-            Tooltip.SetDefault("Sends ground tremors");
+            // DisplayName.SetDefault("Cinnabar Sword");
+            // Tooltip.SetDefault("Sends ground tremors");
         }
         public override void SetDefaults()
         {

@@ -18,8 +18,8 @@ namespace ArchaeaMod.Items.Alternate
         public override string Texture => "ArchaeaMod/Items/n_core";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Deflector");
-            Tooltip.SetDefault("Creates barriers from harmful attacks");
+            // DisplayName.SetDefault("Deflector");
+            // Tooltip.SetDefault("Creates barriers from harmful attacks");
         }
         public override void SetDefaults()
         {

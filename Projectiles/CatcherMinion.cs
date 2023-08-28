@@ -20,7 +20,7 @@ namespace ArchaeaMod.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rusty Catcher");
+            // DisplayName.SetDefault("Rusty Catcher");
         }
         public override void SetDefaults()
         {

@@ -8,7 +8,7 @@ using System.Drawing;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static IL.Terraria.ID.ArmorIDs;
+
 using static System.Formats.Asn1.AsnWriter;
 
 namespace ArchaeaMod.Jobs.Items
@@ -17,9 +17,9 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Textbook of Gathering");
-			Tooltip.SetDefault("If held and on a grassy area, you will collect acorns.\n" +
-				"Also a chance, if on stone, to collect stone.");
+            // DisplayName.SetDefault("Textbook of Gathering");
+			/* Tooltip.SetDefault("If held and on a grassy area, you will collect acorns.\n" +
+				"Also a chance, if on stone, to collect stone."); */
         }
         public override void SetDefaults()
         {

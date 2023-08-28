@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shock Plate");
+            // DisplayName.SetDefault("Shock Plate");
         }
         public override void UpdateArmorSet(Player player)
         {
@@ -50,7 +50,7 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Bolt");
+            // DisplayName.SetDefault("Bolt");
         }
         public override void SetDefaults()
         {

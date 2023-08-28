@@ -11,7 +11,7 @@ namespace ArchaeaMod.Merged.Items.Tiles
         public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Ore");
+            // DisplayName.SetDefault("Cinnabar Ore");
         }
         public override void SetDefaults()
         {

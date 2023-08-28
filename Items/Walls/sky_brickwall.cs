@@ -13,7 +13,7 @@ namespace ArchaeaMod.Items.Walls
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fortress Brick Wall");
+            // DisplayName.SetDefault("Fortress Brick Wall");
         }
         public override void SetDefaults()
         {

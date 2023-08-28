@@ -10,7 +10,7 @@ namespace ArchaeaMod.Merged.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Hamaxe");
+            // DisplayName.SetDefault("Cinnabar Hamaxe");
         }
         public override void SetDefaults()
         {

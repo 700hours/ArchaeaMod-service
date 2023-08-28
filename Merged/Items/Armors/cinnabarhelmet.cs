@@ -12,9 +12,9 @@ namespace ArchaeaMod.Merged.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Helmet");
-            Tooltip.SetDefault("Increases rate of" 
-                +   "\nhealing");
+            // DisplayName.SetDefault("Cinnabar Helmet");
+            /* Tooltip.SetDefault("Increases rate of" 
+                +   "\nhealing"); */
         }
         public override void SetDefaults()
         {

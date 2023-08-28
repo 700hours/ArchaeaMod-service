@@ -605,14 +605,14 @@ namespace ArchaeaMod.Mode
                 npc.netUpdate = true;
             }
         }
-        public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        public override void ModifyHitByItem(NPC npc, Player player, Item item, ref NPC.HitModifiers modifiers)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
                 damage = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, item.DamageType);
             }
         }
-        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {

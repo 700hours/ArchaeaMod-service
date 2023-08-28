@@ -22,7 +22,7 @@ namespace ArchaeaMod.NPCs
         public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mimic");
+            // DisplayName.SetDefault("Mimic");
             Main.npcFrameCount[NPC.type] = 6;
         }
         public override void SetDefaults()
@@ -119,13 +119,13 @@ namespace ArchaeaMod.NPCs
             }
         }
 
-        public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
+        public override void OnHitByItem(Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
             float force = NPC.knockBackResist * knockback;
             velX = player.Center.X > NPC.Center.X ? force * -1 : force;
             SyncNPC();
         }
-        public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
+        public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
             float force = NPC.knockBackResist * knockback;
             velX = projectile.position.X > NPC.Center.X ? force * -1 : force;

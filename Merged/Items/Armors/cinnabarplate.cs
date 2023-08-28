@@ -12,8 +12,8 @@ namespace ArchaeaMod.Merged.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Breastplate");
-            Tooltip.SetDefault("10% increased damage");
+            // DisplayName.SetDefault("Cinnabar Breastplate");
+            // Tooltip.SetDefault("10% increased damage");
         }
         public override void SetDefaults()
         {

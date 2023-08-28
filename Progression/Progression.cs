@@ -86,12 +86,12 @@ namespace ArchaeaMod.Progression.Global
         public override bool InstancePerEntity => true;
         public int deathProjType;
         public int lastHitOwner;
-        public override void OnHitByProjectile(NPC npc, Projectile projectile, int damage, float knockback, bool crit)
+        public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
             deathProjType = projectile.type;
             lastHitOwner = projectile.owner;
         }
-        public override void OnHitByItem(NPC npc, Player player, Item item, int damage, float knockback, bool crit)
+        public override void OnHitByItem(NPC npc, Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
             if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_Flask, ClassID.Melee, player.whoAmI))
             {
@@ -255,7 +255,7 @@ namespace ArchaeaMod.Progression.Global
             }
             return true;
         }
-        public override void OnCreate(Item item, ItemCreationContext context)
+        public override void OnCreated(Item item, ItemCreationContext context)
         {
             if (item.type == ItemID.StarCannon) 
             {
@@ -428,7 +428,7 @@ namespace ArchaeaMod.Progression.Global
                 }
             }
         }
-        public override void ModifyHitNPC(Projectile projectile, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
         {
             //  Summoner minion buff
             if (projectile.minion)
@@ -439,7 +439,7 @@ namespace ArchaeaMod.Progression.Global
                 }
             }
         }
-        public override void OnHitNPC(Projectile projectile, NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             //  Inflict arrow debuffs here
             if (ArchaeaPlayer.CheckHasTrait(TraitID.RANGED_Fire, ClassID.Ranged, projectile.owner))

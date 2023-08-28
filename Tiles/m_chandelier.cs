@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -33,9 +34,9 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 2, 0);
             TileObjectData.addTile(Type);
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
-            ItemDrop = ModContent.ItemType<Items.Tiles.m_chandelier>();
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Chandelier");
+            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Tiles.m_chandelier>();
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Chandelier");
             AddMapEntry(Color.MediumVioletRed, name);
         }
 

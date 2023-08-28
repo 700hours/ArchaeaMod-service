@@ -12,7 +12,7 @@ namespace ArchaeaMod.Merged.Items.Tiles
             => false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Book");
+            // DisplayName.SetDefault("Book");
         }
         public override void SetDefaults()
         {

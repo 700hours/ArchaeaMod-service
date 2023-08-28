@@ -10,9 +10,9 @@ namespace ArchaeaMod.Jobs.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scroll of Plague Nova");
-            Tooltip.SetDefault("Create a blast of poison around you.\n" + 
-                "One use.");
+            // DisplayName.SetDefault("Scroll of Plague Nova");
+            /* Tooltip.SetDefault("Create a blast of poison around you.\n" + 
+                "One use."); */
         }
         public override void SetDefaults()
         {

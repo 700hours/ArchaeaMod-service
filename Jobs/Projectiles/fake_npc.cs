@@ -25,7 +25,7 @@ namespace ArchaeaMod.Jobs.Projectiles
         public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("fake_npc");
+            // DisplayName.SetDefault("fake_npc");
         }
         public override void SetDefaults()
         {
@@ -84,7 +84,7 @@ namespace ArchaeaMod.Jobs.Projectiles
         {
             return follower.position.X <= follower.oldPosition.X || follower.position.X > follower.oldPosition.X || follower.position.Y <= follower.oldPosition.Y || follower.position.Y > follower.oldPosition.Y;
         }
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (target.townNPC || target.friendly || target.CountsAsACritter)
                 return;

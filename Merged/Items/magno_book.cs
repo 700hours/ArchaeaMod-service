@@ -18,8 +18,8 @@ namespace ArchaeaMod.Merged.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Book");
-            Tooltip.SetDefault("Indicates magic effects");
+            // DisplayName.SetDefault("Magno Book");
+            // Tooltip.SetDefault("Indicates magic effects");
         }
         public override void SetDefaults()
         {

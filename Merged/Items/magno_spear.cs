@@ -11,12 +11,12 @@ namespace ArchaeaMod.Merged.Items
         public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rubidium Staff");
-            Tooltip.SetDefault("Magnoliac artifact\n" +
+            // DisplayName.SetDefault("Rubidium Staff");
+            /* Tooltip.SetDefault("Magnoliac artifact\n" +
                 "Increases defense\n" +
                 "Increases movement speed by 30%\n" +
                 "Decreases jump height by 90%\n" +
-                "Decreases jump speed by 50%");
+                "Decreases jump speed by 50%"); */
         }
         public override void SetDefaults()
         {

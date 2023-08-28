@@ -18,9 +18,9 @@ namespace ArchaeaMod.Jobs.Items
         public override void SetStaticDefaults()
         {
 		//	Blessed Ankh casts Life Leech
-            DisplayName.SetDefault("Life Leech");
-            Tooltip.SetDefault("Absorb life from your enemies\n" +
-				"1 mana per 1 life");
+            // DisplayName.SetDefault("Life Leech");
+            /* Tooltip.SetDefault("Absorb life from your enemies\n" +
+				"1 mana per 1 life"); */
         }
         public override void SetDefaults()
         {

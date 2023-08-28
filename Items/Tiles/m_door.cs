@@ -13,7 +13,7 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magnoliac door");
+            // DisplayName.SetDefault("Magnoliac door");
         }
         public override void SetDefaults()
         {

@@ -19,9 +19,9 @@ namespace ArchaeaMod.Jobs.Buffs
 		int OldNPCdmg = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Weaken");
+            // DisplayName.SetDefault("Weaken");
         }
-        public override void ModifyBuffTip(ref string tip, ref int rare)
+        public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {
             tip = "Half damage";
 			rare = 2;

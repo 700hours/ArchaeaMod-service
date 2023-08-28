@@ -20,8 +20,8 @@ namespace ArchaeaMod.Items.Alternate
         public override string Texture => "ArchaeaMod/Items/r_Catcher";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Staff of Calling");
-            Tooltip.SetDefault("Conjures a minion");
+            // DisplayName.SetDefault("Staff of Calling");
+            // Tooltip.SetDefault("Conjures a minion");
         }
         public override void SetDefaults()
         {
@@ -105,7 +105,7 @@ namespace ArchaeaMod.Items.Alternate
         private Draw draw;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Slowing Minion");
+            // DisplayName.SetDefault("Slowing Minion");
         }
         public override void SetDefaults()
         {
@@ -276,11 +276,11 @@ namespace ArchaeaMod.Items.Alternate
             public override string Texture => "ArchaeaMod/Gores/Null";
             public override void SetStaticDefaults()
             {
-                DisplayName.SetDefault("Minion Helper");
+                // DisplayName.SetDefault("Minion Helper");
                 Main.buffNoSave[Type] = true;
                 Main.buffNoTimeDisplay[Type] = true;
             }
-            public override void ModifyBuffTip(ref string tip, ref int rare)
+            public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
             {
                 tip = "It eats ice";
             }

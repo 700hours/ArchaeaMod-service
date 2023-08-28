@@ -10,9 +10,9 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Tome of Soften");
-			Tooltip.SetDefault("Weakens an enemy's defenses, including bosses.\n" +
-				"Costs mana directionally proportional to NPC size.");
+            // DisplayName.SetDefault("Tome of Soften");
+			/* Tooltip.SetDefault("Weakens an enemy's defenses, including bosses.\n" +
+				"Costs mana directionally proportional to NPC size."); */
         }
         public override void SetDefaults()
         {

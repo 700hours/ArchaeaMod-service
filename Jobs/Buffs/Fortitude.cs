@@ -4,7 +4,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Humanizer.In;
-using static IL.Terraria.WorldBuilding.Searches;
+
 using static System.Formats.Asn1.AsnWriter;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -14,10 +14,10 @@ namespace ArchaeaMod.Jobs.Buffs
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fortitude");
+            // DisplayName.SetDefault("Fortitude");
             Main.buffNoSave[Type] = true;
         }
-        public override void ModifyBuffTip(ref string tip, ref int rare)
+        public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {
             tip = "x3 melee damage";
             rare = 3;

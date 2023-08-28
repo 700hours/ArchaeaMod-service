@@ -20,7 +20,7 @@ namespace ArchaeaMod.NPCs.Bosses
         public override string Texture => "ArchaeaMod/Gores/arrow";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Factory Computer");
+            // DisplayName.SetDefault("Factory Computer");
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
         }
@@ -159,7 +159,7 @@ namespace ArchaeaMod.NPCs.Bosses
         public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Burning steam");
+            // DisplayName.SetDefault("Burning steam");
         }
         public override void SetDefaults()
         {
@@ -205,7 +205,7 @@ namespace ArchaeaMod.NPCs.Bosses
         public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Oil");
+            // DisplayName.SetDefault("Oil");
         }
         public override void SetDefaults()
         {

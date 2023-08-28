@@ -19,7 +19,7 @@ namespace ArchaeaMod.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Orb");
+            // DisplayName.SetDefault("Orb");
             Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()

@@ -14,8 +14,8 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Humanizer.On;
-using static IL.Terraria.ID.ArmorIDs;
-using static On.Terraria.ID.ArmorIDs;
+
+
 using static System.Formats.Asn1.AsnWriter;
 
 namespace ArchaeaMod.Jobs.Items
@@ -24,8 +24,8 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Tome of Weaken");
-			Tooltip.SetDefault("Weakens an enemy.");
+            // DisplayName.SetDefault("Tome of Weaken");
+			// Tooltip.SetDefault("Weakens an enemy.");
         }
         public override void SetDefaults()
         {

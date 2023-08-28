@@ -12,9 +12,9 @@ namespace ArchaeaMod.Merged.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Greaves");
-            Tooltip.SetDefault("7% increased movement"
-                +   "\nspeed");
+            // DisplayName.SetDefault("Magno Greaves");
+            /* Tooltip.SetDefault("7% increased movement"
+                +   "\nspeed"); */
         }
         public override void SetDefaults()
         {

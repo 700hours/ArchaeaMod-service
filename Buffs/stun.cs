@@ -17,7 +17,7 @@ namespace ArchaeaMod.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Stunned");
+            // DisplayName.SetDefault("Stunned");
         }
         public override void Update(NPC npc, ref int buffIndex)
         {

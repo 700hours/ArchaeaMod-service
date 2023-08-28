@@ -20,9 +20,9 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Tome of Phase");
-            Tooltip.SetDefault("Reappear in another location.\n" +
-                "Costs 1/3 total mana.");
+            // DisplayName.SetDefault("Tome of Phase");
+            /* Tooltip.SetDefault("Reappear in another location.\n" +
+                "Costs 1/3 total mana."); */
         }
         public override void SetDefaults()
         {

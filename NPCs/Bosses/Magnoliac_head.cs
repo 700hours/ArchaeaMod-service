@@ -15,7 +15,7 @@ namespace ArchaeaMod.NPCs.Bosses
         public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno");
+            // DisplayName.SetDefault("Magno");
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
         }
@@ -164,7 +164,7 @@ namespace ArchaeaMod.NPCs.Bosses
             index = NPCHeadLoader.GetBossHeadSlot(ArchaeaMain.magnoHead);
         }
         Vector2 lastHit = Vector2.Zero;
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
             lastHit = NPC.Center;
         }

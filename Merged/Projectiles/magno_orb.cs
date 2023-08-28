@@ -17,7 +17,7 @@ namespace ArchaeaMod.Merged.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Orb");
+            // DisplayName.SetDefault("Magno Orb");
         }
         public override void SetDefaults()
         {

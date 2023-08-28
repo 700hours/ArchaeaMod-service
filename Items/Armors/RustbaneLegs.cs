@@ -14,7 +14,7 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rustbane Greaves");
+            // DisplayName.SetDefault("Rustbane Greaves");
         }
         public override void SetDefaults()
         {

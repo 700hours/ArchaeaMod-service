@@ -10,7 +10,7 @@ namespace ArchaeaMod.Merged.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rubidium Ore");
+            // DisplayName.SetDefault("Rubidium Ore");
         }
         public override void SetDefaults()
         {

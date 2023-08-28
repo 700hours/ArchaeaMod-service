@@ -13,7 +13,7 @@ namespace ArchaeaMod.Merged.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Dagger");
+            // DisplayName.SetDefault("Cinnabar Dagger");
         }
         public override void SetDefaults()
         {
@@ -90,7 +90,7 @@ namespace ArchaeaMod.Merged.Projectiles
             SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (Main.rand.NextBool())
             {

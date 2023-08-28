@@ -11,9 +11,9 @@ namespace ArchaeaMod.Merged.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rubidium Staff");
-            Tooltip.SetDefault("Summons Magno minion"
-                    +   "\nCauses shock waves when attached to enemy");
+            // DisplayName.SetDefault("Rubidium Staff");
+            /* Tooltip.SetDefault("Summons Magno minion"
+                    +   "\nCauses shock waves when attached to enemy"); */
         }
         public override void SetDefaults()
         {

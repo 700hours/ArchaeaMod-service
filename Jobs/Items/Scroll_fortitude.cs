@@ -18,9 +18,9 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scroll of Fortitude");
-			Tooltip.SetDefault("Increases a player's defense by 20.\n" +
-				"Strengthens melee damage by 3x.");
+            // DisplayName.SetDefault("Scroll of Fortitude");
+			/* Tooltip.SetDefault("Increases a player's defense by 20.\n" +
+				"Strengthens melee damage by 3x."); */
         }
         public override void SetDefaults()
         {

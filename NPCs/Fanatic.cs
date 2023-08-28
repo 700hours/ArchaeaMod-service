@@ -20,7 +20,7 @@ namespace ArchaeaMod.NPCs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fanatical Caster");
+            // DisplayName.SetDefault("Fanatical Caster");
             Main.npcFrameCount[NPC.type] = 3;
         }
         public override void SetDefaults()

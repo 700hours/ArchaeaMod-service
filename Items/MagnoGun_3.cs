@@ -20,8 +20,8 @@ namespace ArchaeaMod.Items
         public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rubidium Gun");
-            Tooltip.SetDefault("Lasers and phasers");
+            // DisplayName.SetDefault("Rubidium Gun");
+            // Tooltip.SetDefault("Lasers and phasers");
         }
         public override void SetDefaults()
         {

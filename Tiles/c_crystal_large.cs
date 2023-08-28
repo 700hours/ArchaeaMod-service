@@ -6,6 +6,7 @@ using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -33,8 +34,8 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newAlternate.Origin = new Point16(0, 1);
             TileObjectData.addAlternate(0);
             TileObjectData.addTile(Type);
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Cinnabar Crystal");
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Cinnabar Crystal");
             AddMapEntry(new Color(210, 110, 110), name);
             TileID.Sets.DisableSmartCursor[Type] = true;
             HitSound = SoundID.Item27;

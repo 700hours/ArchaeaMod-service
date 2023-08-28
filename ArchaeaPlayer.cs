@@ -262,7 +262,7 @@ namespace ArchaeaMod
             return new Rectangle(x, y, bound.Width, bound.Height);
         }
 
-        public override void clientClone(ModPlayer clientClone)
+        public override void CopyClientState(ModPlayer clientClone)
         {
             ArchaeaPlayer modPlayer = (ArchaeaPlayer)clientClone;
             //  World
@@ -676,7 +676,7 @@ namespace ArchaeaMod
             return lifeMax2;
         }
         Timer debugTimer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
-        public override void OnEnterWorld(Player player)
+        public override void OnEnterWorld()
         {
             //Main.NewText(ModContent.NPCType<NPCs.Bosses.factory_computer>());
             //  DEBUG
@@ -685,7 +685,7 @@ namespace ArchaeaMod
             //debugTimer.Elapsed += DebugTimer_Elapsed;
             //debugTimer.Start();
             SetModeStats(ModContent.GetInstance<ModeToggle>().archaeaMode);
-            InitStat(player);
+            InitStat(Player);
             if (Effects.Barrier.barrier == null)
             {
                 Effects.Barrier.Initialize();
@@ -815,8 +815,9 @@ namespace ArchaeaMod
                 breathTimer = breathTimerMax;
             }
         }
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
+        public override void OnHurt(Player.HurtInfo info)
         {
+            int damage = info.Damage;
             if (CheckHasTrait(TraitID.MAGE_DamageReduce, ClassID.Magic))
             {
                 damage = (int)(damage * 0.9f);
@@ -829,12 +830,12 @@ namespace ArchaeaMod
                 }
             }
             damage = (int)(damage * Math.Max(percentDamageTaken, 0f));
+            info.Damage = damage;
             //- toughness / 2;
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
-                return true;
-            customDamage = true;
+                return;
             damage = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.Player, ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, Player.statDefense, DamageClass.Default);
-            return true;
+            info.Damage = damage;
         }
         public override float UseSpeedMultiplier(Item item)
         {
@@ -1427,11 +1428,11 @@ namespace ArchaeaMod
                 return;
             float ratio = 100f / 500f;
             float result = Player.statDefense / ratio;
-            Player.statDefense = (int)result;
+            Player.statDefense.AdditiveBonus += result;
         }
-        public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (item.CountsAsClass(DamageClass.Melee))
+            if (hit.DamageType == DamageClass.Melee)
             {
                 if (Player.HasBuff(ModContent.BuffType<Buffs.flask_mercury>()))
                 {

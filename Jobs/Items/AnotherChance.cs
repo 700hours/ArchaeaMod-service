@@ -14,11 +14,11 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Another Chance");
-            Tooltip.SetDefault(
+            // DisplayName.SetDefault("Another Chance");
+            /* Tooltip.SetDefault(
                 "Increases extra life" +
                 "\ncount by 1 (max 3)," +
-                "\nand max life by 80.");
+                "\nand max life by 80."); */
         }
         public override void SetDefaults()
         {

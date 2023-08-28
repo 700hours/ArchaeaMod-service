@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -26,10 +27,10 @@ namespace ArchaeaMod.Merged.Tiles
             Main.tileNoSunLight[Type] = false;
 
             //DustType = 1;
-            ItemDrop = ItemID.Book;
+            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ItemID.Book;
             //  UI map tile color
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Books");
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Books");
             AddMapEntry(new Color(201, 101, 101), name);
         }
 
@@ -48,7 +49,7 @@ namespace ArchaeaMod.Merged.Tiles
             int num = Main.rand.Next(4);
             tile.TileFrameX = (short)(18 * num);
         }
-        public override bool Drop(int i, int j)
+        public override bool Drop(int i, int j)/* tModPorter Note: Removed. Use CanDrop to decide if an item should drop. Use GetItemDrops to decide which item drops. Item drops based on placeStyle are handled automatically now, so this method might be able to be removed altogether. */
         {
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX == 90)

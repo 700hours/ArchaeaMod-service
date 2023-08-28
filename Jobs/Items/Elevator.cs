@@ -23,8 +23,8 @@ namespace ArchaeaMod.Jobs.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Elevator");
-            Tooltip.SetDefault("Platform to stand on and grant vertical control");
+            // DisplayName.SetDefault("Elevator");
+            // Tooltip.SetDefault("Platform to stand on and grant vertical control");
         }
         public override void SetDefaults()
         {

@@ -20,8 +20,8 @@ namespace ArchaeaMod.Items.Alternate
         public override string Texture => "ArchaeaMod/Merged/Items/cinnabar_dagger";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Dagger");
-            Tooltip.SetDefault("Forged from the materials of magno");
+            // DisplayName.SetDefault("Dagger");
+            // Tooltip.SetDefault("Forged from the materials of magno");
         }
         public override void SetDefaults()
         {

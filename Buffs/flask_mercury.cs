@@ -9,10 +9,10 @@ namespace ArchaeaMod.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mercury Edge");
+            // DisplayName.SetDefault("Mercury Edge");
             BuffID.Sets.IsAFlaskBuff[Type] = true;
         }
-        public override void ModifyBuffTip(ref string tip, ref int rare)
+        public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {
         }
     }

@@ -16,8 +16,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Shield");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Magno Shield");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {

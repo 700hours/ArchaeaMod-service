@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magnoliac Music Box Alt");
+            // DisplayName.SetDefault("Magnoliac Music Box Alt");
         }
         public override void SetDefaults()
         {

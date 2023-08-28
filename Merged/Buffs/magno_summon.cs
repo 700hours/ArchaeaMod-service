@@ -10,8 +10,8 @@ namespace ArchaeaMod.Merged.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Fly");
-            Description.SetDefault("Chemically enhanced minion");
+            // DisplayName.SetDefault("Magno Fly");
+            // Description.SetDefault("Chemically enhanced minion");
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
         }

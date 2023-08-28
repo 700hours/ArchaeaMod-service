@@ -74,7 +74,7 @@ namespace ArchaeaMod.NPCs.Town
         public override string Texture => "ArchaeaMod/Gores/arrow";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Follower Menu");
+            // DisplayName.SetDefault("Follower Menu");
         }
         public override void SetDefaults()
         {
@@ -163,7 +163,7 @@ namespace ArchaeaMod.NPCs.Town
                 button = "Follow";
             } 
         }
-        public override void OnChatButtonClicked(bool firstButton, ref bool shop)
+        public override void OnChatButtonClicked(bool firstButton, ref string shopName)
         {
             if (firstButton)
             {
@@ -182,7 +182,7 @@ namespace ArchaeaMod.NPCs.Town
                 Main.projectile[projID].localAI[0] = type;
             }
         }
-        public override bool? CanHitNPC(NPC target)
+        public override bool CanHitNPC(NPC target)/* tModPorter Suggestion: Return true instead of null */
         {
             return !target.townNPC;
         }
@@ -209,7 +209,7 @@ namespace ArchaeaMod.NPCs.Town
         public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Follower");
+            // DisplayName.SetDefault("Follower");
         }
         public override void SetDefaults()
         {
@@ -259,7 +259,7 @@ namespace ArchaeaMod.NPCs.Town
         {
             return follower.position.X <= follower.oldPosition.X || follower.position.X > follower.oldPosition.X || follower.position.Y <= follower.oldPosition.Y || follower.position.Y > follower.oldPosition.Y;
         }
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (target.townNPC || target.friendly || target.CountsAsACritter)
                 return;

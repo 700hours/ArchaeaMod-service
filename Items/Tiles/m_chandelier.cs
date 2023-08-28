@@ -14,7 +14,7 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magnoliac Chandelier");
+            // DisplayName.SetDefault("Magnoliac Chandelier");
         }
         public override void SetDefaults()
         {

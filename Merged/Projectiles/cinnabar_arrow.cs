@@ -15,7 +15,7 @@ namespace ArchaeaMod.Merged.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mercury Arrow");
+            // DisplayName.SetDefault("Mercury Arrow");
         }
         public override void SetDefaults()
         {
@@ -94,7 +94,7 @@ namespace ArchaeaMod.Merged.Projectiles
                 Projectile.netUpdate = true;
             }
         }
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (Main.rand.NextBool())
             {

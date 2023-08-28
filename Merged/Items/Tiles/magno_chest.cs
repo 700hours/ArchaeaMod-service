@@ -10,7 +10,7 @@ namespace ArchaeaMod.Merged.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magnoliac Chest");
+            // DisplayName.SetDefault("Magnoliac Chest");
         }
         public override void SetDefaults()
         {

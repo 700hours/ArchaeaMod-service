@@ -14,8 +14,8 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rustbane Chestplate");
-            Tooltip.SetDefault("20% increased throwing damage");
+            // DisplayName.SetDefault("Rustbane Chestplate");
+            // Tooltip.SetDefault("20% increased throwing damage");
         }
         public override void SetDefaults()
         {

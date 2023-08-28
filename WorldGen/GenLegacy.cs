@@ -22,16 +22,16 @@ namespace ArchaeaMod.Unused
         public int sideLimit = 100;
         public int ceiling
         {
-            get { return (int)WorldGen.worldSurfaceLow / 16; }
+            get { return (int)GenVars.worldSurfaceLow / 16; }
         }
         public int floor
         {
-            get { return WorldGen.tBottom - bottomLimit; }
+            get { return GenVars.tBottom - bottomLimit; }
         }
         public Vector2[] DigStarts(int total)
         {
             List<Vector2> centers = new List<Vector2>();
-            int randX = WorldGen.genRand.Next(sideLimit, WorldGen.tRight - sideLimit);
+            int randX = WorldGen.genRand.Next(sideLimit, GenVars.tRight - sideLimit);
             int randY = WorldGen.genRand.Next(ceiling, floor);
             for (int i = 0; i < total; i++)
                 centers.Add(new Vector2(randX, randY));

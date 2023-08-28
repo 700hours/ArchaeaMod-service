@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -31,8 +32,8 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.AnchorWall = true;
             TileObjectData.newTile.Origin = new Point16(1, 1);
             TileObjectData.addTile(Type);
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Portal");
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Portal");
             AddMapEntry(new Color(0.6f, 0.6f, 0f), name);
         }
 

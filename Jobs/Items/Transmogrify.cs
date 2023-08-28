@@ -15,8 +15,8 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Transmogrify");
-			Tooltip.SetDefault("Cost 1/3 max mana");
+            // DisplayName.SetDefault("Transmogrify");
+			// Tooltip.SetDefault("Cost 1/3 max mana");
         }
         public override void SetDefaults()
         {

@@ -19,7 +19,7 @@ namespace ArchaeaMod.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flail");
+            // DisplayName.SetDefault("Flail");
         }
         public override void SetDefaults()
         {
@@ -75,7 +75,7 @@ namespace ArchaeaMod.Projectiles
         private float speed = 1f;
         private float range = 200f;
         private float distance;
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.StrikeNPC(Projectile.damage, Projectile.knockBack, target.position.X < Projectile.position.X ? -1 : 1, Main.rand.NextBool());
         }

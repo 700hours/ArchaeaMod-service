@@ -10,7 +10,7 @@ namespace ArchaeaMod.Merged.Items.Materials
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rubidium Bar");
+            // DisplayName.SetDefault("Rubidium Bar");
         }
         public override void SetDefaults()
         {

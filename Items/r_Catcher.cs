@@ -21,8 +21,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rusty Soul Catcher");
-            Tooltip.SetDefault("Metallic minion");
+            // DisplayName.SetDefault("Rusty Soul Catcher");
+            // Tooltip.SetDefault("Metallic minion");
         }
         public override void SetDefaults()
         {

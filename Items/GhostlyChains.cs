@@ -17,8 +17,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ghostly Chains");
-            Tooltip.SetDefault("Chain gang");
+            // DisplayName.SetDefault("Ghostly Chains");
+            // Tooltip.SetDefault("Chain gang");
         }
         public override void SetDefaults()
         {

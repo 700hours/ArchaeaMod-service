@@ -9,11 +9,11 @@ namespace ArchaeaMod.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mercury Sickness");
+            // DisplayName.SetDefault("Mercury Sickness");
             BuffID.Sets.NurseCannotRemoveDebuff[Type] = false;
             BuffID.Sets.LongerExpertDebuff[Type] = true;
         }
-        public override void ModifyBuffTip(ref string tip, ref int rare)
+        public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {
             tip = "";
         }

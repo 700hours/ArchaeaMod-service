@@ -20,9 +20,9 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Necrosis' Staff");
-            Tooltip.SetDefault("Emits orbitals around aiming direction" +
-                "\nAlt use to disarm orbitals");
+            // DisplayName.SetDefault("Necrosis' Staff");
+            /* Tooltip.SetDefault("Emits orbitals around aiming direction" +
+                "\nAlt use to disarm orbitals"); */
         }
         public override void SetDefaults()
         {

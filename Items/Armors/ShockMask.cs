@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shock Mask");
+            // DisplayName.SetDefault("Shock Mask");
             ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
             // drawHair = true;
             // drawAltHair = false;

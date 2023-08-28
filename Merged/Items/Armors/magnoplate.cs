@@ -12,8 +12,8 @@ namespace ArchaeaMod.Merged.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Breastplate");
-            Tooltip.SetDefault("7% increased damage");
+            // DisplayName.SetDefault("Magno Breastplate");
+            // Tooltip.SetDefault("7% increased damage");
         }
         public override void SetDefaults()
         {

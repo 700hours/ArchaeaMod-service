@@ -114,16 +114,16 @@ namespace ArchaeaMod.NPCs
                 return true;
             return base.CheckActive(npc);
         }
-        public override void SetupShop(int type, Chest shop, ref int nextSlot)
+        public override void ModifyActiveShop(NPC npc, string shopName, Item[] items)
         {
-            if (type == NPCID.Painter)
+            if (npc.type == NPCID.Painter)
             {
                 if (!Main.dayTime)
-                    shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Tiles.m_biomepainting>());
+                    items[nextSlot].SetDefaults(ModContent.ItemType<Items.Tiles.m_biomepainting>());
             }
             else if (type == NPCID.Wizard)
             {
-                shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Tiles.mbox_magno_1>());
+                item[nextSlot].SetDefaults(ModContent.ItemType<Items.Tiles.mbox_magno_1>());
                 shop.item[nextSlot + 1].SetDefaults(ModContent.ItemType<Items.Tiles.mbox_magno_2>());
                 shop.item[nextSlot + 2].SetDefaults(ModContent.ItemType<Items.Tiles.mbox_magno_boss>());
             }

@@ -21,9 +21,9 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Dungeon Locator");
-            Tooltip.SetDefault("Use to locate the dungeon\n" +
-                "One use");
+            // DisplayName.SetDefault("Dungeon Locator");
+            /* Tooltip.SetDefault("Use to locate the dungeon\n" +
+                "One use"); */
         }
         public override void SetDefaults()
         {

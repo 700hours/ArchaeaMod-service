@@ -19,9 +19,9 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scroll of Incognito");
-            Tooltip.SetDefault("Put on a zombie disguise." +
-                "Enemies do no damage for 2 minutes.");
+            // DisplayName.SetDefault("Scroll of Incognito");
+            /* Tooltip.SetDefault("Put on a zombie disguise." +
+                "Enemies do no damage for 2 minutes."); */
         }
         public override void SetDefaults()
         {

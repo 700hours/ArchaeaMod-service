@@ -20,7 +20,7 @@ namespace ArchaeaMod.Tiles
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
             TileID.Sets.Corrupt[Type] = true;
-            ItemDrop = ModContent.ItemType<Items.Tiles.sky_brick>();
+            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Tiles.sky_brick>();
             AddMapEntry(Color.LightSlateGray);
             // soundStyle = 0;
             HitSound = SoundID.Tink;

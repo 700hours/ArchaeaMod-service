@@ -13,7 +13,7 @@ namespace ArchaeaMod.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rubidium Bullet");
+            // DisplayName.SetDefault("Rubidium Bullet");
         }
         public override void SetDefaults()
         {

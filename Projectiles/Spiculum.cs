@@ -17,7 +17,7 @@ namespace ArchaeaMod.Projectiles
         public override string Texture => "ArchaeaMod/Gores/Null";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Spiculum");
+            // DisplayName.SetDefault("Spiculum");
         }
         public override void SetDefaults()
         {
@@ -99,7 +99,7 @@ namespace ArchaeaMod.Projectiles
                 }
             }
         }
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             Projectile.Kill();
         }

@@ -12,9 +12,9 @@ namespace ArchaeaMod.Merged.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cinnabar Mask");
-            Tooltip.SetDefault("10% increased magic"
-                +   "\ndamage");
+            // DisplayName.SetDefault("Cinnabar Mask");
+            /* Tooltip.SetDefault("10% increased magic"
+                +   "\ndamage"); */
         }
         public override void SetDefaults()
         {

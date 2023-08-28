@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Materials
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Plant");
+            // DisplayName.SetDefault("Magno Plant");
         }
         public override void SetDefaults()
         {

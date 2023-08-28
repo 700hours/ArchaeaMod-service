@@ -10,7 +10,7 @@ namespace ArchaeaMod.Merged.Items.Materials
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Scorched Core");
+            // DisplayName.SetDefault("Scorched Core");
         }
         public override void SetDefaults()
         {

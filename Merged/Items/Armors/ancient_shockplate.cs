@@ -13,7 +13,7 @@ namespace ArchaeaMod.Merged.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ancient Shock Plate");
+            // DisplayName.SetDefault("Ancient Shock Plate");
         }
         public override void SetDefaults()
         {

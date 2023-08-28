@@ -19,7 +19,7 @@ namespace ArchaeaMod.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flail");
+            // DisplayName.SetDefault("Flail");
         }
         public override void SetDefaults()
         {

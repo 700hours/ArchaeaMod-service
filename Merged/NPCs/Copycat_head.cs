@@ -18,7 +18,7 @@ namespace ArchaeaMod.Merged.NPCs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Copycat");
+            // DisplayName.SetDefault("Copycat");
         }
         public override void SetDefaults()
         {

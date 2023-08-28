@@ -5,6 +5,7 @@ using ArchaeaMod.NPCs.Bosses;
 using Humanizer;
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Terraria;
@@ -12,19 +13,19 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Humanizer.On;
-using static IL.Terraria.ID.ArmorIDs;
-using static On.Terraria.ID.ArmorIDs;
+
+
 using static System.Formats.Asn1.AsnWriter;
 
 namespace ArchaeaMod.Jobs.Items
 {
     internal class Tome_of_summoning : ModItem
 	{
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            DisplayName.SetDefault("Tome of Summoning");
-			Tooltip.SetDefault("Displaces an NPC into your target. Costs 1/3 max mana.\n" +
-                "Requires line of sight with target.");
+            tooltips.Add(new TooltipLine(Mod, "Tome of Summoning", 
+                "Displaces an NPC into your target. Costs 1/3 max mana.\n" +
+                "Requires line of sight with target."));
         }
         public override void SetDefaults()
         {

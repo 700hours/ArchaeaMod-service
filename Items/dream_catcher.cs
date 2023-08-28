@@ -16,10 +16,10 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Dream Catcher");
-            Tooltip.SetDefault("Holds the stories of bygone times\n" +
+            // DisplayName.SetDefault("Dream Catcher");
+            /* Tooltip.SetDefault("Holds the stories of bygone times\n" +
                 "Gives a buff during night\n" +
-                "A ward against the haze");
+                "A ward against the haze"); */
         }
         public override void SetDefaults()
         {

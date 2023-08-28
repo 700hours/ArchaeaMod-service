@@ -22,7 +22,7 @@ namespace ArchaeaMod.Jobs.Buffs
         NPC nPC = default;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Transmogrified");
+            // DisplayName.SetDefault("Transmogrified");
         }
     //  turn players into an NPC and then back when the buff expires
         public override void Update(NPC npc, ref int buffIndex)

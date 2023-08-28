@@ -12,7 +12,7 @@ namespace ArchaeaMod.Merged.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ancient Shock Mask");
+            // DisplayName.SetDefault("Ancient Shock Mask");
             ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
             // drawHair = true;
         }

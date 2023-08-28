@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -34,8 +35,8 @@ namespace ArchaeaMod.Tiles
             TileObjectData.addTile(Type);
             TileID.Sets.DisableSmartCursor[Type] = true;
             DustType = 1;
-            ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Music Box");
+            LocalizedText name = CreateMapEntryName();
+            // name.SetDefault("Music Box");
             AddMapEntry(Color.White, name);
         }
 

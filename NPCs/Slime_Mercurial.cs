@@ -22,7 +22,7 @@ namespace ArchaeaMod.NPCs
         public override bool IsLoadingEnabled(Mod mod) => true;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mercurial Slime");
+            // DisplayName.SetDefault("Mercurial Slime");
             Main.npcFrameCount[NPC.type] = 2;
         }
         public override void SetDefaults()
@@ -63,7 +63,7 @@ namespace ArchaeaMod.NPCs
                     }
             base.AI();
         }
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
             target.AddBuff(ModContent.BuffType<Buffs.mercury>(), 450);
             NetMessage.SendData(MessageID.AddPlayerBuff, target.whoAmI, -1, null, ModContent.BuffType<Buffs.mercury>());

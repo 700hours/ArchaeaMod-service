@@ -10,7 +10,7 @@ namespace ArchaeaMod.NPCs.Legacy
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Flame");
+            // DisplayName.SetDefault("Magno Flame");
         }
         public override void SetDefaults()
         {

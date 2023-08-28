@@ -13,9 +13,9 @@ namespace ArchaeaMod.Merged.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Helmet");
-            Tooltip.SetDefault("Increases maximum minion "
-                +   "\ncount by 1");
+            // DisplayName.SetDefault("Magno Helmet");
+            /* Tooltip.SetDefault("Increases maximum minion "
+                +   "\ncount by 1"); */
         }
         public override void SetDefaults()
         {

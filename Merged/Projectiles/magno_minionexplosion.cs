@@ -13,7 +13,7 @@ namespace ArchaeaMod.Merged.Projectiles
         bool nativeHitNPC => (int)Projectile.ai[0] == 1 ? true : false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Minion Explosion");
+            // DisplayName.SetDefault("Minion Explosion");
             Main.projFrames[Projectile.type] = 4;
         }
         public override void SetDefaults()
@@ -46,7 +46,7 @@ namespace ArchaeaMod.Merged.Projectiles
             }
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (nativeHitNPC)
             {

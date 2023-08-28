@@ -17,7 +17,7 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rustbane Visor");
+            // DisplayName.SetDefault("Rustbane Visor");
             ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = false;
             // drawHair = false;
             // drawAltHair = false;

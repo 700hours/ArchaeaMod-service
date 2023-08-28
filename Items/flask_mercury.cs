@@ -14,8 +14,8 @@ namespace ArchaeaMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flask of Mercury");
-            Tooltip.SetDefault("Adds mercury sickness on melee hit");
+            // DisplayName.SetDefault("Flask of Mercury");
+            // Tooltip.SetDefault("Adds mercury sickness on melee hit");
         }
         public override void SetDefaults()
         {

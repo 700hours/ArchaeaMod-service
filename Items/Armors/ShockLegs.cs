@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shock Greaves");
+            // DisplayName.SetDefault("Shock Greaves");
         }
         public override void SetDefaults()
         {

@@ -11,8 +11,8 @@ namespace ArchaeaMod.Merged.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Rubidium Yoyo");
-            Tooltip.SetDefault("Throws out a Yoyo");
+            // DisplayName.SetDefault("Rubidium Yoyo");
+            // Tooltip.SetDefault("Throws out a Yoyo");
         }
         public override void SetDefaults()
         {

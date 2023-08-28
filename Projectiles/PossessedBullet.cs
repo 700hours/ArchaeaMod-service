@@ -15,7 +15,7 @@ namespace ArchaeaMod.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Possessed Bullet");
+            // DisplayName.SetDefault("Possessed Bullet");
         }
         public override void SetDefaults()
         {
@@ -34,7 +34,7 @@ namespace ArchaeaMod.Projectiles
         SpriteBatch sb => Main.spriteBatch;
         Vector2 impact = Vector2.Zero;
         int npc = 0;
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             impact = ArchaeaMain.Impact(Projectile, target.Hitbox);
             npc = target.whoAmI;

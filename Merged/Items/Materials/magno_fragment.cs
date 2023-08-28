@@ -10,7 +10,7 @@ namespace ArchaeaMod.Merged.Items.Materials
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Fragment");
+            // DisplayName.SetDefault("Magno Fragment");
         }
         public override void SetDefaults()
         {

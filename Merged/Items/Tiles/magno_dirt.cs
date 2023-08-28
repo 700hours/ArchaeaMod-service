@@ -10,7 +10,7 @@ namespace ArchaeaMod.Merged.Items.Tiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Magno Dirt");
+            // DisplayName.SetDefault("Magno Dirt");
         }
         public override void SetDefaults()
         {
