@@ -48,8 +48,8 @@ namespace ArchaeaMod.Mode
         }
         public static int HealPotion(int amount)
         {
-            float quotient = 400f / 9999f;
-            int result = (int)(amount / quotient);
+            float a = amount / 400f;
+            int result = (int)a * 4000; // not done yet
             return result;
         }
         public static int ManaPotion(int amount)

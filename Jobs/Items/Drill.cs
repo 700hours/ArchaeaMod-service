@@ -47,7 +47,7 @@ namespace ArchaeaMod.Jobs.Items
 						WorldGen.KillTile(i, j);
 						if (Main.netMode == 1)
 						{
-							NetMessage.SendData(10, number: i, number2: j);
+                            NetMessage.SendTileSquare(player.whoAmI, i, j);
 						}
 					}
 				}

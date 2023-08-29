@@ -36,37 +36,31 @@ namespace ArchaeaMod.Jobs.Items
         }
         public override bool? UseItem(Player player)
         {
-			if (player.whoAmI == Main.myPlayer)
-			{
-				Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y );
-				Rectangle mouse = new Rectangle((int)(mousev.X - 16f), (int)(mousev.Y - 16f), 32, 32);
-				NPC[] npc = Main.npc;
-				for(int m = 0; m < npc.Length; m++)
-				{
-					NPC nPC = npc[m];
-					Vector2 npcv = new Vector2(nPC.position.X, nPC.position.Y);
-					Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, nPC.width, nPC.height);
-                    if (player.statMana >= 35)
+		    Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y );
+		    Rectangle mouse = new Rectangle((int)(mousev.X - 16f), (int)(mousev.Y - 16f), 32, 32);
+		    NPC[] npc = Main.npc;
+		    for(int m = 0; m < npc.Length; m++)
+		    {
+			    NPC nPC = npc[m];
+			    Vector2 npcv = new Vector2(nPC.position.X, nPC.position.Y);
+			    Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, nPC.width, nPC.height);
+                if (player.statMana >= 35)
+                {
+                    if (npcBox.Intersects(mouse) && nPC.active && !nPC.townNPC && !nPC.CountsAsACritter && !nPC.boss)
                     {
-					    if(Collision.CanHitLine(nPC.Center, nPC.width, nPC.height, player.Center, player.width, player.height) && mouse.Intersects(npcBox) && !nPC.boss && player.statMana >= 35 && Main.mouseLeft)
-					    {
-                            if (npcBox.Intersects(mouse) && nPC.active && !nPC.townNPC && !nPC.CountsAsACritter && !nPC.boss)
-                            {
-                                nPC.friendly = !nPC.friendly;
-                                player.statMana -= 35;
-                                Color newColor = default(Color);
-						        int a = Dust.NewDust(new Vector2(mousev.X - 10f, mousev.Y - 10f), 20, 20, 20, 0f, 0f, 100, newColor, 2f);
-						        Main.dust[a].noGravity = true;
-						        if (Main.netMode == 1) 
-						        {
-							        nPC.netUpdate = true;
-						        }
-                                return true;
-					        }
-                        }
-                    }
-				}
-			}
+                        nPC.friendly = !nPC.friendly;
+                        player.statMana -= 35;
+                        Color newColor = default(Color);
+						int a = Dust.NewDust(new Vector2(mousev.X - 10f, mousev.Y - 10f), 20, 20, 20, 0f, 0f, 100, newColor, 2f);
+						Main.dust[a].noGravity = true;
+						if (Main.netMode == 1) 
+						{
+							nPC.netUpdate = true;
+						}
+                        return true;
+					}
+                }
+		    }
 			return false;
 		}
         public override void AddRecipes()
