@@ -1,0 +1,687 @@
+Projectiles: {
+	Tomohawk.DisplayName: Tomohawk
+	Spiculum.DisplayName: Spiculum
+	PossessedBullet.DisplayName: Possessed Bullet
+	Pixel.DisplayName: Pixel
+	Orbital.DisplayName: Orbital
+	Orb.DisplayName: Orb
+	Mercury.DisplayName: Mercury
+	MagnoHomingBullet.DisplayName: Magno Homing Bullet
+	MagnoBullet.DisplayName: Magno Bullet
+	Javelin.DisplayName: Javelin
+	ghostly_chains.DisplayName: ghostly_chains
+	Flail.DisplayName: Flail
+	dust_diffusion.DisplayName: dust_diffusion
+	Chain.DisplayName: Chain
+	CatcherMinion.DisplayName: Catcher Minion
+	Mechanic.DisplayName: Mechanic
+	Follower.DisplayName: Follower
+	OilLeak.DisplayName: Oil Leak
+	Flame.DisplayName: Flame
+	BurningSteam.DisplayName: Burning Steam
+	magno_yoyoprojectile.DisplayName: magno_yoyoprojectile
+	magno_orb.DisplayName: magno_orb
+	magno_minionexplosion.DisplayName: magno_minionexplosion
+	magno_minion.DisplayName: magno_minion
+	cinnabar_spore.DisplayName: cinnabar_spore
+	cinnabar_orb.DisplayName: cinnabar_orb
+	cinnabar_dagger.DisplayName: cinnabar_dagger
+	cinnabar_arrow.DisplayName: cinnabar_arrow
+	t_effect.DisplayName: t_effect
+	j_effect.DisplayName: j_effect
+	FireRain.DisplayName: Fire Rain
+	fake_npc.DisplayName: fake_npc
+	Elevator.DisplayName: Elevator
+	diffusion.DisplayName: diffusion
+	GraySolution.DisplayName: Gray Solution
+	Bolt.DisplayName: Bolt
+	Minion.DisplayName: Minion
+}
+
+NPCs: {
+	MechanicMinion.DisplayName: Mechanic Minion
+	FollowerMenu.DisplayName: Follower Menu
+	Slime_Mercurial.DisplayName: Slime_ Mercurial
+	Slime_Itchy.DisplayName: Slime_ Itchy
+	Sky_3.DisplayName: Sky_3
+	Sky_1.DisplayName: Sky_1
+	PossessedBullet.DisplayName: Possessed Bullet
+	Mimic.DisplayName: Mimic
+	m_flame.DisplayName: m_flame
+	Hatchling_tail.DisplayName: Hatchling_tail
+	Hatchling_head.DisplayName: Hatchling_head
+	Hatchling_body.DisplayName: Hatchling_body
+	Fanatic.DisplayName: Fanatic
+	Sky_boss.DisplayName: Sky_boss
+	Magnoliac_tail.DisplayName: Magnoliac_tail
+	Magnoliac_head.DisplayName: Magnoliac_head
+	Magnoliac_body.DisplayName: Magnoliac_body
+	factory_computer.DisplayName: factory_computer
+	_boss02.DisplayName: _boss02
+	Copycat_tail.DisplayName: Copycat_tail
+	Copycat_body.DisplayName: Copycat_body
+}
+
+Items: {
+	magno_stonewall: {
+		Tooltip: ""
+		DisplayName: magno_stonewall
+	}
+
+	magno_stone: {
+		Tooltip: ""
+		DisplayName: magno_stone
+	}
+
+	magno_brickwall: {
+		Tooltip: ""
+		DisplayName: magno_brickwall
+	}
+
+	magno_brick: {
+		Tooltip: ""
+		DisplayName: magno_brick
+	}
+
+	magno_mask: {
+		Tooltip: ""
+		DisplayName: magno_mask
+	}
+
+	magno_ore: {
+		Tooltip: ""
+		DisplayName: magno_ore
+	}
+
+	magno_dirt: {
+		Tooltip: ""
+		DisplayName: magno_dirt
+	}
+
+	magno_chest: {
+		Tooltip: ""
+		DisplayName: magno_chest
+	}
+
+	magno_fragment: {
+		Tooltip: ""
+		DisplayName: magno_fragment
+	}
+
+	magno_core: {
+		Tooltip: ""
+		DisplayName: magno_core
+	}
+
+	magno_bar: {
+		Tooltip: ""
+		DisplayName: magno_bar
+	}
+
+	cinnabar_crystal: {
+		Tooltip: ""
+		DisplayName: cinnabar_crystal
+	}
+
+	magno_yoyo: {
+		Tooltip: ""
+		DisplayName: magno_yoyo
+	}
+
+	magno_trophy: {
+		Tooltip: ""
+		DisplayName: magno_trophy
+	}
+
+	magno_treasurebag: {
+		Tooltip: ""
+		DisplayName: magno_treasurebag
+	}
+
+	magno_summonstaff: {
+		Tooltip: ""
+		DisplayName: magno_summonstaff
+	}
+
+	magno_book: {
+		Tooltip: ""
+		DisplayName: magno_book
+	}
+
+	cinnabar_pickaxe: {
+		Tooltip: ""
+		DisplayName: cinnabar_pickaxe
+	}
+
+	cinnabar_hamaxe: {
+		Tooltip: ""
+		DisplayName: cinnabar_hamaxe
+	}
+
+	cinnabar_dagger: {
+		Tooltip: ""
+		DisplayName: cinnabar_dagger
+	}
+
+	cinnabar_bow: {
+		Tooltip: ""
+		DisplayName: cinnabar_bow
+	}
+
+	magnoplate: {
+		Tooltip: ""
+		DisplayName: magnoplate
+	}
+
+	magnohelmet: {
+		Tooltip: ""
+		DisplayName: magnohelmet
+	}
+
+	magnoheadgear: {
+		Tooltip: ""
+		DisplayName: magnoheadgear
+	}
+
+	magnogreaves: {
+		Tooltip: ""
+		DisplayName: magnogreaves
+	}
+
+	cinnabarplate: {
+		Tooltip: ""
+		DisplayName: cinnabarplate
+	}
+
+	cinnabarmask: {
+		Tooltip: ""
+		DisplayName: cinnabarmask
+	}
+
+	cinnabarhelmet: {
+		Tooltip: ""
+		DisplayName: cinnabarhelmet
+	}
+
+	cinnabargreaves: {
+		Tooltip: ""
+		DisplayName: cinnabargreaves
+	}
+
+	ancient_shockplate: {
+		Tooltip: ""
+		DisplayName: ancient_shockplate
+	}
+
+	ancient_shockhelmet: {
+		Tooltip: ""
+		DisplayName: ancient_shockhelmet
+	}
+
+	ancient_shockgreaves: {
+		Tooltip: ""
+		DisplayName: ancient_shockgreaves
+	}
+
+	Transmogrify: {
+		Tooltip: ""
+		DisplayName: Transmogrify
+	}
+
+	Tome_of_weaken: {
+		Tooltip: ""
+		DisplayName: Tome_of_weaken
+	}
+
+	Tome_of_summoning: {
+		Tooltip: ""
+		DisplayName: Tome_of_summoning
+	}
+
+	Tome_of_soften: {
+		Tooltip: ""
+		DisplayName: Tome_of_soften
+	}
+
+	Tome_of_plague_explosion: {
+		Tooltip: ""
+		DisplayName: Tome_of_plague_explosion
+	}
+
+	Tome_of_plague: {
+		Tooltip: ""
+		DisplayName: Tome_of_plague
+	}
+
+	Tome_of_phase: {
+		Tooltip: ""
+		DisplayName: Tome_of_phase
+	}
+
+	Textbook_of_gathering: {
+		Tooltip: ""
+		DisplayName: Textbook_of_gathering
+	}
+
+	Scroll_plague_nova: {
+		Tooltip: ""
+		DisplayName: Scroll_plague_nova
+	}
+
+	Scroll_plague_explosion: {
+		Tooltip: ""
+		DisplayName: Scroll_plague_explosion
+	}
+
+	Scroll_incognito: {
+		Tooltip: ""
+		DisplayName: Scroll_incognito
+	}
+
+	Scroll_frozen_nova: {
+		Tooltip: ""
+		DisplayName: Scroll_frozen_nova
+	}
+
+	Scroll_fortitude: {
+		Tooltip: ""
+		DisplayName: Scroll_fortitude
+	}
+
+	Scroll_firestorm: {
+		Tooltip: ""
+		DisplayName: Scroll_firestorm
+	}
+
+	Prospecting_tool: {
+		Tooltip: ""
+		DisplayName: Prospecting_tool
+	}
+
+	Manipulate: {
+		Tooltip: ""
+		DisplayName: Manipulate
+	}
+
+	LifeLeech: {
+		Tooltip: ""
+		DisplayName: Life Leech
+	}
+
+	Elevator: {
+		Tooltip: ""
+		DisplayName: Elevator
+	}
+
+	DungeonLocator: {
+		Tooltip: ""
+		DisplayName: Dungeon Locator
+	}
+
+	Drill: {
+		Tooltip: ""
+		DisplayName: Drill
+	}
+
+	Convert: {
+		Tooltip: ""
+		DisplayName: Convert
+	}
+
+	AnotherChance: {
+		Tooltip: ""
+		DisplayName: Another Chance
+	}
+
+	sky_brickwall: {
+		Tooltip: ""
+		DisplayName: sky_brickwall
+	}
+
+	sky_brick: {
+		Tooltip: ""
+		DisplayName: sky_brick
+	}
+
+	factory_brickwall_1: {
+		Tooltip: ""
+		DisplayName: factory_brickwall_1
+	}
+
+	purple_haze: {
+		Tooltip: ""
+		DisplayName: purple_haze
+	}
+
+	mbox_magno_boss: {
+		Tooltip: ""
+		DisplayName: mbox_magno_boss
+	}
+
+	mbox_magno_2: {
+		Tooltip: ""
+		DisplayName: mbox_magno_2
+	}
+
+	mbox_magno_1: {
+		Tooltip: ""
+		DisplayName: mbox_magno_1
+	}
+
+	m_door: {
+		Tooltip: ""
+		DisplayName: m_door
+	}
+
+	m_chandelier: {
+		Tooltip: ""
+		DisplayName: m_chandelier
+	}
+
+	m_chair: {
+		Tooltip: ""
+		DisplayName: m_chair
+	}
+
+	m_biomepainting: {
+		Tooltip: ""
+		DisplayName: m_biomepainting
+	}
+
+	factory_brick_1: {
+		Tooltip: ""
+		DisplayName: factory_brick_1
+	}
+
+	banner_hatchling: {
+		Tooltip: ""
+		DisplayName: banner_hatchling
+	}
+
+	r_Tomohawk: {
+		Tooltip: ""
+		DisplayName: r_ Tomohawk
+	}
+
+	r_Javelin: {
+		Tooltip: ""
+		DisplayName: r_ Javelin
+	}
+
+	r_Flail: {
+		Tooltip: ""
+		DisplayName: r_ Flail
+	}
+
+	r_Catcher: {
+		Tooltip: ""
+		DisplayName: r_ Catcher
+	}
+
+	PossessedSpiculum: {
+		Tooltip: ""
+		DisplayName: Possessed Spiculum
+	}
+
+	PossessedMusket: {
+		Tooltip: ""
+		DisplayName: Possessed Musket
+	}
+
+	n_Staff: {
+		Tooltip: ""
+		DisplayName: n_ Staff
+	}
+
+	n_core: {
+		Tooltip: ""
+		DisplayName: n_core
+	}
+
+	r_plate: {
+		Tooltip: ""
+		DisplayName: r_plate
+	}
+
+	magno_plant: {
+		Tooltip: ""
+		DisplayName: magno_plant
+	}
+
+	m_shield: {
+		Tooltip: ""
+		DisplayName: m_shield
+	}
+
+	m_fossil: {
+		Tooltip: ""
+		DisplayName: m_fossil
+	}
+
+	gray_solution: {
+		Tooltip: ""
+		DisplayName: gray_solution
+	}
+
+	GhostlyChains: {
+		Tooltip: ""
+		DisplayName: Ghostly Chains
+	}
+
+	flask_mercury: {
+		Tooltip: ""
+		DisplayName: flask_mercury
+	}
+
+	dream_catcher: {
+		Tooltip: ""
+		DisplayName: dream_catcher
+	}
+
+	c_Sword: {
+		Tooltip: ""
+		DisplayName: c_ Sword
+	}
+
+	c_Staff: {
+		Tooltip: ""
+		DisplayName: c_ Staff
+	}
+
+	ShockPlate: {
+		Tooltip: ""
+		DisplayName: Shock Plate
+	}
+
+	ShockMask: {
+		Tooltip: ""
+		DisplayName: Shock Mask
+	}
+
+	ShockLegs: {
+		Tooltip: ""
+		DisplayName: Shock Legs
+	}
+
+	RustbanePlate: {
+		Tooltip: ""
+		DisplayName: Rustbane Plate
+	}
+
+	RustbaneLegs: {
+		Tooltip: ""
+		DisplayName: Rustbane Legs
+	}
+
+	RustbaneHead: {
+		Tooltip: ""
+		DisplayName: Rustbane Head
+	}
+
+	Staff: {
+		Tooltip: ""
+		DisplayName: Staff
+	}
+
+	Sabre: {
+		Tooltip: ""
+		DisplayName: Sabre
+	}
+
+	Deflector: {
+		Tooltip: ""
+		DisplayName: Deflector
+	}
+
+	Calling: {
+		Tooltip: ""
+		DisplayName: Calling
+	}
+
+	Broadsword: {
+		Tooltip: ""
+		DisplayName: Broadsword
+	}
+
+	acc_cluster: {
+		Tooltip: ""
+		DisplayName: acc_cluster
+	}
+}
+
+Buffs: {
+	magno_summon: {
+		Description: Mods.ArchaeaMod.Buffs.magno_summon.Description
+		DisplayName: magno_summon
+	}
+
+	Zombie: {
+		Description: Mods.ArchaeaMod.Buffs.Zombie.Description
+		DisplayName: Zombie
+	}
+
+	Weaken: {
+		Description: Mods.ArchaeaMod.Buffs.Weaken.Description
+		DisplayName: Weaken
+	}
+
+	Transmogrify: {
+		Description: Mods.ArchaeaMod.Buffs.Transmogrify.Description
+		DisplayName: Transmogrify
+	}
+
+	Summoned: {
+		Description: Mods.ArchaeaMod.Buffs.Summoned.Description
+		DisplayName: Summoned
+	}
+
+	Soft: {
+		Description: Mods.ArchaeaMod.Buffs.Soft.Description
+		DisplayName: Soft
+	}
+
+	Plague: {
+		Description: Mods.ArchaeaMod.Buffs.Plague.Description
+		DisplayName: Plague
+	}
+
+	Phase: {
+		Description: Mods.ArchaeaMod.Buffs.Phase.Description
+		DisplayName: Phase
+	}
+
+	Fortitude: {
+		Description: Mods.ArchaeaMod.Buffs.Fortitude.Description
+		DisplayName: Fortitude
+	}
+
+	CallMinionBuff: {
+		Description: Mods.ArchaeaMod.Buffs.CallMinionBuff.Description
+		DisplayName: Call Minion Buff
+	}
+
+	stun: {
+		Description: Mods.ArchaeaMod.Buffs.stun.Description
+		DisplayName: stun
+	}
+
+	mercury: {
+		Description: Mods.ArchaeaMod.Buffs.mercury.Description
+		DisplayName: mercury
+	}
+
+	frozen: {
+		Description: Mods.ArchaeaMod.Buffs.frozen.Description
+		DisplayName: frozen
+	}
+
+	flask_mercury: {
+		Description: Mods.ArchaeaMod.Buffs.flask_mercury.Description
+		DisplayName: flask_mercury
+	}
+
+	buff_cluster: {
+		Description: Mods.ArchaeaMod.Buffs.buff_cluster.Description
+		DisplayName: buff_cluster
+	}
+
+	buff_catcher: {
+		Description: Mods.ArchaeaMod.Buffs.buff_catcher.Description
+		DisplayName: buff_catcher
+	}
+}
+
+Tiles: {
+	steam_vent.MapEntry: steam_vent
+	sky_portal.MapEntry: sky_portal
+	paintings.MapEntry: paintings
+	music_boxes_alt.MapEntry: music_boxes_alt
+	music_boxes.MapEntry: music_boxes
+	m_dooropen.MapEntry: m_dooropen
+	m_doorclosed.MapEntry: m_doorclosed
+	m_chandelier.MapEntry: m_chandelier
+	m_chair.MapEntry: m_chair
+	c_crystal_large.MapEntry: c_crystal_large
+	banners.MapEntry: banners
+	m_trophy.MapEntry: m_trophy
+	m_ore.MapEntry: m_ore
+	m_chest.MapEntry: m_chest
+	m_book.MapEntry: m_book
+	m_bar.MapEntry: m_bar
+	c_crystalsmall.MapEntry: c_crystalsmall
+	c_crystal2x2.MapEntry: c_crystal2x2
+	c_crystal2x1.MapEntry: c_crystal2x1
+	Elevator.MapEntry: Elevator
+}
+
+Biomes: {
+	SkyFortPortalBiome: {
+		TownNPCDialogueName: the Sky Fort Portal Biome
+		DisplayName: Sky Fort Portal Biome
+	}
+
+	SkyFortBiome: {
+		TownNPCDialogueName: the Sky Fort Biome
+		DisplayName: Sky Fort Biome
+	}
+
+	MagnoBiome: {
+		TownNPCDialogueName: the Magno Biome
+		DisplayName: Magno Biome
+	}
+
+	FactoryBiome: {
+		TownNPCDialogueName: the Factory Biome
+		DisplayName: Factory Biome
+	}
+}
+
+Keybinds: {
+	"Show Extra Lives.DisplayName": Show  Extra  Lives
+	"Use Elevator.DisplayName": Use  Elevator
+	"Wall Jump.DisplayName": Wall  Jump
+	"Double jump.DisplayName": Double jump
+	"Leap attack.DisplayName": Leap attack
+	Leap.DisplayName: Leap
+	"Progress diaglog visible.DisplayName": Progress diaglog visible
+}
