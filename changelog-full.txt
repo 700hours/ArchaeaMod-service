@@ -700,3 +700,10 @@ version 1.4.25.116 -> 1.4.30.137
 ================================
 # Added
 -> 25 items
+
+version 1.4.30.137 -> 1.4.31.156
+================================
+# Changed
+-> Improved multiplayer stability of the added items
+# Removed
+-> 3 items

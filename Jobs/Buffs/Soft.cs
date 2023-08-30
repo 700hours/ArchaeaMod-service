@@ -23,7 +23,7 @@ namespace ArchaeaMod.Jobs.Buffs
         public override void Update(NPC npc, ref int buffIndex)
         {
 			int buffTime = npc.buffTime[buffIndex];
-            if (buffTime == MaxTime)
+            if (buffTime == MaxTime - 1)
 			{
 				NPCEffectsStart(npc, buffIndex, Type, 0);
 			}

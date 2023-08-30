@@ -1,3 +1,4 @@
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -65,8 +66,7 @@ namespace ArchaeaMod.Jobs.Items
 					    Main.dust[a].noGravity = true;
                     }
                     SoundEngine.PlaySound(SoundID.Item8, mousev);
-                    nPC.AddBuff(ModContent.BuffType<Buffs.Soft>(), Buffs.Soft.MaxTime, Main.netMode == 0);
-					nPC.netUpdate = true;
+                    ArchaeaNPC.AddBuffNetNPC(nPC, ModContent.BuffType<Buffs.Soft>(), Buffs.Soft.MaxTime);
 					return true;
 				}
 			}

@@ -298,7 +298,7 @@ namespace ArchaeaMod
             modPlayer.extraLife = extraLife;
             modPlayer.dungeonLocatorTicks = dungeonLocatorTicks;
             modPlayer.locatorDirection = locatorDirection;
-            modPlayer.fireStorm = fireStorm;
+            //modPlayer.fireStorm = fireStorm;
             //  End
             clientClone = modPlayer;
         }
@@ -338,7 +338,7 @@ namespace ArchaeaMod
             extraLife = modPlayer.extraLife;
             dungeonLocatorTicks = modPlayer.dungeonLocatorTicks;
             locatorDirection = modPlayer.locatorDirection;
-            fireStorm = modPlayer.fireStorm;
+            //fireStorm = modPlayer.fireStorm;
             //  End
         }
 
@@ -1857,7 +1857,6 @@ namespace ArchaeaMod
         {
             get { return Main.spriteBatch; }
         }
-        bool extraLifeFlag = false;
         int t = 180;
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
@@ -1920,10 +1919,13 @@ namespace ArchaeaMod
                 string text = locatorDirection == -1 ? "Dungeon left." : "Dungeon right.";
                 ModeUI.DrawTextUI(sb, Main.screenHeight - 200, text, ref locatorDirection, 900);
             }
-            if (ArchaeaMain.extraLife.Current || extraLifeFlag)
+            if (ArchaeaMain.extraLife.JustPressed)
             {
-                ModeUI.DrawTextUI(sb, Main.screenHeight - 200, $"Extra lives: {extraLife}", ref t, 180);
-                extraLifeFlag = true;
+                t = 0;
+            }
+            if (t >= 0 && t <= 300)
+            {
+                ModeUI.DrawTextUI(sb, Main.screenHeight - 200, $"Extra lives: {extraLife}", ref t, 300);
             }
             if (debugMenu)
                 DebugMenu();

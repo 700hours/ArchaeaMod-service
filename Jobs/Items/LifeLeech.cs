@@ -55,17 +55,21 @@ namespace ArchaeaMod.Jobs.Items
 			for(int m = 0; m < npc.Length; m++)
 			{
 				NPC nPC = npc[m];
-				Vector2 npcv = new Vector2(nPC.position.X, nPC.position.Y);
+                if (!nPC.active) continue;
+                if (nPC.life <= 0) continue;
+                if (nPC.friendly) continue;
+                if (nPC.dontTakeDamage) continue;
+                Vector2 npcv = new Vector2(nPC.position.X, nPC.position.Y);
 				Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, nPC.width, nPC.height);
 				if(npcBox.Intersects(mouse) && player.statLife != player.statLifeMax)
 				{
 					player.statLife++;
-					nPC.life--;
-					if(nPC.life <= 5)
-					{
-						nPC.StrikeNPC(6, 0f, player.direction, true, false, Main.netMode == 1);
-					}
-					player.statMana--;
+					ArchaeaNPC.HurtNetNPC(nPC, 1, 0, 0, 0);
+                    if (nPC.life <= 5)
+                    {
+                        ArchaeaNPC.StrikeNetNPC(nPC, 6, 0, 0, 0);
+                    }
+                    player.statMana--;
 					player.manaRegenDelay = (int)player.maxRegenDelay;
 					Color newColor = default(Color);
 					int a = Dust.NewDust(new Vector2(nPC.position.X, nPC.position.Y), nPC.width, nPC.height, 5, 0f, 0f, 100, newColor, 1f);
@@ -74,7 +78,6 @@ namespace ArchaeaMod.Jobs.Items
 					int b = Dust.NewDust(nPC.Center, 1, 1, 5, speed.X, speed.Y, 0, default, 3f);
 					Main.dust[b].noGravity = true;
 					SoundEngine.PlaySound(SoundID.Item39, player.Center);
-                    nPC.netUpdate = true;
                     if (Main.netMode == 1) 
 					{
                         NetMessage.SendData(16, player.whoAmI);

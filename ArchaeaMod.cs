@@ -313,7 +313,7 @@ namespace ArchaeaMod
                     break;
                 case Packet.CastFireStorm:
                     if (Main.netMode == NetmodeID.Server)
-                        NetHandler.Send(Packet.CastFireStorm, i, b: b);
+                        NetHandler.Send(Packet.CastFireStorm, b: b);
                     else
                     {
                         if (b)
@@ -325,7 +325,6 @@ namespace ArchaeaMod
                             }
                         }
                     }
-                    break;
                     break;
             }
         }

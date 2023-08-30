@@ -141,6 +141,39 @@ namespace ArchaeaMod.NPCs
     {
         public static int defaultWidth = 800;
         public static int defaultHeight = 600;
+        public static bool IsGenericNPC(NPC nPC)
+        {
+            if (!nPC.active) return false;
+            if (nPC.life <= 0) return false;
+            if (nPC.friendly) return false;
+            if (nPC.dontTakeDamage) return false;
+            if (nPC.boss) return false;
+            return true;
+        }
+        public static void StrikeNetNPC(NPC npc, int damage, float knockback, int direction, int crit)
+        {
+            npc.StrikeNPC(damage, knockback, direction, true, false, Main.netMode == 2);
+            if (Main.netMode == 1)
+            {
+                NetMessage.SendData(28, -1, -1, null, npc.whoAmI, damage, knockback, direction, crit);
+            }
+        }
+        public static void HurtNetNPC(NPC npc, int damage, float knockback, int direction, int crit)
+        {
+            npc.life -= damage;
+            if (Main.netMode == 1)
+            {
+                NetMessage.SendData(28, -1, -1, null, npc.whoAmI, damage, knockback, direction, crit);
+            }
+        }
+        public static void AddBuffNetNPC(NPC npc, int buffType, int duration)
+        {
+            npc.AddBuff(buffType, duration, Main.netMode == 0);
+            if (Main.netMode == 1)
+            {
+                NetMessage.SendData(53, -1, -1, null, npc.whoAmI, buffType, duration);
+            }
+        }
         public static void DrawChain(Texture2D tex, SpriteBatch sb, Vector2 start, Vector2 end, int len = 12)
         {
             for (int n = 0; n < start.Distance(end); n += len)

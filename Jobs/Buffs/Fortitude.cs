@@ -30,7 +30,7 @@ namespace ArchaeaMod.Jobs.Buffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            if (player.buffTime[buffIndex] == MaxTime)
+            if (player.buffTime[buffIndex] == MaxTime - 1)
             { 
                 player.statDefense += 20;
             }

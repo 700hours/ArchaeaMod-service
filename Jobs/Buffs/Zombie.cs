@@ -65,6 +65,19 @@ namespace ArchaeaMod.Jobs.Buffs
             {
                 player.DelBuff(buffIndex--);
             }
+            int buffTime = player.buffTime[buffIndex];
+            //if (buffTime == MaxTime)
+            //{
+            //    NPCEffectsStart(npc, buffIndex, Type, 0);
+            //}
+            //if (buffTime < MaxTime && buffTime > 1)
+            //{
+            //    NPCEffects(npc, buffIndex, Type, 0);
+            //}
+            if (buffTime == 1)
+            {
+                mask.active = false;
+            }
         }
         /*	public static Texture2D
                 armorLeg = Main.Assets.Request[Config.goreID["Zombie Legs"]],

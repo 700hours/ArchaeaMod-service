@@ -464,7 +464,9 @@ namespace ArchaeaMod.Mode
         }
         public static void DrawTextUI(SpriteBatch sb, int y, string text, ref int ticks, int maxTicks = 300, Color color = default)
         {
-            if (ticks < maxTicks)
+            if (text == null)
+                return;
+            if (ticks <= maxTicks)
             { 
                 ticks++;
                 string placeholder = "Trait acquired!";

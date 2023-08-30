@@ -67,7 +67,7 @@ namespace ArchaeaMod.Jobs.Projectiles
 				Rectangle NB = new Rectangle((int)N.position.X,(int)N.position.Y,N.width,N.height);
 				if (MB.Intersects(NB))
 				{
-					N.AddBuff(buffType, 600, Main.netMode == 0);
+                    ArchaeaNPC.AddBuffNetNPC(N, buffType, 600);
 				}
             }
 		}
