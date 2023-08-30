@@ -199,7 +199,10 @@ namespace ArchaeaMod
                     }
                     break;
                 case Packet.StrikeNPC:
-                    Main.npc[t].StrikeNPC(i, f, 0);
+                    var info = new NPC.HitInfo();
+                    info.Damage = i;
+                    info.Knockback = f;
+                    Main.npc[t].StrikeNPC(info);
                     NetMessage.SendData(28, -1, -1, null, t);
                     break;
                 case Packet.ArchaeaMode:

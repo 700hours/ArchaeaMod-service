@@ -65,7 +65,7 @@ namespace ArchaeaMod.Jobs.Items
 						int a = Dust.NewDust(player.position, 20, 20, 61, 0f, 0f, 100, newColor, 2f);
 						Main.dust[a].noGravity = true;
 						SoundEngine.PlaySound(SoundID.Item20, player.Center);
-						int proj = Projectile.NewProjectile(Item.GetSource_ItemUse(Item), player.Center, Vector2.Zero, ModContent.ProjectileType<t_effect>(), 0, 0f, Main.myPlayer, 0, nPC.whoAmI);
+						int proj = Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<t_effect>(), 0, 0f, Main.myPlayer, 0, nPC.whoAmI);
 						Main.projectile[proj].localAI[0] = ModContent.BuffType<Plague>();
                         Main.projectile[proj].localAI[1] = DustID.GreenTorch;
                         player.statMana -= 10;

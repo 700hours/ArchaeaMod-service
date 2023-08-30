@@ -14,9 +14,9 @@ namespace ArchaeaMod.Items.Armors
     [AutoloadEquip(EquipType.Legs)]
     public class ShockLegs : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Shock Greaves");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Shock Greaves"));
         }
         public override void SetDefaults()
         {

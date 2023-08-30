@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +14,11 @@ namespace ArchaeaMod.Items
 {
     public class acc_cluster : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Soul Cluster");
-            /* Tooltip.SetDefault("Adds a damage boost per successful enemy hit" +
-                "\nResets after taking damage"); */
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Soul Cluster"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Adds a damage boost per successful enemy hit"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "\nResets after taking damage"));
         }
         public override void SetDefaults()
         {
@@ -74,7 +74,7 @@ namespace ArchaeaMod.Items
                     break;
                 }
             }
-            damage += stack;
+            modifiers.FinalDamage += stack;
         }
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)/* tModPorter If you don't need the Projectile, consider using ModifyHitNPC instead */
         {
@@ -86,7 +86,7 @@ namespace ArchaeaMod.Items
                     break;
                 }
             }
-            damage += stack;
+            modifiers.FinalDamage += stack;
         }
     }
 }

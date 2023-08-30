@@ -14,9 +14,9 @@ namespace ArchaeaMod.Items.Materials
 {
     public class r_plate : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Rusty Plate");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Plate"));
         }
         public override void SetDefaults()
         {

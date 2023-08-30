@@ -15,10 +15,10 @@ namespace ArchaeaMod.Items
 {
     public class c_Staff : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Cinnabar Staff");
-            // Tooltip.SetDefault("Emits mercury dust");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Cinnabar Staff"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Emits mercury dust"));
         }
         public override void SetDefaults()
         {

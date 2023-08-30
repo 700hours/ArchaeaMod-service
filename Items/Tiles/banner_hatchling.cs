@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,9 +13,9 @@ namespace ArchaeaMod.Items.Tiles
 {
     public class banner_hatchling : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Hatchling banner");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Hatchling banner"));
         }
         public override void SetDefaults()
         {

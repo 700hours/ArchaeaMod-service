@@ -62,7 +62,7 @@ namespace ArchaeaMod.Jobs.Projectiles
 				if(MB.Intersects(NB))
 				{
 					N.AddBuff(24,600,false);
-					N.StrikeNPC(45, 0f, 0, false, false, Main.netMode != 0);
+					ArchaeaNPC.StrikeNPC(N, 45, 0f, 0, false);
 				}
 			}
 		}

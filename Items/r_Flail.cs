@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,10 +18,10 @@ namespace ArchaeaMod.Items
     [CloneByReference]
     public class r_Flail : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Rusty Thrasher");
-            // Tooltip.SetDefault("Scatters rust");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Thrasher"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Scatters rust"));
         }
         public override void SetDefaults()
         {

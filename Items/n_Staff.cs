@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +18,11 @@ namespace ArchaeaMod.Items
     [CloneByReference]
     public class n_Staff : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Necrosis' Staff");
-            /* Tooltip.SetDefault("Emits orbitals around aiming direction" +
-                "\nAlt use to disarm orbitals"); */
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Necrosis' Staff"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Emits orbitals around aiming direction"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "Alt use to disarm orbitals"));
         }
         public override void SetDefaults()
         {

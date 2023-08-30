@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,10 +15,10 @@ namespace ArchaeaMod.Items
 {
     public class GhostlyChains : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Ghostly Chains");
-            // Tooltip.SetDefault("Chain gang");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Ghostly Chains"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Chain gang"));
         }
         public override void SetDefaults()
         {

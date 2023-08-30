@@ -34,7 +34,7 @@ namespace ArchaeaMod.Tiles
             TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 2, 0);
             TileObjectData.addTile(Type);
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
-            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Tiles.m_chandelier>();
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Tiles.m_chandelier>();
             LocalizedText name = CreateMapEntryName();
             // name.SetDefault("Chandelier");
             AddMapEntry(Color.MediumVioletRed, name);

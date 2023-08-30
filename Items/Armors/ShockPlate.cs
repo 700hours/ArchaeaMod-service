@@ -14,9 +14,9 @@ namespace ArchaeaMod.Items.Armors
     [AutoloadEquip(EquipType.Body)]
     public class ShockPlate : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Shock Plate");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Shock Plate"));
         }
         public override void UpdateArmorSet(Player player)
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,9 +14,9 @@ namespace ArchaeaMod.Items
     public class debug : ModItem
     {
         public override bool IsLoadingEnabled(Mod mod) => false;
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Debug");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Debug"));
         }
         public override void SetDefaults()
         {

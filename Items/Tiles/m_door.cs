@@ -11,9 +11,9 @@ namespace ArchaeaMod.Items.Tiles
 {
     public class m_door : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Magnoliac door");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac door"));
         }
         public override void SetDefaults()
         {

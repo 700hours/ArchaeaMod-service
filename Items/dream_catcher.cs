@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +14,12 @@ namespace ArchaeaMod.Items
 {
     public class dream_catcher : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Dream Catcher");
-            /* Tooltip.SetDefault("Holds the stories of bygone times\n" +
-                "Gives a buff during night\n" +
-                "A ward against the haze"); */
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Dream Catcher"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Holds the stories of bygone times\n"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "Gives a buff during night\n"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip2", "A ward against the haze"));
         }
         public override void SetDefaults()
         {

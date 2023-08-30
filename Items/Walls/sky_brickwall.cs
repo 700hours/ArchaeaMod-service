@@ -11,9 +11,9 @@ namespace ArchaeaMod.Items.Walls
 {
     public class sky_brickwall : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Fortress Brick Wall");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Fortress Brick Wall"));
         }
         public override void SetDefaults()
         {

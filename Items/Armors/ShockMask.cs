@@ -14,12 +14,12 @@ namespace ArchaeaMod.Items.Armors
     [AutoloadEquip(EquipType.Head)]
     public class ShockMask : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Shock Mask");
-            ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true;
-            // drawHair = true;
-            // drawAltHair = false;
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Shock Mask"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "// drawHair = true"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip2", "// drawAltHair = false"));
         }
         public override void SetDefaults()
         {

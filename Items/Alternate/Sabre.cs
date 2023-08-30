@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,10 +18,10 @@ namespace ArchaeaMod.Items.Alternate
     public class Sabre : ModItem
     {
         public override string Texture => "ArchaeaMod/Merged/Items/cinnabar_dagger";
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Dagger");
-            // Tooltip.SetDefault("Forged from the materials of magno");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Dagger"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Forged from the materials of magno"));
         }
         public override void SetDefaults()
         {

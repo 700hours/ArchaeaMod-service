@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,10 +19,10 @@ namespace ArchaeaMod.Items
     [CloneByReference]
     public class r_Catcher : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Rusty Soul Catcher");
-            // Tooltip.SetDefault("Metallic minion");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Soul Catcher"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Metallic minion"));
         }
         public override void SetDefaults()
         {

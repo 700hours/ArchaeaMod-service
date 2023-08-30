@@ -11,10 +11,10 @@ namespace ArchaeaMod.Items
 {
     public class n_core : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Dark Aura");
-            // Tooltip.SetDefault("For use in the dark sky portal chamber.");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Dark Aura"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "For use in the dark sky portal chamber."));
         }
         public override void SetDefaults()
         {

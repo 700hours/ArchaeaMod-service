@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace ArchaeaMod
@@ -114,22 +115,23 @@ namespace ArchaeaMod.NPCs
                 return true;
             return base.CheckActive(npc);
         }
-        public override void ModifyActiveShop(NPC npc, string shopName, Item[] items)
+        public override void ModifyShop(NPCShop shop)
         {
-            if (npc.type == NPCID.Painter)
+            if (shop.NpcType == NPCID.Painter)
             {
-                if (!Main.dayTime)
-                    items[nextSlot].SetDefaults(ModContent.ItemType<Items.Tiles.m_biomepainting>());
+                shop.Add(new NPCShop.Entry(
+                    ModContent.ItemType<Items.Tiles.m_biomepainting>(), 
+                    new Condition(LocalizedText.Empty, delegate () { return !Main.dayTime; })));
             }
-            else if (type == NPCID.Wizard)
+            else if (shop.NpcType == NPCID.Wizard)
             {
-                item[nextSlot].SetDefaults(ModContent.ItemType<Items.Tiles.mbox_magno_1>());
-                shop.item[nextSlot + 1].SetDefaults(ModContent.ItemType<Items.Tiles.mbox_magno_2>());
-                shop.item[nextSlot + 2].SetDefaults(ModContent.ItemType<Items.Tiles.mbox_magno_boss>());
+                shop.Add(new NPCShop.Entry(ModContent.ItemType<Items.Tiles.mbox_magno_1>()));
+                shop.Add(new NPCShop.Entry(ModContent.ItemType<Items.Tiles.mbox_magno_2>()));
+                shop.Add(new NPCShop.Entry(ModContent.ItemType<Items.Tiles.mbox_magno_boss>()));
             }
-            else if (type == NPCID.Steampunker)
+            else if (shop.NpcType == NPCID.Steampunker)
             {
-                shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.gray_solution>());
+                shop.Add(new NPCShop.Entry(ModContent.ItemType<Items.gray_solution>()));
             }
         }
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
@@ -150,9 +152,18 @@ namespace ArchaeaMod.NPCs
             if (nPC.boss) return false;
             return true;
         }
+        public static void StrikeNPC(NPC npc, int damage, float knockback, int direction, bool crit)
+        {
+            NPC.HitInfo info = new NPC.HitInfo();
+            info.Damage = damage;
+            info.Knockback = knockback;
+            info.HitDirection = direction;
+            info.Crit = crit;
+            npc.StrikeNPC(info, Main.netMode == 2);
+        }
         public static void StrikeNetNPC(NPC npc, int damage, float knockback, int direction, int crit)
         {
-            npc.StrikeNPC(damage, knockback, direction, true, false, Main.netMode == 2);
+            StrikeNPC(npc, damage, knockback, direction, crit == 1);
             if (Main.netMode == 1)
             {
                 NetMessage.SendData(28, -1, -1, null, npc.whoAmI, damage, knockback, direction, crit);

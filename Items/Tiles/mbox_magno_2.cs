@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,9 +14,9 @@ namespace ArchaeaMod.Items.Tiles
 {
     public class mbox_magno_2 : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Magnoliac Music Box Alt");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Music Box Alt"));
         }
         public override void SetDefaults()
         {

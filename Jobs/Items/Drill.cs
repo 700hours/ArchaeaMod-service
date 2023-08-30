@@ -85,7 +85,7 @@ namespace ArchaeaMod.Jobs.Items
                 .AddIngredient(ItemID.DemoniteBar, 24)
                 .AddIngredient(ItemID.IronBar, 6)
                 .AddTile(TileID.DemonAltar)
-				.AddCondition(new Recipe.Condition(NetworkText.Empty, t => Main.hardMode))
+				.AddCondition(new Condition(LocalizedText.Empty, delegate() { return Main.hardMode; }))
                 .Register();
         }
     }

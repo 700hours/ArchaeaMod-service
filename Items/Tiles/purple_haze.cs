@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,10 +14,10 @@ namespace ArchaeaMod.Items.Tiles
 {
     public class purple_haze : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Purple Haze");
-            // Tooltip.SetDefault("Fever dreams coalesced into a tangible essence");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Purple Haze"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Fever dreams coalesced into a tangible essence"));
         }
         public override void SetDefaults()
         {

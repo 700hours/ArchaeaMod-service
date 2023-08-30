@@ -1,13 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace ArchaeaMod.Merged.Items
 {
     public class magno_treasurebag : ModItem
     {
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Treasure Bag"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "{$CommonItemTooltip.RightClickToOpen}"));
+        }
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Treasure Bag");
@@ -21,13 +28,14 @@ namespace ArchaeaMod.Merged.Items
             Item.maxStack = 250;
             Item.consumable = true;
             Item.expert = true;
+            ItemID.Sets.BossBag[Type] = true;
+            ItemID.Sets.PreHardmodeLikeBossBag[Type] = true;
         }
-        public override int BossBagNPC => ModContent.NPCType<ArchaeaMod.NPCs.Bosses.Magnoliac_head>();
         public override bool CanRightClick()
         {
             return true;
         }
-        public override void OpenBossBag(Player player)
+        public override void RightClick(Player player)
         {
             player.QuickSpawnItem(Item.GetSource_Loot(), ItemID.GoldCoin, 5);
             //  player.QuickSpawnItem(ModContent.ItemType<magno_shieldacc>(), 1);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +13,10 @@ namespace ArchaeaMod.Items.Tiles
 {
     public class m_biomepainting : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Magnoliac Biome");
-            // Tooltip.SetDefault("R.A.");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Biome"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "R.A."));
         }
         public override void SetDefaults()
         {

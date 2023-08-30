@@ -12,9 +12,9 @@ namespace ArchaeaMod.Items.Tiles
 {
     public class m_chandelier : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Magnoliac Chandelier");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Chandelier"));
         }
         public override void SetDefaults()
         {

@@ -16,11 +16,11 @@ namespace ArchaeaMod.Items
 {
     public class m_fossil : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Scorched Fossil");
-            // Tooltip.SetDefault("");
-            ItemID.Sets.SortingPriorityBossSpawns[Type] = 12;
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Scorched Fossil"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", ""));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "ItemID.Sets.SortingPriorityBossSpawns[Type] = 12"));
         }
         public override void SetDefaults()
         {

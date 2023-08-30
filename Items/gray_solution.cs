@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +13,10 @@ namespace ArchaeaMod.Items
 {
     public class gray_solution : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Scorched Solution");
-            // Tooltip.SetDefault("Transforms stone into Magno stone");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Scorched Solution"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Transforms stone into Magno stone"));
         }
         public override void SetDefaults()
         {

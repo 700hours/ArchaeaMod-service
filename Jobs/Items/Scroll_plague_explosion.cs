@@ -57,7 +57,7 @@ namespace ArchaeaMod.Jobs.Items
 				Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, nPC.width, nPC.height);
 				if (mouse.Intersects(npcBox) && Main.mouseLeft)
 				{
-					nPC.StrikeNPC(Item.damage, 0f, 0, fromNet: Main.netMode == 1);
+					ArchaeaNPC.StrikeNPC(nPC, Item.damage, 0f, 0, Main.rand.NextBool());
 					nPC.AddBuff(ModContent.BuffType<Plague>(), 300, Main.netMode == 0);
 					for (int i = 0; i < 10; i++)
 					{

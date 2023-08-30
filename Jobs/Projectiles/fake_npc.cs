@@ -90,7 +90,7 @@ namespace ArchaeaMod.Jobs.Projectiles
                 return;
             if (ArchaeaItem.Elapsed(ref ticks2, 20))
             {
-                target.StrikeNPC(Main.hardMode ? 40 : 20, 2f, target.Center.X < Projectile.Center.X ? -1 : 1, Main.rand.NextBool(), false, Main.netMode != 0);
+                ArchaeaNPC.StrikeNPC(target, Main.hardMode ? 40 : 20, 2f, target.Center.X < Projectile.Center.X ? -1 : 1, Main.rand.NextBool());
                 ticks2 = 0;
             }
         }

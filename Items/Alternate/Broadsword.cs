@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,10 +18,10 @@ namespace ArchaeaMod.Items.Alternate
     public class Broadsword : ModItem
     {
         public override string Texture => "ArchaeaMod/Items/c_Sword";
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Crystal Broadsword");
-            // Tooltip.SetDefault("Shocks weakened enemies");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Crystal Broadsword"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Shocks weakened enemies"));
         }
         public override void SetDefaults()
         {
@@ -70,7 +70,7 @@ namespace ArchaeaMod.Items.Alternate
         }
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (crit)
+            if (hit.Crit)
             {
                 for (float r = 0; r < Math.PI * 2f + Math.PI / 4f; r += (float)Math.PI / 8f)
                 {

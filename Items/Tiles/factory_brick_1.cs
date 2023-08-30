@@ -11,9 +11,9 @@ namespace ArchaeaMod.Items.Tiles
 {
     public class factory_brick_1 : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Factory Brick");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Factory Brick"));
         }
         public override void SetDefaults()
         {

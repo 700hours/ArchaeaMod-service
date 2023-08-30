@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,10 +14,10 @@ namespace ArchaeaMod.Items
     public class PossessedSpiculum : ModItem
     {
         public override string Texture => "ArchaeaMod/Gores/MagnoSpear_2";
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Possessed Spiculum");
-            // Tooltip.SetDefault("Embodied throwing arm");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Possessed Spiculum"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Embodied throwing arm"));
         }
         public override void SetDefaults()
         {

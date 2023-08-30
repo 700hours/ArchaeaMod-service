@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,10 +16,10 @@ namespace ArchaeaMod.Items.Alternate
     public class Deflector : ModItem
     {
         public override string Texture => "ArchaeaMod/Items/n_core";
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Deflector");
-            // Tooltip.SetDefault("Creates barriers from harmful attacks");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Deflector"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Creates barriers from harmful attacks"));
         }
         public override void SetDefaults()
         {

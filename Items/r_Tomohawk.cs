@@ -14,10 +14,10 @@ namespace ArchaeaMod.Items
 {
     public class r_Tomohawk : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Rusty Tomohawk");
-            // Tooltip.SetDefault("Was once shiny");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Tomohawk"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Was once shiny"));
         }
         public override void SetDefaults()
         {

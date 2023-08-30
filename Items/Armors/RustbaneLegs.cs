@@ -12,9 +12,9 @@ namespace ArchaeaMod.Items.Armors
     [AutoloadEquip(EquipType.Legs)]
     public class RustbaneLegs : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Rustbane Greaves");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rustbane Greaves"));
         }
         public override void SetDefaults()
         {

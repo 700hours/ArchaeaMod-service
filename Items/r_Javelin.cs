@@ -14,10 +14,10 @@ namespace ArchaeaMod.Items
 {
     public class r_Javelin : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Rusty Spearhead");
-            // Tooltip.SetDefault("Rusty but still useful");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Spearhead"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Rusty but still useful"));
         }
         public override void SetDefaults()
         {

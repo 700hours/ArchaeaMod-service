@@ -15,10 +15,10 @@ namespace ArchaeaMod.Items
     [CloneByReference]
     public class c_Sword : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Cinnabar Sword");
-            // Tooltip.SetDefault("Sends ground tremors");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Cinnabar Sword"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Sends ground tremors"));
         }
         public override void SetDefaults()
         {

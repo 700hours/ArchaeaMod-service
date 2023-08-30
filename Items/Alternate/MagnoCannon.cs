@@ -23,10 +23,10 @@ namespace ArchaeaMod.Items.Alternate
     {
         public override string Texture => "ArchaeaMod/Gores/Null";
         public override bool IsLoadingEnabled(Mod mod) => false;
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Magno Cannon");
-            // Tooltip.SetDefault("");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magno Cannon"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", ""));
         }
         public override void SetDefaults()
         {

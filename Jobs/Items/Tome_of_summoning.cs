@@ -23,9 +23,9 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "Tome of Summoning", 
-                "Displaces an NPC into your target. Costs 1/3 max mana.\n" +
-                "Requires line of sight with target."));
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Tome of Summoning"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Displaces an NPC into your target. Costs 1/3 max mana."));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "Requires line of sight with target."));
         }
         public override void SetDefaults()
         {

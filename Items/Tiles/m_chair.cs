@@ -11,9 +11,9 @@ namespace ArchaeaMod.Items.Tiles
 {
     public class m_chair : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Magnoliac Chair");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Chair"));
         }
         public override void SetDefaults()
         {

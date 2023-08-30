@@ -27,7 +27,7 @@ namespace ArchaeaMod.Merged.Tiles
 			Main.tileLighted[Type] = false;
             Main.tileMerge[Type][ArchaeaWorld.magnoStone] = true;
             DustType = 1;
-			ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Tiles.magno_ore>();
+			//ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Tiles.magno_ore>();
             //  UI map tile color
             LocalizedText name = CreateMapEntryName();
             // name.SetDefault("Rubidium");
@@ -47,7 +47,7 @@ namespace ArchaeaMod.Merged.Tiles
         {
             num = fail ? 1 : 3;
         }
-        public override bool Drop(int i, int j)/* tModPorter Note: Removed. Use CanDrop to decide if an item should drop. Use GetItemDrops to decide which item drops. Item drops based on placeStyle are handled automatically now, so this method might be able to be removed altogether. */
+        public override bool CanDrop(int i, int j)
         {
             float chance = Main.rand.NextFloat();
             if (Main.netMode == 2)

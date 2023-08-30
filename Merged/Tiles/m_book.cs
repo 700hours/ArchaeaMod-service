@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -27,7 +28,7 @@ namespace ArchaeaMod.Merged.Tiles
             Main.tileNoSunLight[Type] = false;
 
             //DustType = 1;
-            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ItemID.Book;
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ItemID.Book;
             //  UI map tile color
             LocalizedText name = CreateMapEntryName();
             // name.SetDefault("Books");
@@ -49,17 +50,13 @@ namespace ArchaeaMod.Merged.Tiles
             int num = Main.rand.Next(4);
             tile.TileFrameX = (short)(18 * num);
         }
-        public override bool Drop(int i, int j)/* tModPorter Note: Removed. Use CanDrop to decide if an item should drop. Use GetItemDrops to decide which item drops. Item drops based on placeStyle are handled automatically now, so this method might be able to be removed altogether. */
+        public override IEnumerable<Item> GetItemDrops(int i, int j)
         {
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX == 90)
             {
-                int t = Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 8, 8, ModContent.ItemType<Merged.Items.magno_book>(), 1, false, -1, true, false);
-                if (Main.netMode != 0)
-                    NetHandler.Send(Packet.SpawnItem, -1, -1, t, i * 16, j * 16);
-                return false;
+                yield return new Item(ModContent.ItemType<Merged.Items.magno_book>());
             }
-            else return true;
         }
         public override bool RightClick(int i, int j)
         {

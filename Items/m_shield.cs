@@ -14,10 +14,10 @@ namespace ArchaeaMod.Items
 {
     public class m_shield : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Magno Shield");
-            // Tooltip.SetDefault("");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magno Shield"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", ""));
         }
         public override void SetDefaults()
         {

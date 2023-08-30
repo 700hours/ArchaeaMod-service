@@ -12,10 +12,10 @@ namespace ArchaeaMod.Items.Armors
     [AutoloadEquip(EquipType.Body)]
     public class RustbanePlate : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Rustbane Chestplate");
-            // Tooltip.SetDefault("20% increased throwing damage");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rustbane Chestplate"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "20% increased throwing damage"));
         }
         public override void SetDefaults()
         {

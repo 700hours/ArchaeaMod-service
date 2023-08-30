@@ -11,9 +11,9 @@ namespace ArchaeaMod.Items.Tiles
 {
     public class sky_brick : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Fortress Brick");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Fortress Brick"));
         }
         public override void SetDefaults()
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,10 +18,10 @@ namespace ArchaeaMod.Items
     public class MagnoGun_3 : ModItem
     {
         public override bool IsLoadingEnabled(Mod mod) => false;
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Rubidium Gun");
-            // Tooltip.SetDefault("Lasers and phasers");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rubidium Gun"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Lasers and phasers"));
         }
         public override void SetDefaults()
         {

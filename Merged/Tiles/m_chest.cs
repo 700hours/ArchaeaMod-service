@@ -47,9 +47,10 @@ namespace ArchaeaMod.Merged.Tiles
             AddMapEntry(new Color(110, 110, 210), name);
             TileID.Sets.DisableSmartCursor[Type] = true;
             AdjTiles = new int[] { TileID.Containers };
-            ContainerName/* tModPorter Note: Removed. Override DefaultContainerName instead */.SetDefault("Magno Chest");
-            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Tiles.magno_chest>();
+            //ContainerName/* tModPorter Note: Removed. Override DefaultContainerName instead */.SetDefault("Magno Chest");
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Tiles.magno_chest>();
         }
+        public override LocalizedText DefaultContainerName(int frameX, int frameY) => CreateMapEntryName();
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
         {
@@ -61,7 +62,7 @@ namespace ArchaeaMod.Merged.Tiles
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 16, 16, ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */);
+            //Item.NewItem(Item.GetSource_NaturalSpawn(), i * 16, j * 16, 16, 16, ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */);
             Chest.DestroyChest(i, j);
         }
         public static void ChestSummon(int i, int j)

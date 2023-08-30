@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,10 +19,10 @@ namespace ArchaeaMod.Items.Alternate
     public class Staff : ModItem
     {
         public override string Texture => "ArchaeaMod/Items/c_Staff";
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Charred Staff");
-            // Tooltip.SetDefault("Casts fire wave");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Charred Staff"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Casts fire wave"));
         }
         public override void SetDefaults()
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,10 +15,10 @@ namespace ArchaeaMod.Items
     public class PossessedMusket : ModItem
     {
         public override string Texture => "ArchaeaMod/Gores/MagnoGun_3";
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Possessed Musket");
-            // Tooltip.SetDefault("Leaves haunted impressions");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Possessed Musket"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Leaves haunted impressions"));
         }
         public override void SetDefaults()
         {

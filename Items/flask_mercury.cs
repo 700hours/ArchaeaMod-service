@@ -12,10 +12,10 @@ namespace ArchaeaMod.Items
 {
     public class flask_mercury : ModItem
     {
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Flask of Mercury");
-            // Tooltip.SetDefault("Adds mercury sickness on melee hit");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Flask of Mercury"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Adds mercury sickness on melee hit"));
         }
         public override void SetDefaults()
         {
