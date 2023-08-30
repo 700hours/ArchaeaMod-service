@@ -30,8 +30,9 @@ namespace ArchaeaMod.Merged.Tiles
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
             DustType = 1;
-            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Materials.magno_bar>();
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Materials.magno_bar>();
             //  UI map tile color
+            RegisterItemDrop(ModContent.ItemType<Items.Materials.magno_bar>());
             LocalizedText name = CreateMapEntryName();
             // name.SetDefault("Rubidium Bar");
             AddMapEntry(new Color(151, 102, 65), name);

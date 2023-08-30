@@ -21,7 +21,7 @@ namespace ArchaeaMod.Merged.Tiles
             Main.tileMerge[TileID.Stone][Type] = true;
             Main.tileMerge[TileID.Sand][Type] = true;
             Main.tileMerge[TileID.Grass][Type] = true;
-            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Tiles.magno_brick>();
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Tiles.magno_brick>();
             //  UI map tile color
             AddMapEntry(new Color(119, 111, 98));
             HitSound = SoundID.Tink;

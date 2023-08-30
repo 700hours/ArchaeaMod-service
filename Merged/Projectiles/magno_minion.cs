@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -300,7 +301,7 @@ namespace ArchaeaMod.Merged.Projectiles
                                 int d = Dust.NewDust(Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), 4, 4, 6, Distance(null, k, 2f).X, Distance(null, k, 8f).Y, 0, default(Color), 2f);
                                 Main.dust[d].noGravity = true;
                             }
-                            Main.npc[npcTarget].StrikeNPC((int)(damage * player.GetDamage(DamageClass.Summon).Additive), 4f, 0);
+                            ArchaeaNPC.StrikeNPC(Main.npc[npcTarget], (int)(damage * player.GetDamage(DamageClass.Summon).Additive), 4f, 0, false);
                             int Proj2 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<magno_minionexplosion>(), 0, 0f, Projectile.owner, 0f, 0f);
                             Main.projectile[Proj2].position = Projectile.position - new Vector2(15, 15);
                             Main.projectile[Proj2].minion = true;
@@ -374,7 +375,7 @@ namespace ArchaeaMod.Merged.Projectiles
                                 int d = Dust.NewDust(Projectile.position + new Vector2(Projectile.width / 2, Projectile.height / 2), 4, 4, 6, Distance(null, k, 2f).X, Distance(null, k, 8f).Y, 0, default(Color), 2f);
                                 Main.dust[d].noGravity = true;
                             }
-                            Main.npc[npcTarget].StrikeNPC(damage, 4f, 0);
+                            ArchaeaNPC.StrikeNPC(Main.npc[npcTarget], damage, 4f, 0, false);
                             int Proj2 = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<magno_minionexplosion>(), 0, 0f, Projectile.owner, 0f, 0f);
                             Main.projectile[Proj2].position = Projectile.position - new Vector2(15, 15);
                             Main.projectile[Proj2].minion = true;

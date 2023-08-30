@@ -203,7 +203,7 @@ namespace ArchaeaMod.Structure
                             Main.tile[i, j].WallType = WallID.HellstoneBrickUnsafe;
                             if (j < Bottom - 4)
                             {
-                                WorldGen.PlaceLiquid(i, j, LiquidID.Water, 255);
+                                WorldGen.PlaceLiquid(i, j, (byte)LiquidID.Water, 255);
                             }
                             goto default;
                         default:

@@ -128,7 +128,7 @@ namespace ArchaeaMod.Items.Alternate
             foreach (NPC n in npc)
             { 
                 int direction = n.Center.X < player.Center.X ? -1 : 1;
-                n.StrikeNPC(40, 4f, direction, false, false, Main.netMode != 0);
+                ArchaeaNPC.StrikeNPC(n, 40, 4f, direction, false);
                 n.velocity.Y += 5f;
                 n.velocity.X += 5f * direction;
             }

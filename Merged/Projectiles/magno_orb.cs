@@ -10,6 +10,7 @@ using Terraria.ModLoader;
 
 using ArchaeaMod.Items;
 using ArchaeaMod.Projectiles;
+using ArchaeaMod.NPCs;
 
 namespace ArchaeaMod.Merged.Projectiles
 {
@@ -160,7 +161,7 @@ namespace ArchaeaMod.Merged.Projectiles
             {
                 if (npc.active && !npc.friendly && npc.Distance(Projectile.Center) < num)
                 {
-                    npc.StrikeNPC(Projectile.damage, Projectile.knockBack, npc.position.X < Projectile.position.X ? -1 : 1, Main.rand.NextBool());
+                    ArchaeaNPC.StrikeNPC(npc, Projectile.damage, Projectile.knockBack, npc.position.X < Projectile.position.X ? -1 : 1, Main.rand.NextBool());
                 }
             }
             //for (float k = 0; k < MathHelper.ToRadians(360); k += 0.017f * 9)

@@ -121,13 +121,13 @@ namespace ArchaeaMod.NPCs
 
         public override void OnHitByItem(Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
-            float force = NPC.knockBackResist * knockback;
+            float force = NPC.knockBackResist * hit.Knockback;
             velX = player.Center.X > NPC.Center.X ? force * -1 : force;
             SyncNPC();
         }
         public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
-            float force = NPC.knockBackResist * knockback;
+            float force = NPC.knockBackResist * hit.Knockback;
             velX = projectile.position.X > NPC.Center.X ? force * -1 : force;
             SyncNPC();
         }

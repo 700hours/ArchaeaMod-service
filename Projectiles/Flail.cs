@@ -12,6 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 using ArchaeaMod.Items;
+using ArchaeaMod.NPCs;
 
 namespace ArchaeaMod.Projectiles
 {
@@ -77,7 +78,7 @@ namespace ArchaeaMod.Projectiles
         private float distance;
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.StrikeNPC(Projectile.damage, Projectile.knockBack, target.position.X < Projectile.position.X ? -1 : 1, Main.rand.NextBool());
+            ArchaeaNPC.StrikeNPC(target, Projectile.damage, Projectile.knockBack, target.position.X < Projectile.position.X ? -1 : 1, Main.rand.NextBool());
         }
         public override bool? CanHitNPC(NPC target)
         {

@@ -44,13 +44,15 @@ namespace ArchaeaMod.Tiles
             TileObjectData.addAlternate(0);
             TileObjectData.addTile(Type);
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
-            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Tiles.m_door>();
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Tiles.m_door>();
+            RegisterItemDrop(ModContent.ItemType<Items.Tiles.m_door>());
             LocalizedText name = CreateMapEntryName();
             // name.SetDefault("Door");
             AddMapEntry(Color.DarkRed, name);
             TileID.Sets.DisableSmartCursor[Type] = true;
             AdjTiles = new int[] { TileID.ClosedDoor };
-            OpenDoorID/* tModPorter Note: Removed. Use TileID.Sets.OpenDoorID instead */ = ModContent.TileType<m_dooropen>();
+            TileID.Sets.OpenDoorID[Type] = ModContent.TileType<m_dooropen>();
+            //OpenDoorID/* tModPorter Note: Removed. Use TileID.Sets.OpenDoorID instead */ = ModContent.TileType<m_dooropen>();
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)

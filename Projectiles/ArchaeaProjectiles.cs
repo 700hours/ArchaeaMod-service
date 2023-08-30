@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -42,7 +43,7 @@ namespace ArchaeaMod.Projectiles
                 {
                     if (npc.active && !npc.friendly && npc.Distance(projectile.Center) < num)
                     {
-                        npc.StrikeNPC(damage, knockBack, npc.position.X < projectile.position.X ? -1 : 1, Main.rand.NextBool());
+                        ArchaeaNPC.StrikeNPC(npc, damage, knockBack, npc.position.X < projectile.position.X ? -1 : 1, Main.rand.NextBool());
                         NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, npc.whoAmI, damage, knockBack, 0, 0);
                         if (debuff)
                         {

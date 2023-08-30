@@ -47,7 +47,7 @@ namespace ArchaeaMod.Tiles
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
-            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Tiles.m_chair>();
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Tiles.m_chair>();
             LocalizedText name = CreateMapEntryName();
             // name.SetDefault("Chair");
             AddMapEntry(new Color(150, 50, 50), name);

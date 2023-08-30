@@ -11,7 +11,8 @@ namespace ArchaeaMod.Walls
         {
             Main.wallHouse[Type] = true;
             TileID.Sets.HousingWalls[Type] = true;
-            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Walls.sky_brickwall>();
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Walls.sky_brickwall>();
+            RegisterItemDrop(ModContent.ItemType<Items.Walls.sky_brickwall>());
             AddMapEntry(new Color(80, 10, 10));
         }
     }

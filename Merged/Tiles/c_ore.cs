@@ -25,8 +25,9 @@ namespace ArchaeaMod.Merged.Tiles
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = false;
             DustType = 1;
-			ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Tiles.cinnabar_ore>();
+			//ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Tiles.cinnabar_ore>();
             //  UI map tile color
+            RegisterItemDrop(ModContent.ItemType<Merged.Items.Tiles.cinnabar_ore>());
             LocalizedText name = CreateMapEntryName();
             // name.SetDefault("Cinnabar Ore");
             AddMapEntry(new Color(201, 152, 115), name);

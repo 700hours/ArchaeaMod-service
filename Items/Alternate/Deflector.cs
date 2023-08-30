@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -232,7 +232,7 @@ namespace ArchaeaMod.Items.Alternate
                                 float angle = NPCs.ArchaeaNPC.AngleTo(proj.Center, n.Center);
                                 Dust dust = Dust.NewDustDirect(proj.Center + NPCs.ArchaeaNPC.AngleToSpeed(angle, r), 1, 1, 6);
                             }
-                            n.StrikeNPC(damage, 0f, 0);
+                            ArchaeaNPC.StrikeNPC(n, damage, 0f, 0, false);
                             break;
                         }
                     }
@@ -248,7 +248,7 @@ namespace ArchaeaMod.Items.Alternate
                 Dust dust = Dust.NewDustDirect(itemHitbox + NPCs.ArchaeaNPC.AngleToSpeed(angle, d), 1, 1, dustID);
                 dust.noGravity = true;
             }
-            target.StrikeNPC(damage, 0f, 0);
+            ArchaeaNPC.StrikeNPC(target, damage, 0f, 0, false);
         }
 
         public NPC[] GetTargets(float range)

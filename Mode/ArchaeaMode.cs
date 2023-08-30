@@ -615,18 +615,20 @@ namespace ArchaeaMod.Mode
                 npc.netUpdate = true;
             }
         }
+
+        //  TODO: check scaling
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref NPC.HitModifiers modifiers)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                damage = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, item.DamageType);
+                modifiers.FinalDamage *= ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, item.damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, item.DamageType);
             }
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                damage = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, projectile.DamageType);
+                modifiers.FinalDamage *= ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, projectile.damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, projectile.DamageType);
             }
         }
         public override void OnKill(NPC npc)

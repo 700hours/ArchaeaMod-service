@@ -107,7 +107,7 @@ namespace ArchaeaMod.Progression.Global
             lastHitOwner = player.whoAmI;
             if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_DoubleKb, ClassID.Melee, player.whoAmI))
             {
-                knockback *= 2f;
+                hit.Knockback *= 2f;
             }
             if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_Stun, ClassID.Melee, player.whoAmI))
             {
@@ -309,28 +309,28 @@ namespace ArchaeaMod.Progression.Global
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_ThrowBoulder, ClassID.Summoner, player.whoAmI))
                 {
-                    Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.Boulder, Main.hardMode ? 20 : 10, 5f, player.whoAmI);
+                    Projectile.NewProjectile(item.GetSource_FromThis(), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.Boulder, Main.hardMode ? 20 : 10, 5f, player.whoAmI);
                 }
             }
             if (notTile && Main.rand.NextFloat() < 0.01f)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_ThrowBones, ClassID.Summoner, player.whoAmI))
                 {
-                    Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.BoneGloveProj, Main.hardMode ? 25 : 12, 3f, player.whoAmI);
+                    Projectile.NewProjectile(item.GetSource_FromThis(), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.BoneGloveProj, Main.hardMode ? 25 : 12, 3f, player.whoAmI);
                 }
             }
             if (notTile && Main.rand.NextFloat() < 0.01f)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_ThrowStar, ClassID.Summoner, player.whoAmI))
                 {
-                    Projectile.NewProjectile(item.GetSource_ItemUse(item), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.StarCannonStar, Main.hardMode ? 30 : 15, 2f, player.whoAmI);
+                    Projectile.NewProjectile(item.GetSource_FromThis(), player.position, new Vector2(2f, 3f) * NPCs.ArchaeaNPC.AngleToSpeed(Main.MouseWorld.AngleFrom(player.Center), 4f), ProjectileID.StarCannonStar, Main.hardMode ? 30 : 15, 2f, player.whoAmI);
                 }
             }
             if (notTile && Main.rand.NextFloat() < 0.5f)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.ALL_FallingStarAtk, ClassID.All, player.whoAmI))
                 {
-                    Projectile.NewProjectile(item.GetSource_ItemUse(item), Main.MouseWorld - new Vector2(0, Main.screenHeight * 2), new Vector2(Main.rand.NextFloat() - 0.5f * 2f, 8f), ProjectileID.Starfury, Main.hardMode ? 60 : 30, 2f, player.whoAmI);
+                    Projectile.NewProjectile(item.GetSource_FromThis(), Main.MouseWorld - new Vector2(0, Main.screenHeight * 2), new Vector2(Main.rand.NextFloat() - 0.5f * 2f, 8f), ProjectileID.Starfury, Main.hardMode ? 60 : 30, 2f, player.whoAmI);
                 }
             }
             //  Assigning trait values
@@ -384,7 +384,7 @@ namespace ArchaeaMod.Progression.Global
             {
                 if (Main.tile[i, j].TileFrameX == 918 && Main.tile[i, j].TileFrameY == 0)
                 {
-                    if (Main.LocalPlayer.IsTileTypeInInteractionRange(type))
+                    if (Main.LocalPlayer.IsTileTypeInInteractionRange(type, TileReachCheckSettings.Simple))
                     { 
                         ArchaeaPlayer.SetClassTrait(TraitID.SUMMONER_ThrowBones, ClassID.Summoner, true, Main.LocalPlayer.whoAmI);
                     }
@@ -435,7 +435,7 @@ namespace ArchaeaMod.Progression.Global
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, projectile.owner))
                 {
-                    damage = (int)(damage * 1.2f);
+                    modifiers.FinalDamage *= 1.2f;
                 }
             }
         }

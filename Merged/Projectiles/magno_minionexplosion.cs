@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -50,7 +51,7 @@ namespace ArchaeaMod.Merged.Projectiles
         {
             if (nativeHitNPC)
             {
-                target.StrikeNPC(damage, knockback, Projectile.Center.X < target.Center.X ? 1 : -1, crit);
+                ArchaeaNPC.StrikeNPC(target, damageDone, hit.Knockback, Projectile.Center.X < target.Center.X ? 1 : -1, hit.Crit);
             }
         }
 

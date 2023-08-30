@@ -1,4 +1,5 @@
 ﻿using System;
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -115,7 +116,7 @@ namespace ArchaeaMod.Merged.Projectiles
                     else direction = 1;
                     if(Projectile.Hitbox.Intersects(nme.Hitbox))
                     {
-                        nme.StrikeNPC(Projectile.damage, Projectile.knockBack, direction, false, false, false);
+                        ArchaeaNPC.StrikeNPC(nme, Projectile.damage, Projectile.knockBack, direction, false);
                         Projectile.Kill();
                     }
 

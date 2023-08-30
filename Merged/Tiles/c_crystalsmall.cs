@@ -38,7 +38,8 @@ namespace ArchaeaMod.Merged.Tiles
             TileObjectData.newAlternate.AnchorRight = new AnchorData(AnchorType.SolidSide, 1, 0);
             TileObjectData.addAlternate(2);
             TileObjectData.addTile(Type);
-            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>();
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>();
+            RegisterItemDrop(ModContent.ItemType<Merged.Items.Materials.cinnabar_crystal>());
             LocalizedText name = CreateMapEntryName();
             // name.SetDefault("Cinnabar Crystal");
             AddMapEntry(new Color(210, 110, 110), name);

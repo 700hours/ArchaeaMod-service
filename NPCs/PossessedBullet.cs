@@ -49,7 +49,7 @@ namespace ArchaeaMod.NPCs
                 Main.dust[dust].noGravity = true;
                 if ((int)Main.time % 60 == 0)
                 {
-                    target.StrikeNPC((int)(damage * 10 * Main.player[owner].GetDamage<RangedDamageClass>().Multiplicative), 0f, 0, false, true);
+                    ArchaeaNPC.StrikeNPC(target, (int)(damage * 10 * Main.player[owner].GetDamage<RangedDamageClass>().Multiplicative), 0f, 0, false);
                     Dust.NewDust(v2, 3, 3, DustID.Smoke, 0, -3f, 0, default, 2.5f);
                 }
             }

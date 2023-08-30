@@ -353,7 +353,7 @@ namespace ArchaeaMod.GenLegacy
             int y = (int)position.Y;
             if (Inbounds(x, y))
             { 
-                WorldGen.PlaceLiquid(x, y, LiquidID.Water, 60);
+                WorldGen.PlaceLiquid(x, y, (byte)LiquidID.Water, 60);
             }
         }
         public void CheckComplete(int divisor = 2)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ArchaeaMod.Merged.Projectiles;
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -73,7 +74,7 @@ namespace ArchaeaMod.Items.Armors
                         NPC npc = Main.npc[target];
                         if (npc.Distance(Main.projectile[Proj2].Center) < Main.projectile[Proj2].width)
                         { 
-                            npc.StrikeNPC(damage, 4f, Main.projectile[Proj2].Center.X < npc.Center.X ? 1 : -1);
+                            ArchaeaNPC.StrikeNPC(npc, damage, 4f, Main.projectile[Proj2].Center.X < npc.Center.X ? 1 : -1, false);
                             int type = Projectile.NewProjectile(Projectile.GetSource_None(), npc.Center, Vector2.Zero, ModContent.ProjectileType<Merged.Projectiles.magno_minion>(), 5, 0f, player.whoAmI, 0f, npc.whoAmI);
                             Main.projectile[type].localAI[1] = -100f;
                         }

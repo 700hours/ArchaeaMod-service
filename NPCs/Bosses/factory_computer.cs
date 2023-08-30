@@ -235,7 +235,7 @@ namespace ArchaeaMod.NPCs.Bosses
             Dust.NewDust(Projectile.position, 1, 1, DustID.SilverFlame, 0, 0, Scale: 2f);
             if (Projectile.wet || Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height))
             {
-                WorldGen.PlaceLiquid((int)Projectile.position.X / 16, (int)Projectile.position.Y / 16 - 1, LiquidID.Water, 255);
+                WorldGen.PlaceLiquid((int)Projectile.position.X / 16, (int)Projectile.position.Y / 16 - 1, (byte)LiquidID.Water, 255);
                 Projectile.active = false;
             }
             Lighting.AddLight(Projectile.position, TorchID.White);

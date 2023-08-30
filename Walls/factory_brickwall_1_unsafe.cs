@@ -12,7 +12,8 @@ namespace ArchaeaMod.Walls
         public override void SetStaticDefaults()
         {
             Main.wallHouse[Type] = false;
-            ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Walls.factory_brickwall_1>();
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<Items.Walls.factory_brickwall_1>();
+            RegisterItemDrop(ModContent.ItemType<Items.Walls.factory_brickwall_1>());
             AddMapEntry(new Color(80, 10, 10));
         }
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

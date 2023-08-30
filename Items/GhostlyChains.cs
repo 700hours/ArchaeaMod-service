@@ -50,7 +50,7 @@ namespace ArchaeaMod.Items
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    Projectile.NewProjectile(Item.GetSource_ItemUse(Item), player.Center + new Vector2(ArchaeaItem.StartThrowX(player), 0), NPCs.ArchaeaNPC.AngleToSpeed(player.Center.AngleTo(Main.MouseWorld), Item.shootSpeed), ModContent.ProjectileType<Projectiles.ghostly_chains>(), 0, 0f, player.whoAmI);
+                    Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center + new Vector2(ArchaeaItem.StartThrowX(player), 0), NPCs.ArchaeaNPC.AngleToSpeed(player.Center.AngleTo(Main.MouseWorld), Item.shootSpeed), ModContent.ProjectileType<Projectiles.ghostly_chains>(), 0, 0f, player.whoAmI);
                 }
                 ticks = 0;
                 return true;

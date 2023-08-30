@@ -82,11 +82,11 @@ namespace ArchaeaMod.NPCs
         }
         public override void OnHitByItem(Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
-            knockback = 0f;
+            hit.Knockback = 0f;
         }
         public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
-            knockback = 0f;
+            hit.Knockback = 0f;
         }
         public override void AI()
         {

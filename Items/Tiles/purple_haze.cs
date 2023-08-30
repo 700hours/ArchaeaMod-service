@@ -9,6 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 using ArchaeaMod.NPCs.Bosses;
+using System.Collections.Generic;
 
 namespace ArchaeaMod.Items.Tiles
 {

@@ -31,7 +31,7 @@ namespace ArchaeaMod.Merged.Items
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             bool mode = ModContent.GetInstance<Mode.ModeToggle>().archaeaMode;
-            player.statDefense = (int)(player.statDefense * (mode ? 2 : 1.1f));
+            player.statDefense *= mode ? 2 : 1.1f;
             player.moveSpeed *= 1.3f;
             Player.jumpHeight = (int)(Player.jumpHeight * 0.1f);;
             Player.jumpSpeed *= 0.5f;

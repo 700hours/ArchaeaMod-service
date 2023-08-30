@@ -7,6 +7,8 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using ArchaeaMod.NPCs.Bosses;
+using System.Collections.Generic;
+
 namespace ArchaeaMod.Items
 {
     public class n_core : ModItem

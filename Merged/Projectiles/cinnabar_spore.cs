@@ -1,4 +1,5 @@
 ﻿using System;
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -95,7 +96,7 @@ namespace ArchaeaMod.Merged.Projectiles
                     {
                         if (ticks % 60 == 0)
                         {
-                            n.StrikeNPC(Projectile.damage, Projectile.knockBack, direction, false, false, false);
+                            ArchaeaNPC.StrikeNPC(n, Projectile.damage, Projectile.knockBack, direction, false);
                         }
                     }
                 }

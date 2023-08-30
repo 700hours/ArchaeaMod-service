@@ -273,7 +273,7 @@ namespace ArchaeaMod
             if (Inbounds(x, y))
             {
                 var tile = Main.tile[x, y];
-                WorldGen.PlaceLiquid(x, y, LiquidID.Water, 60);
+                WorldGen.PlaceLiquid(x, y, (byte)LiquidID.Water, 60);
             }
         }
         public void CheckComplete(int divisor = 2)

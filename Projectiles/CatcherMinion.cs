@@ -13,6 +13,7 @@ using Terraria.ModLoader;
 
 using ArchaeaMod.Items;
 using ArchaeaMod.Merged.Projectiles;
+using ArchaeaMod.NPCs;
 
 namespace ArchaeaMod.Projectiles
 {
@@ -119,7 +120,7 @@ namespace ArchaeaMod.Projectiles
                         { 
                             if ((Main.npc[npcTarget].lifeMax > 50 && (Main.expertMode || Main.hardMode)) || (Main.npc[npcTarget].lifeMax > 22 && !Main.expertMode && !Main.hardMode))
                             { 
-                                Main.npc[npcTarget].StrikeNPC((int)(Projectile.ai[0] * Main.player[Projectile.owner].GetDamage(DamageClass.Summon).Additive), 4f, 0);
+                                ArchaeaNPC.StrikeNPC(Main.npc[npcTarget], (int)(Projectile.ai[0] * Main.player[Projectile.owner].GetDamage(DamageClass.Summon).Additive), 4f, 0, false);
                                 Projectile.netUpdate = true;
                             }
                         }
