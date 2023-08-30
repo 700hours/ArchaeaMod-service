@@ -41,19 +41,15 @@ namespace ArchaeaMod.Jobs.Items
         }
         public override bool? UseItem(Player player)
         {
-            if (player.whoAmI == Main.myPlayer)
+            for (int i = 0; i < 20; i++)
             {
-                for (int i = 0; i < 20; i++)
-                {
-                    int index = Dust.NewDust(player.Center, 1, 1, DustID.GreenMoss, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 1.2f);
-                    Main.dust[index].noGravity = false;
-                    Main.dust[index].noLight = false;
-                }
-                player.AddBuff(ModContent.BuffType<Buffs.Zombie>(), Buffs.Zombie.MaxTime, Main.netMode == 1);
-                SoundEngine.PlaySound(SoundID.ZombieMoan, player.Center);
-                return true;
+                int index = Dust.NewDust(player.Center, 1, 1, DustID.GreenMoss, ArchaeaNPC.RandAngle() * 4f, ArchaeaNPC.RandAngle() * 4f, 0, default, 1.2f);
+                Main.dust[index].noGravity = false;
+                Main.dust[index].noLight = false;
             }
-            return false;
+            player.AddBuff(ModContent.BuffType<Buffs.Zombie>(), Buffs.Zombie.MaxTime, Main.netMode == 1);
+            SoundEngine.PlaySound(SoundID.ZombieMoan, player.Center);
+            return true;
 		}
         public override void AddRecipes()
         {

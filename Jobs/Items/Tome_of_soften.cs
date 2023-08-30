@@ -1,3 +1,4 @@
+using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -36,7 +37,7 @@ namespace ArchaeaMod.Jobs.Items
             Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y);
 			Rectangle mouse = new Rectangle((int)(mousev.X - 16f), (int)(mousev.Y - 16f), 32, 32);
 			NPC[] npc = Main.npc;
-			for(int m = 0; m < npc.Length-1; m++)
+			for(int m = 0; m < npc.Length; m++)
 			{
 				NPC nPC = npc[m];
 				if(!nPC.active) continue;
@@ -65,8 +66,7 @@ namespace ArchaeaMod.Jobs.Items
 					    Main.dust[a].noGravity = true;
                     }
                     SoundEngine.PlaySound(SoundID.Item8, mousev);
-                    nPC.AddBuff(ModContent.BuffType<Buffs.Soft>(), Buffs.Soft.MaxTime, Main.netMode == 0);
-					nPC.netUpdate = true;
+                    ArchaeaNPC.AddBuffNetNPC(nPC, ModContent.BuffType<Buffs.Soft>(), Buffs.Soft.MaxTime);
 					return true;
 				}
 			}

@@ -37,21 +37,17 @@ namespace ArchaeaMod.Jobs.Items
             Item.rare = 3;
         }
         public override bool? UseItem(Player player)
-        {                  
-            if (player.whoAmI == Main.myPlayer)
+        {     
+            var modPlayer = player.GetModPlayer<ArchaeaPlayer>();
+            if (!modPlayer.fireStorm)
             { 
-                var modPlayer = player.GetModPlayer<ArchaeaPlayer>();
-                if (!modPlayer.fireStorm)
-                { 
-                    modPlayer.fireStorm = true;
-                    SoundEngine.PlaySound(SoundID.Item8, player.Center);
-                    if (Main.netMode == 1)
-                    {
-                        NetHandler.Send(Packet.CastFireStorm, i: player.whoAmI, b: true);
-                    }
-                    return true;
+                modPlayer.fireStorm = true;
+                SoundEngine.PlaySound(SoundID.Item8, player.Center);
+                if (Main.netMode == 1)
+                {
+                    NetHandler.Send(Packet.CastFireStorm, i: player.whoAmI, b: true);
                 }
-                else return false;
+                return true;
             }
             return false;
 		}

@@ -23,6 +23,10 @@ namespace ArchaeaMod.Jobs.Buffs
         public override void Update(NPC npc, ref int buffIndex)
         {
             float timeLeft = npc.buffTime[buffIndex];
+            if (timeLeft == MaxTime - 1)
+            {
+                ArchaeaItem.DustCircle(npc.Center, 5f, 59);
+            }
             if (npc.oldPosition != Vector2.Zero)
             { 
                 npc.velocity = Vector2.Zero;

@@ -64,12 +64,10 @@ namespace ArchaeaMod.Jobs.Tiles
         Projectile elevator;
         public override void NearbyEffects(int i, int j, bool closer)
         {
-            int x = i * 16;
-            int y = j * 16;
-            if (elevator == default(Projectile) || !elevator.active)
+            if (elevator == default(Projectile) || !elevator.active || !init)
             {
-                Dust.NewDust(new Vector2(x + 24, y + 80 - 64), 24, 80, 31, Scale: 1.4f);
-                elevator = Projectile.NewProjectileDirect(Projectile.GetSource_None(), new Vector2(x + 24, y + 80 - 64), Vector2.Zero, ModContent.ProjectileType<Projectiles.Elevator>(), 0, 0);
+                PlaceElevator(i * 16, j * 16);
+                init = true;
             }
         }
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
@@ -88,12 +86,19 @@ namespace ArchaeaMod.Jobs.Tiles
                 }
             }
         }
+        public void PlaceElevator(int x, int y)
+        {
+            Dust.NewDust(new Vector2(x + 24, y + 80 - 64), 24, 80, 31, Scale: 1.4f);
+            elevator = Projectile.NewProjectileDirect(Projectile.GetSource_None(), new Vector2(x + 24, y + 80 - 64), Vector2.Zero, ModContent.ProjectileType<Projectiles.Elevator>(), 0, 0);
+        }
         public override void PlaceInWorld(int i, int j, Item item)
         {
+            PlaceElevator(i * 16, j * 16);
             ModContent.GetInstance<ArchaeaWorld>().elevatorCount++;
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
+            elevator.active = false;
             Item.NewItem(Item.GetSource_None(), i * 16, j * 16, 64, 64, ModContent.ItemType<Jobs.Items.Elevator>());
             ModContent.GetInstance<ArchaeaWorld>().elevatorCount--;
         }

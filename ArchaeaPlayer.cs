@@ -298,7 +298,7 @@ namespace ArchaeaMod
             modPlayer.extraLife = extraLife;
             modPlayer.dungeonLocatorTicks = dungeonLocatorTicks;
             modPlayer.locatorDirection = locatorDirection;
-            modPlayer.fireStorm = fireStorm;
+            //modPlayer.fireStorm = fireStorm;
             //  End
             clientClone = modPlayer;
         }
@@ -338,7 +338,7 @@ namespace ArchaeaMod
             extraLife = modPlayer.extraLife;
             dungeonLocatorTicks = modPlayer.dungeonLocatorTicks;
             locatorDirection = modPlayer.locatorDirection;
-            fireStorm = modPlayer.fireStorm;
+            //fireStorm = modPlayer.fireStorm;
             //  End
         }
 
@@ -1679,7 +1679,6 @@ namespace ArchaeaMod
                 Main.projectile[index].netUpdate = true;
             }
         }
-
         public bool ClassItemCheck()
         {
             Item item = Player.inventory[Player.selectedItem];
@@ -1859,6 +1858,7 @@ namespace ArchaeaMod
         {
             get { return Main.spriteBatch; }
         }
+        int t = 180;
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
             //  Need a little bit of engineering to resize
@@ -1897,7 +1897,7 @@ namespace ArchaeaMod
             {
                 var c = ArchaeaWorld.playerClass.FirstOrDefault(t => t.playerUID == playerUID);
                 if (c != default)
-                { 
+                {
                     classChoice = c.classChoice;
                 }
                 if (OptionsUI.MainOptions(drawInfo.drawPlayer, setInitMode))
@@ -1906,13 +1906,13 @@ namespace ArchaeaMod
             if (drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI)
             {
                 if (!Main.dedServ && Effects.Barrier.barrier != null)
-                { 
+                {
                     for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
                         Effects.Barrier.barrier[i]?.Draw(sb, Player);
                 }
             }
             if (drawInfo.drawPlayer.active)
-            { 
+            {
                 ModeUI.DrawTextUI(sb, Main.screenHeight - 200, "Set hotkeys in the Control settings.", ref enterWorldTicks, 1800);
             }
             if (dungeonLocatorTicks > 0 && dungeonLocatorTicks < 900)
@@ -1920,10 +1920,13 @@ namespace ArchaeaMod
                 string text = locatorDirection == -1 ? "Dungeon left." : "Dungeon right.";
                 ModeUI.DrawTextUI(sb, Main.screenHeight - 200, text, ref locatorDirection, 900);
             }
-            if (ArchaeaMain.extraLife.Current)
+            if (ArchaeaMain.extraLife.JustPressed)
             {
-                int t = 3;
-                ModeUI.DrawTextUI(sb, Main.screenHeight - 200, $"Extra lives: {extraLife}", ref t, 3);
+                t = 0;
+            }
+            if (t >= 0 && t <= 300)
+            {
+                ModeUI.DrawTextUI(sb, Main.screenHeight - 200, $"Extra lives: {extraLife}", ref t, 300);
             }
             if (debugMenu)
                 DebugMenu();

@@ -28,7 +28,7 @@ namespace ArchaeaMod.Jobs.Buffs
         public override void Update(NPC npc, ref int buffIndex)
         {
             float timeLeft = npc.buffTime[buffIndex];
-            if (timeLeft == MaxTime)
+            if (timeLeft == MaxTime - 1)
             {
                 oldScale = npc.scale;
                 int tries = 0;

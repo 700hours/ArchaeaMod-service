@@ -37,28 +37,23 @@ namespace ArchaeaMod.Jobs.Items
         }
         public override bool CanUseItem(Player player)
         {
-            if (player.whoAmI == Main.myPlayer)
+            var modPlayer = player.GetModPlayer<ArchaeaPlayer>();
+            if (modPlayer.extraLife >= 3)
             {
-                var modPlayer = player.GetModPlayer<ArchaeaPlayer>();
-                if (modPlayer.extraLife >= 3)
-                {
-                    return false;
-                }
+                return false;
             }
-            return false;
+            return true;
         }
         public override bool? UseItem(Player player)
         {
-            if (player.whoAmI == Main.myPlayer)
+            var modPlayer = player.GetModPlayer<ArchaeaPlayer>();
+            if (modPlayer.extraLife < 3) modPlayer.extraLife++;
+            if (modPlayer.extraLife == 3)
             {
-                var modPlayer = player.GetModPlayer<ArchaeaPlayer>();
-                if (modPlayer.extraLife < 3) modPlayer.extraLife++;
-                if (modPlayer.extraLife == 3)
-                {
-                    return false;
-                }
+                return false;
             }
-            return null;
+            FakeUseLifeCrystal(player);
+            return true;
         }
         public bool FakeUseLifeCrystal(Player Player)
         {
