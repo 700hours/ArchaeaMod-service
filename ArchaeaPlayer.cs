@@ -1096,7 +1096,6 @@ namespace ArchaeaMod
                 return;
             for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
                 Effects.Barrier.barrier[i]?.Update(Player);
-            return;
             #region debug
             if (setModeStats)
             {
@@ -1967,7 +1966,6 @@ namespace ArchaeaMod
         private List<ItemDebug> debugList = new List<ItemDebug>();
         private void DebugMenu()
         {
-            return;
             if (!flag2)
             {
                 debugList.Clear();
@@ -2038,7 +2036,6 @@ namespace ArchaeaMod
         }
         private void SpawnMenu()
         {
-            return;
             int x = 80;
             int y = 180;
             int width = 300;

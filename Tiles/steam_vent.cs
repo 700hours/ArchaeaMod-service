@@ -81,20 +81,13 @@ namespace ArchaeaMod.Tiles
                 }
             }
             else goto EFFECT;
+            return;
             EFFECT:
             {
-                if (oldNpc == npc)
+                if (ticks++ > 120 - 1)
                 {
                     ticks = 0;
                     return;
-                }
-                if (ticks++ > 120 - 1)
-                {
-                    if (ArchaeaItem.Elapsed(ref ticks, 240))
-                    {
-                        ticks = 0;
-                        return;
-                    }
                 }
                 if (ArchaeaItem.Elapsed(ticks, 120))
                 {
