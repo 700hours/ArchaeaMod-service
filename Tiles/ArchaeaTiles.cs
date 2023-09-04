@@ -14,6 +14,37 @@ namespace ArchaeaMod.Tiles
 {
     public class ArchaeaTiles : GlobalTile
     {
+        public static Tile GetSafeTile(float x, float y)
+        {
+            int i = (int)x / 16;
+            int j = (int)y / 16;
+            if (i <= 0) i = 50;
+            if (i >= Main.maxTilesX) i = Main.maxTilesX - 50;
+            if (j <= 0) i = 50;
+            if (j >= Main.maxTilesY) i = Main.maxTilesY - 50;
+            return Main.tile[i, j];
+        }
+        public static Tile GetSafeTile(Vector2 position)
+        {
+            int i = (int)position.X / 16;
+            int j = (int)position.Y / 16;
+            if (i <= 0) i = 50;
+            if (i >= Main.maxTilesX) i = Main.maxTilesX - 50;
+            if (j <= 0) i = 50;
+            if (j >= Main.maxTilesY) i = Main.maxTilesY - 50;
+            return Main.tile[i, j];
+        }
+        public static void GetCeilingTile(Vector2 position, out Tile ceiling, out Tile underneath)
+        {
+            int i = (int)position.X / 16;
+            int j = (int)position.Y / 16;
+            if (i <= 0) i = 50;
+            if (i >= Main.maxTilesX) i = Main.maxTilesX - 50;
+            if (j <= 0) i = 50;
+            if (j >= Main.maxTilesY) i = Main.maxTilesY - 50;
+            ceiling = Main.tile[i, j];
+            underneath = Main.tile[i, j + 1];
+        }
         public override bool CanExplode(int i, int j, int type)
         {
             for (int k = -1; k <= 1; k++)

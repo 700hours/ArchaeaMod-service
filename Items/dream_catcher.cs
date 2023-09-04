@@ -16,10 +16,10 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Dream Catcher"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Holds the stories of bygone times\n"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "Gives a buff during night\n"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip2", "A ward against the haze"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Dream Catcher"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Holds the stories of bygone times\n"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip1", "Gives a buff during night\n"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip2", "A ward against the haze"));
         }
         public override void SetDefaults()
         {

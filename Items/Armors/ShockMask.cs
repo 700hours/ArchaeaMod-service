@@ -16,10 +16,10 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Shock Mask"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "// drawHair = true"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip2", "// drawAltHair = false"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Shock Mask"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "ArmorIDs.Head.Sets.DrawHatHair[Item.headSlot] = true"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip1", "// drawHair = true"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip2", "// drawAltHair = false"));
         }
         public override void SetDefaults()
         {

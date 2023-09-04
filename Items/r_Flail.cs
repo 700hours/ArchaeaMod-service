@@ -20,8 +20,8 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Thrasher"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Scatters rust"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Thrasher"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Scatters rust"));
         }
         public override void SetDefaults()
         {

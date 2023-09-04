@@ -17,8 +17,8 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Cinnabar Sword"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Sends ground tremors"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Cinnabar Sword"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Sends ground tremors"));
         }
         public override void SetDefaults()
         {

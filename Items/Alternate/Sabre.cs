@@ -20,8 +20,8 @@ namespace ArchaeaMod.Items.Alternate
         public override string Texture => "ArchaeaMod/Merged/Items/cinnabar_dagger";
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Dagger"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Forged from the materials of magno"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Dagger"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Forged from the materials of magno"));
         }
         public override void SetDefaults()
         {

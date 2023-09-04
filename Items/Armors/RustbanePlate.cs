@@ -14,8 +14,8 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rustbane Chestplate"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "20% increased throwing damage"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Rustbane Chestplate"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "20% increased throwing damage"));
         }
         public override void SetDefaults()
         {

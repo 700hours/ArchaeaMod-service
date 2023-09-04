@@ -17,8 +17,8 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Cinnabar Staff"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Emits mercury dust"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Cinnabar Staff"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Emits mercury dust"));
         }
         public override void SetDefaults()
         {

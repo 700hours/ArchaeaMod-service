@@ -17,8 +17,8 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magno Shield"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", ""));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Magno Shield"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", ""));
         }
         public override void SetDefaults()
         {

@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Materials
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Plate"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Plate"));
         }
         public override void SetDefaults()
         {

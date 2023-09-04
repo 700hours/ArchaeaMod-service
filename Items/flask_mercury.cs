@@ -14,8 +14,8 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Flask of Mercury"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Adds mercury sickness on melee hit"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Flask of Mercury"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Adds mercury sickness on melee hit"));
         }
         public override void SetDefaults()
         {

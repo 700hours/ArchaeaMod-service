@@ -17,8 +17,8 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Purple Haze"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Fever dreams coalesced into a tangible essence"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Purple Haze"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Fever dreams coalesced into a tangible essence"));
         }
         public override void SetDefaults()
         {

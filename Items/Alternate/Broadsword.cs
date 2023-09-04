@@ -20,8 +20,8 @@ namespace ArchaeaMod.Items.Alternate
         public override string Texture => "ArchaeaMod/Items/c_Sword";
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Crystal Broadsword"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Shocks weakened enemies"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Crystal Broadsword"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Shocks weakened enemies"));
         }
         public override void SetDefaults()
         {

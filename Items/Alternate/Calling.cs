@@ -20,8 +20,8 @@ namespace ArchaeaMod.Items.Alternate
         public override string Texture => "ArchaeaMod/Items/r_Catcher";
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Staff of Calling"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Conjures a minion"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Staff of Calling"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Conjures a minion"));
         }
         public override void SetDefaults()
         {

@@ -18,8 +18,8 @@ namespace ArchaeaMod.Items.Alternate
         public override string Texture => "ArchaeaMod/Items/n_core";
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Deflector"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Creates barriers from harmful attacks"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Deflector"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Creates barriers from harmful attacks"));
         }
         public override void SetDefaults()
         {

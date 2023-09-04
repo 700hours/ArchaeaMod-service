@@ -15,7 +15,7 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Hatchling banner"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Hatchling banner"));
         }
         public override void SetDefaults()
         {

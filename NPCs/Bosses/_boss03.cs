@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace ArchaeaMod.NPCs.Bosses
 {
-    internal class factory_computer : ModNPC
+    internal class _boss03 : ModNPC
     {
         public override string Texture => "ArchaeaMod/Gores/arrow";
         public override void SetStaticDefaults()

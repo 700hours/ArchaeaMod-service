@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Materials
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magno Plant"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Magno Plant"));
         }
         public override void SetDefaults()
         {

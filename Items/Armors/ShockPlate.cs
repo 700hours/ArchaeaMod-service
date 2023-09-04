@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Shock Plate"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Shock Plate"));
         }
         public override void UpdateArmorSet(Player player)
         {

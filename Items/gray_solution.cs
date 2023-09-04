@@ -15,8 +15,8 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Scorched Solution"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Transforms stone into Magno stone"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Scorched Solution"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Transforms stone into Magno stone"));
         }
         public override void SetDefaults()
         {

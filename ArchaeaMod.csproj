@@ -25,6 +25,9 @@
     <None Remove="Jobs\Jobs\**" />
   </ItemGroup>
   <ItemGroup>
+    <AdditionalFiles Remove="en-US.hjson" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="Jobs\Buffs\_Frozen.cs" />
     <Compile Remove="Jobs\Items\IronWorkbench.cs" />
     <Compile Remove="Jobs\Items\Seeded_dirt.cs" />
@@ -61,6 +64,10 @@
     <None Remove="Jobs\Projectiles\OneBox.png" />
     <None Remove="Jobs\Projectiles\Poison.ini" />
     <None Remove="Jobs\Projectiles\Poison.png" />
+    <None Remove="NPCs\Bosses\factory_01.png" />
+    <None Remove="NPCs\Bosses\factory_02.png" />
+    <None Remove="NPCs\Bosses\factory_02_arm_01.png" />
+    <None Remove="NPCs\Bosses\factory_02_arm_02.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />

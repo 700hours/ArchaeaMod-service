@@ -13,7 +13,7 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Chair"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Chair"));
         }
         public override void SetDefaults()
         {

@@ -25,8 +25,8 @@ namespace ArchaeaMod.Items.Alternate
         public override bool IsLoadingEnabled(Mod mod) => false;
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magno Cannon"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", ""));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Magno Cannon"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", ""));
         }
         public override void SetDefaults()
         {

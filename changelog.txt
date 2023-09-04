@@ -1,4 +1,5 @@
-version 1.4.31.156 -> 1.4.33.276
+version 1.4.34.277 -> 1.4.35.279
 ================================
-# Changed
--> 1.4.4.* port
+# Fixed
+-> Oblique damage scaling
+-> Oblique defense scaling

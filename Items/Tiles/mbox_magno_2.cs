@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Music Box Alt"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Music Box Alt"));
         }
         public override void SetDefaults()
         {

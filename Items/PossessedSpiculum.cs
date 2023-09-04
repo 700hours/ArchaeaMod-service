@@ -16,8 +16,8 @@ namespace ArchaeaMod.Items
         public override string Texture => "ArchaeaMod/Gores/MagnoSpear_2";
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Possessed Spiculum"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Embodied throwing arm"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Possessed Spiculum"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Embodied throwing arm"));
         }
         public override void SetDefaults()
         {

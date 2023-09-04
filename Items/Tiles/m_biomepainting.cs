@@ -15,8 +15,8 @@ namespace ArchaeaMod.Items.Tiles
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Biome"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "R.A."));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Biome"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "R.A."));
         }
         public override void SetDefaults()
         {

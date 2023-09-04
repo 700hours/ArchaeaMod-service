@@ -17,8 +17,8 @@ namespace ArchaeaMod.Items
         public override string Texture => "ArchaeaMod/Gores/MagnoGun_3";
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Possessed Musket"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Leaves haunted impressions"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Possessed Musket"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Leaves haunted impressions"));
         }
         public override void SetDefaults()
         {

@@ -26,6 +26,10 @@ namespace ArchaeaMod.Jobs.Buffs
             tip = "Half damage";
 			rare = 2;
         }
+        public override void Update(Player player, ref int buffIndex)
+        {
+            PlayerEffects(player);
+        }
         public override void Update(NPC npc, ref int buffIndex)
         {
             int buffTime = npc.buffTime[buffIndex];
@@ -42,10 +46,13 @@ namespace ArchaeaMod.Jobs.Buffs
 				NPCEffectsEnd(npc, buffIndex, Type, 0);
 			}
         }
+        public void PlayerEffects(Player P)
+        {
+            P.GetTotalDamage(ArchaeaPlayer.GetDamageClass(P.GetModPlayer<ArchaeaPlayer>())).ApplyTo(0.5f);
+            Dust.NewDust(P.position, P.width, P.height, DustID.RedMoss);
+        }
         public void NPCEffectsStart(NPC N,int buffIndex,int buffType,int buffTime)
 		{
-			buffTime = 600;
-			buffType = -1;
 			OldNPCdmg = N.damage;
 			N.netUpdate = true;
 		}

@@ -1,0 +1,632 @@
+Mods: {
+	ArchaeaMod: {
+		Buffs: {
+			buff_catcher: {
+				DisplayName: Rusty Catcher minion
+				Description: Mods.ArchaeaMod.BuffDescription.buff_catcher
+			}
+
+			buff_cluster: {
+				DisplayName: Cluster Count
+				Description: Mods.ArchaeaMod.BuffDescription.buff_cluster
+			}
+
+			flask_mercury: {
+				DisplayName: Mercury Edge
+				Description: Mods.ArchaeaMod.BuffDescription.flask_mercury
+			}
+
+			frozen: {
+				DisplayName: Frozen
+				Description: Mods.ArchaeaMod.BuffDescription.frozen
+			}
+
+			mercury: {
+				DisplayName: Mercury Sickness
+				Description: Mods.ArchaeaMod.BuffDescription.mercury
+			}
+
+			stun: {
+				DisplayName: Stunned
+				Description: Mods.ArchaeaMod.BuffDescription.stun
+			}
+
+			CallMinionBuff: {
+				DisplayName: Minion Helper
+				Description: Mods.ArchaeaMod.BuffDescription.CallMinionBuff
+			}
+
+			Fortitude: {
+				DisplayName: Fortitude
+				Description: Mods.ArchaeaMod.BuffDescription.Fortitude
+			}
+
+			Phase: {
+				DisplayName: Mods.ArchaeaMod.BuffName.Phase
+				Description: Mods.ArchaeaMod.BuffDescription.Phase
+			}
+
+			Plague: {
+				DisplayName: Plague
+				Description: Mods.ArchaeaMod.BuffDescription.Plague
+			}
+
+			Soft: {
+				DisplayName: Soft
+				Description: Mods.ArchaeaMod.BuffDescription.Soft
+			}
+
+			Summoned: {
+				DisplayName: Just Summoned
+				Description: Mods.ArchaeaMod.BuffDescription.Summoned
+			}
+
+			Transmogrify: {
+				DisplayName: Transmogrified
+				Description: Mods.ArchaeaMod.BuffDescription.Transmogrify
+			}
+
+			Weaken: {
+				DisplayName: Weaken
+				Description: Mods.ArchaeaMod.BuffDescription.Weaken
+			}
+
+			Zombie: {
+				DisplayName: Incognito
+				Description: Mods.ArchaeaMod.BuffDescription.Zombie
+			}
+
+			magno_summon: {
+				DisplayName: Magno Fly
+				Description: Chemically enhanced minion
+			}
+		}
+
+		Biomes: {
+			FactoryBiome.DisplayName: Factory Biome
+			MagnoBiome.DisplayName: Magno Biome
+			SkyFortBiome.DisplayName: Sky Fort Biome
+			SkyFortPortalBiome.DisplayName: Sky Fort Portal Biome
+		}
+
+		Items: {
+			acc_cluster: {
+				DisplayName: Soul Cluster
+				Tooltip:
+					'''
+					Adds a damage boost per successful enemy hit
+					Resets after taking damage
+					'''
+			}
+
+			Broadsword: {
+				DisplayName: Crystal Broadsword
+				Tooltip: Shocks weakened enemies
+			}
+
+			Calling: {
+				DisplayName: Staff of Calling
+				Tooltip: Conjures a minion
+			}
+
+			Deflector: {
+				DisplayName: Deflector
+				Tooltip: Creates barriers from harmful attacks
+			}
+
+			Sabre: {
+				DisplayName: Dagger
+				Tooltip: Forged from the materials of magno
+			}
+
+			Staff: {
+				DisplayName: Charred Staff
+				Tooltip: Casts fire wave
+			}
+
+			RustbaneHead.DisplayName: Rustbane Visor
+			RustbaneLegs.DisplayName: Rustbane Greaves
+
+			RustbanePlate: {
+				DisplayName: Rustbane Chestplate
+				Tooltip: 20% increased throwing damage
+			}
+
+			ShockLegs.DisplayName: Shock Greaves
+			ShockMask.DisplayName: Shock Mask
+			ShockPlate.DisplayName: Shock Plate
+
+			c_Staff: {
+				DisplayName: Cinnabar Staff
+				Tooltip: Emits mercury dust
+			}
+
+			c_Sword: {
+				DisplayName: Cinnabar Sword
+				Tooltip: Sends ground tremors
+			}
+
+			dream_catcher: {
+				DisplayName: Dream Catcher
+				Tooltip:
+					'''
+					Holds the stories of bygone times
+					Gives a buff during night
+					A ward against the haze
+					'''
+			}
+
+			flask_mercury: {
+				DisplayName: Flask of Mercury
+				Tooltip: Adds mercury sickness on melee hit
+			}
+
+			GhostlyChains: {
+				DisplayName: Ghostly Chains
+				Tooltip: Chain gang
+			}
+
+			gray_solution: {
+				DisplayName: Scorched Solution
+				Tooltip: Transforms stone into Magno stone
+			}
+
+			m_fossil.DisplayName: Scorched Fossil
+			m_shield.DisplayName: Magno Shield
+			magno_plant.DisplayName: Magno Plant
+			r_plate.DisplayName: Rusty Plate
+
+			n_core: {
+				DisplayName: Dark Aura
+				Tooltip: For use in the dark sky portal chamber.
+			}
+
+			n_Staff: {
+				DisplayName: Necrosis' Staff
+				Tooltip:
+					'''
+					Emits orbitals around aiming direction
+					Alt use to disarm orbitals
+					'''
+			}
+
+			PossessedMusket: {
+				DisplayName: Possessed Musket
+				Tooltip: Leaves haunted impressions
+			}
+
+			PossessedSpiculum: {
+				DisplayName: Possessed Spiculum
+				Tooltip: Embodied throwing arm
+			}
+
+			r_Catcher: {
+				DisplayName: Rusty Soul Catcher
+				Tooltip: Metallic minion
+			}
+
+			r_Flail: {
+				DisplayName: Rusty Thrasher
+				Tooltip: Scatters rust
+			}
+
+			r_Javelin: {
+				DisplayName: Rusty Spearhead
+				Tooltip: Rusty but still useful
+			}
+
+			r_Tomohawk: {
+				DisplayName: Rusty Tomohawk
+				Tooltip: Was once shiny
+			}
+
+			banner_hatchling.DisplayName: Hatchling banner
+			factory_brick_1.DisplayName: Factory Brick
+
+			m_biomepainting: {
+				DisplayName: Magnoliac Biome
+				Tooltip: R.A.
+			}
+
+			m_chair.DisplayName: Magnoliac Chair
+			m_chandelier.DisplayName: Magnoliac Chandelier
+			m_door.DisplayName: Magnoliac door
+			mbox_magno_1.DisplayName: Magnoliac Music Box
+			mbox_magno_2.DisplayName: Magnoliac Music Box Alt
+			mbox_magno_boss.DisplayName: Magnoliac Music Box
+
+			purple_haze: {
+				DisplayName: Purple Haze
+				Tooltip: Fever dreams coalesced into a tangible essence
+			}
+
+			sky_brick.DisplayName: Fortress Brick
+			factory_brickwall_1.DisplayName: Fortress Brick Wall
+			sky_brickwall.DisplayName: Fortress Brick Wall
+
+			AnotherChance: {
+				DisplayName: Another Chance
+				Tooltip:
+					'''
+					Increases extra life
+					count by 1 (max 3),
+					and max life by 80.
+					'''
+			}
+
+			Convert: {
+				DisplayName: Convert
+				Tooltip: Use to convert friends or foes
+			}
+
+			Drill: {
+				DisplayName: Drill
+				Tooltip: Only digs vertically and breaks two tiles at once
+			}
+
+			DungeonLocator: {
+				DisplayName: Dungeon Locator
+				Tooltip:
+					'''
+					Use to locate the dungeon
+					One use
+					'''
+			}
+
+			Elevator: {
+				DisplayName: Elevator
+				Tooltip: Platform to stand on and grant vertical control
+			}
+
+			LifeLeech: {
+				DisplayName: Life Leech
+				Tooltip:
+					'''
+					Absorb life from your enemies
+					1 mana per 1 life
+					'''
+			}
+
+			Manipulate: {
+				DisplayName: Manipulate
+				Tooltip:
+					'''
+					Make enemies do figure 8's, or something.
+					Drains mana quickly.
+					Requires line of sight.
+					'''
+			}
+
+			Prospecting_tool: {
+				DisplayName: Prospecting Tool
+				Tooltip: Use to locate ore within 100 tiles below you
+			}
+
+			Scroll_firestorm: {
+				DisplayName: Scroll of Firestorm
+				Tooltip:
+					'''
+					Blast from the above.
+					One use.
+					'''
+			}
+
+			Scroll_fortitude: {
+				DisplayName: Scroll of Fortitude
+				Tooltip:
+					'''
+					Increases a player's defense by 20.
+					Strengthens melee damage by 3x.
+					'''
+			}
+
+			Scroll_frozen_nova: {
+				DisplayName: Scroll of Frozen Nova
+				Tooltip:
+					'''
+					Create a blast of frost at target.
+					One use.
+					'''
+			}
+
+			Scroll_incognito: {
+				DisplayName: Scroll of Incognito
+				Tooltip: Put on a zombie disguise.Enemies do no damage for 2 minutes.
+			}
+
+			Scroll_plague_explosion: {
+				DisplayName: Scroll of Plague Explosion
+				Tooltip:
+					'''
+					Strikes an enemy with poison.
+					One use.
+					'''
+			}
+
+			Scroll_plague_nova: {
+				DisplayName: Scroll of Plague Nova
+				Tooltip:
+					'''
+					Create a blast of poison around you.
+					One use.
+					'''
+			}
+
+			Textbook_of_gathering: {
+				DisplayName: Textbook of Gathering
+				Tooltip:
+					'''
+					If held and on a grassy area, you will collect acorns.
+					Also a chance, if on stone, to collect stone.
+					'''
+			}
+
+			Tome_of_phase: {
+				DisplayName: Tome of Phase
+				Tooltip:
+					'''
+					Reappear in another location.
+					Costs 1/3 total mana.
+					'''
+			}
+
+			Tome_of_plague: {
+				DisplayName: Tome of Plague
+				Tooltip: Plagues an enemy.
+			}
+
+			Tome_of_plague_explosion: {
+				DisplayName: Tome of Plague Explosion
+				Tooltip: Strikes an enemy with poison.
+			}
+
+			Tome_of_soften: {
+				DisplayName: Tome of Soften
+				Tooltip:
+					'''
+					Weakens an enemy's defenses, including bosses.
+					Costs mana directionally proportional to NPC size.
+					'''
+			}
+
+			Tome_of_summoning: {
+				DisplayName: Tome of Summoning
+				Tooltip:
+					'''
+					Displaces an NPC into your target. Costs 1/3 max mana.
+					Requires line of sight with target.
+					'''
+			}
+
+			Tome_of_weaken: {
+				DisplayName: Tome of Weaken
+				Tooltip: Weakens an enemy.
+			}
+
+			Transmogrify: {
+				DisplayName: Transmogrify
+				Tooltip: Cost 1/3 max mana
+			}
+
+			ancient_shockgreaves.DisplayName: Ancient Shock Greaves
+			ancient_shockhelmet.DisplayName: Ancient Shock Mask
+			ancient_shockplate.DisplayName: Ancient Shock Plate
+
+			cinnabargreaves: {
+				DisplayName: Cinnabar Greaves
+				Tooltip:
+					'''
+					7% increased movement
+					speed
+					'''
+			}
+
+			cinnabarhelmet: {
+				DisplayName: Cinnabar Helmet
+				Tooltip:
+					'''
+					Increases rate of
+					healing
+					'''
+			}
+
+			cinnabarmask: {
+				DisplayName: Cinnabar Mask
+				Tooltip:
+					'''
+					10% increased magic
+					damage
+					'''
+			}
+
+			cinnabarplate: {
+				DisplayName: Cinnabar Breastplate
+				Tooltip: 10% increased damage
+			}
+
+			magnogreaves: {
+				DisplayName: Magno Greaves
+				Tooltip:
+					'''
+					7% increased movement
+					speed
+					'''
+			}
+
+			magnoheadgear: {
+				DisplayName: Magno Headgear
+				Tooltip: 10% increased arrow damage
+			}
+
+			magnohelmet: {
+				DisplayName: Magno Helmet
+				Tooltip:
+					'''
+					Increases maximum minion 
+					count by 1
+					'''
+			}
+
+			magnoplate: {
+				DisplayName: Magno Breastplate
+				Tooltip: 7% increased damage
+			}
+
+			cinnabar_bow: {
+				DisplayName: Cinnabar Bow
+				Tooltip:
+					'''
+					Transforms wooden
+					arrows into mercury arrows
+					'''
+			}
+
+			cinnabar_dagger: {
+				DisplayName: Cinnabar Dagger
+				Tooltip: Mercury-tipped blade
+			}
+
+			cinnabar_hamaxe.DisplayName: Cinnabar Hamaxe
+			cinnabar_pickaxe.DisplayName: Cinnabar Pickaxe
+
+			magno_book: {
+				DisplayName: Magno Book
+				Tooltip: Indicates magic effects
+			}
+
+			magno_summonstaff: {
+				DisplayName: Rubidium Staff
+				Tooltip:
+					'''
+					Summons Magno minion
+					Causes shock waves when attached to enemy
+					'''
+			}
+
+			magno_treasurebag: {
+				DisplayName: Treasure Bag
+				Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+			}
+
+			magno_trophy.DisplayName: Magnoliac Trophy
+
+			magno_yoyo: {
+				DisplayName: Rubidium Yoyo
+				Tooltip: Throws out a Yoyo
+			}
+
+			cinnabar_crystal: {
+				DisplayName: Cinnabar Crystal
+				Tooltip: Glows with a crimson aura
+			}
+
+			magno_bar.DisplayName: Rubidium Bar
+			magno_core.DisplayName: Scorched Core
+			magno_fragment.DisplayName: Magno Fragment
+			magno_brick.DisplayName: Magno Brick
+			magno_chest.DisplayName: Magnoliac Chest
+			magno_dirt.DisplayName: Magno Dirt
+			magno_ore.DisplayName: Rubidium Ore
+			magno_stone.DisplayName: Magno Stone
+			magno_mask.DisplayName: Magno Mask
+			magno_brickwall.DisplayName: Magno Brick Wall
+			magno_stonewall.DisplayName: Magno Stone Wall
+		}
+
+		Projectiles: {
+			Minion.DisplayName: Slowing Minion
+			Bolt.DisplayName: Bolt
+			GraySolution.DisplayName: Gray solution
+			diffusion.DisplayName: Diffusion
+			Elevator.DisplayName: Elevator
+			fake_npc.DisplayName: fake npc
+			FireRain.DisplayName: Fire Rain
+			j_effect.DisplayName: Debuff
+			t_effect.DisplayName: Debuff 2
+			cinnabar_arrow.DisplayName: Mercury Arrow
+			cinnabar_dagger.DisplayName: Cinnabar Dagger
+			cinnabar_orb.DisplayName: Cinnabar Orb
+			cinnabar_spore.DisplayName: Cinnabar Spore
+			magno_minion.DisplayName: magno_minion
+			magno_minionexplosion.DisplayName: Minion Explosion
+			magno_orb.DisplayName: Magno Orb
+			magno_yoyoprojectile.DisplayName: Mango Yoyo
+			BurningSteam.DisplayName: Burning steam
+			Flame.DisplayName: Flame
+			OilLeak.DisplayName: Oil
+			Orb.DisplayName: Orb
+			Follower.DisplayName: Follower
+			Mechanic.DisplayName: Mechanic
+			CatcherMinion.DisplayName: Rusty Catcher
+			Chain.DisplayName: Flail
+			dust_diffusion.DisplayName: Blast wave
+			Flail.DisplayName: Flail
+			ghostly_chains.DisplayName: Ghostly Chains
+			Javelin.DisplayName: Javelin
+			MagnoBullet.DisplayName: Rubidium Bullet
+			MagnoHomingBullet.DisplayName: Rubidium Homing Bullet
+			Mercury.DisplayName: Mercury Shards
+			Orbital.DisplayName: Orb
+			Pixel.DisplayName: Shard
+			PossessedBullet.DisplayName: Possessed Bullet
+			Spiculum.DisplayName: Spiculum
+			Tomohawk.DisplayName: Tomohawk
+		}
+
+		NPCs: {
+			Copycat_body.DisplayName: Copycat
+			Copycat_tail.DisplayName: Copycat
+			_boss02.DisplayName: _boss02
+			factory_computer.DisplayName: Factory Computer
+			Magnoliac_body.DisplayName: Magno
+			Magnoliac_head.DisplayName: Magno
+			Magnoliac_tail.DisplayName: Magno
+			Sky_boss.DisplayName: Necrosis
+			Fanatic.DisplayName: Fanatical Caster
+			Hatchling_body.DisplayName: Hatchling
+			Hatchling_head.DisplayName: Hatchling
+			Hatchling_tail.DisplayName: Hatchling
+			m_flame.DisplayName: Magno Flame
+			Mimic.DisplayName: Mimic
+			PossessedBullet.DisplayName: Possessed Bullet
+			Sky_1.DisplayName: Resentful Spirit
+			Sky_3.DisplayName: Gargoyle
+			Slime_Itchy.DisplayName: Itchy Slime
+			Slime_Mercurial.DisplayName: Mercurial Slime
+			FollowerMenu.DisplayName: Follower Menu
+			MechanicMinion.DisplayName: Mechanic's Minion
+			_boss03.DisplayName: _boss03
+			factory_01.DisplayName: Factory Computer
+			factory_02.DisplayName: factory_02
+			factory_02_arm_01.DisplayName: factory_02_arm_01
+			factory_02_arm_02.DisplayName: factory_02_arm_02
+		}
+
+		Tiles: {
+			m_chest: {
+				ContainerName: Magno Chest
+				MapEntry: Magnoliac Chest
+			}
+
+			Elevator.MapEntry: Elevator
+			c_crystal2x1.MapEntry: Cinnabar Crystal
+			c_crystal2x2.MapEntry: Cinnabar Crystal
+			c_crystalsmall.MapEntry: Cinnabar Crystal
+			m_bar.MapEntry: Rubidium Bar
+			m_book.MapEntry: Books
+			m_ore.MapEntry: Rubidium
+			m_trophy.MapEntry: Trophy
+			banners.MapEntry: Banner
+			c_crystal_large.MapEntry: Cinnabar Crystal
+			m_chair.MapEntry: Chair
+			m_chandelier.MapEntry: Chandelier
+			m_doorclosed.MapEntry: Door
+			m_dooropen.MapEntry: Door
+			music_boxes.MapEntry: Music Box
+			music_boxes_alt.MapEntry: Music Box
+			paintings.MapEntry: Painting
+			sky_portal.MapEntry: Portal
+			steam_vent.MapEntry: Steam vent
+		}
+	}
+}

@@ -16,9 +16,9 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Soul Cluster"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Adds a damage boost per successful enemy hit"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "\nResets after taking damage"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Soul Cluster"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Adds a damage boost per successful enemy hit"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip1", "Resets after taking damage"));
         }
         public override void SetDefaults()
         {

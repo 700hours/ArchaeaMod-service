@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items.Armors
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Shock Greaves"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Shock Greaves"));
         }
         public override void SetDefaults()
         {

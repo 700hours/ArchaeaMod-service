@@ -21,8 +21,8 @@ namespace ArchaeaMod.Items.Alternate
         public override string Texture => "ArchaeaMod/Items/c_Staff";
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Charred Staff"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Casts fire wave"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Charred Staff"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Casts fire wave"));
         }
         public override void SetDefaults()
         {

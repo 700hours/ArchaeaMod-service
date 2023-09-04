@@ -17,8 +17,8 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Ghostly Chains"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Chain gang"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Ghostly Chains"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Chain gang"));
         }
         public override void SetDefaults()
         {

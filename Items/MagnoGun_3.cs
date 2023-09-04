@@ -20,8 +20,8 @@ namespace ArchaeaMod.Items
         public override bool IsLoadingEnabled(Mod mod) => false;
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rubidium Gun"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Lasers and phasers"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Rubidium Gun"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Lasers and phasers"));
         }
         public override void SetDefaults()
         {

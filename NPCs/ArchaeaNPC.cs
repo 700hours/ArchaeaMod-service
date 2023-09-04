@@ -76,6 +76,14 @@ namespace ArchaeaMod
         {
             get { return ModContent.NPCType<NPCs.Town.FollowerMenu>(); }
         }
+        public static int FactoryComputer
+        {
+            get { return ModContent.NPCType<NPCs.Bosses.factory_01>(); }
+        }
+        public static int FactoryGoblin
+        {
+            get { return ModContent.NPCType<NPCs.Bosses.factory_02>(); }
+        }
         public static bool Follower(int type)
         {
             return type != ModContent.NPCType<NPCs.Town.FollowerMenu>() && 
@@ -183,6 +191,14 @@ namespace ArchaeaMod.NPCs
             if (Main.netMode == 1)
             {
                 NetMessage.SendData(53, -1, -1, null, npc.whoAmI, buffType, duration);
+            }
+        }
+        public static void AddBuffNetPlayer(Player player, int buffType, int duration)
+        {
+            player.AddBuff(buffType, duration, Main.netMode == 0);
+            if (Main.netMode == 1)
+            {
+                NetMessage.SendData(55, -1, -1, null, player.whoAmI, buffType, duration);
             }
         }
         public static void DrawChain(Texture2D tex, SpriteBatch sb, Vector2 start, Vector2 end, int len = 12)
@@ -570,6 +586,20 @@ namespace ArchaeaMod.NPCs
                 npc.velocity.Y = min;
             if (npc.velocity.Y > max)
                 npc.velocity.Y = max;
+        }
+        public static void VelClampX(Projectile proj, float min, float max)
+        {
+            if (proj.velocity.X < min)
+                proj.velocity.X = min;
+            if (proj.velocity.X > max)
+                proj.velocity.X = max;
+        }
+        public static void VelClampY(Projectile proj, float min, float max)
+        {
+            if (proj.velocity.Y < min)
+                proj.velocity.Y = min;
+            if (proj.velocity.Y > max)
+                proj.velocity.Y = max;
         }
         public static bool IsNotOldPosition(NPC npc)
         {

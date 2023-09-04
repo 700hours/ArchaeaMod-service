@@ -16,7 +16,7 @@ namespace ArchaeaMod.Items
         public override bool IsLoadingEnabled(Mod mod) => false;
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Debug"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Debug"));
         }
         public override void SetDefaults()
         {

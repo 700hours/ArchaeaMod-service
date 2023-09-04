@@ -12,8 +12,8 @@ namespace ArchaeaMod.Merged.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Treasure Bag"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "{$CommonItemTooltip.RightClickToOpen}"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Treasure Bag"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "{$CommonItemTooltip.RightClickToOpen}"));
         }
         public override void SetStaticDefaults()
         {

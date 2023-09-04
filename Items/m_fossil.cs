@@ -18,9 +18,9 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Scorched Fossil"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", ""));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "ItemID.Sets.SortingPriorityBossSpawns[Type] = 12"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Scorched Fossil"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", ""));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip1", "ItemID.Sets.SortingPriorityBossSpawns[Type] = 12"));
         }
         public override void SetDefaults()
         {

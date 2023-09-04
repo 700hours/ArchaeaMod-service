@@ -13,7 +13,7 @@ namespace ArchaeaMod.Items.Walls
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Fortress Brick Wall"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Fortress Brick Wall"));
         }
         public override void SetDefaults()
         {

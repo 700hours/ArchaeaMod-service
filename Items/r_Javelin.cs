@@ -16,8 +16,8 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Spearhead"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Rusty but still useful"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Spearhead"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Rusty but still useful"));
         }
         public override void SetDefaults()
         {

@@ -20,9 +20,9 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Necrosis' Staff"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Emits orbitals around aiming direction"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip1", "Alt use to disarm orbitals"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Necrosis' Staff"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Emits orbitals around aiming direction"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip1", "Alt use to disarm orbitals"));
         }
         public override void SetDefaults()
         {

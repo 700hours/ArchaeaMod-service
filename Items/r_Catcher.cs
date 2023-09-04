@@ -21,8 +21,8 @@ namespace ArchaeaMod.Items
     {
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Soul Catcher"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Metallic minion"));
+            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Rusty Soul Catcher"));
+            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Metallic minion"));
         }
         public override void SetDefaults()
         {
