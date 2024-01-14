@@ -182,18 +182,17 @@ namespace ArchaeaMod.Interface.UI
                 //currently without designation
                 for (int i = 0; i < mainOptions.Length; i++)
                 {
-                    Element opt = mainOptions[i];
                     if (i == 2 && ModContent.GetInstance<ModeToggle>().notFirstJoin)
                     {
                         continue;
                     }
-                    if (opt.LeftClick() && opt.ticks++ == 0)
+                    if (mainOptions[i].LeftClick() && mainOptions[i].ticks++ == 0)
                     {
-                        opt.active = !opt.active;
-                        opt.color = opt.active ? Color.Blue : Color.White;
+                        mainOptions[i].active = !mainOptions[i].active;
+                        mainOptions[i].color = mainOptions[i].active ? Color.Blue : Color.White;
                         break;
                     }
-                    opt.ticks = 0;
+                    mainOptions[i].ticks = 0;
                 }
                 //first player joined code
                 /*
@@ -260,11 +259,11 @@ namespace ArchaeaMod.Interface.UI
             // experimental to fix coloring bug
             if (forceDraw)
             {
-                if (Mode.LeftClick() && !ModContent.GetInstance<ModeToggle>().notFirstJoin)
-                {
-                    Mode.active = !Mode.active;
-                    Mode.color = Mode.active ? Color.Blue : Color.White;
-                }
+                //if (Mode.LeftClick() && !ModContent.GetInstance<ModeToggle>().notFirstJoin)
+                //{
+                //    Mode.active = !Mode.active;
+                //    Mode.color = Mode.active ? Color.Blue : Color.White;
+                //}
                 Classes.active = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice != ClassID.None;
                 Classes.color = Classes.active ? Color.Blue : Color.White;
                 if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice != ClassID.None || choiceName != "")

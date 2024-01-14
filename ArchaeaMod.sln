@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaeaMod", "ArchaeaMod.csproj", "{729B674C-C1E3-4C0C-A506-E03ADA3B2ABB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tUserInterface", "..\tUserInterface\tUserInterface.csproj", "{0C814403-E66F-43F8-A25E-91EA8B38A968}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{729B674C-C1E3-4C0C-A506-E03ADA3B2ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{729B674C-C1E3-4C0C-A506-E03ADA3B2ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{729B674C-C1E3-4C0C-A506-E03ADA3B2ABB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C814403-E66F-43F8-A25E-91EA8B38A968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C814403-E66F-43F8-A25E-91EA8B38A968}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C814403-E66F-43F8-A25E-91EA8B38A968}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C814403-E66F-43F8-A25E-91EA8B38A968}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

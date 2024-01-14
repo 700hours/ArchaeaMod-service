@@ -21,6 +21,7 @@ using System.Timers;
 using ArchaeaMod.Progression;
 using ArchaeaMod.NPCs.Town;
 using Terraria.Audio;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ArchaeaMod.Mode
 {
@@ -456,7 +457,11 @@ namespace ArchaeaMod.Mode
             Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SetModeStats(false);
         }
 
-        public bool notFirstJoin = false;
+        public bool notFirstJoin
+        { 
+            get { return ModContent.GetInstance<ArchaeaWorld>().notFirstJoin; }
+            set { ModContent.GetInstance<ArchaeaWorld>().notFirstJoin = value; }
+        }
         public bool archaeaMode;
         public bool progress;
         public float healthScale;
@@ -468,7 +473,7 @@ namespace ArchaeaMod.Mode
         
         public override void SaveWorldData(TagCompound tag)/* Edit tag parameter rather than returning new TagCompound */
         {                                       
-            tag.Add("Init", notFirstJoin);
+            //tag.Add("Init", notFirstJoin);
             tag.Add("ArchaeaMode", archaeaMode);
             tag.Add("HealthScale", healthScale);
             tag.Add("DamageScale", damageScale);
@@ -477,7 +482,7 @@ namespace ArchaeaMod.Mode
         }
         public override void LoadWorldData(TagCompound tag)
         {
-            notFirstJoin = tag.GetBool("Init");
+            //notFirstJoin = tag.GetBool("Init");
             if (tag.ContainsKey("ArchaeaMode"))
             {
                 archaeaMode = tag.GetBool("ArchaeaMode");
@@ -486,10 +491,10 @@ namespace ArchaeaMod.Mode
                 dayCount = tag.GetFloat("DayCount");
                 totalTime = tag.GetFloat("TotalTime");
             }
-            if (!notFirstJoin)
-            {
-                archaeaMode = false;
-            }
+            //if (!notFirstJoin)
+            //{
+            //    archaeaMode = false;
+            //}
         }
         public void SetArchaeaMode(bool flag)
         {

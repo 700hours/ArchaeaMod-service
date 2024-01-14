@@ -182,6 +182,7 @@ namespace ArchaeaMod
         public static Vector2[] genPosition;
         public bool _archaeaMode = false;
         public int elevatorCount = 0;
+        public bool notFirstJoin = false;
 
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
@@ -910,6 +911,7 @@ namespace ArchaeaMod
                 tag.Add($"playerUID{i}", playerClass[i].playerUID);
             }
             tag.Add("elevatorCount", elevatorCount);
+            tag.Add("notFirstJoin", notFirstJoin);
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -935,6 +937,7 @@ namespace ArchaeaMod
                 playerClass.Add(PlayerClass.NewPlayer(classChoice, plrUID, 255));
             }
             elevatorCount = tag.GetInt("elevatorCount");
+            notFirstJoin = tag.GetBool("notFirstJoin");
         }
         public override void NetSend(BinaryWriter writer)
         {
@@ -950,6 +953,7 @@ namespace ArchaeaMod
                 writer.Write(objectiveStat[i]);
             }
             writer.Write(elevatorCount);
+            writer.Write(notFirstJoin);
         }
         public override void NetReceive(BinaryReader reader)
         {
@@ -965,6 +969,7 @@ namespace ArchaeaMod
                 objectiveStat[i] = reader.ReadBoolean();
             }
             elevatorCount = reader.ReadInt32();
+            notFirstJoin = reader.ReadBoolean();
         }
         private bool begin;
         private bool first;
