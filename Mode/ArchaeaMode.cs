@@ -22,6 +22,7 @@ using ArchaeaMod.Progression;
 using ArchaeaMod.NPCs.Town;
 using Terraria.Audio;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using ArchaeaMod.Buffs;
 
 namespace ArchaeaMod.Mode
 {
@@ -610,14 +611,12 @@ namespace ArchaeaMod.Mode
     public class ModeNPC : GlobalNPC
     {
         public override bool InstancePerEntity => true;
-        public override void SetDefaults(NPC npc)
+        
+        public override void OnSpawn(NPC npc, IEntitySource source)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                int lifeMax = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.NPC, ArchaeaMode.Stat.Life, npc.lifeMax, ModContent.GetInstance<ModeToggle>().healthScale, npc.defense, DamageClass.Default);
-                npc.lifeMax = lifeMax;
-                npc.life = lifeMax;
-                npc.netUpdate = true;
+                npc.AddBuff(ModContent.BuffType<ModeLifeScale>(), 60);
             }
         }
 
@@ -626,14 +625,14 @@ namespace ArchaeaMod.Mode
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                modifiers.FinalDamage *= ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, item.damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, item.DamageType);
+                modifiers.ScalingBonusDamage += ModContent.GetInstance<ModeToggle>().damageScale; //ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, item.damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, item.DamageType) / (float)item.damage;
             }
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
-                modifiers.FinalDamage *= ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, projectile.damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, projectile.DamageType);
+                 modifiers.ScalingBonusDamage += ModContent.GetInstance<ModeToggle>().damageScale; //ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.None, ArchaeaMode.Stat.Damage, projectile.damage, ModContent.GetInstance<ModeToggle>().damageScale, npc.defense, projectile.DamageType) / (float)projectile.damage;
             }
         }
         public override void OnKill(NPC npc)

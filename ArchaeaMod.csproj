@@ -41,6 +41,7 @@
     <Compile Remove="Jobs\Projectiles\Poison.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Buffs\ModeLifeScale.png" />
     <None Remove="Jobs\Buffs\_Frozen.ini" />
     <None Remove="Jobs\Buffs\_Frozen.png" />
     <None Remove="Jobs\Items\IronWorkbench.ini" />

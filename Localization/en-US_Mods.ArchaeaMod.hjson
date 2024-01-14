@@ -281,6 +281,11 @@ Buffs: {
 
 	buff_catcher: {
 	}
+
+	ModeLifeScale: {
+		DisplayName: Mode Life Scale
+		Description: Mods.ArchaeaMod.Buffs.ModeLifeScale.Description
+	}
 }
 
 Tiles: {

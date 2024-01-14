@@ -1,4 +1,6 @@
-version 1.4.35.279 -> 1.4.36.280 
+version 1.4.36.280 -> 1.4.37.283 
 ================================
 # Fixed
--> Crash related to loading a type of liquid droplet
+-> Scroll wheel slow
+-> Scroll wheel function causing automatic scrolling
+-> Archaea Mode menu option saving and clicking not working
