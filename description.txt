@@ -33,5 +33,9 @@ Multiplayer gameplay is included. Dedicated server usage is also implemented.
 
 [hr]
 [b]Latest update[/b]
-[i]version 1.4.33.276 -> 1.4.35.279
-Change log can be found at the steam workshop page and mod homepage.[/i]
+[i]version 1.4.35.279 -> 1.4.36.280 
+================================
+# Fixed
+-> Crash related to loading a type of liquid droplet
+
+Full change log can be found at the steam workshop page and mod homepage.[/i]

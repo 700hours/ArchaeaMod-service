@@ -733,6 +733,26 @@ namespace ArchaeaMod
             }
         }
 
+        public static DamageClass GetDamageClass(ArchaeaPlayer modPlayer)
+        {     
+            switch (modPlayer.classChoice)
+            {
+                default:
+                case ClassID.None:
+                    return DamageClass.Default;
+                case ClassID.Melee:
+                    return DamageClass.Melee;
+                case ClassID.Ranged:
+                    return DamageClass.Ranged;
+                case ClassID.Magic:
+                    return DamageClass.Magic;
+                case ClassID.Summoner:
+                    return DamageClass.Summon;
+                case ClassID.All:
+                    return DamageClass.Generic;
+            }
+        }
+
         public void SetModeStats(bool modeFlag, int whoAmI)
         {
             if (Main.netMode == NetmodeID.MultiplayerClient) 
@@ -1097,6 +1117,7 @@ namespace ArchaeaMod
             for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
                 Effects.Barrier.barrier[i]?.Update(Player);
             #region debug
+            return;
             if (setModeStats)
             {
                 Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.MagnoGun_3>());

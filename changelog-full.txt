@@ -723,3 +723,8 @@ version 1.4.34.277 -> 1.4.35.279
 # Fixed
 -> Oblique damage scaling
 -> Oblique defense scaling
+
+version 1.4.35.279 -> 1.4.36.280 
+================================
+# Fixed
+-> Crash related to loading a type of liquid droplet

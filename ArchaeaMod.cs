@@ -10,6 +10,7 @@ using Terraria.ID;
 using ArchaeaMod.Mode;
 using Microsoft.Xna.Framework.Input;
 using System;
+using Terraria.ModLoader.Default;
 
 namespace ArchaeaMod
 {

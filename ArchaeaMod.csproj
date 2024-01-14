@@ -8,6 +8,7 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <AdditionalFiles Remove="Jobs\Jobs\**" />
     <Compile Remove="archive\**" />
     <Compile Remove="Jobs\Items\Armor\**" />
     <Compile Remove="Jobs\Items\art\**" />
@@ -70,9 +71,6 @@
     <None Remove="NPCs\Bosses\factory_02_arm_02.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="tUserInterface">
       <HintPath>lib\tUserInterface.dll</HintPath>
     </Reference>
@@ -80,5 +78,8 @@
   <ItemGroup>
     <Folder Include="Jobs\Projectiles\art\" />
     <Folder Include="WorldGen\Factory\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="tModLoader.CodeAssist" Version="0.1.5" />
   </ItemGroup>
 </Project>
