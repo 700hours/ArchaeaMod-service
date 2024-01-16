@@ -13,17 +13,14 @@
     <Compile Remove="Jobs\Items\Armor\**" />
     <Compile Remove="Jobs\Items\art\**" />
     <Compile Remove="Jobs\Items\Weapon\**" />
-    <Compile Remove="Jobs\Jobs\**" />
     <EmbeddedResource Remove="archive\**" />
     <EmbeddedResource Remove="Jobs\Items\Armor\**" />
     <EmbeddedResource Remove="Jobs\Items\art\**" />
     <EmbeddedResource Remove="Jobs\Items\Weapon\**" />
-    <EmbeddedResource Remove="Jobs\Jobs\**" />
     <None Remove="archive\**" />
     <None Remove="Jobs\Items\Armor\**" />
     <None Remove="Jobs\Items\art\**" />
     <None Remove="Jobs\Items\Weapon\**" />
-    <None Remove="Jobs\Jobs\**" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Remove="en-US.hjson" />

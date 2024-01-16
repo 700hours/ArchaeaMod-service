@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaeaMod", "ArchaeaMod.cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tUserInterface", "..\tUserInterface\tUserInterface.csproj", "{0C814403-E66F-43F8-A25E-91EA8B38A968}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TakerylProject-alpha2", "..\TakerylProject-alpha2\TakerylProject-alpha2.csproj", "{1780DAA5-C0E8-4FFF-BE18-9891A6C9D7EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0C814403-E66F-43F8-A25E-91EA8B38A968}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C814403-E66F-43F8-A25E-91EA8B38A968}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C814403-E66F-43F8-A25E-91EA8B38A968}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1780DAA5-C0E8-4FFF-BE18-9891A6C9D7EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1780DAA5-C0E8-4FFF-BE18-9891A6C9D7EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1780DAA5-C0E8-4FFF-BE18-9891A6C9D7EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1780DAA5-C0E8-4FFF-BE18-9891A6C9D7EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

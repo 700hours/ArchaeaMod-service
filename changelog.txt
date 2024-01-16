@@ -1,6 +1,5 @@
-version 1.4.36.280 -> 1.4.37.283 
+version 1.4.37.283 -> 1.4.38.285
 ================================
-# Fixed
--> Scroll wheel slow
--> Scroll wheel function causing automatic scrolling
--> Archaea Mode menu option saving and clicking not working
+# Updated
+-> Damage scaling
+-> NPC life scaling
