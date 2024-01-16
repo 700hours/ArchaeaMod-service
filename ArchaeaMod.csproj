@@ -36,6 +36,7 @@
     <Compile Remove="Jobs\Projectiles\Frost.cs" />
     <Compile Remove="Jobs\Projectiles\OneBox.cs" />
     <Compile Remove="Jobs\Projectiles\Poison.cs" />
+    <Compile Remove="TakerylProject\ProjectWorld.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Buffs\ModeLifeScale.png" />
