@@ -7,4 +7,5 @@ Release Archaea Mod
 
 Major scaling difference before and after consuming life crystal
 -> Add a notice, such as "By the way" for the jump from 100 to 600 life
+
 Make a configuration

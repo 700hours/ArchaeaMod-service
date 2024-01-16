@@ -161,18 +161,18 @@ namespace ArchaeaMod.Mode
             // Original ratio
             // float ratio = 500f / 9999f;
             // float result = value / ratio * scale;
-            float result = scale;
+            float result = 1f;
             switch (who)
             {
                 case StatWho.None:
                     break;
                 //  Player.PreHurt
                 case StatWho.Player:
-                    result *= scale;
+                    //result *= scale;
                     break;
                 //  NPC.OnSpawn
                 case StatWho.NPC:
-                    result *= scale;
+                    //result *= scale;
                     break;
             }
             switch (stat)
@@ -187,7 +187,7 @@ namespace ArchaeaMod.Mode
                     result *= mitigate;
                     if (Main.LocalPlayer.statLifeMax >= 600)
                     {
-                        result *= 5f;// * (Main.LocalPlayer.statLifeMax / 9999f);    // increase in damage when life scales
+                        result += ModeToggle.FinalScale(Main.LocalPlayer);    // increase in damage when life scales
                     }
                     break;
             }
@@ -525,6 +525,10 @@ namespace ArchaeaMod.Mode
             get { return ModContent.GetInstance<ArchaeaWorld>().notFirstJoin; }
             set { ModContent.GetInstance<ArchaeaWorld>().notFirstJoin = value; }
         }
+        public static float FinalScale(Player player)
+        {                                                          
+            return ModContent.GetInstance<ModeToggle>().damageScale + 10f * (player.statLifeMax / 9999f);
+        }
         public bool archaeaMode;
         public bool progress;
         public float healthScale;
@@ -659,7 +663,7 @@ namespace ArchaeaMod.Mode
                     Utils.DrawInvBG(sb, panel, Color.DodgerBlue * 0.33f);
                     //sb.Draw(TextureAssets.MagicPixel.Value, panel, Color.DodgerBlue * 0.33f);
                     sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + healthScale, new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
-                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + damageScale + (Main.LocalPlayer.statLifeMax >= 600 ? 5 : 0), new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + (Main.LocalPlayer.statLifeMax >= 600 ? FinalScale(Main.LocalPlayer) : damageScale), new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "Day: " + Math.Round(dayCount + 1, 0), new Vector2(panel.Left + 4, panel.Top + 44), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "World time: " + Math.Round(totalTime / 60d / 60d, 1), new Vector2(panel.Left + 4, panel.Top + 64), Color.White);
                 }
