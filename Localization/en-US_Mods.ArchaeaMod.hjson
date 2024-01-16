@@ -1,342 +1,263 @@
-Projectiles: {
-	a_Aura.DisplayName: a_ Aura
-	a_Convert.DisplayName: a_ Convert
-	a_Lightning.DisplayName: a_ Lightning
-	a_Shock.DisplayName: a_ Shock
-	a_Wind.DisplayName: a_ Wind
-	d_Bog.DisplayName: d_ Bog
-	d_IceStorm.DisplayName: d_ Ice Storm
-	d_Meteor.DisplayName: d_ Meteor
-	d_Poison.DisplayName: d_ Poison
-	d_Toxic.DisplayName: d_ Toxic
-	Meteor.DisplayName: Meteor
-	ThrownSword.DisplayName: Thrown Sword
-}
-
-NPCs: {
-}
-
-Items: {
-	magno_stonewall.Tooltip: ""
-	magno_stone.Tooltip: ""
-	magno_brickwall.Tooltip: ""
-	magno_brick.Tooltip: ""
-	magno_mask.Tooltip: ""
-	magno_ore.Tooltip: ""
-	magno_dirt.Tooltip: ""
-	magno_chest.Tooltip: ""
-	magno_fragment.Tooltip: ""
-	magno_core.Tooltip: ""
-	magno_bar.Tooltip: ""
-
-	cinnabar_crystal: {
-	}
-
-	magno_yoyo: {
-	}
-
-	magno_trophy.Tooltip: ""
-
-	magno_treasurebag: {
-	}
-
-	magno_summonstaff: {
-	}
-
-	magno_book: {
-	}
-
-	cinnabar_pickaxe.Tooltip: ""
-	cinnabar_hamaxe.Tooltip: ""
-
-	cinnabar_dagger: {
-	}
-
-	cinnabar_bow: {
-	}
-
-	magnoplate: {
-	}
-
-	magnohelmet: {
-	}
-
-	magnoheadgear: {
-	}
-
-	magnogreaves: {
-	}
-
-	cinnabarplate: {
-	}
-
-	cinnabarmask: {
-	}
-
-	cinnabarhelmet: {
-	}
-
-	cinnabargreaves: {
-	}
-
-	ancient_shockplate.Tooltip: ""
-	ancient_shockhelmet.Tooltip: ""
-	ancient_shockgreaves.Tooltip: ""
-
-	Transmogrify: {
-	}
-
-	Tome_of_weaken: {
-	}
-
-	Tome_of_summoning: {
-	}
-
-	Tome_of_soften: {
-	}
-
-	Tome_of_plague_explosion: {
-	}
-
-	Tome_of_plague: {
-	}
-
-	Tome_of_phase: {
-	}
-
-	Textbook_of_gathering: {
-	}
-
-	Scroll_plague_nova: {
-	}
-
-	Scroll_plague_explosion: {
-	}
-
-	Scroll_incognito: {
-	}
-
-	Scroll_frozen_nova: {
-	}
-
-	Scroll_fortitude: {
-	}
-
-	Scroll_firestorm: {
-	}
-
-	Prospecting_tool: {
-	}
-
-	Manipulate: {
-	}
-
-	LifeLeech: {
-	}
-
-	Elevator: {
-	}
-
-	DungeonLocator: {
-	}
-
-	Drill: {
-	}
-
-	Convert: {
-	}
-
-	AnotherChance: {
-	}
-
-	sky_brickwall.Tooltip: ""
-	sky_brick.Tooltip: ""
-	factory_brickwall_1.Tooltip: ""
-
-	purple_haze: {
-	}
-
-	mbox_magno_boss.Tooltip: ""
-	mbox_magno_2.Tooltip: ""
-	mbox_magno_1.Tooltip: ""
-	m_door.Tooltip: ""
-	m_chandelier.Tooltip: ""
-	m_chair.Tooltip: ""
-
-	m_biomepainting: {
-	}
-
-	factory_brick_1.Tooltip: ""
-	banner_hatchling.Tooltip: ""
-
-	r_Tomohawk: {
-	}
-
-	r_Javelin: {
-	}
-
-	r_Flail: {
-	}
-
-	r_Catcher: {
-	}
-
-	PossessedSpiculum: {
-	}
-
-	PossessedMusket: {
-	}
-
-	n_Staff: {
-	}
-
-	n_core: {
-	}
-
-	r_plate.Tooltip: ""
-	magno_plant.Tooltip: ""
-	m_shield.Tooltip: ""
-	m_fossil.Tooltip: ""
-
-	gray_solution: {
-	}
-
-	GhostlyChains: {
-	}
-
-	flask_mercury: {
-	}
-
-	dream_catcher: {
-	}
-
-	c_Sword: {
-	}
-
-	c_Staff: {
-	}
-
-	ShockPlate.Tooltip: ""
-	ShockMask.Tooltip: ""
-	ShockLegs.Tooltip: ""
-
-	RustbanePlate: {
-	}
-
-	RustbaneLegs.Tooltip: ""
-	RustbaneHead.Tooltip: ""
-
-	Staff: {
-	}
-
-	Sabre: {
-	}
-
-	Deflector: {
-	}
-
-	Calling: {
-	}
-
-	Broadsword: {
-	}
-
-	acc_cluster: {
-	}
-
-	Alpha: {
-		DisplayName: Alpha
-		Tooltip: ""
-	}
-
-	BlinkDagger: {
-		DisplayName: Blink Dagger
-		Tooltip: ""
-	}
-
-	Dire: {
-		DisplayName: Dire
-		Tooltip: ""
-	}
-
-	SpacialAnomaly: {
-		DisplayName: Spacial Anomaly
-		Tooltip: ""
-	}
-}
-
 Buffs: {
-	magno_summon: {
-	}
-
-	Zombie: {
-	}
-
-	Weaken: {
-	}
-
-	Transmogrify: {
-	}
-
-	Summoned: {
-	}
-
-	Soft: {
-	}
-
-	Plague: {
-	}
-
-	Phase: {
-	}
-
-	Fortitude: {
-	}
-
-	CallMinionBuff: {
-	}
-
-	stun: {
-	}
-
-	mercury: {
-	}
-
-	frozen: {
-	}
-
-	flask_mercury: {
+	buff_catcher: {
 	}
 
 	buff_cluster: {
 	}
 
-	buff_catcher: {
+	flask_mercury: {
+	}
+
+	frozen: {
+	}
+
+	mercury: {
+	}
+
+	stun: {
+	}
+
+	CallMinionBuff: {
+	}
+
+	Fortitude: {
+	}
+
+	Phase: {
+	}
+
+	Plague: {
+	}
+
+	Soft: {
+	}
+
+	Summoned: {
+	}
+
+	Transmogrify: {
+	}
+
+	Weaken: {
+	}
+
+	Zombie: {
+	}
+
+	magno_summon: {
 	}
 
 	ModeLifeScale: {
-		DisplayName: Mode Life Scale
-		Description: Mods.ArchaeaMod.Buffs.ModeLifeScale.Description
 	}
 }
 
-Tiles: {
+Biomes: {
 }
 
-Biomes: {
-	SkyFortPortalBiome.TownNPCDialogueName: the Sky Fort Portal Biome
-	SkyFortBiome.TownNPCDialogueName: the Sky Fort Biome
-	MagnoBiome.TownNPCDialogueName: the Magno Biome
-	FactoryBiome.TownNPCDialogueName: the Factory Biome
+Items: {
+	acc_cluster: {
+	}
+
+	Broadsword: {
+	}
+
+	Calling: {
+	}
+
+	Deflector: {
+	}
+
+	Sabre: {
+	}
+
+	Staff: {
+	}
+
+	RustbanePlate: {
+	}
+
+	c_Staff: {
+	}
+
+	c_Sword: {
+	}
+
+	dream_catcher: {
+	}
+
+	flask_mercury: {
+	}
+
+	GhostlyChains: {
+	}
+
+	gray_solution: {
+	}
+
+	n_core: {
+	}
+
+	n_Staff: {
+	}
+
+	PossessedMusket: {
+	}
+
+	PossessedSpiculum: {
+	}
+
+	r_Catcher: {
+	}
+
+	r_Flail: {
+	}
+
+	r_Javelin: {
+	}
+
+	r_Tomohawk: {
+	}
+
+	m_biomepainting: {
+	}
+
+	purple_haze: {
+	}
+
+	AnotherChance: {
+	}
+
+	Convert: {
+	}
+
+	Drill: {
+	}
+
+	DungeonLocator: {
+	}
+
+	Elevator: {
+	}
+
+	LifeLeech: {
+	}
+
+	Manipulate: {
+	}
+
+	Prospecting_tool: {
+	}
+
+	Scroll_firestorm: {
+	}
+
+	Scroll_fortitude: {
+	}
+
+	Scroll_frozen_nova: {
+	}
+
+	Scroll_incognito: {
+	}
+
+	Scroll_plague_explosion: {
+	}
+
+	Scroll_plague_nova: {
+	}
+
+	Textbook_of_gathering: {
+	}
+
+	Tome_of_phase: {
+	}
+
+	Tome_of_plague: {
+	}
+
+	Tome_of_plague_explosion: {
+	}
+
+	Tome_of_soften: {
+	}
+
+	Tome_of_summoning: {
+	}
+
+	Tome_of_weaken: {
+	}
+
+	Transmogrify: {
+	}
+
+	cinnabargreaves: {
+	}
+
+	cinnabarhelmet: {
+	}
+
+	cinnabarmask: {
+	}
+
+	cinnabarplate: {
+	}
+
+	magnogreaves: {
+	}
+
+	magnoheadgear: {
+	}
+
+	magnohelmet: {
+	}
+
+	magnoplate: {
+	}
+
+	cinnabar_bow: {
+	}
+
+	cinnabar_dagger: {
+	}
+
+	magno_book: {
+	}
+
+	magno_summonstaff: {
+	}
+
+	magno_treasurebag: {
+	}
+
+	magno_yoyo: {
+	}
+
+	cinnabar_crystal: {
+	}
+
+	Alpha: {
+	}
+
+	BlinkDagger: {
+	}
+
+	Dire: {
+	}
+
+	SpacialAnomaly: {
+	}
+}
+
+Projectiles: {
+}
+
+NPCs: {
+}
+
+Tiles: {
+	m_chest: {
+	}
 }
 
 Keybinds: {
-	"Show Extra Lives.DisplayName": Show  Extra  Lives
-	"Use Elevator.DisplayName": Use  Elevator
-	"Wall Jump.DisplayName": Wall  Jump
-	"Double jump.DisplayName": Double jump
-	"Leap attack.DisplayName": Leap attack
-	Leap.DisplayName: Leap
-	"Progress diaglog visible.DisplayName": Progress diaglog visible
-	"Use Job Skill.DisplayName": Use  Job  Skill
 }

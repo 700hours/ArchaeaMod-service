@@ -268,6 +268,7 @@ namespace ArchaeaMod
         private bool classChosen;
         private PlayerClass classData;
         public byte jobChoice = 0;
+        private bool hasUsedLifeCrystal = false;
 
         //  Stat and trait
         public int remainingStat;
@@ -299,6 +300,7 @@ namespace ArchaeaMod
         public short extraLife = 0;
         public int dungeonLocatorTicks = 0;
         public int locatorDirection = -1;
+        private int hintTicks = 0;
 
         //  Stat variables
         //  Increase
@@ -488,6 +490,7 @@ namespace ArchaeaMod
             enterWorldTicks = tag.GetInt("enterWorldStart");
             //  Items
             extraLife = tag.GetShort("extraLives");
+            hasUsedLifeCrystal = tag.GetBool("hasUsedLifeCrystal");
 
         }
         public override void SaveData(TagCompound tag)
@@ -536,6 +539,7 @@ namespace ArchaeaMod
             tag.Add("enterWorldStart", enterWorldTicks);
             //  Items
             tag.Add("extraLives", extraLife);
+            tag.Add("hasUsedLifeCrystal", hasUsedLifeCrystal);
         }
 
         public bool HasClassTrait(int index, int classID)
@@ -956,12 +960,11 @@ namespace ArchaeaMod
                 breathTimer = breathTimerMax;
             }
         }
-        public override void OnHurt(Player.HurtInfo info)
+        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
-            int damage = info.Damage;
             if (CheckHasTrait(TraitID.MAGE_DamageReduce, ClassID.Magic))
             {
-                damage = (int)(damage * 0.9f);
+                modifiers.FinalDamage *= 0.9f;
             }
             if (CheckHasTrait(TraitID.MAGE_NoKb, ClassID.Magic))
             {
@@ -970,13 +973,9 @@ namespace ArchaeaMod
                     Player.noKnockback = true;
                 }
             }
-            damage = (int)(damage * Math.Max(percentDamageTaken, 0f));
-            info.Damage = damage;
-            //- toughness / 2;
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return;
-            damage = ArchaeaMode.ModeScaling(ArchaeaMode.StatWho.Player, ArchaeaMode.Stat.Damage, damage, ModContent.GetInstance<ModeToggle>().damageScale, Player.statDefense, DamageClass.Default);
-            info.Damage = damage;
+            modifiers.FinalDamage += ArchaeaMode.ModeScale(ArchaeaMode.StatWho.Player, ArchaeaMode.Stat.Damage, ModContent.GetInstance<ModeToggle>().damageScale, Player.statDefense, DamageClass.Default);
         }
         public override float UseSpeedMultiplier(Item item)
         {
@@ -2070,6 +2069,22 @@ namespace ArchaeaMod
             {
                 ModeUI.DrawTextUI(sb, Main.screenHeight - 200, $"Extra lives: {extraLife}", ref t, 300);
             }
+            if (Player.statLifeMax == 100)
+            {
+                hintTicks = 0;
+            }
+            if (Player.statLifeMax == 600)
+            {
+                if (!hasUsedLifeCrystal)
+                {
+                    ModeUI.DrawTextUI(sb, Main.screenHeight - 200, "Reminder: Archaea Mode is enabled.", ref hintTicks, 600);
+                    if (hintTicks >= 600)
+                    {
+                        hasUsedLifeCrystal = true;
+                    }
+                }
+            }
+            return;
             if (debugMenu)
                 DebugMenu();
             if (spawnMenu)

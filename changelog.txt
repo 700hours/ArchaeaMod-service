@@ -1,9 +1,11 @@
-version 1.4.38.285 -> 1.4.39.290
+version 1.4.38.285 -> 1.4.40.292
 ================================
 # Added
 -> 15 jobs; there are three jobs per class
 -> 15 skills; each job has one unique skill
 -> Jobs menu UI
+-> When using a Life Crystal, a reminder will be posted
+-> 5x damage multiplier once conditions are met
 # Fixed
 -> Stun debuff recoloring
 -> ListBox innactive text not drawing

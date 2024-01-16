@@ -80,13 +80,33 @@ Mods: {
 				DisplayName: Magno Fly
 				Description: Chemically enhanced minion
 			}
+
+			ModeLifeScale: {
+				DisplayName: Mode Life Scale
+				Description: Mods.ArchaeaMod.Buffs.ModeLifeScale.Description
+			}
 		}
 
 		Biomes: {
-			FactoryBiome.DisplayName: Factory Biome
-			MagnoBiome.DisplayName: Magno Biome
-			SkyFortBiome.DisplayName: Sky Fort Biome
-			SkyFortPortalBiome.DisplayName: Sky Fort Portal Biome
+			SkyFortPortalBiome: {
+				TownNPCDialogueName: the Sky Fort Portal
+				DisplayName: Sky Fort Portal Biome
+			}
+
+			SkyFortBiome: {
+				TownNPCDialogueName: the Sky Fort
+				DisplayName: Sky Fort Biome
+			}
+
+			MagnoBiome: {
+				TownNPCDialogueName: the Magno Biome
+				DisplayName: Magno Biome
+			}
+
+			FactoryBiome: {
+				TownNPCDialogueName: the Factory Biome
+				DisplayName: Factory Biome
+			}
 		}
 
 		Items: {
@@ -124,17 +144,35 @@ Mods: {
 				Tooltip: Casts fire wave
 			}
 
-			RustbaneHead.DisplayName: Rustbane Visor
-			RustbaneLegs.DisplayName: Rustbane Greaves
+			RustbaneHead: {
+				DisplayName: Rustbane Visor
+				Tooltip: ""
+			}
+
+			RustbaneLegs: {
+				DisplayName: Rustbane Greaves
+				Tooltip: ""
+			}
 
 			RustbanePlate: {
 				DisplayName: Rustbane Chestplate
 				Tooltip: 20% increased throwing damage
 			}
 
-			ShockLegs.DisplayName: Shock Greaves
-			ShockMask.DisplayName: Shock Mask
-			ShockPlate.DisplayName: Shock Plate
+			ShockLegs: {
+				DisplayName: Shock Greaves
+				Tooltip: ""
+			}
+
+			ShockMask: {
+				DisplayName: Shock Mask
+				Tooltip: ""
+			}
+
+			ShockPlate: {
+				DisplayName: Shock Plate
+				Tooltip: ""
+			}
 
 			c_Staff: {
 				DisplayName: Cinnabar Staff
@@ -171,10 +209,25 @@ Mods: {
 				Tooltip: Transforms stone into Magno stone
 			}
 
-			m_fossil.DisplayName: Scorched Fossil
-			m_shield.DisplayName: Magno Shield
-			magno_plant.DisplayName: Magno Plant
-			r_plate.DisplayName: Rusty Plate
+			m_fossil: {
+				DisplayName: Scorched Fossil
+				Tooltip: ""
+			}
+
+			m_shield: {
+				DisplayName: Magno Shield
+				Tooltip: ""
+			}
+
+			magno_plant: {
+				DisplayName: Magno Plant
+				Tooltip: ""
+			}
+
+			r_plate: {
+				DisplayName: Rusty Plate
+				Tooltip: ""
+			}
 
 			n_core: {
 				DisplayName: Dark Aura
@@ -220,29 +273,70 @@ Mods: {
 				Tooltip: Was once shiny
 			}
 
-			banner_hatchling.DisplayName: Hatchling banner
-			factory_brick_1.DisplayName: Factory Brick
+			banner_hatchling: {
+				DisplayName: Hatchling banner
+				Tooltip: ""
+			}
+
+			factory_brick_1: {
+				DisplayName: Factory Brick
+				Tooltip: ""
+			}
 
 			m_biomepainting: {
 				DisplayName: Magnoliac Biome
 				Tooltip: R.A.
 			}
 
-			m_chair.DisplayName: Magnoliac Chair
-			m_chandelier.DisplayName: Magnoliac Chandelier
-			m_door.DisplayName: Magnoliac door
-			mbox_magno_1.DisplayName: Magnoliac Music Box
-			mbox_magno_2.DisplayName: Magnoliac Music Box Alt
-			mbox_magno_boss.DisplayName: Magnoliac Music Box
+			m_chair: {
+				DisplayName: Magnoliac Chair
+				Tooltip: ""
+			}
+
+			m_chandelier: {
+				DisplayName: Magnoliac Chandelier
+				Tooltip: ""
+			}
+
+			m_door: {
+				DisplayName: Magnoliac door
+				Tooltip: ""
+			}
+
+			mbox_magno_1: {
+				DisplayName: Magnoliac Music Box
+				Tooltip: ""
+			}
+
+			mbox_magno_2: {
+				DisplayName: Magnoliac Music Box Alt
+				Tooltip: ""
+			}
+
+			mbox_magno_boss: {
+				DisplayName: Magnoliac Music Box
+				Tooltip: ""
+			}
 
 			purple_haze: {
 				DisplayName: Purple Haze
 				Tooltip: Fever dreams coalesced into a tangible essence
 			}
 
-			sky_brick.DisplayName: Fortress Brick
-			factory_brickwall_1.DisplayName: Fortress Brick Wall
-			sky_brickwall.DisplayName: Fortress Brick Wall
+			sky_brick: {
+				DisplayName: Fortress Brick
+				Tooltip: ""
+			}
+
+			factory_brickwall_1: {
+				DisplayName: Fortress Brick Wall
+				Tooltip: ""
+			}
+
+			sky_brickwall: {
+				DisplayName: Fortress Brick Wall
+				Tooltip: ""
+			}
 
 			AnotherChance: {
 				DisplayName: Another Chance
@@ -408,9 +502,20 @@ Mods: {
 				Tooltip: Cost 1/3 max mana
 			}
 
-			ancient_shockgreaves.DisplayName: Ancient Shock Greaves
-			ancient_shockhelmet.DisplayName: Ancient Shock Mask
-			ancient_shockplate.DisplayName: Ancient Shock Plate
+			ancient_shockgreaves: {
+				DisplayName: Ancient Shock Greaves
+				Tooltip: ""
+			}
+
+			ancient_shockhelmet: {
+				DisplayName: Ancient Shock Mask
+				Tooltip: ""
+			}
+
+			ancient_shockplate: {
+				DisplayName: Ancient Shock Plate
+				Tooltip: ""
+			}
 
 			cinnabargreaves: {
 				DisplayName: Cinnabar Greaves
@@ -486,8 +591,15 @@ Mods: {
 				Tooltip: Mercury-tipped blade
 			}
 
-			cinnabar_hamaxe.DisplayName: Cinnabar Hamaxe
-			cinnabar_pickaxe.DisplayName: Cinnabar Pickaxe
+			cinnabar_hamaxe: {
+				DisplayName: Cinnabar Hamaxe
+				Tooltip: ""
+			}
+
+			cinnabar_pickaxe: {
+				DisplayName: Cinnabar Pickaxe
+				Tooltip: ""
+			}
 
 			magno_book: {
 				DisplayName: Magno Book
@@ -508,7 +620,10 @@ Mods: {
 				Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
 			}
 
-			magno_trophy.DisplayName: Magnoliac Trophy
+			magno_trophy: {
+				DisplayName: Magnoliac Trophy
+				Tooltip: ""
+			}
 
 			magno_yoyo: {
 				DisplayName: Rubidium Yoyo
@@ -520,17 +635,80 @@ Mods: {
 				Tooltip: Glows with a crimson aura
 			}
 
-			magno_bar.DisplayName: Rubidium Bar
-			magno_core.DisplayName: Scorched Core
-			magno_fragment.DisplayName: Magno Fragment
-			magno_brick.DisplayName: Magno Brick
-			magno_chest.DisplayName: Magnoliac Chest
-			magno_dirt.DisplayName: Magno Dirt
-			magno_ore.DisplayName: Rubidium Ore
-			magno_stone.DisplayName: Magno Stone
-			magno_mask.DisplayName: Magno Mask
-			magno_brickwall.DisplayName: Magno Brick Wall
-			magno_stonewall.DisplayName: Magno Stone Wall
+			magno_bar: {
+				DisplayName: Rubidium Bar
+				Tooltip: ""
+			}
+
+			magno_core: {
+				DisplayName: Scorched Core
+				Tooltip: ""
+			}
+
+			magno_fragment: {
+				DisplayName: Magno Fragment
+				Tooltip: ""
+			}
+
+			magno_brick: {
+				DisplayName: Magno Brick
+				Tooltip: ""
+			}
+
+			magno_chest: {
+				DisplayName: Magnoliac Chest
+				Tooltip: ""
+			}
+
+			magno_dirt: {
+				DisplayName: Magno Dirt
+				Tooltip: ""
+			}
+
+			magno_ore: {
+				DisplayName: Rubidium Ore
+				Tooltip: ""
+			}
+
+			magno_stone: {
+				DisplayName: Magno Stone
+				Tooltip: ""
+			}
+
+			magno_mask: {
+				DisplayName: Magno Mask
+				Tooltip: ""
+			}
+
+			magno_brickwall: {
+				DisplayName: Magno Brick Wall
+				Tooltip: ""
+			}
+
+			magno_stonewall: {
+				DisplayName: Magno Stone Wall
+				Tooltip: ""
+			}
+
+			Alpha: {
+				DisplayName: Alpha
+				Tooltip: ""
+			}
+
+			BlinkDagger: {
+				DisplayName: Blink Dagger
+				Tooltip: ""
+			}
+
+			Dire: {
+				DisplayName: Dire
+				Tooltip: ""
+			}
+
+			SpacialAnomaly: {
+				DisplayName: Spacial Anomaly
+				Tooltip: ""
+			}
 		}
 
 		Projectiles: {
@@ -571,6 +749,18 @@ Mods: {
 			PossessedBullet.DisplayName: Possessed Bullet
 			Spiculum.DisplayName: Spiculum
 			Tomohawk.DisplayName: Tomohawk
+			a_Aura.DisplayName: Aura
+			a_Convert.DisplayName: Convert
+			a_Lightning.DisplayName: Lightning
+			a_Shock.DisplayName: Shock
+			a_Wind.DisplayName: Wind
+			d_Bog.DisplayName: Bog
+			d_IceStorm.DisplayName: Ice Storm
+			d_Meteor.DisplayName: Meteor
+			d_Poison.DisplayName: Poison
+			d_Toxic.DisplayName: Toxic
+			Meteor.DisplayName: Meteor
+			ThrownSword.DisplayName: Thrown Sword
 		}
 
 		NPCs: {
@@ -627,6 +817,17 @@ Mods: {
 			paintings.MapEntry: Painting
 			sky_portal.MapEntry: Portal
 			steam_vent.MapEntry: Steam vent
+		}
+
+		Keybinds: {
+			"Show Extra Lives.DisplayName": Show Extra Lives
+			"Use Elevator.DisplayName": Use Elevator
+			"Wall Jump.DisplayName": Wall Jump
+			"Double jump.DisplayName": Double jump
+			"Leap attack.DisplayName": Leap attack
+			Leap.DisplayName: Leap
+			"Progress diaglog visible.DisplayName": Progress diaglog visible
+			"Use Job Skill.DisplayName": Use job skill
 		}
 	}
 }

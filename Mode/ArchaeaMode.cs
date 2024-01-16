@@ -111,6 +111,10 @@ namespace ArchaeaMod.Mode
                 //  Player.PreHurt
                 case StatWho.Player:
                     result *= scale;
+                    if (Main.LocalPlayer.statLifeMax >= 600)
+                    {
+                        result *= 5;    // increase in damage when life scales
+                    }
                     break;
                 //  NPC.OnSpawn
                 case StatWho.NPC:
@@ -127,6 +131,64 @@ namespace ArchaeaMod.Mode
                 case Stat.Damage:
                     result *= bonus;
                     result *= mitigate;
+                    break;
+            }
+            return (int)result;
+        }
+        public static int ModeScale(StatWho who, Stat stat, float scale, int defense, DamageClass damage)
+        {
+            float quotient = Math.Min(defense / 999f, 0.9f);
+            float mitigate = Math.Abs(quotient - 1f);
+            float bonus = 1f;
+            switch (damage)
+            {
+                case DefaultDamageClass:
+                    break;
+                case MagicDamageClass:
+                    bonus = mitigate + 1f;
+                    break;
+                case RangedDamageClass:
+                    break;
+                case SummonDamageClass:
+                    break;
+                case MeleeDamageClass:
+                    bonus = quotient + 1f;
+                    break;
+                case ThrowingDamageClass:
+                    break;
+            }
+
+            // Original ratio
+            // float ratio = 500f / 9999f;
+            // float result = value / ratio * scale;
+            float result = scale;
+            switch (who)
+            {
+                case StatWho.None:
+                    break;
+                //  Player.PreHurt
+                case StatWho.Player:
+                    result *= scale;
+                    break;
+                //  NPC.OnSpawn
+                case StatWho.NPC:
+                    result *= scale;
+                    break;
+            }
+            switch (stat)
+            {
+                case Stat.None:
+                    break;
+                case Stat.Life:
+                    break;
+                // NPC.ModifyHitByItem & NPC.ModifyHitByProjectile
+                case Stat.Damage:
+                    result *= bonus;
+                    result *= mitigate;
+                    if (Main.LocalPlayer.statLifeMax >= 600)
+                    {
+                        result *= 5f;// * (Main.LocalPlayer.statLifeMax / 9999f);    // increase in damage when life scales
+                    }
                     break;
             }
             return (int)result;
@@ -597,7 +659,7 @@ namespace ArchaeaMod.Mode
                     Utils.DrawInvBG(sb, panel, Color.DodgerBlue * 0.33f);
                     //sb.Draw(TextureAssets.MagicPixel.Value, panel, Color.DodgerBlue * 0.33f);
                     sb.DrawString(FontAssets.MouseText.Value, "Life scale: " + healthScale, new Vector2(panel.Left + 4, panel.Top + 4), Color.White);
-                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + damageScale, new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
+                    sb.DrawString(FontAssets.MouseText.Value, "Damage scale: " + damageScale + (Main.LocalPlayer.statLifeMax >= 600 ? 5 : 0), new Vector2(panel.Left + 4, panel.Top + 24), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "Day: " + Math.Round(dayCount + 1, 0), new Vector2(panel.Left + 4, panel.Top + 44), Color.White);
                     sb.DrawString(FontAssets.MouseText.Value, "World time: " + Math.Round(totalTime / 60d / 60d, 1), new Vector2(panel.Left + 4, panel.Top + 64), Color.White);
                 }
