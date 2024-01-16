@@ -17,12 +17,36 @@ using ArchaeaMod.TakerylProject.Projectiles;
 using ReLogic.Content;
 using Terraria.GameContent;
 using Terraria.GameContent.Drawing;
+using Terraria.Audio;
 
 namespace ArchaeaMod.TakerylProject
 {
 	public class ProjectPlayer : ModPlayer
 	{
-		public bool canSpin = false;
+        #region sword spin
+        bool light = false;
+        int lightDust, lightDust2;
+        int coolDown = 0;
+
+        int spinCharge = 0, spinDuration = 600;
+        bool /*canSpin = false, */spinning = false, charging = false;
+        int radius = 72, Radius;
+        float degrees = 0.017f, degrees2 = 3.077f, degrees3 = 0;
+        int dmgTicks;
+        int soundTicks = 0;
+        int ticks = 0;
+
+        int blasts;
+        float charge = 450f;
+        bool active = false;
+
+        const float defaultCharge = 450f;
+
+        Vector2 dustPos;
+        Vector2 center;
+        Texture2D swordTexture;
+        #endregion
+        public bool canSpin = false;
 		public bool drawBlink = false;
 		public bool drawLeft, drawRight;
 		public bool angel, demon, spacePirate;
@@ -36,12 +60,13 @@ namespace ArchaeaMod.TakerylProject
 		public int 
 			blinkCoolDown = 0, spinCoolDown = 0, 
 			strikeCoolDown = 0, missileCoolDown = 0,
-			SK_coolDown, maxCoolDown;
+			SK_coolDown, SK_maxCoolDown;
 		private int oldHP, direction, num;
 		public int Active_Skill;
 		public const int
-			AS_None = 0, 
-			AS_Leap = 1,
+			AS_None = -1,
+            AS_Spin = 0,
+            AS_Leap = 1,
 			AS_Throw = 2,
 			AS_Convert = 10,
 			AS_PhaseShift = 11,
@@ -55,8 +80,38 @@ namespace ArchaeaMod.TakerylProject
 			AS_IceStorm = 23,
 			AS_MeteorRain = 24,
 			AS_Swamp = 25;
+		public readonly string[] Name = new string[]
+		{
+			"Spin",
+			"Leap",
+            "Throw",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Convert",
+			"Phase Shift",
+			"Refresh Aura",
+			"Shock Nova",
+			"Wind Buff",
+			"Lightning Bolt",
+            "",
+            "",
+            "",
+            "",
+            "Poison",
+			"Toxic Nova",
+			"Berserk",
+			"Ice Storm",
+			"Meteor Rain",
+			"Swamp"
+        };
 		private float weight, distance;
 		private Vector2 start, target;
+		private Item swordSpin;
 		
 	/*	public override TagCompound Save()
 		{
@@ -74,14 +129,129 @@ namespace ArchaeaMod.TakerylProject
 		private bool init = true;
 		public override void PreUpdate()
 		{
-			if (debug)
+			switch (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice)
 			{
-				if (KeyPress(Keys.Down))
-					Active_Skill++;
-				if (KeyPress(Keys.Up))
-					Active_Skill--;
+				case JobID.ALL_BusinessMan:
+					Active_Skill = AS_LightningBolt;
+					break;
+				case JobID.ALL_Entrepreneur:
+					Active_Skill = AS_RefreshAura;
+					break;
+				case JobID.ALL_Merchant:
+					Active_Skill = AS_Convert;
+					break;
+				case JobID.MAGE_Botanist:
+					Active_Skill = AS_Swamp;
+					break;
+				case JobID.MAGE_Witch:
+					Active_Skill = AS_ToxicNova;
+					break;
+				case JobID.MAGE_Wizard:
+					Active_Skill = AS_MeteorRain;
+					break;
+				case JobID.MELEE_Smith:
+					Active_Skill = AS_Spin;
+					break;
+				case JobID.MELEE_Warrior:
+					Active_Skill = AS_Leap;
+					break;
+				case JobID.MELEE_WhiteKnight:
+					Active_Skill = AS_Throw;
+					break;
+				case JobID.RANGED_Bowsman:
+					Active_Skill = AS_WindBuff;
+					break;
+				case JobID.RANGED_CorperateUsurper:
+					Active_Skill = AS_ShockNova;
+					break;
+				case JobID.RANGED_Outlaw:
+					Active_Skill = AS_Poison;
+					break;
+				case JobID.SUMMONER_Alchemist:
+					Active_Skill = AS_IceStorm;
+					break;
+				case JobID.SUMMONER_Scientist:
+					Active_Skill = AS_Berzerk;
+					break;
+				case JobID.SUMMONER_Surveyor:
+					Active_Skill = AS_PhaseShift;
+					break;
 			}
-			if (KeyPress(Keys.F))
+            #region sword spin skill
+            if (canSpin)
+            {
+				//	blinkCharge = 0;
+                if (swordSpin.type == 46 || swordSpin.type == 121 || swordSpin.type == 155 || swordSpin.type == 190 || swordSpin.type == 273 || swordSpin.type == 368 || swordSpin.type == 484 || swordSpin.type == 485 || swordSpin.type == 486 || swordSpin.type == 675 || swordSpin.type == 723 || swordSpin.type == 989 || swordSpin.type == 1166 || swordSpin.type == 1185 || swordSpin.type == 1192 || swordSpin.type == 1199 || swordSpin.type == ItemID.CopperShortsword)
+                {
+                    spinning = true;
+
+                    radius = 72;
+                    degrees3 += 0.06f / 2f;
+
+                    center = Player.position + new Vector2(Player.width / 2, Player.height / 2);
+
+                    float PosX = center.X + (float)(radius * Math.Cos(degrees3));
+                    float PosY = center.Y + (float)(radius * Math.Sin(degrees3));
+
+                    Vector2 swordPos = Player.bodyPosition + new Vector2(PosX, PosY);
+
+                    Rectangle swordHitBox = new Rectangle((int)swordPos.X, (int)swordPos.Y, swordSpin.width, swordSpin.height);
+                    NPC[] npc = Main.npc;
+                    for (int k = 0; k < npc.Length - 1; k++)
+                    {
+                        NPC n = npc[k];
+                        Vector2 npcv = new Vector2(n.position.X, n.position.Y);
+                        Rectangle npcBox = new Rectangle((int)npcv.X, (int)npcv.Y, n.width, n.height);
+                        if (n.active && !n.friendly && !n.dontTakeDamage && dmgTicks == 0 && swordPos.Distance(n.Center) <= swordHitBox.Width)
+                        {
+                            n.StrikeNPC(n.CalculateHitInfo((int)(swordSpin.damage * 1.1f), Player.Center.X < n.Center.X ? 1 : -1, false, swordSpin.knockBack * 3, DamageClass.Melee, true));
+                            dmgTicks = 10;
+                        }
+                    }
+                    Projectile[] projectile = Main.projectile;
+                    for (int l = 0; l < projectile.Length - 1; l++)
+                    {
+                        Projectile n = projectile[l];
+                        Vector2 projv = new Vector2(n.position.X, n.position.Y);
+                        Rectangle projBox = new Rectangle((int)projv.X, (int)projv.Y, n.width, n.height);
+                        if (n.active && swordPos.Distance(n.Center) <= swordHitBox.Width)
+                        {
+                            n.timeLeft = 0;
+                        }
+                    }
+                    for (int l = 0; l < Main.player.Length - 1; l++)
+                    {
+                        Player n = Main.player[l];
+                        Vector2 projv = new Vector2(n.position.X, n.position.Y);
+                        Rectangle projBox = new Rectangle((int)projv.X, (int)projv.Y, n.width, n.height);
+                        if (n.active && !n.dead && n.hostile && n.InOpposingTeam(Player) && swordPos.Distance(n.Center) <= swordHitBox.Width)
+                        {
+                            n.DropSelectedItem();
+                        }
+                    }
+
+                    //	TODO: spin sound effect
+                    //soundTicks++;
+                    //if(soundTicks%16 == 0)
+                    //	SoundEngine.PlaySound(SoundID., Player.bodyPosition + new Vector2(PosX, PosY));
+                }
+                else
+                {
+                    spinning = false;
+                }
+                if (spinDuration > 0)
+                    spinDuration--;
+                if (spinDuration == 0)
+                {
+                    degrees3 = 0f;
+                    canSpin = false;
+                    spinning = false;
+                }
+            }
+            if (dmgTicks > 0)
+                dmgTicks--;
+            #endregion
+            if (ArchaeaMain.jobSkill.JustPressed)
 			{
 				if (Active_Skill == AS_Throw)
 				{
@@ -96,12 +266,59 @@ namespace ArchaeaMod.TakerylProject
 						}
 					}
 				}
-				else if (Active_Skill == AS_Leap && SK_coolDown <= 0)
+				else if (Active_Skill == AS_Spin && SK_coolDown <= 0)
+				{
+                    #region Sword Spin
+                    swordSpin = Player.inventory[Player.selectedItem];
+                    if (!canSpin && !spinning)
+                    {
+                        foreach (int i in SwordID.swordTypes)
+                        {
+                            if (swordSpin.type == i)
+                            {
+                                spinCharge = 60;
+                                if (spinCharge >= 60)
+                                {
+                                    canSpin = true;
+                                    spinCharge = 0;
+                                    spinDuration = 600;
+                                    spinCoolDown = 1200;  
+									SetCoolDown(900);
+                                }
+                                if (spinCharge == 30)
+                                    SoundEngine.PlaySound(SoundID.Item2, Player.position);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (spinCharge > 0)
+                            spinCharge--;
+                    }
+                    #endregion
+                }
+                else if (Active_Skill == AS_Leap && SK_coolDown <= 0)
 				{
 					if (!leapt)
 					{
-						SK_coolDown = 180;
-						maxCoolDown = 180;
+                        if (Player.direction == 1)
+                            target = new Vector2(Player.position.X + distance, Player.position.Y);
+                        else
+                            target = new Vector2(Player.position.X - distance, Player.position.Y);
+                        leapt = true;
+
+                        int k = (int)Player.position.X / 16;
+                        int l = (int)Player.position.Y / 16;
+                        if ((Main.tile[k - 1, l + 1].HasTile && Main.tileSolid[Main.tile[k - 1, l + 1].TileType] && Player.direction == -1) || (Main.tile[k + 2, l + 1].HasTile && Main.tileSolid[Main.tile[k + 2, l + 1].TileType] && Player.direction == 1))
+                        {
+                            weight = 0f;
+                            leapt = false;
+                            return;
+                        }
+
+                        SK_coolDown = 180;
+                        SK_maxCoolDown = 180;
 						Player.lifeRegenTime = 150;
 						oldHP = Player.statLife;
 						direction = Player.direction;
@@ -114,29 +331,27 @@ namespace ArchaeaMod.TakerylProject
 							start.X += 16f;
 							start.Y += 8f;
 						}
-						if (Player.direction == 1)
-							target = new Vector2(Player.position.X + distance, Player.position.Y);
-						else 
-							target = new Vector2(Player.position.X - distance, Player.position.Y);
-						leapt = true;
 					}
 				}
 				if (Active_Skill > AS_Throw)
 				{
-					if (angel)
-						AlphaSkillSet();
-					else if (demon)
-						DireSkillSet();
+					//if (angel)
+					AlphaSkillSet();
+					//else if (demon)
+					DireSkillSet();
 				}
 			}
 			if (leapt)
 			{
-				float cos = (float)(distance / 2 * Math.Cos(weight * Math.PI));
+                float cos = (float)(distance / 2 * Math.Cos(weight * Math.PI));
 				float sine = (float)(distance * 1.25f * Math.Sin(weight * Math.PI));
 				if (weight < 1f)
+				{ 
 					weight += 0.02f;
-				//	Make it progression based so longer leaps
-				Player.position += new Vector2(cos, sine * direction) * (direction * -1) + Vector2.Lerp(start, target, weight) - new Vector2(Main.screenPosition.X + Main.screenWidth / 2, Main.screenPosition.Y + Main.screenHeight / 2);
+					//	Make it progression based so longer leaps
+					Player.position += new Vector2(cos, sine * direction) * (direction * -1) + Vector2.Lerp(start, target, weight) - new Vector2(Main.screenPosition.X + Main.screenWidth / 2, Main.screenPosition.Y + Main.screenHeight / 2);
+				}
+				else leapt = false;
 			}
 			if (SK_Phase)
 			{
@@ -171,6 +386,25 @@ namespace ArchaeaMod.TakerylProject
 			int	ex = sx + Player.width - 8, ey = sy + Player.height - 8;
 			if (weight >= 1f || oldHP != Player.statLife)
 				leapt = false;
+            if (leapt)
+			{
+				if (weight >= 0.08f)
+				{ 
+					for (int i = 0; i < 4; i++)
+					{
+						for (int j = 0; j < 5; j++)
+						{
+							int x = (int)(Player.position.X - 16 + i * 16) / 16;
+							int y = (int)(Player.position.Y - 16 + j * 16) / 16;
+							if (Main.tile[x, y].HasTile && Main.tileSolid[Main.tile[x, y].TileType])
+							{
+								leapt = false;
+							}
+						}
+					}
+				}
+			}
+
 			return;
 			#region debug
 				if (KeyPress(Keys.Right))
@@ -184,8 +418,6 @@ namespace ArchaeaMod.TakerylProject
 		}
 		
 		int animate = 0, frameHeight = 52;
-		float degrees3 = 0;
-		Texture2D swordTexture;
 		Texture2D blinkTexture;
 		Texture2D GemTexture;
 		Texture2D WingsTex;
@@ -212,9 +444,9 @@ namespace ArchaeaMod.TakerylProject
 			if (lightState)
 				colorSpecial = Color.LightBlue;
 			else if (!lightState)
-				colorSpecial = Color.Black;
+				colorSpecial = Color.Gray;
 
-			Main.spriteBatch.DrawString(FontAssets.MouseText.Value, textSpecial, boxCenter + new Vector2(32, 64), colorSpecial, 0f, new Vector2(8,8) + FontAssets.MouseText.Value.MeasureString(textSize), 1f, SpriteEffects.None, 0f);
+			//Main.spriteBatch.DrawString(FontAssets.MouseText.Value, textSpecial, boxCenter + new Vector2(32, 64), colorSpecial, 0f, new Vector2(8,8) + FontAssets.MouseText.Value.MeasureString(textSize), 1f, SpriteEffects.None, 0f);
 		
 		//	CurrentPoint = (Time - Depreciating) / Time;
 			
@@ -290,10 +522,10 @@ namespace ArchaeaMod.TakerylProject
 					DrawBorderedRect(Main.spriteBatch, Color.LightGreen * 0.1f, Color.LightGreen * 0.3f, boxOrigin, boxSize, 4);
 			}
 			if (!Main.playerInventory)
-				DrawSkillUI(SK_coolDown, newColor, 90, "Active Skill: " + Active_Skill);
+				DrawSkillUI(SK_coolDown, newColor, 90, "Active skill: " + Name[Active_Skill]);
 			if (Active_Skill == AS_Berzerk)
 			{
-				if (KeyPress(Keys.F))
+				if (ArchaeaMain.jobSkill.JustPressed)
 					num++;
 				if (num > 2)
 					num = 0;
@@ -308,11 +540,26 @@ namespace ArchaeaMod.TakerylProject
 					}
 					for (int i = 0; i < Main.player.Length; i++)
 					{
-						if (Main.player[i].active && !Main.player[i].dead && Main.player[i].Distance(Player.Center) <= dist)
+						if (Main.player[i].active && !Main.player[i].dead && !Main.player[i].hostile && !Main.player[i].InOpposingTeam(Player))
 						{
-							gainBuff[i] = true;
-						}
+							if (Main.player[i].Distance(Player.Center) <= dist)
+							{ 
+								gainBuff[i] = true;
+							}
+							else gainBuff[i] = false;
+                        }
 					}
+					for (int i = 0; i < Main.npc.Length; i++)
+					{
+						if (Main.npc[i].friendly)
+						{
+							if (Main.npc[i].Distance(Player.Center) <= dist)
+							{ 
+								npcGainBuff[i] = true;
+							}
+							else npcGainBuff[i] = false;
+                        }
+                    }
 				}
 				if (num == 2 && CanCastSkill(20, 600))
 				{
@@ -326,7 +573,18 @@ namespace ArchaeaMod.TakerylProject
 							Main.player[j].AddBuff(BuffID.Ironskin, 1800);
 						}
 					}
-				}
+                    for (int j = 0; j < npcGainBuff.Length; j++)
+                    {
+                        if (npcGainBuff[j])
+                        {
+							npcGainBuff[j] = false;
+                            Main.npc[j].AddBuff(BuffID.Wrath, 1800);
+                            Main.npc[j].AddBuff(BuffID.Archery, 1800);
+                            Main.npc[j].AddBuff(BuffID.Ironskin, 1800);
+                        }
+                    }
+					num = 0;
+                }
 			}
 			#region debug
 			return;
@@ -466,10 +724,10 @@ namespace ArchaeaMod.TakerylProject
 					break;
 			}
 		}
-		internal void SetCoolDown(int duration)
+		internal void SetCoolDown(int duration, int buff = 10)
 		{
 			SK_coolDown = duration;
-			maxCoolDown = duration;
+            SK_maxCoolDown = duration;
 		}
 		internal bool CanCastSkill(int manaCost, int coolDown)
 		{
@@ -484,7 +742,8 @@ namespace ArchaeaMod.TakerylProject
 		}
 
 		private bool[] gainBuff = new bool[256];
-		private Vector2 boxOrigin;
+        private bool[] npcGainBuff = new bool[Main.npc.Length];
+        private Vector2 boxOrigin;
 		private Vector2 boxSize;
 		private Vector2 boxCenter;
 		private Color colorSpecial, newColor, newColor2, newColor3, newColor4;
@@ -579,16 +838,17 @@ namespace ArchaeaMod.TakerylProject
 			
 			int leftOrient = (int)boxCenter.X - 76;
 			int verticalOrient = (int)boxCenter.Y;
-			
+			int max = SK_maxCoolDown;
+
 			if (coolDown > 0)
 				newColor = Color.Red;
 			else if (coolDown == 0)
 				newColor = Color.LightGreen;
 
-            Utils.DrawBorderString(spriteBatch, text, boxCenter + new Vector2(32, (offset - 16) * -1), newColor);
+            Utils.DrawBorderString(spriteBatch, text, boxCenter + new Vector2(-76, (offset - 16) * -1), newColor);
             	
-			spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(leftOrient, verticalOrient - offset, (int)100, 4), Color.Black);
-			spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(leftOrient, verticalOrient - offset, maxCoolDown/2, 4), Color.Lerp(Color.Green, Color.Red, (float)coolDown/maxCoolDown));
+			spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(leftOrient, verticalOrient - offset, 100, 4), Color.Black);
+			spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(leftOrient, verticalOrient - offset, (int)(Math.Abs((float)coolDown / Math.Max(max, 1) - 1f) * 100f), 4), Color.Lerp(Color.Green, Color.Red, (float)coolDown/max));
 		}
 
 		public const float radian = 0.017f;

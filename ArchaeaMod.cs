@@ -29,6 +29,9 @@ namespace ArchaeaMod
         public static ModKeybind wallJump;
         public static ModKeybind elevatorButton;
         public static ModKeybind extraLife;
+        public static ModKeybind jobSkill;
+        public static ModKeybind lightHotkey;
+        public static ModKeybind throwHotkey;
         public override void Load()
         {
             AddBossHeadTexture(magnoHead, ModNPCID.MagnoliacHead);
@@ -46,6 +49,10 @@ namespace ArchaeaMod
             wallJump       = KeybindLoader.RegisterKeybind(this, "Wall Jump", Keys.Space);
             elevatorButton = KeybindLoader.RegisterKeybind(this, "Use Elevator", Keys.X);
             extraLife      = KeybindLoader.RegisterKeybind(this, "Show Extra Lives", Keys.None);
+            jobSkill       = KeybindLoader.RegisterKeybind(this, "Use Job Skill", Keys.F);
+            //  lightHotkey    = KeybindLoader.RegisterKeybind(this, "Light effect", Keys.Q);
+            //  Bound to jobSkill hotkey
+            //  throwHotkey    = KeybindLoader.RegisterKeybind(this, "Throw sword", Keys.F);
             //for (int i = 0; i < macro.Length; i++)
             //{
             //    macro[i] = RegisterHotKey($"Macro {i + 1}", "");

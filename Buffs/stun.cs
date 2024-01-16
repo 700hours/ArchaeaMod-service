@@ -15,16 +15,24 @@ namespace ArchaeaMod.Buffs
 {
     public class stun : ModBuff
     {
+        bool init = false;
+        Color oldColor = default;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Stunned");
         }
         public override void Update(NPC npc, ref int buffIndex)
         {
-            if (npc.boss) 
-                return;
+            if (!init)
+            { 
+                oldColor = npc.color;
+            }
             npc.velocity = Vector2.Zero;
             npc.color = Color.LightGray;
+            if (npc.buffTime[buffIndex] == 2)
+            {
+                npc.color = oldColor;
+            }
         }
     }
 }

@@ -99,41 +99,131 @@ namespace ArchaeaMod
     {
         public static class Sets
         {
-            public static bool[] IsMelee = new bool[]
+            public static bool[] IsMelee
             {
-
-            };
+                get
+                {
+                    bool[] array = new bool[15];
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        switch (i)
+                        {
+                            case MELEE_Smith:
+                            case MELEE_Warrior:
+                            case MELEE_WhiteKnight:
+                                array[i] = true;
+                                break;
+                        }
+                    }
+                    return array;
+                }
+            }
+            public static bool[] IsRanged
+            {
+                get
+                {
+                    bool[] array = new bool[15];
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        switch (i)
+                        {
+                            case RANGED_Bowsman:
+                            case RANGED_CorperateUsurper:
+                            case RANGED_Outlaw:
+                                array[i] = true;
+                                break;
+                        }
+                    }
+                    return array;
+                }
+            }
+            public static bool[] IsMage
+            {
+                get
+                {
+                    bool[] array = new bool[15];
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        switch (i)
+                        {
+                            case MAGE_Botanist:
+                            case MAGE_Witch:
+                            case MAGE_Wizard:
+                                array[i] = true;
+                                break;
+                        }
+                    }
+                    return array;
+                }
+            }
+            public static bool[] IsSummoner
+            {
+                get
+                {
+                    bool[] array = new bool[15];
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        switch (i)
+                        {
+                            case SUMMONER_Alchemist:
+                            case SUMMONER_Scientist:
+                            case SUMMONER_Surveyor:
+                                array[i] = true;
+                                break;
+                        }
+                    }
+                    return array;
+                }
+            }
+            public static bool[] IsAll
+            {
+                get
+                {
+                    bool[] array = new bool[15];
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        switch (i)
+                        {
+                            case ALL_BusinessMan:
+                            case ALL_Entrepreneur:
+                            case ALL_Merchant:
+                                array[i] = true;
+                                break;
+                        }
+                    }
+                    return array;
+                }
+            }
         }
-        public static string[] Name = new string[]
+        public readonly static string[] Name = new string[]
         {
-            NAME_None,
-            NAME_Botanist,
-            NAME_Bowsman,
             NAME_BusinessMan,
-            NAME_Contractor,
-            NAME_CorporateUsurper,
             NAME_Entrepreneur,
             NAME_Merchant,
-            NAME_Outlaw,
-            NAME_ScienceTeacher,
+            NAME_Botanist,
+            NAME_Witch,
+            NAME_Wizard,
             NAME_Smith,
-            NAME_Surveyor,
             NAME_Warrior,
             NAME_WhiteKnight,
-            NAME_Witch,
-            NAME_Wizard
+            NAME_Bowsman,
+            NAME_CorporateUsurper,
+            NAME_Outlaw,
+            NAME_Alchemist,
+            NAME_Scientist,
+            NAME_Surveyor
         };
         public const string
             NAME_None = "None",
+            NAME_Alchemist = "Alchemist",
             NAME_Botanist = "Botanist",
             NAME_Bowsman = "Bowsman",
             NAME_BusinessMan = "Business Man",
-            NAME_Contractor = "Contractor",
             NAME_CorporateUsurper = "Corporate Usurper",
             NAME_Entrepreneur = "Entrepreneur",
             NAME_Merchant = "Merchant",
             NAME_Outlaw = "Outlaw",
-            NAME_ScienceTeacher = "Science Teacher",
+            NAME_Scientist = "Scientist",
             NAME_Smith = "Smith",
             NAME_Surveyor = "Surveyor",
             NAME_Warrior = "Warrior",
@@ -141,39 +231,22 @@ namespace ArchaeaMod
             NAME_Witch = "Witch",
             NAME_Wizard = "Wizard";
         public const int
-            TYPE_None = 0,
-            TYPE_Botanist = 1,
-            TYPE_Bowsman = 2,
-            TYPE_BusinessMan = 3,
-            TYPE_Contractor = 4,
-            TYPE_CorporateUsurper = 5,
-            TYPE_Entrepreneur = 6,
-            TYPE_Merchant = 7,
-            TYPE_Outlaw = 8,
-            TYPE_ScienceTeacher = 9,
-            TYPE_Smith = 10,
-            TYPE_Surveyor = 11,
-            TYPE_Warrior = 12,
-            TYPE_WhiteKnight = 13,
-            TYPE_Witch = 14,
-            TYPE_Wizard = 15;
-        public const int
-            None = 0,
-            MELEE_Smith = 1,
-            MELEE_Warrior = 2,
-            MELEE_WhiteKnight = 3,
-            RANGED_Bowsman = 4,
-            RANGED_CorperateUsurper = 5,
-            RANGED_Outlaw = 6,
-            MAGE_Botanist = 7,
-            MAGE_Witch = 8,
-            MAGE_Wizard = 9,
-            SUMMONER_Alchemist = 10,
-            SUMMONER_Scientist = 11,
-            SUMMONER_Surveyor = 12,
-            ALL_BusinessMan = 13,
-            ALL_Entrepreneur = 14,
-            ALL_Merchant = 15;
+            None = -1,
+            ALL_BusinessMan = 0,
+            ALL_Entrepreneur = 1,
+            ALL_Merchant = 2,
+            MAGE_Botanist = 3,
+            MAGE_Witch = 4,
+            MAGE_Wizard = 5,
+            MELEE_Smith = 6,
+            MELEE_Warrior = 7,
+            MELEE_WhiteKnight = 8,
+            RANGED_Bowsman = 9,
+            RANGED_CorperateUsurper = 10,
+            RANGED_Outlaw = 11,
+            SUMMONER_Alchemist = 12,
+            SUMMONER_Scientist = 13,
+            SUMMONER_Surveyor = 14;
     }
     public class ArchaeaPlayer : ModPlayer
     {
@@ -194,6 +267,7 @@ namespace ArchaeaMod
         public int _classChoice = 0;
         private bool classChosen;
         private PlayerClass classData;
+        public byte jobChoice = 0;
 
         //  Stat and trait
         public int remainingStat;
@@ -373,6 +447,8 @@ namespace ArchaeaMod
                 playerUID = GetHashCode();
             classData.playerUID = playerUID;
             classData.classChoice = tag.GetByte("Class");
+            //  Job selection
+            jobChoice = tag.GetByte("Job");
             //  Progression stat poins
             remainingStat = tag.GetInt("remainingStat");
             overallMaxStat = tag.GetInt("overallMaxStat");
@@ -419,6 +495,8 @@ namespace ArchaeaMod
             //  Class selction
             tag.Add("PlayerID", playerUID);
             tag.Add("Class", (byte)classData.classChoice);
+            //  Job selection
+            tag.Add("Job", jobChoice);
             //  Progression stat poins
             tag.Add("remainingStat", remainingStat);
             tag.Add("overallMaxStat", overallMaxStat);
@@ -514,6 +592,35 @@ namespace ArchaeaMod
             if (classChoice == classID && trait[index])
                 return true;
             return false;
+        }
+        public bool CheckValidJob(int classID, int jobChoice)
+        {
+            switch (classID)
+            {
+                case ClassID.All:
+                    return JobID.Sets.IsAll[jobChoice];
+                case ClassID.Magic:
+                    return JobID.Sets.IsMage[jobChoice];
+                case ClassID.Melee:
+                    return JobID.Sets.IsMelee[jobChoice];
+                case ClassID.Ranged:
+                    return JobID.Sets.IsRanged[jobChoice];
+                case ClassID.Summoner:
+                    return JobID.Sets.IsSummoner[jobChoice];
+                default:
+                    return false;
+            }
+        }
+        public bool CheckHasJob(int jobID)
+        {
+            return jobChoice == jobID;
+        }
+        public void SelectJob(int __classChoice, int _jobChoice)
+        {
+            if (CheckValidJob(__classChoice, _jobChoice))
+            {
+                jobChoice = (byte)_jobChoice;
+            }
         }
         /* Unused
         public int ArrowSpeed;

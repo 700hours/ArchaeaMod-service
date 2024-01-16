@@ -48,7 +48,7 @@ namespace ArchaeaMod.TakerylProject.Projectiles
             {
                 if (npc.active && !npc.friendly && !npcHit[npc.whoAmI] && npc.life > 0 && !npc.boss && npc.Distance(Projectile.Center) < dist)
                 {
-                    npc.AddBuff(BuffID.Webbed, 210);
+                    npc.AddBuff(ModContent.BuffType<Buffs.stun>(), 210);
                     npcHit[npc.whoAmI] = true;
                 }
             }

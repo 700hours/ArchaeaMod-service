@@ -43,7 +43,7 @@ namespace ArchaeaMod.TakerylProject.Projectiles
             {
                 if (npc.active && !npc.friendly && npc.life > 0 && npc.Distance(Projectile.Center) < dist)
                 {
-                    npc.AddBuff(BuffID.Poisoned, 300);
+                    npc.AddBuff(BuffID.Venom, 300);
                 }
             }
             for (int i = 0; i < Main.player.Length; i++)

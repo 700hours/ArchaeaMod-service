@@ -1,4 +1,16 @@
 Projectiles: {
+	a_Aura.DisplayName: a_ Aura
+	a_Convert.DisplayName: a_ Convert
+	a_Lightning.DisplayName: a_ Lightning
+	a_Shock.DisplayName: a_ Shock
+	a_Wind.DisplayName: a_ Wind
+	d_Bog.DisplayName: d_ Bog
+	d_IceStorm.DisplayName: d_ Ice Storm
+	d_Meteor.DisplayName: d_ Meteor
+	d_Poison.DisplayName: d_ Poison
+	d_Toxic.DisplayName: d_ Toxic
+	Meteor.DisplayName: Meteor
+	ThrownSword.DisplayName: Thrown Sword
 }
 
 NPCs: {
@@ -231,6 +243,26 @@ Items: {
 
 	acc_cluster: {
 	}
+
+	Alpha: {
+		DisplayName: Alpha
+		Tooltip: ""
+	}
+
+	BlinkDagger: {
+		DisplayName: Blink Dagger
+		Tooltip: ""
+	}
+
+	Dire: {
+		DisplayName: Dire
+		Tooltip: ""
+	}
+
+	SpacialAnomaly: {
+		DisplayName: Spacial Anomaly
+		Tooltip: ""
+	}
 }
 
 Buffs: {
@@ -306,4 +338,5 @@ Keybinds: {
 	"Leap attack.DisplayName": Leap attack
 	Leap.DisplayName: Leap
 	"Progress diaglog visible.DisplayName": Progress diaglog visible
+	"Use Job Skill.DisplayName": Use  Job  Skill
 }

@@ -54,6 +54,8 @@ namespace ArchaeaMod.TakerylProject.Projectiles
         }
         public override void AI()
         {
+            if (next >= connect.Length)
+                return;
             if (Projectile.position.Y < connect[next].Y)
             {
                 for (float i = 0; i < 1f; i += 0.025f)
@@ -72,7 +74,7 @@ namespace ArchaeaMod.TakerylProject.Projectiles
         }
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {   
-            target.AddBuff(BuffID.Webbed, 210);
+            target.AddBuff(ModContent.BuffType<Buffs.stun>(), 210);
         }
     }
 }

@@ -17,6 +17,7 @@ using ArchaeaMod.Items.Alternate;
 using ArchaeaMod.Projectiles;
 using ArchaeaMod.NPCs;
 using Microsoft.CodeAnalysis.Operations;
+using ArchaeaMod.TakerylProject;
 
 namespace ArchaeaMod
 {
@@ -223,6 +224,13 @@ namespace ArchaeaMod.Items
 
     public class ArchaeaItem_Global : GlobalItem
     {
+        public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
+        {
+            if (SwordID.swordTypes.Contains(item.type))
+            {
+                tooltips.Add(new TooltipLine(Mod, "ItemName", "[c/0088ff:Can throw and swing]"));
+            }
+        }
         public override void HoldItem(Item item, Player player)
         {
             if (player.releaseUseItem && player.controlUseItem && item.DamageType == DamageClass.Throwing)

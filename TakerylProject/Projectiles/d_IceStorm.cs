@@ -30,6 +30,8 @@ namespace ArchaeaMod.TakerylProject.Projectiles
         private Vector2[] storm = new Vector2[30];
         private bool[] dust = new bool[30];
         private int[] dustID = new int[30];
+        private bool[] npcHit = new bool[Main.npc.Length];
+        private bool[] beenHit = new bool[256];
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
@@ -63,16 +65,18 @@ namespace ArchaeaMod.TakerylProject.Projectiles
             }
             foreach (NPC npc in Main.npc)
             {
-                if (npc.active && !npc.friendly && npc.life > 0 && !npc.boss && npc.Distance(Projectile.Center) < dist)
+                if (!npcHit[npc.whoAmI] && npc.active && !npc.friendly && npc.life > 0 && !npc.boss && npc.Distance(Projectile.Center) < dist)
                 {
+                    npcHit[npc.whoAmI] = true;
                     npc.AddBuff(BuffID.Frostburn, 150);
                     npc.StrikeNPC(npc.CalculateHitInfo(3, Projectile.position.X < npc.position.X ? 1 : -1, false, 0f));
                 }
             }
             for (int i = 0; i < Main.player.Length; i++)
             {
-                if (Main.player[i].active && i != Projectile.owner && Main.player[i].hostile && Main.player[i].team != Main.player[Projectile.owner].team && !Main.player[i].dead && Main.player[i].Distance(Projectile.position) < dist)
+                if (!beenHit[i] && Main.player[i].active && i != Projectile.owner && Main.player[i].hostile && Main.player[i].team != Main.player[Projectile.owner].team && !Main.player[i].dead && Main.player[i].Distance(Projectile.position) < dist)
                 {
+                    beenHit[i] = true;
                     Main.player[i].AddBuff(BuffID.Frozen, 90);
                     Main.player[i].Hurt(PlayerDeathReason.ByPlayerItem(Projectile.owner, Main.player[Projectile.owner].HeldItem), 3, Main.player[i].position.X < Projectile.position.X ? -1 : 1, true);
                 }

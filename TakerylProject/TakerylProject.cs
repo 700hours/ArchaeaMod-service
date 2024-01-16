@@ -9,25 +9,6 @@ using Terraria.ModLoader;
 
 namespace ArchaeaMod.TakerylProject
 {
-	public class TakerylProject : ArchaeaMain
-	{
-        public static ModKeybind lightHotkey;
-        public static ModKeybind throwHotkey;
-        /*
-		public void SetModInfo(out string name, ref ModProperties properties)
-		{
-			name = "Takeryl Project";
-			properties.Autoload = true;
-			properties.AutoloadGores = true;
-			properties.AutoloadSounds = true;
-		}
-		 */
-        public override void Load()
-        {
-            lightHotkey = KeybindLoader.RegisterKeybind(this, "Light effect", Keys.Q);
-            throwHotkey = KeybindLoader.RegisterKeybind(this, "Throw sword", Keys.F);
-        }
-    }
 	public class WingID
 	{
 		public static int Selected = None;
@@ -47,7 +28,7 @@ namespace ArchaeaMod.TakerylProject
 		public const int
 			None = 0,
 			CopperShortSword = ItemID.CopperShortsword,
-			LightsBane = 46,
+            LightsBane = 46,
 			FieryGreatsword = 121,
 			Muramasa = 155,
 			BladeOfGrass = 190,
