@@ -8,4 +8,14 @@ Release Archaea Mod
 Major scaling difference before and after consuming life crystal
 -> Add a notice, such as "By the way" for the jump from 100 to 600 life
 
+# Current
+Class starting items
+Finish class and job start dialog
+Put job items into each category
+Add "maxed out" class quest buff and extra stat points
+
+# Other
 Make a configuration
+> Mod config for setting unlocked classes
+Check out "Growing water plants" in worldgen
+Cordon biomes

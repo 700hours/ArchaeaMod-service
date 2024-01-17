@@ -261,3 +261,24 @@ Tiles: {
 
 Keybinds: {
 }
+
+Configs: {
+	Config: {
+		DisplayName: Config
+
+		LockArchaeaMode: {
+			Label: Lock Archaea Mode
+			Tooltip: ""
+		}
+
+		LockClassSelect: {
+			Label: Lock Class Select
+			Tooltip: ""
+		}
+
+		LockClassStats: {
+			Label: Lock Class Stats
+			Tooltip: ""
+		}
+	}
+}

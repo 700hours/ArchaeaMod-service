@@ -5,6 +5,10 @@ namespace ArchaeaMod.Jobs.Global
 {
     public class business_man
 	{
+		public static void GiveGear(Player player)
+		{
+			player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.SilverCoin, 50);
+		}
 		public static void CreatePlayer(Player player)
 		{
 			player.inventory[0].SetDefaults(ItemID.CopperShortsword);
