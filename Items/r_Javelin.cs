@@ -35,7 +35,7 @@ namespace ArchaeaMod.Items
             Item.consumable = true;
             Item.shoot = ModContent.ProjectileType<Javelin>();
             Item.shootSpeed = 6f;
-            Item.DamageType = DamageClass.Throwing;
+            Item.DamageType = DamageClass.Ranged;
         }
         public override void AddRecipes()
         {

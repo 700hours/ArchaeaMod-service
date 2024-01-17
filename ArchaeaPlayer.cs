@@ -35,6 +35,9 @@ using ArchaeaMod.Items;
 using System.Security.Cryptography;
 using static System.Net.Mime.MediaTypeNames;
 using ArchaeaMod.Jobs.Projectiles;
+using ArchaeaMod.Jobs;
+using System.Diagnostics;
+using Container = tUserInterface.ModUI.Container;
 
 namespace ArchaeaMod
 {
@@ -302,6 +305,11 @@ namespace ArchaeaMod
         public int locatorDirection = -1;
         private int hintTicks = 0;
 
+        //  Jobs
+        public bool showedDialog = false;
+        public int[] jobProgress = new int[3];
+        private int ticks3 = 0;
+
         //  Stat variables
         //  Increase
         public float arrowSpeed = 1f;
@@ -451,6 +459,8 @@ namespace ArchaeaMod
             classData.classChoice = tag.GetByte("Class");
             //  Job selection
             jobChoice = tag.GetByte("Job");
+            showedDialog = tag.GetBool("JobDialog");
+            jobProgress = tag.GetIntArray("JobProgress");
             //  Progression stat poins
             remainingStat = tag.GetInt("remainingStat");
             overallMaxStat = tag.GetInt("overallMaxStat");
@@ -500,6 +510,8 @@ namespace ArchaeaMod
             tag.Add("Class", (byte)classData.classChoice);
             //  Job selection
             tag.Add("Job", jobChoice);
+            tag.Add("JobDialog", showedDialog);
+            tag.Add("JobProgress", jobProgress);
             //  Progression stat poins
             tag.Add("remainingStat", remainingStat);
             tag.Add("overallMaxStat", overallMaxStat);
@@ -1169,6 +1181,48 @@ namespace ArchaeaMod
                     }
                 }
             }
+            //  Jobs turn-in box
+            /*
+            Container box = ModContent.GetInstance<ModeUI>().turnInBox;
+            box.UpdateInput(Player, true);
+            if (ticks3 > 600)
+                ticks3 = 0;
+            switch (classChoice)
+            {
+                case ClassID.Melee:
+                    if (box.content?.type == ModContent.ItemType<Items.Materials.r_plate>())
+                    {
+                        if (ticks3++ % 30 == 0)
+                        { 
+                            //box.content.stack--;
+                            if (jobChoice == JobID.MELEE_Smith)
+                            {
+
+                            }
+                            else if (jobChoice == JobID.MELEE_Warrior)
+                            {
+
+                            }
+                            else if (jobChoice == JobID.MELEE_WhiteKnight)
+                            {
+
+                            }
+                        }
+                    }
+                    break;
+                case ClassID.Ranged:
+                    break;
+                case ClassID.Magic:
+                    break;
+                case ClassID.Summoner:
+                    break;
+                case ClassID.All:
+                    break;
+                default:
+                    break;
+            }
+            */
+
             //  Fire storm scroll effect
             FireStorm();
 
@@ -2003,37 +2057,37 @@ namespace ArchaeaMod
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
             //  Need a little bit of engineering to resize
-         /* if (blueprint != Rectangle.Empty)
-            {
-                if (blueprint.Resize())
-                { 
-                    blueprint.Width  = blueprint.Width  + (blueprint.Width % 16);
-                    blueprint.Height = blueprint.Height + (blueprint.Height % 16);
-                }
-                sb.Draw(TextureAssets.MagicPixel.Value, blueprint, Color.CornflowerBlue * 0.2f);
-                sb.DrawString(FontAssets.MouseText.Value, (blueprint.Width * 2 / 16 + blueprint.Height * 2 / 16).ToString(), blueprint.TopLeft(), Color.White);
-                SetXY(accept.box, blueprint.Left, blueprint.Bottom - accept.box.Height * 2 - 4);
-                SetXY(cancel.box, blueprint.Left, blueprint.Bottom - cancel.box.Height);
-                accept.Draw();
-                cancel.Draw();
-                if (accept.LeftClick())
-                {
-                    int i = (int)(blueprint.X + Main.screenPosition.X) / 16;
-                    int j = (int)(blueprint.Y + Main.screenPosition.Y) / 16;
-                    int w = blueprint.Width  / 16;
-                    int h = blueprint.Height / 16;
-                    for (int m = i; m < i + w; m++)
-                    {
-                        for (int n = j; n < j + h; n++)
-                        {
-                        }
-                    }
-                }
-                if (cancel.LeftClick())
-                {
-                    blueprint = Rectangle.Empty;
-                }
-            }   */
+            /* if (blueprint != Rectangle.Empty)
+               {
+                   if (blueprint.Resize())
+                   { 
+                       blueprint.Width  = blueprint.Width  + (blueprint.Width % 16);
+                       blueprint.Height = blueprint.Height + (blueprint.Height % 16);
+                   }
+                   sb.Draw(TextureAssets.MagicPixel.Value, blueprint, Color.CornflowerBlue * 0.2f);
+                   sb.DrawString(FontAssets.MouseText.Value, (blueprint.Width * 2 / 16 + blueprint.Height * 2 / 16).ToString(), blueprint.TopLeft(), Color.White);
+                   SetXY(accept.box, blueprint.Left, blueprint.Bottom - accept.box.Height * 2 - 4);
+                   SetXY(cancel.box, blueprint.Left, blueprint.Bottom - cancel.box.Height);
+                   accept.Draw();
+                   cancel.Draw();
+                   if (accept.LeftClick())
+                   {
+                       int i = (int)(blueprint.X + Main.screenPosition.X) / 16;
+                       int j = (int)(blueprint.Y + Main.screenPosition.Y) / 16;
+                       int w = blueprint.Width  / 16;
+                       int h = blueprint.Height / 16;
+                       for (int m = i; m < i + w; m++)
+                       {
+                           for (int n = j; n < j + h; n++)
+                           {
+                           }
+                       }
+                   }
+                   if (cancel.LeftClick())
+                   {
+                       blueprint = Rectangle.Empty;
+                   }
+               }   */
             if (/*classChoice == ClassID.None &&*/ drawInfo.drawPlayer.active && drawInfo.drawPlayer.whoAmI == Main.LocalPlayer.whoAmI && !drawInfo.drawPlayer.dead)
             {
                 var c = ArchaeaWorld.playerClass.FirstOrDefault(t => t.playerUID == playerUID);

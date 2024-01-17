@@ -22,11 +22,15 @@ using ArchaeaMod.Jobs.Global;
 using static Humanizer.On;
 using System.Diagnostics.Metrics;
 
-namespace ArchaeaMod.Jobs.Jobs
+namespace ArchaeaMod.Jobs
 {
     internal class DialogUI : ModSystem
     {
-        SpriteBatch sb => Main.spriteBatch;
+        bool showedDialog
+        { 
+            get { return Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().showedDialog; }
+            set { Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().showedDialog = value; }
+        }
         int num3 = 0;
         string noticeText = // Legacy to display amount of text
             "There are some unloaded items. Please manage\n" +
@@ -39,6 +43,7 @@ namespace ArchaeaMod.Jobs.Jobs
         Rectangle listRect => new Rectangle(Main.screenWidth / 2 - 400 / 2 - 120, (int)(Main.screenHeight / 2.5f) - 200 / 2 - 8, 190, 320 - 24);
         Scroll listScroll => new Scroll(listRect);
         ListBox dialog => new ListBox(listRect, listScroll, default(string[]));
+        SpriteBatch sb => Main.spriteBatch;
         public static readonly string JobText =
             "Jobs can be selected per class. There are three\n" +
             "jobs per class, and they are not locked. Each\n" +
@@ -50,29 +55,35 @@ namespace ArchaeaMod.Jobs.Jobs
             "quest screen.";
         public static readonly string[] Content = new string[]
         {
-            "Melee",
+            "Melee: Rusty Plate",
             "   smith",
             "   warrior",
             "   white knight",
-            "Ranged",
+            "Ranged: Black Lens",
             "   bowsman",
             "   corperate usurper",
             "   outlaw",
-            "Mage",
+            "Mage: Magno Core",
             "   botanist",
             "   witch",
             "   wizard",
-            "Summoner",
+            "Summoner: Bird Statue",
             "   alchemist",
             "   scientist",
             "   surveyor",
-            "All",
+            "All: Gold Coin",
             "   business man",
             "   entrepreneur",
             "   merchant"
         };
         public void PrintDualListText(string text, string[] content)
         {
+            if (!unloadedNotice.active || showedDialog)
+                return;
+            if (num3 == 0)
+            {
+                dialog.content = content;
+            }
             string caret = "|";
             string notice = text; //\nMissing mod: {ModName}.";
             if (num3 < notice.Length)
@@ -90,13 +101,19 @@ namespace ArchaeaMod.Jobs.Jobs
             close.HoverPlaySound(SoundID.MenuTick);
             if (close.LeftClick())
             {
+                dialog.active = false;
                 close.active = false;
                 unloadedNotice.active = false;
+                showedDialog = true;
             }
+        }
+        public override void UpdateUI(GameTime gameTime)
+        {
+            PrintDualListText(JobText, Content);
         }
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
-            if (!unloadedNotice.active)
+            if (!unloadedNotice.active || showedDialog)
                 return;
             sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             bool hover = close.HoverOver();

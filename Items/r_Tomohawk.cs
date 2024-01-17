@@ -34,7 +34,7 @@ namespace ArchaeaMod.Items
             Item.useStyle = ItemUseStyleID.Swing;
             Item.shoot = ModContent.ProjectileType<Tomohawk>();
             Item.shootSpeed = 7f;
-            Item.DamageType = DamageClass.Throwing;
+            Item.DamageType = DamageClass.Ranged;
             Item.consumable = true;
             Item.noUseGraphic = true;
         }

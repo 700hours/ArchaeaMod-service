@@ -47,6 +47,7 @@ namespace ArchaeaMod.Mode
         public int ticks = 300;
         public int ticks2 = 300;
         public string text;
+        public Container turnInBox => new Container(new Rectangle(objective.hitbox.Left - 50, objective.hitbox.Bottom - 50, 50, 50), Color.PaleVioletRed);
 
         public override void OnModLoad()
         {
@@ -144,7 +145,7 @@ namespace ArchaeaMod.Mode
             };
             page = new ListBox[] { objective, stat, default, mode, job };
         }
-        private string[] ClassArray(int index, int num = 0, int num2 = 0)
+        private string[] ClassArray(int index, int num = 0, int num2 = 0, int num3 = 0)
         {
             switch (index) 
             {
@@ -162,7 +163,9 @@ namespace ArchaeaMod.Mode
                         "Craft wings\n" +
                         "   Leap attack",
                         $"Survive a {num2}/1000 tile fall\n" +
-                        "   Leap"
+                        "   Leap",
+                        $"Complete {num3}/3 class turn-in\n" +
+                        "   "
                     };
                 case 1:     // Ranged
                     return new[]
@@ -178,7 +181,9 @@ namespace ArchaeaMod.Mode
                         "Defeat all Mech bosses\n" +
                         "   Ichor arrows",
                         "Acquire Daedalus\n" +
-                        "   Cinnabar arrows"
+                        "   Cinnabar arrows",
+                        $"Complete {num3}/3 class turn-in\n" +
+                        "   "
                     };
                 case 2:     // Magic
                     return new[] 
@@ -194,7 +199,9 @@ namespace ArchaeaMod.Mode
                         "Reach the ocean\n" +
                         "   50% no knockback chance",
                         "Reach fallen meteor\n" +
-                        "   20% reduced mana cost"
+                        "   20% reduced mana cost",
+                        $"Complete {num3}/3 class turn-in\n" +
+                        "   "
                     };
                 case 3:     // Summoner
                     return new[] 
@@ -210,7 +217,9 @@ namespace ArchaeaMod.Mode
                         "Find a sword shrine\n" +
                         "   1% chance attack throws bones",
                         "Reach space\n" +
-                        "   1% chance attack throws star"
+                        "   1% chance attack throws star",
+                        $"Complete {num3}/3 class turn-in\n" +
+                        "   "
                     };
                 case 4:     // All
                     return new[]
@@ -226,7 +235,9 @@ namespace ArchaeaMod.Mode
                         "Last-hit Eye of Cthulhu\n" +
                         "   Dash",
                         $"Get {num}/10 villagers\n" +
-                        "   50% chance falling star"
+                        "   50% chance falling star",
+                        $"Complete {num3}/3 class turn-in\n" +
+                        "   "
                     };
                 default:
                     return new[] { "" };
@@ -311,7 +322,7 @@ namespace ArchaeaMod.Mode
                     }
                 }
                 sb.Draw(TextureAssets.Item[ItemID.AvengerEmblem].Value, AdjustY(tab[2].box, offY), page[2].active ? Color.White : Color.White * 0.5f);
-            //if (tab[4].active)
+            //if (tab[3].active)
                 tab[3].HoverPlaySound(SoundID.MenuTick);
                 if (TextureAssets.Item[ItemID.TargetDummy].Value.Name.Contains("Dummy"))
                 {
@@ -341,8 +352,17 @@ namespace ArchaeaMod.Mode
             {
                 Utils.DrawBorderString(sb, $"{ClassName()} class traits", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
             }
-            if (page[4].active)
+            if (turnInBox.active = page[4].active)
             {
+                // Job items
+                /*
+                {
+                    turnInBox.box = new Rectangle(objective.hitbox.Left - 50, objective.hitbox.Bottom - 50, 50, 50)
+                    Texture2D tex = null;
+                    if (turnInBox.content != default && turnInBox.content.type != ItemID.None && turnInBox.content.stack > 0)
+                        tex = TextureAssets.Item[turnInBox.content.type].Value;
+                    turnInBox.Draw(tex, drawStack: true);
+                }*/
                 Utils.DrawBorderString(sb, "Job choices", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
                 Utils.DrawBorderString(sb, $"Current selection: {JobID.Name[Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice]}", new Vector2(objective.hitbox.X, objective.hitbox.Bottom), Color.MediumPurple);
                 Utils.DrawBorderString(sb, "Click item to assign job", new Vector2(objective.hitbox.X, objective.hitbox.Bottom + 24), Color.Gray);
