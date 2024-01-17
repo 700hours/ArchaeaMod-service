@@ -1,11 +1,17 @@
 using Terraria.ID;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace ArchaeaMod.Jobs.Global
 { 
 	public class botanist
-	{ 
-		public static void CreatePlayer(Player player)
+	{
+        public static void GiveGear(Player player)
+        {
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ModContent.ItemType<Jobs.Items.Textbook_of_gathering>());
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.Acorn, 5);
+        }
+        public static void CreatePlayer(Player player)
 		{
 			player.inventory[0].SetDefaults(ItemID.WoodenBoomerang);
 			player.inventory[1].SetDefaults(ItemID.CopperPickaxe);

@@ -5,7 +5,11 @@ namespace ArchaeaMod.Jobs.Global
 {
     public class witch
 	{
-		public static void CreatePlayer(Player player)
+        public static void GiveGear(Player player)
+        {
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.WandofSparking);
+        }
+        public static void CreatePlayer(Player player)
 		{
 			player.inventory[0].SetDefaults(ItemID.WandofSparking);
 			player.inventory[1].SetDefaults(ItemID.CopperPickaxe);

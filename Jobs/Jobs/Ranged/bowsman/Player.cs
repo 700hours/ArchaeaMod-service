@@ -4,8 +4,13 @@ using Terraria;
 namespace ArchaeaMod.Jobs.Global
 {
     public class bowsman
-	{ 
-		public static void CreatePlayer(Player player)
+	{
+        public static void GiveGear(Player player)
+        {
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.SilverBow);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.WoodenArrow, 250);
+        }
+        public static void CreatePlayer(Player player)
 		{
 			player.inventory[0].SetDefaults(ItemID.SilverBow);
 			player.inventory[1].SetDefaults(ItemID.CopperShortsword);

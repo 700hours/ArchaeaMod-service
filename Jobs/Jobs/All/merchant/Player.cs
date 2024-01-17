@@ -4,8 +4,16 @@ using Terraria;
 namespace ArchaeaMod.Jobs.Global
 {
     public class merchant
-	{ 
-		public static void CreatePlayer(Player player)
+	{
+        public static void GiveGear(Player player)
+        {
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.WoodenTable);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.WoodenChair);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.Chest);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.Candle);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.SilverCoin, 10);
+        }
+        public static void CreatePlayer(Player player)
 		{
 			player.inventory[0].SetDefaults(ItemID.CopperShortsword);
 			player.inventory[1].SetDefaults(ItemID.CopperPickaxe);

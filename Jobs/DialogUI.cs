@@ -55,6 +55,14 @@ namespace ArchaeaMod.Jobs
             "quest screen.";
         public static readonly string[] Content = new string[]
         {
+            "All: Gold Chest",
+            "   business man",
+            "   entrepreneur",
+            "   merchant",
+            "Mage: Magno Core",
+            "   botanist",
+            "   witch",
+            "   wizard",
             "Melee: Rusty Plate",
             "   smith",
             "   warrior",
@@ -63,18 +71,10 @@ namespace ArchaeaMod.Jobs
             "   bowsman",
             "   corperate usurper",
             "   outlaw",
-            "Mage: Magno Core",
-            "   botanist",
-            "   witch",
-            "   wizard",
             "Summoner: Bird Statue",
             "   alchemist",
             "   scientist",
-            "   surveyor",
-            "All: Gold Coin",
-            "   business man",
-            "   entrepreneur",
-            "   merchant"
+            "   surveyor"
         };
         public void PrintDualListText(string text, string[] content)
         {

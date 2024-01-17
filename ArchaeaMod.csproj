@@ -44,6 +44,7 @@
     <None Remove="Jobs\Buffs\_Frozen.png" />
     <None Remove="Jobs\Items\IronWorkbench.ini" />
     <None Remove="Jobs\Items\IronWorkbench.png" />
+    <None Remove="Jobs\Items\job_bag.png" />
     <None Remove="Jobs\Items\Seeded_dirt.ini" />
     <None Remove="Jobs\Items\Tome.ini" />
     <None Remove="Jobs\Items\Tome.png" />

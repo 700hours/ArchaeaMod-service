@@ -4,8 +4,16 @@ using Terraria;
 namespace ArchaeaMod.Jobs.Global
 {
     public class corperate_usurper
-	{ 
-		public static void CreatePlayer(Player player)
+	{
+        public static void GiveGear(Player player)
+        {
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.Wood, 6);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.CopperBar, 5);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.IronBar, 3);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.SilverBar, 2);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.GoldBar, 1);
+        }
+        public static void CreatePlayer(Player player)
 		{
 			player.inventory[0].SetDefaults(0, false);
 			player.inventory[1].SetDefaults(0, false);

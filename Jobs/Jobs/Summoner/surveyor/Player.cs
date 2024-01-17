@@ -1,10 +1,16 @@
 using Terraria.ID;
 using Terraria;
+using Terraria.ModLoader;
 
-namespace ArchaeaMod.Jobs
+namespace ArchaeaMod.Jobs.Global
 {
     public class surveyor
     {
+        public static void GiveGear(Player player)
+        {
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ModContent.ItemType<Jobs.Items.Prospecting_tool>());
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ModContent.ItemType<Jobs.Items.DungeonLocator>());
+        }
         public static void CreatePlayer(Player player)
         {
             player.inventory[0].SetDefaults(ItemID.CopperShortsword);

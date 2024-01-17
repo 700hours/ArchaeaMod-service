@@ -124,17 +124,17 @@ namespace ArchaeaMod.Mode
             mode.scroll = new Scroll(mode.hitbox);
             mode.bgColor = bgColor * 0.5f;
 
-            trait[ClassID.Melee - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Melee - 1, 0), null, new Color[5]);
-            trait[ClassID.Ranged - 1] = new ListBox(objective.hitbox, default,  ClassArray(ClassID.Ranged - 1, 0), null, new Color[5]);
-            trait[ClassID.Magic - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Magic - 1, 0), null, new Color[5]);
-            trait[ClassID.Summoner -1] = new ListBox(objective.hitbox, default, ClassArray(ClassID.Summoner - 1, 0), null, new Color[5]);
-            trait[ClassID.All - 1] = new ListBox(objective.hitbox, default,     ClassArray(ClassID.All - 1, 0), null, new Color[5]);
+            trait[ClassID.Melee - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Melee - 1, 0), null, new Color[7]);
+            trait[ClassID.Ranged - 1] = new ListBox(objective.hitbox, default,  ClassArray(ClassID.Ranged - 1, 0), null, new Color[7]);
+            trait[ClassID.Magic - 1] = new ListBox(objective.hitbox, default,   ClassArray(ClassID.Magic - 1, 0), null, new Color[7]);
+            trait[ClassID.Summoner -1] = new ListBox(objective.hitbox, default, ClassArray(ClassID.Summoner - 1, 0), null, new Color[7]);
+            trait[ClassID.All - 1] = new ListBox(objective.hitbox, default,     ClassArray(ClassID.All - 1, 0), null, new Color[7]);
             for (int i = 0; i < trait.Length; i++)
             {
                 trait[i].bgColor = Color.Transparent;
                 trait[i].scroll = new Scroll(objective.hitbox);
                 trait[i].active = false;
-                trait[i].textColor = new Color[] { innactiveColor, innactiveColor, innactiveColor, innactiveColor, innactiveColor, innactiveColor };
+                trait[i].textColor = new Color[] { innactiveColor, innactiveColor, innactiveColor, innactiveColor, innactiveColor, innactiveColor, innactiveColor };
             }
             tab = new Button[]
             {
@@ -165,7 +165,7 @@ namespace ArchaeaMod.Mode
                         $"Survive a {num2}/1000 tile fall\n" +
                         "   Leap",
                         $"Complete {num3}/3 class turn-in\n" +
-                        "   "
+                        "   10% faster weapon speed"
                     };
                 case 1:     // Ranged
                     return new[]
@@ -183,7 +183,7 @@ namespace ArchaeaMod.Mode
                         "Acquire Daedalus\n" +
                         "   Cinnabar arrows",
                         $"Complete {num3}/3 class turn-in\n" +
-                        "   "
+                        "   Enemies glow at night"
                     };
                 case 2:     // Magic
                     return new[] 
@@ -201,7 +201,7 @@ namespace ArchaeaMod.Mode
                         "Reach fallen meteor\n" +
                         "   20% reduced mana cost",
                         $"Complete {num3}/3 class turn-in\n" +
-                        "   "
+                        "   10% more damage dealt"
                     };
                 case 3:     // Summoner
                     return new[] 
@@ -219,7 +219,7 @@ namespace ArchaeaMod.Mode
                         "Reach space\n" +
                         "   1% chance attack throws star",
                         $"Complete {num3}/3 class turn-in\n" +
-                        "   "
+                        "   10% faster move speed"
                     };
                 case 4:     // All
                     return new[]
@@ -237,7 +237,7 @@ namespace ArchaeaMod.Mode
                         $"Get {num}/10 villagers\n" +
                         "   50% chance falling star",
                         $"Complete {num3}/3 class turn-in\n" +
-                        "   "
+                        "   10% off all vendor prices"
                     };
                 default:
                     return new[] { "" };
@@ -355,14 +355,13 @@ namespace ArchaeaMod.Mode
             if (turnInBox.active = page[4].active)
             {
                 // Job items
-                /*
                 {
-                    turnInBox.box = new Rectangle(objective.hitbox.Left - 50, objective.hitbox.Bottom - 50, 50, 50)
+                    turnInBox.box = new Rectangle(objective.hitbox.Left - 50, objective.hitbox.Bottom - 50, 50, 50);
                     Texture2D tex = null;
                     if (turnInBox.content != default && turnInBox.content.type != ItemID.None && turnInBox.content.stack > 0)
                         tex = TextureAssets.Item[turnInBox.content.type].Value;
                     turnInBox.Draw(tex, drawStack: true);
-                }*/
+                }
                 Utils.DrawBorderString(sb, "Job choices", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
                 Utils.DrawBorderString(sb, $"Current selection: {JobID.Name[Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice]}", new Vector2(objective.hitbox.X, objective.hitbox.Bottom), Color.MediumPurple);
                 Utils.DrawBorderString(sb, "Click item to assign job", new Vector2(objective.hitbox.X, objective.hitbox.Bottom + 24), Color.Gray);
@@ -510,7 +509,8 @@ namespace ArchaeaMod.Mode
                             {
                                 if (page[i].item[n].reserved == 0)
                                 { 
-                                    if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SpendStatPoint(n)) {
+                                    if (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().SpendStatPoint(n)) 
+                                    {
                                         SoundEngine.PlaySound(SoundID.Item4, Main.LocalPlayer.Center);
                                     }
                                     page[i].item[n].reserved = 1;
@@ -527,6 +527,35 @@ namespace ArchaeaMod.Mode
                             trait[TraitIndex()].textColor[n] = 
                                     ArchaeaPlayer.CheckHasTrait(n + TraitIndex() * 6, TraitIndex() + 1, Main.LocalPlayer.whoAmI)
                                     ? activeColor : innactiveColor;
+                        }
+                        //  Adding in more trait indices manually to avoid breaking changes to characters
+                        switch (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice)
+                        {
+                            case ClassID.Melee:
+                                trait[TraitIndex()].textColor[6] =
+                                        ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_Job, TraitIndex() + 1, Main.LocalPlayer.whoAmI)
+                                        ? activeColor : innactiveColor;
+                                break;
+                            case ClassID.Ranged:
+                                trait[TraitIndex()].textColor[6] =
+                                        ArchaeaPlayer.CheckHasTrait(TraitID.RANGED_Job, TraitIndex() + 1, Main.LocalPlayer.whoAmI)
+                                        ? activeColor : innactiveColor;
+                                break;
+                            case ClassID.Magic:
+                                trait[TraitIndex()].textColor[6] =
+                                        ArchaeaPlayer.CheckHasTrait(TraitID.MAGE_Job, TraitIndex() + 1, Main.LocalPlayer.whoAmI)
+                                        ? activeColor : innactiveColor;
+                                break;
+                            case ClassID.Summoner:
+                                trait[TraitIndex()].textColor[6] =
+                                        ArchaeaPlayer.CheckHasTrait(TraitID.SUMMONER_Job, TraitIndex() + 1, Main.LocalPlayer.whoAmI)
+                                        ? activeColor : innactiveColor;
+                                break;
+                            case ClassID.All:
+                                trait[TraitIndex()].textColor[6] =
+                                        ArchaeaPlayer.CheckHasTrait(TraitID.ALL_Job, TraitIndex() + 1, Main.LocalPlayer.whoAmI)
+                                        ? activeColor : innactiveColor;
+                                break;
                         }
                         break;
                     case 4:
@@ -589,19 +618,19 @@ namespace ArchaeaMod.Mode
             switch (TraitIndex())
             {
                 case 0:
-                    trait[0].content = ClassArray(0, modPlayer.placedTiles, modPlayer.comparison);
+                    trait[0].content = ClassArray(0, modPlayer.placedTiles, modPlayer.comparison, modPlayer.CompletedJobsCount());      // Melee
                     break;
                 case 1:
-                    trait[1].content = ClassArray(1, modPlayer.TRAIT_TIME_MaxDirtStack);
+                    trait[1].content = ClassArray(1, modPlayer.TRAIT_TIME_MaxDirtStack, num3: modPlayer.CompletedJobsCount());          // Ranged
                     break;
                 case 2:
-                    trait[2].content = ClassArray(2, modPlayer.TRAIT_PlantedMushroom, modPlayer.TRAIT_PlacedRails);
+                    trait[2].content = ClassArray(2, modPlayer.TRAIT_PlantedMushroom, modPlayer.TRAIT_PlacedRails, modPlayer.CompletedJobsCount());   // Magic
                     break;
                 case 3:
-                    trait[3].content = ClassArray(3, modPlayer.TRAIT_PlacedBricks);
+                    trait[3].content = ClassArray(3, modPlayer.TRAIT_PlacedBricks, num3: modPlayer.CompletedJobsCount());               // Summoner
                     break;
                 case 4:
-                    trait[4].content = ClassArray(4, Main.townNPCCanSpawn.Count(t => t == true));
+                    trait[4].content = ClassArray(4, Main.townNPCCanSpawn.Count(t => t == true), num3: modPlayer.CompletedJobsCount()); // All
                     break;
             }
             InBoundsUI(objective);

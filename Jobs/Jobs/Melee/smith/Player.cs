@@ -4,8 +4,13 @@ using Terraria;
 namespace ArchaeaMod.Jobs.Global
 {
     public class smith
-	{ 
-		public static void CreatePlayer(Player player)
+	{
+        public static void GiveGear(Player player)
+        {
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.CopperHammer);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.Furnace);
+        }
+        public static void CreatePlayer(Player player)
 		{
 			player.inventory[0].SetDefaults(ItemID.CopperBroadsword);
 			player.inventory[1].SetDefaults(ItemID.CopperPickaxe);

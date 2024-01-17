@@ -4,8 +4,13 @@ using Terraria;
 namespace ArchaeaMod.Jobs.Global
 {
     public class outlaw
-	{ 
-		public static void CreatePlayer(Player player)
+	{
+        public static void GiveGear(Player player)
+        {
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.FlintlockPistol);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.MusketBall, 100);
+        }
+        public static void CreatePlayer(Player player)
 		{
 			player.inventory[0].SetDefaults(ItemID.FlintlockPistol);
 			player.inventory[1].SetDefaults(ItemID.CopperPickaxe);

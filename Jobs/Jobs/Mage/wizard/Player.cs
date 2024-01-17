@@ -1,11 +1,18 @@
 using Terraria.ID;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace ArchaeaMod.Jobs.Global
 {
     public class wizard
-	{ 
-		public static void CreatePlayer(Player player)
+	{
+        public static void GiveGear(Player player)
+        {
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ModContent.ItemType<Jobs.Items.Scroll_frozen_nova>(), 3);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ModContent.ItemType<Jobs.Items.Scroll_incognito>(), 3);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ItemID.ManaCrystal);
+        }
+        public static void CreatePlayer(Player player)
 		{
 			//player.inventory[0].SetDefaults("Box Staff");
 			player.inventory[1].SetDefaults(ItemID.CopperPickaxe);

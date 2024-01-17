@@ -270,7 +270,12 @@ namespace ArchaeaMod
         public int _classChoice = 0;
         private bool classChosen;
         private PlayerClass classData;
-        public byte jobChoice = 0;
+        private int _jobChoice = -1;
+        public int jobChoice 
+        {
+            get { return _jobChoice; } 
+            set { _jobChoice = value; } 
+        }
         private bool hasUsedLifeCrystal = false;
 
         //  Stat and trait
@@ -279,7 +284,7 @@ namespace ArchaeaMod
         private int breathTimer;
         private const int breathTimerMax = 180;
         public int[] spentStat = new int[10];
-        public bool[] trait = new bool[30];
+        public bool[] trait = new bool[35];
         public bool[] objectiveStat = new bool[9];
         public int placedTiles = 0;
         public bool[] placedPylon = new bool[9];
@@ -307,8 +312,15 @@ namespace ArchaeaMod
 
         //  Jobs
         public bool showedDialog = false;
+        private int[] _jobProgress = new int[15];
         public int[] jobProgress = new int[3];
         private int ticks3 = 0;
+        public const int JOB_Progress_All = 21;
+        public const int JOB_Progress_Mage = 30;
+        public const int JOB_Progress_Melee = 24;
+        public const int JOB_Progress_Ranged = 21;
+        public const int JOB_Progress_Summoner = 15;
+        private bool[] obtainedCatalogue = new bool[2];
 
         //  Stat variables
         //  Increase
@@ -440,6 +452,168 @@ namespace ArchaeaMod
             //  End
         }
 
+        //  More job methods
+        public int CompletedJobsCount()
+        {
+            JobProgress(classChoice, out int num);
+            return num;
+        }
+        private static void SetJobTraitSuccess(Player player)
+        {
+            ArchaeaPlayer modPlayer = player.GetModPlayer<ArchaeaPlayer>();
+            switch (modPlayer.classChoice)
+            {
+                case ClassID.All:
+                    modPlayer.SetClassTrait(TraitID.ALL_Job, modPlayer.classChoice, true);
+                    goto default;
+                case ClassID.Magic:
+                    modPlayer.SetClassTrait(TraitID.MAGE_Job, modPlayer.classChoice, true);
+                    goto default;
+                case ClassID.Melee:
+                    modPlayer.SetClassTrait(TraitID.MELEE_Job, modPlayer.classChoice, true);
+                    goto default;
+                case ClassID.Ranged:
+                    modPlayer.SetClassTrait(TraitID.RANGED_Job, modPlayer.classChoice, true);
+                    goto default;
+                case ClassID.Summoner:
+                    modPlayer.SetClassTrait(TraitID.SUMMONER_Job, modPlayer.classChoice, true);
+                    goto default;
+                default:
+                    SoundEngine.PlaySound(SoundID.Item4, player.Center);
+                    break;
+            }
+        }
+        public static bool JobProgressSuccess(Player player)
+        {
+            ArchaeaPlayer modPlayer = player.GetModPlayer<ArchaeaPlayer>();
+            int index = 0;
+            int success = 0;
+            switch (modPlayer.classChoice)
+            {
+                case ClassID.All:
+                    index = modPlayer.jobChoice;
+                    success = JOB_Progress_All / 3;
+                    break;
+                case ClassID.Magic:
+                    index = modPlayer.jobChoice - 3;
+                    success = JOB_Progress_Mage / 3;
+                    break;
+                case ClassID.Melee:
+                    index = modPlayer.jobChoice - 6;
+                    success = JOB_Progress_Melee / 3;
+                    break;
+                case ClassID.Ranged:
+                    index = modPlayer.jobChoice - 9;
+                    success = JOB_Progress_Ranged / 3;
+                    break;
+                case ClassID.Summoner:
+                    index = modPlayer.jobChoice - 12;
+                    success = JOB_Progress_Summoner / 3;
+                    break;
+            }
+            int num = 0;
+            for (int i = 0; i < modPlayer.jobProgress.Length; i++)
+            {
+                num += modPlayer.jobProgress[i];
+            }
+            return modPlayer.jobProgress[index] >= success;
+        }
+        public int[] SetJobProgress(int jobID, ref Item item)
+        {
+            switch (jobID)
+            {
+                case JobID.ALL_BusinessMan:
+                case JobID.ALL_Entrepreneur:
+                case JobID.ALL_Merchant:
+                    if (item.type == ItemID.GoldChest)
+                    {
+                        _jobProgress[jobID]++;
+                        item.stack--;
+                        goto default;
+                    }
+                    break;
+                case JobID.MAGE_Botanist:
+                case JobID.MAGE_Witch:
+                case JobID.MAGE_Wizard:
+                    if (item.type == ModContent.ItemType<Merged.Items.Materials.magno_core>())
+                    {
+                        _jobProgress[jobID]++;
+                        item.stack--;
+                        goto default;
+                    }
+                    break;
+                case JobID.MELEE_Smith:
+                case JobID.MELEE_Warrior:
+                case JobID.MELEE_WhiteKnight:
+                    if (item.type == ModContent.ItemType<Items.Materials.r_plate>())
+                    {
+                        _jobProgress[jobID]++;
+                        item.stack--;
+                        goto default;
+                    }
+                    break;
+                case JobID.RANGED_Bowsman:
+                case JobID.RANGED_CorperateUsurper:
+                case JobID.RANGED_Outlaw:
+                    if (item.type == ItemID.BlackLens)
+                    {
+                        _jobProgress[jobID]++;
+                        item.stack--;
+                        goto default;
+                    }
+                    break;
+                case JobID.SUMMONER_Alchemist:
+                case JobID.SUMMONER_Scientist:
+                case JobID.SUMMONER_Surveyor:
+                    if (item.type == ItemID.BirdStatue)
+                    {
+                        _jobProgress[jobID]++;
+                        item.stack--;
+                        goto default;
+                    }
+                    break;
+                default:
+                    SoundEngine.PlaySound(SoundID.Tink);
+                    break;
+            }
+            return jobProgress = JobProgress(classChoice, out _);
+        }
+        private int[] JobProgress(int classID, out int numComplete)
+        {
+            int index = 0;
+            int num = 0;
+            switch (classID)
+            {
+                case ClassID.All:
+                    index = 0;
+                    num = JOB_Progress_All / 3;
+                    break;
+                case ClassID.Magic:
+                    index = 3;
+                    num = JOB_Progress_Mage / 3;
+                    break;
+                case ClassID.Melee:
+                    index = 4;
+                    num = JOB_Progress_Melee / 3;
+                    break;
+                case ClassID.Ranged:
+                    index = 9;
+                    num = JOB_Progress_Ranged / 3;
+                    break;
+                case ClassID.Summoner:
+                    index = 12;
+                    num = JOB_Progress_Summoner / 3;
+                    break;
+            }
+            int[] array = _jobProgress.ToList().GetRange(index, 3).ToArray();
+            numComplete = array.Count(t => t >= num);
+            if (numComplete >= 3)
+            {
+                SetJobTraitSuccess(Player);
+            }
+            return array;
+        }
+
         private void InitStatRemaining()
         {
             int num = 0;
@@ -458,9 +632,12 @@ namespace ArchaeaMod
             classData.playerUID = playerUID;
             classData.classChoice = tag.GetByte("Class");
             //  Job selection
-            jobChoice = tag.GetByte("Job");
+            jobChoice = tag.GetInt("Job");
             showedDialog = tag.GetBool("JobDialog");
             jobProgress = tag.GetIntArray("JobProgress");
+            _jobProgress = tag.GetIntArray("TotalJobProgress");
+            obtainedCatalogue[0] = tag.GetBool("_obtained0");
+            obtainedCatalogue[1] = tag.GetBool("_obtained1");
             //  Progression stat poins
             remainingStat = tag.GetInt("remainingStat");
             overallMaxStat = tag.GetInt("overallMaxStat");
@@ -512,6 +689,9 @@ namespace ArchaeaMod
             tag.Add("Job", jobChoice);
             tag.Add("JobDialog", showedDialog);
             tag.Add("JobProgress", jobProgress);
+            tag.Add("TotalJobProgress", _jobProgress);
+            tag.Add("_obtained0", obtainedCatalogue[0]);
+            tag.Add("_obtained1", obtainedCatalogue[1]);
             //  Progression stat poins
             tag.Add("remainingStat", remainingStat);
             tag.Add("overallMaxStat", overallMaxStat);
@@ -635,7 +815,7 @@ namespace ArchaeaMod
         {
             if (CheckValidJob(__classChoice, _jobChoice))
             {
-                jobChoice = (byte)_jobChoice;
+                jobChoice = _jobChoice;
             }
         }
         /* Unused
@@ -1182,46 +1362,20 @@ namespace ArchaeaMod
                 }
             }
             //  Jobs turn-in box
-            /*
             Container box = ModContent.GetInstance<ModeUI>().turnInBox;
             box.UpdateInput(Player, true);
-            if (ticks3 > 600)
-                ticks3 = 0;
-            switch (classChoice)
-            {
-                case ClassID.Melee:
-                    if (box.content?.type == ModContent.ItemType<Items.Materials.r_plate>())
+            if (box.content != null && box.content.type != ItemID.None && box.content.stack > 0)
+            { 
+                if (ticks3 > 600)
+                    ticks3 = 0;
+                if (++ticks3 % 20 == 0)
+                {
+                    if (!JobProgressSuccess(Player))
                     {
-                        if (ticks3++ % 30 == 0)
-                        { 
-                            //box.content.stack--;
-                            if (jobChoice == JobID.MELEE_Smith)
-                            {
-
-                            }
-                            else if (jobChoice == JobID.MELEE_Warrior)
-                            {
-
-                            }
-                            else if (jobChoice == JobID.MELEE_WhiteKnight)
-                            {
-
-                            }
-                        }
+                        SetJobProgress(jobChoice, ref box.content);
                     }
-                    break;
-                case ClassID.Ranged:
-                    break;
-                case ClassID.Magic:
-                    break;
-                case ClassID.Summoner:
-                    break;
-                case ClassID.All:
-                    break;
-                default:
-                    break;
+                }
             }
-            */
 
             //  Fire storm scroll effect
             FireStorm();
@@ -1642,6 +1796,13 @@ namespace ArchaeaMod
                 mult = 0.8f;
             }
         }
+        public override void ModifyStartingInventory(IReadOnlyDictionary<string, List<Item>> itemsByMod, bool mediumCoreDeath)
+        {
+            Item catalogue = new Item(ModContent.ItemType<Jobs.Items.job_bag>());
+            itemsByMod["ArchaeaMod"].Add(catalogue);
+            obtainedCatalogue[0] = true;
+            obtainedCatalogue[1] = true;
+        }
         private bool flag = true;
         public void NPCVendorScaling(float scale = 1f)
         {
@@ -1667,6 +1828,11 @@ namespace ArchaeaMod
             foreach (Room r in ArchaeaMod.Structure.Factory.room)
             {
                 r.Update(Player);
+            }
+            if (!obtainedCatalogue[0] && !obtainedCatalogue[1])
+            {
+                Player.QuickSpawnItem(Player.GetSource_DropAsItem(), ModContent.ItemType<Jobs.Items.job_bag>());
+                obtainedCatalogue[0] = true;
             }
             NPCVendorScaling(merchantDiscount);
             //  Trait characteristics

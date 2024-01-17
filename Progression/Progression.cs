@@ -59,7 +59,12 @@ namespace ArchaeaMod.Progression
             ALL_TenDefense = 26,
             ALL_IncJumpHeight = 27,
             ALL_Dash = 28,
-            ALL_FallingStarAtk = 29;
+            ALL_FallingStarAtk = 29,
+            MELEE_Job = 30,
+            RANGED_Job = 31,
+            MAGE_Job = 32,
+            SUMMONER_Job = 33,
+            ALL_Job = 34;
     }
 }
 namespace ArchaeaMod.Progression.Global

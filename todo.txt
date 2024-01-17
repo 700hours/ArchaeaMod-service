@@ -19,3 +19,25 @@ Make a configuration
 > Mod config for setting unlocked classes
 Check out "Growing water plants" in worldgen
 Cordon biomes
+
+"All: Gold Chest", 10% off all vendor prices
+"   business man",
+"   entrepreneur",
+"   merchant",
+"Mage: Magno Core", 10% more damage dealt
+"   botanist",
+"   witch",
+"   wizard",
+"Melee: Rusty Plate", 10% faster weapon speed
+"   smith",
+"   warrior",
+"   white knight",
+"Ranged: Black Lens", Enemies glow at night
+"   bowsman",
+"   corperate usurper",
+"   outlaw",
+"Summoner: Bird Statue", 10% faster move speed
+"   alchemist",
+"   scientist",
+"   surveyor"
+

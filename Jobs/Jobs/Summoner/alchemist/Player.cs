@@ -1,11 +1,17 @@
 using Terraria.ID;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace ArchaeaMod.Jobs.Global
 {
     public class alchemist
-	{ 
-		public static void CreatePlayer(Player player)
+	{
+        public static void GiveGear(Player player)
+        {
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ModContent.ItemType<Jobs.Items.Scroll_plague_nova>(), 3);
+            player.QuickSpawnItem(player.GetSource_DropAsItem(), ModContent.ItemType<Jobs.Items.Scroll_plague_explosion>(), 3);
+        }
+        public static void CreatePlayer(Player player)
 		{
 			player.inventory[0].SetDefaults(ItemID.CopperPickaxe);
 			player.inventory[1].SetDefaults(ItemID.CopperAxe);
