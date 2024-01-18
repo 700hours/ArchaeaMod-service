@@ -33,7 +33,7 @@ Multiplayer gameplay is included. Dedicated server usage is also implemented.
 
 [hr]
 [b]Latest update[/b]
-[i]version 1.4.41.292 -> 1.4.48.305
+[i]version 1.4.41.292 -> 1.4.50.307
 ================================
 # Added
 -> Job catalogue for starting items
@@ -47,8 +47,11 @@ Multiplayer gameplay is included. Dedicated server usage is also implemented.
 -> Traps to a certain biome
 # Changed
 -> Tomohawk, Javelin and Dagger now properly set to Ranged class
+-> Performance update
 # Fixed
 -> Certain mod buffs correctly set to be enabled in PvP
 -> UI drawing overlapping upon world join
+# Removed
+-> 4 unused items
 
 Full change log can be found at the steam workshop page and mod homepage.[/i]

@@ -780,3 +780,10 @@ version 1.4.45.302 -> 1.4.48.305
 -> Another boss pattern and 2 projectile patterns
 -> Bom Vest (mispelling intended)
 -> Traps to a certain biome
+
+version 1.4.48.305 -> 1.4.50.307
+================================
+# Changes
+-> Performance update
+# Removed
+-> 4 unused items
