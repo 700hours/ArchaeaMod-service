@@ -19,6 +19,7 @@ namespace ArchaeaMod.Jobs.Buffs
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Soft");
+            Main.pvpBuff[Type] = true;
         }
         public override void Update(NPC npc, ref int buffIndex)
         {

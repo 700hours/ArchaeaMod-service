@@ -15,6 +15,10 @@ namespace ArchaeaMod.Jobs.Buffs
 {
     internal class Plague : ModBuff
     {
+        public override void SetStaticDefaults()
+        {
+            Main.pvpBuff[Type] = true;
+        }
         public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {
             buffName = "Plague";

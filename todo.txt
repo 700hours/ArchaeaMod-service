@@ -41,3 +41,7 @@ Cordon biomes
 "   scientist",
 "   surveyor"
 
+Add bonuses for completing job side quest
+Organize UI
+
+Only get into fights with enemies upon making first contact

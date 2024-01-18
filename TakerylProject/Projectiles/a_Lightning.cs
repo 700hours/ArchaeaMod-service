@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.UI.ResourceSets;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -31,6 +33,8 @@ namespace ArchaeaMod.TakerylProject.Projectiles
         private float weight;
         private Vector2[] connect = new Vector2[8];
         private Vector2 dest, start;
+        private bool[] npcHit = new bool[Main.npc.Length];
+        private bool[] beenHit = new bool[256];
         internal bool GeneratePath()
         {
             if (!init)
@@ -67,6 +71,32 @@ namespace ArchaeaMod.TakerylProject.Projectiles
             }
             else if (next < connect.Length)
                 next++;
+            for (int i = 0; i < Main.npc.Length; i++)
+            {
+                NPC npc = Main.npc[i];
+                if (!npcHit[i] && npc.active && npc.life > 0 && !npc.friendly)
+                {
+                    if (Projectile.Center.Distance(npc.Center) < 80f)
+                    {
+                        npc.StrikeNPC(npc.CalculateHitInfo(Projectile.damage, Projectile.position.X < npc.Center.X ? 1 : -1, true));
+                        npc.AddBuff(ModContent.BuffType<Buffs.stun>(), 210);
+                        npcHit[i] = true;
+                    }
+                }
+            }
+            for (int i = 0; i < Main.player.Length; i++)
+            {
+                Player plr = Main.player[i];
+                if (!beenHit[i] && plr.active && !plr.dead && plr.InOpposingTeam(Main.player[Projectile.owner]) && plr.hostile)
+                {
+                    if (Projectile.Center.Distance(plr.Center) < 80f)
+                    {
+                        plr.Hurt(PlayerDeathReason.ByProjectile(plr.whoAmI, Projectile.whoAmI), Projectile.damage, Projectile.position.X < plr.Center.X ? 1 : -1, true);
+                        plr.AddBuff(ModContent.BuffType<Buffs.stun>(), 150);
+                        beenHit[i] = true;
+                    }
+                }
+            }
         }
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {

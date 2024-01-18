@@ -38,6 +38,7 @@ using ArchaeaMod.Jobs.Projectiles;
 using ArchaeaMod.Jobs;
 using System.Diagnostics;
 using Container = tUserInterface.ModUI.Container;
+using tModPorter;
 
 namespace ArchaeaMod
 {
@@ -452,6 +453,24 @@ namespace ArchaeaMod
             //  End
         }
 
+        //  More class methods
+        public static int HardChangeClass(Player player)
+        {
+            if (Main.netMode < 2)
+            {
+                ArchaeaPlayer modPlayer = player.GetModPlayer<ArchaeaPlayer>();
+                //  Class select override
+                if (Locks.Instance.OverrideClassSelect)
+                {
+                    modPlayer.classChoice = (int)Locks.Instance.ForceClass + 1;
+                    modPlayer.classData.classChoice = (int)Locks.Instance.ForceClass + 1;
+                    return (int)Locks.Instance.ForceClass + 1;
+                }
+                return modPlayer.classChoice;
+            }
+            return ClassID.None;
+        }
+
         //  More job methods
         public int CompletedJobsCount()
         {
@@ -486,6 +505,8 @@ namespace ArchaeaMod
         public static bool JobProgressSuccess(Player player)
         {
             ArchaeaPlayer modPlayer = player.GetModPlayer<ArchaeaPlayer>();
+            if (modPlayer.jobChoice == -1)
+                return false;
             int index = 0;
             int success = 0;
             switch (modPlayer.classChoice)
@@ -632,10 +653,16 @@ namespace ArchaeaMod
             classData.playerUID = playerUID;
             classData.classChoice = tag.GetByte("Class");
             //  Job selection
-            jobChoice = tag.GetInt("Job");
+            jobChoice = tag.GetInt("_Job");
             showedDialog = tag.GetBool("JobDialog");
-            jobProgress = tag.GetIntArray("JobProgress");
-            _jobProgress = tag.GetIntArray("TotalJobProgress");
+            for (int i = 0; i < jobProgress.Length; i++)
+            {
+                jobProgress[i] = tag.GetInt($"job_prog{i}");
+            }
+            for (int i = 0; i < _jobProgress.Length; i++)
+            {
+                _jobProgress[i] = tag.GetInt($"_job_prog{i}");
+            }
             obtainedCatalogue[0] = tag.GetBool("_obtained0");
             obtainedCatalogue[1] = tag.GetBool("_obtained1");
             //  Progression stat poins
@@ -686,10 +713,16 @@ namespace ArchaeaMod
             tag.Add("PlayerID", playerUID);
             tag.Add("Class", (byte)classData.classChoice);
             //  Job selection
-            tag.Add("Job", jobChoice);
+            tag.Add("_Job", jobChoice);
             tag.Add("JobDialog", showedDialog);
-            tag.Add("JobProgress", jobProgress);
-            tag.Add("TotalJobProgress", _jobProgress);
+            for (int i = 0; i < jobProgress.Length; i++)
+            {
+                tag.Add($"job_prog{i}", jobProgress[i]);
+            }
+            for (int i = 0; i < _jobProgress.Length; i++)
+            {
+                tag.Add($"_job_prog{i}", _jobProgress[i]);
+            }
             tag.Add("_obtained0", obtainedCatalogue[0]);
             tag.Add("_obtained1", obtainedCatalogue[1]);
             //  Progression stat poins
@@ -1030,6 +1063,13 @@ namespace ArchaeaMod
                     damage.Base *= 3;
                 }
             }
+            if (CheckHasTrait(TraitID.MAGE_Job, ClassID.Magic, Main.myPlayer))
+            {
+                if (item.DamageType == DamageClass.Magic)
+                {
+                    damage.Base *= 1.1f;
+                }
+            }
         }
 
         private void DebugTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -1106,6 +1146,17 @@ namespace ArchaeaMod
             //else ModeOffResetStats(Player.statLifeMax2);
         }
         #region Progression
+        int ticks4 = 0;
+        public override void PreUpdateBuffs()
+        {
+            if (!Main.dayTime && ticks4++ % 300 == 0)
+            { 
+                if (CheckHasTrait(TraitID.RANGED_Job, ClassID.Ranged))
+                {
+                    Player.AddBuff(BuffID.Hunter, 600);
+                }
+            }
+        }
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
         {
             price = (int)(price / merchantDiscount);
@@ -1113,6 +1164,11 @@ namespace ArchaeaMod
         public override void ModifyShootStats(Item item, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             velocity *= attackSpeed;
+        }
+        public override void PostUpdateBuffs()
+        {
+            //  ALERT; dumb idea
+            HardChangeClass(Player);
         }
         public override void PostUpdateRunSpeeds()
         {
@@ -1122,6 +1178,10 @@ namespace ArchaeaMod
             }
             if (CheckHasTrait(TraitID.MAGE_MoveSpeed, ClassID.Magic))
             { 
+                Player.maxRunSpeed *= 1.10f;
+            }
+            if (CheckHasTrait(TraitID.SUMMONER_Job, ClassID.Summoner))
+            {
                 Player.maxRunSpeed *= 1.10f;
             }
             Player.maxRunSpeed *= moveSpeed;
@@ -1154,6 +1214,10 @@ namespace ArchaeaMod
         }
         public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
+            if (ItemID.Sets.ItemsThatCountAsBombsForDemolitionistToSpawn[modifiers.DamageSource.SourceItem.type] && ArchaeaItem.HasEquipped(Player, ModContent.ItemType<Jobs.Items.Armors.BomVest>()))
+            {
+                modifiers.FinalDamage *= 0.8f;
+            }
             if (CheckHasTrait(TraitID.MAGE_DamageReduce, ClassID.Magic))
             {
                 modifiers.FinalDamage *= 0.9f;
@@ -1347,7 +1411,7 @@ namespace ArchaeaMod
         public override void PreUpdate()
         {
             //  Force class choice to avert swapping
-            if (classChosen)
+            if (classChosen && !Locks.Instance.OverrideClassSelect)
             {
                 var c = ArchaeaWorld.playerClass.FirstOrDefault(t => t.playerUID == playerUID);
                 if (c != default)
@@ -1361,11 +1425,14 @@ namespace ArchaeaMod
                     }
                 }
             }
+            //  ALERT; dumb idea
+            HardChangeClass(Player);
             //  Jobs turn-in box
             Container box = ModContent.GetInstance<ModeUI>().turnInBox;
-            box.UpdateInput(Player, true);
+            box.active = true;
+            box.UpdateInput(Player, true, true, true);
             if (box.content != null && box.content.type != ItemID.None && box.content.stack > 0)
-            { 
+            {
                 if (ticks3 > 600)
                     ticks3 = 0;
                 if (++ticks3 % 20 == 0)
@@ -1796,13 +1863,6 @@ namespace ArchaeaMod
                 mult = 0.8f;
             }
         }
-        public override void ModifyStartingInventory(IReadOnlyDictionary<string, List<Item>> itemsByMod, bool mediumCoreDeath)
-        {
-            Item catalogue = new Item(ModContent.ItemType<Jobs.Items.job_bag>());
-            itemsByMod["ArchaeaMod"].Add(catalogue);
-            obtainedCatalogue[0] = true;
-            obtainedCatalogue[1] = true;
-        }
         private bool flag = true;
         public void NPCVendorScaling(float scale = 1f)
         {
@@ -1834,7 +1894,12 @@ namespace ArchaeaMod
                 Player.QuickSpawnItem(Player.GetSource_DropAsItem(), ModContent.ItemType<Jobs.Items.job_bag>());
                 obtainedCatalogue[0] = true;
             }
-            NPCVendorScaling(merchantDiscount);
+            float totalDiscount = merchantDiscount;
+            if (CheckHasTrait(TraitID.ALL_Job, ClassID.All))
+            {
+                totalDiscount += 0.1f;
+            }
+            NPCVendorScaling(totalDiscount);
             //  Trait characteristics
             //  Wall jump
             if (CheckHasTrait(TraitID.ALL_WallJump, ClassID.All))
@@ -2220,6 +2285,7 @@ namespace ArchaeaMod
             get { return Main.spriteBatch; }
         }
         int t = 180;
+        public static bool OptionsDisplayed = true;
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
             //  Need a little bit of engineering to resize

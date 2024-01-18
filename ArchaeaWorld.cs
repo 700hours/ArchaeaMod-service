@@ -912,6 +912,7 @@ namespace ArchaeaMod
             }
             tag.Add("elevatorCount", elevatorCount);
             tag.Add("notFirstJoin", notFirstJoin);
+            playerClass.Clear();
         }
         public override void LoadWorldData(TagCompound tag)
         {

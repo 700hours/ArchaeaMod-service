@@ -753,3 +753,30 @@ version 1.4.38.285 -> 1.4.41.292
 # Fixed
 -> Stun debuff recoloring
 -> ListBox innactive text not drawing
+
+version 1.4.41.292 -> 1.4.43.301
+================================
+# Added
+-> Job catalogue for starting items
+-> New dialog UI
+-> Job side quest UI
+-> "   "    "     status
+-> "   "    "     completion bonuses
+-> Hotkey for showing job help
+# Changed
+-> Tomohawk, Javelin and Dagger now properly set to Ranged class
+# Fixed
+-> Certain mod buffs correctly set to be enabled in PvP
+-> UI drawing overlapping upon world join
+
+version 1.4.42.301 -> 1.4.45.302
+================================
+# Added
+-> Mod config for class lock/unlock
+
+version 1.4.45.302 -> 1.4.48.305
+================================
+# Added
+-> Another boss pattern and 2 projectile patterns
+-> Bom Vest (mispelling intended)
+-> Traps to a certain biome

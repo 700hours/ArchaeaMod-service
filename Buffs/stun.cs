@@ -20,6 +20,7 @@ namespace ArchaeaMod.Buffs
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Stunned");
+            Main.pvpBuff[Type] = true;
         }
         public override void Update(NPC npc, ref int buffIndex)
         {
@@ -32,6 +33,19 @@ namespace ArchaeaMod.Buffs
             if (npc.buffTime[buffIndex] == 2)
             {
                 npc.color = oldColor;
+            }
+        }
+        public override void Update(Player player, ref int buffIndex)
+        {
+            if (!init)
+            {
+                oldColor = player.skinColor;
+            }
+            player.velocity = Vector2.Zero;
+            player.skinColor = Color.LightGray;
+            if (player.buffTime[buffIndex] == 2)
+            {
+                player.skinColor = oldColor;
             }
         }
     }

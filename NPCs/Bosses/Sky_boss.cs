@@ -79,12 +79,18 @@ namespace ArchaeaMod.NPCs.Bosses
         }
         private bool init;
         private bool attack;
+        private bool movePattern = false;
+        private bool movePatternInit = false;
         private int index;
-        private int sendIndex;
+        private int sendIndex;           
+        private float shape_ticks = 0;
+        private int shape_num = 0;
         private float angle;
-        private const int maxTimer = 900;
+        private const int maxTimer = 901;
         private Projectile[] orbs = new Projectile[7];
-        private Projectile[] flames = new Projectile[6];
+        private Projectile[] flames = new Projectile[5];
+        Vector2[] pentagon = new Vector2[5];
+
         public override bool PreAI()
         {
             if (!init)
@@ -101,6 +107,11 @@ namespace ArchaeaMod.NPCs.Bosses
             }
             if (timer % 600 == 0 && timer != 0)
             {
+                movePattern = Main.rand.NextBool();
+                if (!movePattern)
+                {
+                    movePatternInit = true;
+                }
                 move = Vector2.Zero;
                 do
                 {
@@ -148,15 +159,37 @@ namespace ArchaeaMod.NPCs.Bosses
             {
                 if (NPC.alpha > 0)
                     NPC.alpha -= 255 / 60;
-                if (timer < 600)
+                if (movePattern)
+                { 
+                    if (timer < 600)
+                    {
+                        if (timer % 150 == 0)
+                            move = ArchaeaNPC.FindAny(NPC, target(), false);
+                        float angle = NPC.AngleTo(move);
+                        float cos = (float)(0.2f * Math.Cos(angle));
+                        float sine = (float)(0.2f * Math.Sin(angle));
+                        NPC.velocity += new Vector2(cos, sine);
+                        ArchaeaNPC.VelocityClamp(ref NPC.velocity, -4f, 4f);
+                    }
+                }
+                else
                 {
-                    if (timer % 150 == 0)
-                        move = ArchaeaNPC.FindAny(NPC, target(), false);
-                    float angle = NPC.AngleTo(move);
-                    float cos = (float)(0.2f * Math.Cos(angle));
-                    float sine = (float)(0.2f * Math.Sin(angle));
-                    NPC.velocity += new Vector2(cos, sine);
-                    ArchaeaNPC.VelocityClamp(ref NPC.velocity, -4f, 4f);
+                    if (movePatternInit)
+                    { 
+                        pentagon = ArchaeaNPC.GetShape(target(), 5, NPC.height * 5);
+                        movePatternInit = false;
+                    }
+                    if ((shape_ticks += 1f / (600f / 5f)) >= 1f)
+                    {
+                        shape_num++;
+                        shape_ticks = 0f;
+                    }
+                    if (shape_ticks >= pentagon.Length)
+                    {
+                        shape_ticks = 0;
+                        movePattern = false;
+                    }
+                    else Vector2.Lerp(NPC.Center, pentagon[shape_num], shape_ticks);
                 }
             }
             if (attack)
@@ -189,13 +222,13 @@ namespace ArchaeaMod.NPCs.Bosses
         {
             index = NPCHeadLoader.GetBossHeadSlot(ArchaeaMain.skyHead);
         }
-
+        
         private bool FlameBurst()
         {
             float angle = ArchaeaNPC.RandAngle();
             for (int i = 0; i < flames.Length; i++)
             {
-                flames[i] = Projectile.NewProjectileDirect(Projectile.GetSource_None(), NPC.Center, ArchaeaNPC.AngleToSpeed(angle), ModContent.ProjectileType<Flame>(), 20, 3f, 255, 1f, NPC.target);
+                flames[i] = Projectile.NewProjectileDirect(Projectile.GetSource_None(), NPC.Center, ArchaeaNPC.AngleToSpeed(angle), ModContent.ProjectileType<Flame>(), 20, 3f, NPC.whoAmI, i, NPC.target, Main.rand.Next(2));
                 angle += (float)Math.PI / 3f;
                 if (Main.netMode == 2)
                     NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, flames[i].whoAmI);
@@ -396,16 +429,17 @@ namespace ArchaeaMod.NPCs.Bosses
             if (Projectile.alpha > 0)
                 Projectile.alpha -= 255 / 60;
             else Projectile.alpha = 0;
-            float maxSpeed = Math.Max(((boss.lifeMax + 1 - boss.life) / boss.lifeMax) * 5f, 2f);
+            float maxSpeed = Math.Max(((boss.lifeMax + 1 - boss.life) / boss.lifeMax) * 5f, 5f);
             float angle;
-            if (timer++ > 90)
+            if (timer++ % 180 == 0)
             {
                 if (target.active && !target.dead)
                     angle = Projectile.AngleTo(target.Center);
                 else angle = Projectile.AngleFrom(target.Center);
-                Projectile.velocity += ArchaeaNPC.AngleToSpeed(angle, 0.5f);
+                Projectile.velocity = ArchaeaNPC.AngleToSpeed(angle, maxSpeed);
                 ArchaeaNPC.VelocityClamp(ref Projectile.velocity, maxSpeed * -1, maxSpeed);
             }
+            ArchaeaNPC.SlowDown(ref Projectile.velocity);
             Projectile.rotation = Projectile.velocity.ToRotation();
             if (Main.netMode == 2 && (Projectile.velocity.X < 0f && Projectile.oldVelocity.X >= 0f || Projectile.velocity.X > 0f && Projectile.oldVelocity.X <= 0f || Projectile.velocity.Y < 0f && Projectile.oldVelocity.Y >= 0f || Projectile.velocity.Y > 0f && Projectile.oldVelocity.Y <= 0f))
                 Projectile.netUpdate = true;
@@ -453,30 +487,87 @@ namespace ArchaeaMod.NPCs.Bosses
             Projectile.hostile = true;
             Projectile.ignoreWater = true;
         }
+        public const int 
+            TYPE_Bounce = 0,
+            TYPE_Shape = 1,
+            MAX_Index = 5;
         private int i;
         private int j;
+        private int numBounce
+        {
+            get { return (int)Projectile.localAI[1]; }
+            set { Projectile.localAI[1] = value; }
+        }    
+        private int maxBounce = 3;
         private Player player
         {
             get { return Main.player[(int)Projectile.ai[1]]; }
         }
+        private int type
+        {
+            get { return (int)Projectile.ai[2]; }
+            set { Projectile.ai[2] = value; }
+        }
+        private bool init
+        {
+            get { return Projectile.localAI[0] == 1 ? true : false; }
+            set { Projectile.localAI[0] = (value == true ? 1 : 0); }
+        }
+        private int index
+        {
+            get { return (int)Projectile.ai[0]; }
+            set { Projectile.ai[0] = value; }
+        }
+        Vector2 destination = Vector2.Zero;
         public override void AI()
         {
-            if (Projectile.Distance(player.Center) > 2048)
-                Projectile.active = false;
-            if (Projectile.ai[0] != 1f)
-                Projectile.timeLeft = 90;
-            i = (int)Projectile.position.X / 16;
-            j = (int)Projectile.position.Y / 16;
-            Projectile.rotation = Projectile.velocity.ToRotation();
-            if (TileLeft() || TileRight())
-                Projectile.velocity.X *= -1;
-            if (TileTop() || TileBottom())
-                Projectile.velocity.Y *= -1;
-            for (int k = 0; k < 3; k++)
-                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Shadowflame);
-            if (Main.netMode == 2 && (Projectile.velocity.X < 0f && Projectile.oldVelocity.X >= 0f || Projectile.velocity.X > 0f && Projectile.oldVelocity.X <= 0f || Projectile.velocity.Y < 0f && Projectile.oldVelocity.Y >= 0f || Projectile.velocity.Y > 0f && Projectile.oldVelocity.Y <= 0f))
-                Projectile.netUpdate = true;
-            Projectile.velocity.Y += 0.0917f;
+            if (type == TYPE_Shape)
+            {
+                if (!init)
+                {
+                    destination = ArchaeaNPC.GetShape(Main.npc[Projectile.owner], 5, 400f)[index];
+                    Projectile.velocity = ArchaeaNPC.AngleToSpeed(ArchaeaNPC.AngleTo(Projectile.Center, destination), 3f);
+                    Projectile.netUpdate = true;
+                    init = true;
+                }
+                if (Projectile.timeLeft == 2)
+                {
+                    ArchaeaNPC.GenerateDiffusion(Projectile.Center, 10, DustID.PurpleTorch, BuffID.Venom);
+                    Projectile.timeLeft = -1;
+                    Projectile.netUpdate = true;
+                }
+            }
+            else
+            { 
+                if (Projectile.Distance(player.Center) > 2048)
+                    Projectile.active = false;
+                if (Projectile.ai[0] != 1f)
+                    Projectile.timeLeft = 90;
+                i = (int)Projectile.position.X / 16;
+                j = (int)Projectile.position.Y / 16;
+                Projectile.rotation = Projectile.velocity.ToRotation();
+                if (numBounce >= maxBounce)
+                {
+                    ArchaeaNPC.GenerateDiffusion(Projectile.Center, 10, DustID.PurpleTorch, BuffID.Venom);
+                    Projectile.timeLeft = -1;
+                    Projectile.netUpdate = true;
+                }
+                if (TileLeft() || TileRight())
+                { 
+                    Projectile.velocity.X *= -1;
+                    numBounce++;
+                }
+                if (TileTop() || TileBottom())
+                { 
+                    Projectile.velocity.Y *= -1;
+                    numBounce++;
+                } 
+                for (int k = 0; k < 3; k++)
+                    Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Shadowflame);
+                if (Main.netMode == 2 && (Projectile.velocity.X < 0f && Projectile.oldVelocity.X >= 0f || Projectile.velocity.X > 0f && Projectile.oldVelocity.X <= 0f || Projectile.velocity.Y < 0f && Projectile.oldVelocity.Y >= 0f || Projectile.velocity.Y > 0f && Projectile.oldVelocity.Y <= 0f))
+                    Projectile.netUpdate = true;
+                Projectile.velocity.Y = 0.0917f;
+            }
         }
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {

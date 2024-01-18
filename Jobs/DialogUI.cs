@@ -21,6 +21,7 @@ using ArchaeaMod.Jobs.Buffs;
 using ArchaeaMod.Jobs.Global;
 using static Humanizer.On;
 using System.Diagnostics.Metrics;
+using ArchaeaMod.Mode;
 
 namespace ArchaeaMod.Jobs
 {
@@ -38,11 +39,11 @@ namespace ArchaeaMod.Jobs
             "or otherwise, or enable any missing mods before\n" +
             "using AnotherSSC. The SP data will reload on\n" +
             "world join upon completion.";
-        Button close => new Button("Close", default, Color.Blue) { drawMagicPixel = true };                                                     //200 (legacy value)
-        TextBox unloadedNotice => new TextBox(new Rectangle(Main.screenWidth / 2 - 400 / 2 + 120, (int)(Main.screenHeight / 2.5f) - 200 / 2, 400, 320), Color.Blue);
-        Rectangle listRect => new Rectangle(Main.screenWidth / 2 - 400 / 2 - 120, (int)(Main.screenHeight / 2.5f) - 200 / 2 - 8, 190, 320 - 24);
-        Scroll listScroll => new Scroll(listRect);
-        ListBox dialog => new ListBox(listRect, listScroll, default(string[]));
+        static Button close = new Button("Close", default, Color.Blue) { active = true, drawMagicPixel = true };                                                     //200 (legacy value)
+        public static TextBox unloadedNotice = new TextBox(new Rectangle(Main.screenWidth / 2 - 400 / 2 + 120, (int)(Main.screenHeight / 2.5f) - 200 / 2, 400, 320), Color.Blue) { active = true };
+        static Rectangle listRect = new Rectangle(Main.screenWidth / 2 - 400 / 2 - 120, (int)(Main.screenHeight / 2.5f) - 200 / 2 - 8, 190, 320 - 24);
+        static Scroll listScroll = new Scroll(listRect);
+        static ListBox dialog = new ListBox(listRect, listScroll, default(string[])) { active = true};
         SpriteBatch sb => Main.spriteBatch;
         public static readonly string JobText =
             "Jobs can be selected per class. There are three\n" +
@@ -76,9 +77,13 @@ namespace ArchaeaMod.Jobs
             "   scientist",
             "   surveyor"
         };
+        public override void OnWorldLoad()
+        {
+            unloadedNotice.active = false;
+        }
         public void PrintDualListText(string text, string[] content)
         {
-            if (!unloadedNotice.active || showedDialog)
+            if (Main.playerInventory || !unloadedNotice.active)
                 return;
             if (num3 == 0)
             {
@@ -99,6 +104,7 @@ namespace ArchaeaMod.Jobs
             close.box = new Rectangle(unloadedNotice.box.Right - 60, unloadedNotice.box.Bottom - 40 - 32, 50, 30);
             unloadedNotice.text = notice.Substring(0, num3) + caret;
             close.HoverPlaySound(SoundID.MenuTick);
+            dialog.Update(false);
             if (close.LeftClick())
             {
                 dialog.active = false;
@@ -109,18 +115,20 @@ namespace ArchaeaMod.Jobs
         }
         public override void UpdateUI(GameTime gameTime)
         {
+            if (ArchaeaMain.showJobHelp.JustPressed)
+            {
+                unloadedNotice.active = !unloadedNotice.active;
+            }
             PrintDualListText(JobText, Content);
         }
-        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+        public override void PostDrawInterface(SpriteBatch sb)
         {
-            if (!unloadedNotice.active || showedDialog)
+            if (Main.playerInventory || !unloadedNotice.active)
                 return;
-            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             bool hover = close.HoverOver();
             int offset = 8;
             var bounds = unloadedNotice.box;
             Utils.DrawInvBG(Main.spriteBatch, new Rectangle(bounds.X - offset, bounds.Y - offset, bounds.Width + offset * 2, bounds.Height - 40 + offset * 2));
-            //sb.Draw(TextureAssets.MagicPixel.Value, box, Color.Gray);
             dialog.bgColor = default;
             if (dialog.scroll != null)
             {
@@ -129,7 +137,6 @@ namespace ArchaeaMod.Jobs
             listScroll.Draw(Main.spriteBatch, Color.Gray);
             unloadedNotice.DrawText(null);
             close.Draw(hover);
-            sb.End();
         }
     }
 }

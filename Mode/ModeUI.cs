@@ -20,6 +20,7 @@ using ArchaeaMod.Progression;
 using Terraria.Audio;
 using Terraria.ID;
 using tUserInterface.ModUI;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ArchaeaMod.Mode
 {
@@ -32,7 +33,7 @@ namespace ArchaeaMod.Mode
     }
     public class ModeUI : ModSystem
     {
-        private ListBox objective;
+        public ListBox objective;
         private ListBox stat;
         private ListBox job;
         private ListBox[] trait = new ListBox[5];
@@ -47,11 +48,13 @@ namespace ArchaeaMod.Mode
         public int ticks = 300;
         public int ticks2 = 300;
         public string text;
-        public Container turnInBox => new Container(new Rectangle(objective.hitbox.Left - 50, objective.hitbox.Bottom - 50, 50, 50), Color.PaleVioletRed);
+        public Container turnInBox;
+        private bool showUI = false;
 
         public override void OnModLoad()
         {
             if (Main.dedServ) return;
+            Container.Initialize(TextureAssets.MagicPixel.Value);
             //start = 0, health = 1, mana = 2, bosses = 3, bottom = 4, npcs = 5, week = 6, crafting = 7, downedMagno = 8;
             objective = new ListBox(new Rectangle(200, 200, 240, 200), default, new[] 
             { 
@@ -144,6 +147,7 @@ namespace ArchaeaMod.Mode
                 new Button("4", default, Color.LightGray)
             };
             page = new ListBox[] { objective, stat, default, mode, job };
+            turnInBox = new Container(new Rectangle(objective.hitbox.Right - 50, objective.hitbox.Bottom + 50, 50, 50), Color.PaleVioletRed);
         }
         private string[] ClassArray(int index, int num = 0, int num2 = 0, int num3 = 0)
         {
@@ -246,7 +250,7 @@ namespace ArchaeaMod.Mode
 
         private int TraitIndex()
         {
-            return (int)Math.Max(Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice - 1, 0);
+            return (int)Math.Max(ArchaeaPlayer.HardChangeClass(Main.LocalPlayer) - 1, 0);
         }
         private Rectangle AdjustY(Rectangle box, int offY)
         {
@@ -254,6 +258,14 @@ namespace ArchaeaMod.Mode
         }
         public override void PostDrawInterface(SpriteBatch sb)
         {
+            if (!showUI)
+            { 
+                if (ArchaeaMain.progressKey.JustPressed)
+                {
+                    showUI = true;
+                }
+                return;
+            }
             if (ModContent.GetInstance<ModeToggle>().loading)
             {
                 Utils.DrawBorderString(sb, "Loading checklist . . .", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
@@ -356,18 +368,56 @@ namespace ArchaeaMod.Mode
             {
                 // Job items
                 {
-                    turnInBox.box = new Rectangle(objective.hitbox.Left - 50, objective.hitbox.Bottom - 50, 50, 50);
-                    Texture2D tex = null;
-                    if (turnInBox.content != default && turnInBox.content.type != ItemID.None && turnInBox.content.stack > 0)
-                        tex = TextureAssets.Item[turnInBox.content.type].Value;
-                    turnInBox.Draw(tex, drawStack: true);
+                    turnInBox.box = new Rectangle(objective.hitbox.Left - 50 - 6, objective.hitbox.Bottom - 16, 50, 50);
+                    turnInBox.DrawItem(turnInBox.color, true);
+                    Texture2D tex = default;
+                    switch (ArchaeaPlayer.HardChangeClass(Main.LocalPlayer))
+                    {
+                        case ClassID.All:
+                            InitTexture(ItemID.GoldChest);
+                            tex = TextureAssets.Item[ItemID.GoldChest].Value;
+                            break;
+                        case ClassID.Magic:
+                            tex = Mod.Assets.Request<Texture2D>("Merged/Items/Materials/magno_core").Value;
+                            break;
+                        case ClassID.Melee:
+                            tex = Mod.Assets.Request<Texture2D>("Items/Materials/r_plate").Value;
+                            break;
+                        case ClassID.Ranged:
+                            InitTexture(ItemID.BlackLens);
+                            tex = TextureAssets.Item[ItemID.BlackLens].Value;
+                            break;
+                        case ClassID.Summoner:
+                            InitTexture(ItemID.BirdStatue);
+                            tex = TextureAssets.Item[ItemID.BirdStatue].Value;
+                            break;
+                    }
+                    if (turnInBox.content == null || turnInBox.content.type == ItemID.None)
+                    { 
+                        sb.Draw(tex, new Rectangle(turnInBox.box.Center.X - tex.Width / 2, turnInBox.box.Center.Y - tex.Height / 2, tex.Width, tex.Height), Color.DarkGray * 0.5f);
+                    }
+                    if (turnInBox.HoverOver())
+                    {
+                        Utils.DrawBorderString(sb, "Turn in", new Vector2(turnInBox.box.Left, turnInBox.box.Bottom + 8), Color.White);
+                    }
                 }
                 Utils.DrawBorderString(sb, "Job choices", new Vector2(objective.hitbox.X, objective.hitbox.Top - 24), Color.CornflowerBlue);
-                Utils.DrawBorderString(sb, $"Current selection: {JobID.Name[Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice]}", new Vector2(objective.hitbox.X, objective.hitbox.Bottom), Color.MediumPurple);
+                Utils.DrawBorderString(sb, $"Current selection: {(Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice == -1 ? "None" : JobID.Name[Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice])}", new Vector2(objective.hitbox.X, objective.hitbox.Bottom), Color.MediumPurple);
                 Utils.DrawBorderString(sb, "Click item to assign job", new Vector2(objective.hitbox.X, objective.hitbox.Bottom + 24), Color.Gray);
             }
             DrawTextUI(sb, 0, "Trait acquired!", ref ticks, color: Color.CornflowerBlue);
             DrawTextUI(sb, 0, text, ref ticks2, color: textColor);
+        }
+        private void InitTexture(int type)
+        {
+            if (TextureAssets.Item[type].Value.Name.Contains("Dummy"))
+            {
+                int t = Item.NewItem(Item.GetSource_None(), Rectangle.Empty, type);
+                if (Main.netMode != 0)
+                {
+                    NetMessage.SendData(MessageID.SyncItem, -1, -1, null, t);
+                }
+            }
         }
         public override void UpdateUI(GameTime gameTime)
         {
@@ -473,7 +523,7 @@ namespace ArchaeaMod.Mode
                         for (int n = 0; n < page[i].item.Length; n++)
                         {
                             page[i].item[n].active = true;
-                            switch (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice)
+                            switch (ArchaeaPlayer.HardChangeClass(Main.LocalPlayer))
                             {
                                 case ClassID.None:
                                     //classChoice = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice;
@@ -529,7 +579,7 @@ namespace ArchaeaMod.Mode
                                     ? activeColor : innactiveColor;
                         }
                         //  Adding in more trait indices manually to avoid breaking changes to characters
-                        switch (Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice)
+                        switch (ArchaeaPlayer.HardChangeClass(Main.LocalPlayer))
                         {
                             case ClassID.Melee:
                                 trait[TraitIndex()].textColor[6] =
@@ -564,7 +614,7 @@ namespace ArchaeaMod.Mode
                         for (int n = 0; n < page[i].item.Length; n++)
                         {
                             page[i].item[n].active = true;
-                            int classChoice = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().classChoice;
+                            int classChoice = ArchaeaPlayer.HardChangeClass(Main.LocalPlayer);
                             switch (classChoice)
                             {
                                 case ClassID.None:
@@ -647,7 +697,7 @@ namespace ArchaeaMod.Mode
             { 
                 ticks++;
                 string placeholder = "Trait acquired!";
-                float width = 140 * text.Length / placeholder.Length;
+                float width = 140 * text.Length / placeholder.Length + 20;
                 int cOffset = Main.player[Main.myPlayer].height * 2 + y;
                 int xOffset = 8;
                 int yOffset = 8;
@@ -657,7 +707,7 @@ namespace ArchaeaMod.Mode
                     ticks = maxTicks;
                 }
                 Utils.DrawInvBG(sb, rect, Color.Transparent);
-                Utils.DrawBorderString(sb, text, new Vector2(rect.X + xOffset, rect.Y + yOffset), Color.CornflowerBlue);
+                Utils.DrawBorderString(sb, text, new Vector2(rect.Center.X - FontAssets.MouseText.Value.MeasureString(text).X / 2 - xOffset, rect.Y + yOffset), Color.CornflowerBlue);
             }
         }
         public static void NewText(string text, Color color)

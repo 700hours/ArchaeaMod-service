@@ -12,6 +12,7 @@ namespace ArchaeaMod.Buffs
             // DisplayName.SetDefault("Mercury Sickness");
             BuffID.Sets.NurseCannotRemoveDebuff[Type] = false;
             BuffID.Sets.LongerExpertDebuff[Type] = true;
+            Main.pvpBuff[Type] = true;
         }
         public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {

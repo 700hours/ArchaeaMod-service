@@ -20,6 +20,7 @@ namespace ArchaeaMod.Jobs.Buffs
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Weaken");
+            Main.pvpBuff[Type] = true;
         }
         public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {

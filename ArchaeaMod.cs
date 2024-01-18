@@ -30,8 +30,9 @@ namespace ArchaeaMod
         public static ModKeybind elevatorButton;
         public static ModKeybind extraLife;
         public static ModKeybind jobSkill;
-        public static ModKeybind lightHotkey;
-        public static ModKeybind throwHotkey;
+        public static ModKeybind showJobHelp;
+        //public static ModKeybind lightHotkey;
+        //public static ModKeybind throwHotkey;
         public override void Load()
         {
             AddBossHeadTexture(magnoHead, ModNPCID.MagnoliacHead);
@@ -46,10 +47,11 @@ namespace ArchaeaMod
             leapBind       = KeybindLoader.RegisterKeybind(this, "Leap", Keys.None);
             leapAttackBind = KeybindLoader.RegisterKeybind(this, "Leap attack", Keys.None);
             doubleJump     = KeybindLoader.RegisterKeybind(this, "Double jump", Keys.Space);
-            wallJump       = KeybindLoader.RegisterKeybind(this, "Wall Jump", Keys.Space);
-            elevatorButton = KeybindLoader.RegisterKeybind(this, "Use Elevator", Keys.X);
-            extraLife      = KeybindLoader.RegisterKeybind(this, "Show Extra Lives", Keys.None);
-            jobSkill       = KeybindLoader.RegisterKeybind(this, "Use Job Skill", Keys.F);
+            wallJump       = KeybindLoader.RegisterKeybind(this, "Wall jump", Keys.Space);
+            elevatorButton = KeybindLoader.RegisterKeybind(this, "Use elevator", Keys.X);
+            extraLife      = KeybindLoader.RegisterKeybind(this, "Show extra lives", Keys.None);
+            jobSkill       = KeybindLoader.RegisterKeybind(this, "Use job skill", Keys.F);
+            showJobHelp    = KeybindLoader.RegisterKeybind(this, "Show job help", Keys.H);
             //  lightHotkey    = KeybindLoader.RegisterKeybind(this, "Light effect", Keys.Q);
             //  Bound to jobSkill hotkey
             //  throwHotkey    = KeybindLoader.RegisterKeybind(this, "Throw sword", Keys.F);

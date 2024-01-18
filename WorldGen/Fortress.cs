@@ -149,7 +149,8 @@ namespace ArchaeaMod
                 End = 7,
                 Lighted = 8,
                 Decorated = 9,
-                Haze = 10;
+                Haze = 10,
+                Trap = 11;
         }
         class FortID
         {
@@ -183,7 +184,7 @@ namespace ArchaeaMod
 
             int lengthX = fort[0].GetLength(0);
             int lengthY = fort[0].GetLength(1);
-            int[] roomTypes = new int[] { RoomID.Chest, RoomID.Danger, RoomID.Decorated, RoomID.Lighted, RoomID.Haze };
+            int[] roomTypes = new int[] { RoomID.Chest, RoomID.Danger, RoomID.Decorated, RoomID.Lighted, RoomID.Haze, RoomID.Trap };
 
             int x1, x2, x3;
             int y1 = YCoord, y2 = y1, y3;
@@ -593,6 +594,16 @@ namespace ArchaeaMod
                         case RoomID.Haze:
                             if (WorldGen.genRand.Next(5) == 0)
                                 WorldGen.PlaceTile(x, y, ModContent.TileType<Tiles.purple_haze>(), true, true);
+                            break;
+                        case RoomID.Trap:
+                            if (!placed[m, n])
+                            {
+                                int rand = Main.rand.Next(2);
+                                if (rand == 0)
+                                    placed[m, n] = WorldGen.placeTrap(x, y);
+                                else if (rand == 1)
+                                    placed[m, n] = WorldGen.PlaceSandTrap(x, y);
+                            }
                             break;
                     }
                     WorldGen.PlaceWall(i, j, wallID);

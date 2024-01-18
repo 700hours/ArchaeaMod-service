@@ -709,6 +709,16 @@ Mods: {
 				DisplayName: Spacial Anomaly
 				Tooltip: ""
 			}
+
+			job_bag: {
+				DisplayName: Catalogue
+				Tooltip: Gives starting items
+			}
+
+			BomVest: {
+				DisplayName: Bom Vest
+				Tooltip: 20% reduced explosion damage
+			}
 		}
 
 		Projectiles: {
@@ -828,6 +838,32 @@ Mods: {
 			Leap.DisplayName: Leap
 			"Progress diaglog visible.DisplayName": Progress diaglog visible
 			"Use Job Skill.DisplayName": Use job skill
+			"Show job help.DisplayName": Show job help
+		}
+
+		Configs: {
+			Config: {
+				DisplayName: Config
+
+				LockClassSelect: {
+					Label: Lock Class Select
+					Tooltip: Enable this to force a class
+				}
+
+				OverrideClassSelect: {
+					Label: Override Class Select
+					Tooltip: Enable this to force a class
+				}
+
+				ClassOverride: {
+					Tooltip: Pick a class to override with
+					All.Label: All
+					Magic.Label: Magic
+					Melee.Label: Melee
+					Ranged.Label: Ranged
+					Summoner.Label: Summoner
+				}
+			}
 		}
 	}
 }

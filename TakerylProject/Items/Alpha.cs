@@ -28,9 +28,6 @@ namespace ArchaeaMod.TakerylProject.Items
 		}
 		public override void AddRecipes()
 		{
-			//Recipe.Create(Type)
-				  //.AddIngredient(9)
-				  //.Register();
 		}
 		public override bool? UseItem(Player player)
 		{

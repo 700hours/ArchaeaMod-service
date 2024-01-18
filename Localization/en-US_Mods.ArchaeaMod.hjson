@@ -246,6 +246,12 @@ Items: {
 
 	SpacialAnomaly: {
 	}
+
+	job_bag: {
+	}
+
+	BomVest: {
+	}
 }
 
 Projectiles: {
@@ -260,16 +266,30 @@ Tiles: {
 }
 
 Keybinds: {
+	"Wall jump.DisplayName": Wall jump
+	"Use elevator.DisplayName": Use elevator
+	"Show extra lives.DisplayName": Show extra lives
+	"Use job skill.DisplayName": Use job skill
 }
 
 Configs: {
 	Config: {
-		DisplayName: Config
-
 		LockArchaeaMode: {
 			Label: Lock Archaea Mode
 			Tooltip: ""
 		}
+
+		LockClassSelect: {
+		}
+
+		LockClassStats: {
+			Label: Lock Class Stats
+			Tooltip: ""
+		}
+	}
+
+	Locks: {
+		DisplayName: Locks
 
 		LockClassSelect: {
 			Label: Lock Class Select
@@ -280,5 +300,25 @@ Configs: {
 			Label: Lock Class Stats
 			Tooltip: ""
 		}
+
+		ForceClass: {
+			Label: Force Class
+			Tooltip: ""
+		}
+
+		OverrideClassSelect: {
+			Label: Override Class Select
+			Tooltip: ""
+		}
+	}
+
+	ClassOverride: {
+		Tooltip: ""
+		All.Label: All
+		Magic.Label: Magic
+		Melee.Label: Melee
+		Ranged.Label: Ranged
+		Summoner.Label: Summoner
+		None.Label: None
 	}
 }

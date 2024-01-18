@@ -151,6 +151,42 @@ namespace ArchaeaMod.NPCs
     {
         public static int defaultWidth = 800;
         public static int defaultHeight = 600;
+        public static Vector2[] GetShape(Player player, int num, float range)
+        {
+            Vector2[] shape = new Vector2[num];
+            float start = 360f / num;
+            for (int i = 0; i < shape.Length; i++)
+            {
+                double sine = player.Center.X + range * Math.Sin(start * i);
+                double cos = player.Center.Y + range * Math.Sin(start * i);
+                shape[i] = new Vector2((float)sine, (float)cos);
+            }
+            return shape;
+        }
+        public static Vector2[] GetShape(NPC npc, int num, float range)
+        {
+            Vector2[] shape = new Vector2[num];
+            float start = 360f / num;
+            for (int i = 0; i < shape.Length; i++)
+            {
+                double sine = npc.Center.X + range * Math.Sin(start * i);
+                double cos = npc.Center.Y + range * Math.Sin(start * i);
+                shape[i] = new Vector2((float)sine, (float)cos);
+            }
+            return shape;
+        }
+        public static void GenerateDiffusion(Vector2 position, int num, int dustType, int debuffType)
+        {
+            for (int i = 0; i < num; i++)
+            {
+                int num54 = Projectile.NewProjectile(Projectile.GetSource_None(), position.X, position.Y, Main.rand.Next(10) - 5, Main.rand.Next(10) - 5, ModContent.ProjectileType<Jobs.Projectiles.diffusion>(), 5, 0, Main.LocalPlayer.whoAmI, dustType, debuffType);
+                Main.projectile[num54].timeLeft = 90;
+                Main.projectile[num54].tileCollide = false;
+                Main.projectile[num54].ignoreWater = true;
+                Main.projectile[num54].localAI[0] = 300;
+                Main.projectile[num54].localAI[1] = 1;
+            }
+        }
         public static bool IsGenericNPC(NPC nPC)
         {
             if (!nPC.active) return false;

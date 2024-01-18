@@ -13,8 +13,12 @@ namespace ArchaeaMod.Jobs.Items
         //  Catalogue
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(Mod, "ItemName", $"[c/0088ff:{JobID.Name[Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice]} catalogue]"));
-            tooltips.Add(new TooltipLine(Mod, "ItemName", "[c/ff0000:Choose a job first!]"));
+            string jobChoice = Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice == -1 ? "" : JobID.Name[Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice];
+            if (string.IsNullOrEmpty(jobChoice))
+            {
+                tooltips.Add(new TooltipLine(Mod, "ItemName", "[c/ff0000:Choose a job first!]"));
+            }
+            else tooltips.Add(new TooltipLine(Mod, "ItemName", $"[c/0088ff:{(Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice == -1 ? 0 : JobID.Name[Main.LocalPlayer.GetModPlayer<ArchaeaPlayer>().jobChoice])} catalogue]"));
         }
         public override void SetDefaults()
         {

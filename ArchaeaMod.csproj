@@ -10,15 +10,12 @@
   <ItemGroup>
     <AdditionalFiles Remove="Jobs\Jobs\**" />
     <Compile Remove="archive\**" />
-    <Compile Remove="Jobs\Items\Armor\**" />
     <Compile Remove="Jobs\Items\art\**" />
     <Compile Remove="Jobs\Items\Weapon\**" />
     <EmbeddedResource Remove="archive\**" />
-    <EmbeddedResource Remove="Jobs\Items\Armor\**" />
     <EmbeddedResource Remove="Jobs\Items\art\**" />
     <EmbeddedResource Remove="Jobs\Items\Weapon\**" />
     <None Remove="archive\**" />
-    <None Remove="Jobs\Items\Armor\**" />
     <None Remove="Jobs\Items\art\**" />
     <None Remove="Jobs\Items\Weapon\**" />
   </ItemGroup>
@@ -42,6 +39,7 @@
     <None Remove="Buffs\ModeLifeScale.png" />
     <None Remove="Jobs\Buffs\_Frozen.ini" />
     <None Remove="Jobs\Buffs\_Frozen.png" />
+    <None Remove="Jobs\Items\Armors\BomVest.png" />
     <None Remove="Jobs\Items\IronWorkbench.ini" />
     <None Remove="Jobs\Items\IronWorkbench.png" />
     <None Remove="Jobs\Items\job_bag.png" />

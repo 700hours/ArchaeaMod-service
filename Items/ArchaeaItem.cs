@@ -64,7 +64,17 @@ namespace ArchaeaMod.Items
                 if (index == player.armor.Length - 1 && player.armor[i].type != type)
                     return true;
             }
-            index = 0;
+            return false;
+        }
+        public static bool HasEquipped(Player player, int type)
+        {
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                if (player.armor[i].type == type)
+                { 
+                    return true;
+                }
+            }
             return false;
         }
         public static bool Elapsed(int interval)

@@ -289,11 +289,19 @@ namespace ArchaeaMod.Progression.Global
         }
         public override float UseTimeMultiplier(Item item, Player player)
         {
+            float value = 1f;
             if (item.DamageType == DamageClass.Melee)
             {
                 if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_DoubleSwing, ClassID.Melee, player.whoAmI))
                 {
-                    return 0.75f;
+                    value = 0.75f;
+                }
+            }
+            if (item.DamageType == DamageClass.Melee)
+            {
+                if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_Job, ClassID.Melee, player.whoAmI))
+                {
+                    value *= 0.9f;
                 }
             }
             if (item.DamageType == DamageClass.Magic && (rand = Main.rand.NextFloat()) < 0.5f)
@@ -303,7 +311,7 @@ namespace ArchaeaMod.Progression.Global
                     return 0.75f;
                 }
             }
-            return 1f;
+            return value;
         }
         public override bool? UseItem(Item item, Player player)
         {
