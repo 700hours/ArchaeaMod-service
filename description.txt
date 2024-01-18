@@ -33,7 +33,7 @@ Multiplayer gameplay is included. Dedicated server usage is also implemented.
 
 [hr]
 [b]Latest update[/b]
-[i]version 1.4.41.292 -> 1.4.42.301
+[i]version 1.4.41.292 -> 1.4.48.305
 ================================
 # Added
 -> Job catalogue for starting items
@@ -42,6 +42,9 @@ Multiplayer gameplay is included. Dedicated server usage is also implemented.
 -> "   "    "     status
 -> "   "    "     completion bonuses
 -> Hotkey for showing job help 
+-> Another boss pattern and 2 projectile patterns
+-> Bom Vest (mispelling intended)
+-> Traps to a certain biome
 # Changed
 -> Tomohawk, Javelin and Dagger now properly set to Ranged class
 # Fixed
