@@ -23,6 +23,8 @@ using ArchaeaMod.NPCs.Town;
 using Terraria.Audio;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ArchaeaMod.Buffs;
+using ArchaeaMod.Projectiles;
+using ArchaeaMod.Entities;
 
 namespace ArchaeaMod.Mode
 {
@@ -676,8 +678,6 @@ namespace ArchaeaMod.Mode
     }
     public class ModeNPC : GlobalNPC
     {
-        public override bool InstancePerEntity => true;
-        
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)

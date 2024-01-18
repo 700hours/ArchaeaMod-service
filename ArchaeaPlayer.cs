@@ -1214,9 +1214,12 @@ namespace ArchaeaMod
         }
         public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
-            if (ItemID.Sets.ItemsThatCountAsBombsForDemolitionistToSpawn[modifiers.DamageSource.SourceItem.type] && ArchaeaItem.HasEquipped(Player, ModContent.ItemType<Jobs.Items.Armors.BomVest>()))
-            {
-                modifiers.FinalDamage *= 0.8f;
+            if (modifiers.DamageSource.SourceItem != null)
+            { 
+                if (ItemID.Sets.ItemsThatCountAsBombsForDemolitionistToSpawn[modifiers.DamageSource.SourceItem.type] && ArchaeaItem.HasEquipped(Player, ModContent.ItemType<Jobs.Items.Armors.BomVest>()))
+                {
+                    modifiers.FinalDamage *= 0.8f;
+                }
             }
             if (CheckHasTrait(TraitID.MAGE_DamageReduce, ClassID.Magic))
             {
@@ -1842,9 +1845,10 @@ namespace ArchaeaMod
             }
             if (!ModContent.GetInstance<ModeToggle>().archaeaMode)
                 return;
-            float ratio = 100f / 500f;
-            float result = Player.statDefense / ratio;
-            Player.statDefense.AdditiveBonus += result;
+            //float ratio = 100f / 500f;
+            //float result = Player.statDefense / ratio;
+            //  Generic 10% buff
+            Player.statDefense /= 0.9f;
         }
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {

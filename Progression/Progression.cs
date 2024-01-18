@@ -88,14 +88,6 @@ namespace ArchaeaMod.Progression.Global
     }
     public class ClassNPC : GlobalNPC
     {
-        public override bool InstancePerEntity => true;
-        public int deathProjType;
-        public int lastHitOwner;
-        public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
-        {
-            deathProjType = projectile.type;
-            lastHitOwner = projectile.owner;
-        }
         public override void OnHitByItem(NPC npc, Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
             if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_Flask, ClassID.Melee, player.whoAmI))
@@ -109,7 +101,6 @@ namespace ArchaeaMod.Progression.Global
                     }
                 }
             }
-            lastHitOwner = player.whoAmI;
             if (ArchaeaPlayer.CheckHasTrait(TraitID.MELEE_DoubleKb, ClassID.Melee, player.whoAmI))
             {
                 hit.Knockback *= 2f;
@@ -131,13 +122,13 @@ namespace ArchaeaMod.Progression.Global
             }
             if (npc.boss)
             {
-                if (deathProjType == ProjectileID.CannonballFriendly) 
+                if (Main.player[npc.lastInteraction].ownedProjectileCounts[ProjectileID.CannonballFriendly] > 0) 
                 { 
-                    ArchaeaPlayer.SetClassTrait(TraitID.SUMMONER_ThrowBoulder, ClassID.Summoner, true, lastHitOwner);
+                    ArchaeaPlayer.SetClassTrait(TraitID.SUMMONER_ThrowBoulder, ClassID.Summoner, true, npc.lastInteraction);
                 }
                 if (npc.type == NPCID.EyeofCthulhu)
                 {
-                    ArchaeaPlayer.SetClassTrait(TraitID.ALL_Dash, ClassID.All, true, lastHitOwner);
+                    ArchaeaPlayer.SetClassTrait(TraitID.ALL_Dash, ClassID.All, true, npc.lastInteraction);
                 }
             }
         }
@@ -149,14 +140,12 @@ namespace ArchaeaMod.Progression.Global
             }
         }
     }
-    [CloneByReference]
     public class ClassItem : GlobalItem
     {
-        Timer timer;
-        float rand;
-        int useCount = 0;
-        int count = 0;
-        public override bool InstancePerEntity => true;
+        //Timer timer;
+        static float rand;
+        //int useCount = 0;
+        //int count = 0;
         //  Assigning trait effects
         public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -166,7 +155,7 @@ namespace ArchaeaMod.Progression.Global
             }
             if (ArchaeaPlayer.CheckHasTrait(TraitID.RANGED_DoubleFire, ClassID.Ranged, player.whoAmI))
             {
-                timer = new Timer(Math.Max((float)item.useTime / Math.Max(Main.frameRate, 60f) * 1000f / 2f, 100f));
+                var timer = new Timer(Math.Max((float)item.useTime / Math.Max(Main.frameRate, 60f) * 1000f / 2f, 100f));
                 timer.AutoReset = false;
                 timer.Enabled = true;
                 timer.Elapsed += (object sender, ElapsedEventArgs e) => 
@@ -187,7 +176,7 @@ namespace ArchaeaMod.Progression.Global
                 {
                     if (rand < 0.5f)
                     {
-                        timer = new Timer(Math.Max((float)item.useTime / Math.Max(Main.frameRate, 60f) * 1000f / 2f, 100f));
+                        var timer = new Timer(Math.Max((float)item.useTime / Math.Max(Main.frameRate, 60f) * 1000f / 2f, 100f));
                         timer.Enabled = true;
                         timer.AutoReset = false;
                         timer.Elapsed += (object sender, ElapsedEventArgs e) =>
@@ -228,25 +217,25 @@ namespace ArchaeaMod.Progression.Global
         }
 
         //  Custom UseItem
-        public void BeginUseItem(Item item, Player player)
-        {
-            if (useCount > 0)
-                return;
+        //public void BeginUseItem(Item item, Player player)
+        //{
+        //    if (useCount > 0)
+        //        return;
 
-            timer = new Timer(Math.Max((float)item.useTime / Math.Max(Main.frameRate, 60f) * 1000f * 0.75f + 1f, 100f));
-            timer.Enabled = true;
-            timer.Elapsed += (object sender, ElapsedEventArgs e) =>
-            {
-                useCount = 0;
-            };
-            timer.Start();
-        }
-        public void EndUseItem(Item item, Player player)
-        {
-            if (useCount > 0)
-                return;
-            useCount = 1;
-        }
+        //    var timer = new Timer(Math.Max((float)item.useTime / Math.Max(Main.frameRate, 60f) * 1000f * 0.75f + 1f, 100f));
+        //    timer.Enabled = true;
+        //    timer.Elapsed += (object sender, ElapsedEventArgs e) =>
+        //    {
+        //        useCount = 0;
+        //    };
+        //    timer.Start();
+        //}
+        //public void EndUseItem(Item item, Player player)
+        //{
+        //    if (useCount > 0)
+        //        return;
+        //    useCount = 1;
+        //}
         //  Assigning trait values
         public override bool OnPickup(Item item, Player player)
         {
@@ -315,7 +304,7 @@ namespace ArchaeaMod.Progression.Global
         }
         public override bool? UseItem(Item item, Player player)
         {
-            BeginUseItem(item, player);
+            //BeginUseItem(item, player);
             //  Assigning trait effects
             bool notTile = item.damage > 0 && !item.noMelee;
             if (notTile && Main.rand.NextFloat() < 0.01f)
@@ -348,7 +337,7 @@ namespace ArchaeaMod.Progression.Global
             }
             //  Assigning trait values
             ArchaeaPlayer.SetClassTrait(TraitID.ALL_IncJumpHeight, ClassID.All, item.buffType == BuffID.WellFed3, player.whoAmI);
-            EndUseItem(item, player);
+            //EndUseItem(item, player);
             return null;
         }
     }
@@ -407,7 +396,6 @@ namespace ArchaeaMod.Progression.Global
     }
     public class ClassProj : GlobalProjectile
     {
-        public override bool InstancePerEntity => true;
         public override void AI(Projectile projectile)
         {
             if (projectile.friendly && projectile.active)

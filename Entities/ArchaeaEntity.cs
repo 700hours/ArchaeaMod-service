@@ -119,6 +119,7 @@ namespace ArchaeaMod.Entities
     }
     public class EntityProjectile : GlobalProjectile
     {
+        public static EntityProjectile Instance;
         public override void AI(Projectile projectile)
         {
             Projectile p = projectile;
