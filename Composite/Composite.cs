@@ -20,6 +20,8 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using ArchaeaMod.Effects;
 using Terraria.Graphics.Light;
 using Point = Microsoft.Xna.Framework.Point;
+using ArchaeaMod.NPCs.Bosses;
+using System.Threading;
 
 namespace ArchaeaMod.Composite
 {
@@ -58,20 +60,34 @@ namespace ArchaeaMod.Composite
                 }
             }
             Composite2D[,] comp = getTextureArray();
+            Lamp[,] lamp = getTorchArray();
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             for (int i = 0; i < map.GetLength(0); i++)
             {
                 for (int j = 0; j < map.GetLength(1); j++)
-                {                                             // Delete commented for parallax effect
-                    float x = Main.screenPosition.X + i * 16f;// - offX;
-                    float y = Main.screenPosition.Y + j * 16f;// - offY;
+                {                                            // Delete offsets for parallax effect
+                    float x = Main.screenPosition.X + i * 16f - offX;
+                    float y = Main.screenPosition.Y + j * 16f - offY;
                     x -= x % 16;
                     y -= y % 16;
                     if (comp[i, j] != default)
                     {
                         map[i, j].position = new Vector2(x, y) - Main.screenPosition;
-                        LampEffect(new Vector2(width / 2, height / 2), ref map[i, j], Color.Orange);
+                        foreach (Lamp _lamp in lamp)
+                        { 
+                            if (_lamp != null)
+                            { 
+                                LampEffect(_lamp.position - Main.screenPosition, ref map[i, j], _lamp.light);
+                            }
+                        }
+                        foreach (Player plr in Main.player)
+                        {
+                            if (plr.active && ItemID.Sets.Torches[plr.HeldItem.type])
+                            {
+                                LampEffect(plr.Center - Main.screenPosition, ref map[i, j], Lighting.GetColor((int)plr.Center.X / 16, (int)plr.Center.Y / 16));
+                            }
+                        }
                         sb.Draw(comp[i, j].texture, new Rectangle((int)(x - Main.screenPosition.X), (int)(y - Main.screenPosition.Y), comp[i, j].tileWidth, comp[i, j].tileHeight), new Rectangle(comp[i, j].tileFrameX, comp[i, j].tileFrameY, comp[i, j].tileWidth, comp[i, j].tileHeight), map[i, j].color, 0, Vector2.Zero, comp[i, j].tileSpriteEffect, 0f);
                         map[i, j].color = map[i, j].DefaultColor;
                     }
@@ -120,12 +136,15 @@ namespace ArchaeaMod.Composite
                 {
                     int x = i + (int)Main.screenPosition.X / 16;
                     int y = j + (int)Main.screenPosition.Y / 16;
-                    if (TileID.Sets.Torch[Main.tile[x, y].TileType])
+                    if (Main.tile[x, y].HasTile && TileID.Sets.Torch[Main.tile[x, y].TileType])
                     {
+                        lamp[i, j] = new Lamp();
+                        lamp[i, j].position = new Vector2(x * 16 + 8, y * 16 + 8);
                         lamp[i, j].light = Lighting.GetColor(new Point(x, y));
                     }
                 }
             }
+            return lamp;
         }
         public static void LampEffect(Vector2 target, ref Lightmap map, Color c, float range = 200f)
         {
@@ -156,6 +175,14 @@ namespace ArchaeaMod.Composite
                 (int)Math.Min(color.G + newColor.G * distance, 255),
                 (int)Math.Min(color.B + newColor.B * distance, 255),
                 color.A);
+        }
+        public static Color Multiply(Color one, Color two, float alpha)
+        {
+            int a = (int)Math.Max(Math.Min(255f * Math.Min(alpha, 1f), 255), 1f);
+            int r = (int)Math.Min(Math.Max(one.R, 1f) * ((two.R / 255f) + 1), 255);
+            int g = (int)Math.Min(Math.Max(one.G, 1f) * ((two.G / 255f) + 1), 255);
+            int b = (int)Math.Min(Math.Max(one.B, 1f) * ((two.B / 255f) + 1), 255);
+            return new Color(r, g, b, a);
         }
     }
     public class Lamp
