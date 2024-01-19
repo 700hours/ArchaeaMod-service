@@ -837,7 +837,7 @@ Mods: {
 			"Leap attack.DisplayName": Leap attack
 			Leap.DisplayName: Leap
 			"Progress diaglog visible.DisplayName": Progress diaglog visible
-			"Use Job Skill.DisplayName": Use job skill
+			"Use job skill.DisplayName": Use job skill
 			"Show job help.DisplayName": Show job help
 		}
 

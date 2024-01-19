@@ -863,7 +863,7 @@ namespace ArchaeaMod
         public int PercentDamageTaken;
         public int AmmoReduction;
         */
-        public bool FakeUseLifeCrystal(Item item)
+        public void FakeUseLifeCrystal(Item item)
         {
             if (ModContent.GetInstance<ModeToggle>().archaeaMode)
             {
@@ -883,7 +883,6 @@ namespace ArchaeaMod
             {
                 SetClassTrait(TraitID.SUMMONER_MinionDmg, ClassID.Summoner, true);
             }
-            return false;
         }
 
         public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
@@ -908,7 +907,8 @@ namespace ArchaeaMod
             switch (item.type)
             {
                 case ItemID.LifeCrystal:
-                    return FakeUseLifeCrystal(item);
+                    FakeUseLifeCrystal(item);
+                    return !ModContent.GetInstance<ModeToggle>().archaeaMode;
                 case ItemID.LifeFruit:
                     if (ModContent.GetInstance<ModeToggle>().archaeaMode)
                     { 
@@ -1431,18 +1431,21 @@ namespace ArchaeaMod
             //  ALERT; dumb idea
             HardChangeClass(Player);
             //  Jobs turn-in box
-            Container box = ModContent.GetInstance<ModeUI>().turnInBox;
-            box.active = true;
-            box.UpdateInput(Player, true, true, true);
-            if (box.content != null && box.content.type != ItemID.None && box.content.stack > 0)
+            if (Main.netMode < 2)
             {
-                if (ticks3 > 600)
-                    ticks3 = 0;
-                if (++ticks3 % 20 == 0)
+                Container box = ModContent.GetInstance<ModeUI>().turnInBox;
+                box.active = true;
+                box.UpdateInput(Player, true, true, true);
+                if (box.content != null && box.content.type != ItemID.None && box.content.stack > 0)
                 {
-                    if (!JobProgressSuccess(Player))
+                    if (ticks3 > 600)
+                        ticks3 = 0;
+                    if (++ticks3 % 20 == 0)
                     {
-                        SetJobProgress(jobChoice, ref box.content);
+                        if (!JobProgressSuccess(Player))
+                        {
+                            SetJobProgress(jobChoice, ref box.content);
+                        }
                     }
                 }
             }
@@ -1515,7 +1518,6 @@ namespace ArchaeaMod
             for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
                 Effects.Barrier.barrier[i]?.Update(Player);
             #region debug
-            return;
             if (setModeStats)
             {
                 Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.MagnoGun_3>());
@@ -2374,7 +2376,6 @@ namespace ArchaeaMod
                     }
                 }
             }
-            return;
             if (debugMenu)
                 DebugMenu();
             if (spawnMenu)

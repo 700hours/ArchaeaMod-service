@@ -787,3 +787,8 @@ version 1.4.48.305 -> 1.4.50.307
 -> Performance update
 # Removed
 -> 4 unused items
+
+version 1.4.50.307 -> 1.4.51.308
+================================
+# Fixed
+-> Life Crystal usage when not in Archaea Mode

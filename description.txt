@@ -33,7 +33,7 @@ Multiplayer gameplay is included. Dedicated server usage is also implemented.
 
 [hr]
 [b]Latest update[/b]
-[i]version 1.4.41.292 -> 1.4.50.307
+[i]version 1.4.41.292 -> 1.4.51.308
 ================================
 # Added
 -> Job catalogue for starting items
@@ -51,6 +51,7 @@ Multiplayer gameplay is included. Dedicated server usage is also implemented.
 # Fixed
 -> Certain mod buffs correctly set to be enabled in PvP
 -> UI drawing overlapping upon world join
+-> Life Crystal usage when not in Archaea Mode
 # Removed
 -> 4 unused items
 
