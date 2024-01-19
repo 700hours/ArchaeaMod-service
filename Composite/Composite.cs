@@ -17,14 +17,17 @@ using cotf;
 using ArchaeaMod.NPCs;
 using Terraria.ID;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using ArchaeaMod.Effects;
+using Terraria.Graphics.Light;
+using Point = Microsoft.Xna.Framework.Point;
 
 namespace ArchaeaMod.Composite
 {
     internal class Composite : ModSystem
     {
-        int width, height;
+        static int width, height;
+        int offX = 16, offY = 16;
         Lightmap[,] map = new Lightmap[,] { };
-        //Tile[,] tile = new Tile[,] { };
         SpriteBatch sb => Main.spriteBatch;
         public override void OnWorldLoad()
         {
@@ -35,41 +38,42 @@ namespace ArchaeaMod.Composite
         {
             if (Main.screenWidth != width || Main.screenHeight != height)
             {
-                width  = Main.screenWidth;
-                height = Main.screenHeight;
+                width  = Main.screenWidth + offX * 3;
+                height = Main.screenHeight + offY * 3;
                 map    = new Lightmap[width / 16, height / 16];
-                //tile   = new Tile[width / 16, height / 16];
-                int originX = (int)Main.screenPosition.X / 16;
-                int originY = (int)Main.screenPosition.Y / 16;
-                int w       = width / 16;
-                int h       = height / 16;
+                int originX = (int)(Main.screenPosition.X - offX) / 16;
+                int originY = (int)(Main.screenPosition.Y - offY) / 16;
+                int w       = (width + offX * 2) / 16;
+                int h       = (height + offY * 2) / 16;
                 int right   = originX + w;
                 int bottom  = originY + h;
-                for (int i = originX + 1; i < right; i++)
+                for (int i = originX + 1; i < right - 1; i++)
                 {
-                    for (int j = originY + 1; j < bottom; j++)
+                    for (int j = originY + 1; j < bottom - 1; j++)
                     {
                         int m = i - originX - 1;
                         int n = j - originY - 1;
                         map[m, n]  = new Lightmap(m, n);
-                        //tile[m, n] = new Tile(m, n);
                     }
                 }
             }
             Composite2D[,] comp = getTextureArray();
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            for (int i = 1; i < comp.GetLength(0) - 1; i++)
+            for (int i = 0; i < map.GetLength(0); i++)
             {
-                for (int j = 1; j < comp.GetLength(1) - 1; j++)
-                {
-                    float x = Main.screenPosition.X + i * 16f;
-                    float y = Main.screenPosition.Y + j * 16f;
+                for (int j = 0; j < map.GetLength(1); j++)
+                {                                             // Delete commented for parallax effect
+                    float x = Main.screenPosition.X + i * 16f;// - offX;
+                    float y = Main.screenPosition.Y + j * 16f;// - offY;
                     x -= x % 16;
                     y -= y % 16;
                     if (comp[i, j] != default)
-                    { 
-                        sb.Draw(comp[i, j].texture, new Rectangle((int)(x - Main.screenPosition.X), (int)(y - Main.screenPosition.Y), comp[i, j].tileWidth, comp[i, j].tileHeight), new Rectangle(comp[i, j].tileFrameX, comp[i, j].tileFrameY, comp[i, j].tileWidth, comp[i, j].tileHeight), Color.White, 0, Vector2.Zero, comp[i, j].tileSpriteEffect, 0f);
+                    {
+                        map[i, j].position = new Vector2(x, y) - Main.screenPosition;
+                        LampEffect(new Vector2(width / 2, height / 2), ref map[i, j], Color.Orange);
+                        sb.Draw(comp[i, j].texture, new Rectangle((int)(x - Main.screenPosition.X), (int)(y - Main.screenPosition.Y), comp[i, j].tileWidth, comp[i, j].tileHeight), new Rectangle(comp[i, j].tileFrameX, comp[i, j].tileFrameY, comp[i, j].tileWidth, comp[i, j].tileHeight), map[i, j].color, 0, Vector2.Zero, comp[i, j].tileSpriteEffect, 0f);
+                        map[i, j].color = map[i, j].DefaultColor;
                     }
                 }
             }
@@ -81,16 +85,16 @@ namespace ArchaeaMod.Composite
         }
         private Composite2D[,] getTextureArray()
         {
-            int originX = (int)Main.screenPosition.X / 16;
-            int originY = (int)Main.screenPosition.Y / 16;
-            int w = width / 16;
-            int h = height / 16;
-            int right = originX + w;
-            int bottom = originY + h;
+            int originX = (int)(Main.screenPosition.X - offX) / 16;
+            int originY = (int)(Main.screenPosition.Y - offY) / 16;
+            int w       = (width + offX * 2) / 16;
+            int h       = (height + offY * 2) / 16;
+            int right   = originX + w;
+            int bottom  = originY + h;
             Composite2D[,] comp = new Composite2D[w, h];
-            for (int i = originX; i < right; i++)
+            for (int i = originX; i < right - 1; i++)
             {
-                for (int j = originY; j < bottom; j++)
+                for (int j = originY; j < bottom - 1; j++)
                 {
                     int m = i - originX;
                     int n = j - originY;
@@ -107,7 +111,23 @@ namespace ArchaeaMod.Composite
             }
             return comp;
         }
-        public static void LampEffect(Vector2 target, Lightmap map, Color c, float range = 200f)
+        public static Lamp[,] getTorchArray()
+        {
+            Lamp[,] lamp = new Lamp[width / 16, height / 16];
+            for (int i = 0; i < width / 16; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    int x = i + (int)Main.screenPosition.X / 16;
+                    int y = j + (int)Main.screenPosition.Y / 16;
+                    if (TileID.Sets.Torch[Main.tile[x, y].TileType])
+                    {
+                        lamp[i, j].light = Lighting.GetColor(new Point(x, y));
+                    }
+                }
+            }
+        }
+        public static void LampEffect(Vector2 target, ref Lightmap map, Color c, float range = 200f)
         {
             float num = RangeNormal(target, map.Center, range);
             if (num == 0f)
@@ -137,6 +157,11 @@ namespace ArchaeaMod.Composite
                 (int)Math.Min(color.B + newColor.B * distance, 255),
                 color.A);
         }
+    }
+    public class Lamp
+    {
+        public Vector2 position;
+        public Color light;
     }
     public class Composite2D
     {

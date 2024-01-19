@@ -19,7 +19,7 @@ namespace cotf.Base
         private int i, j;
         public Color color;
         public Color DefaultColor = _DefaultColor;
-        public static Color _DefaultColor => new Color(0, 0, 0, 255);
+        public static Color _DefaultColor => Color.Black;
         public Vector2 position;
         public Vector2 Center => position + new Vector2(Size.Width / 2, Size.Height / 2);
         public Rectangle Hitbox => new Rectangle((int)position.X, (int)position.Y, Size.Width, Size.Height);
