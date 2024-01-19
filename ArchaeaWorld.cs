@@ -183,6 +183,7 @@ namespace ArchaeaMod
         public bool _archaeaMode = false;
         public int elevatorCount = 0;
         public bool notFirstJoin = false;
+        public Vector2 silentRedNPC;
 
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
@@ -556,6 +557,38 @@ namespace ArchaeaMod
                     }
                 }));
             }
+            int LastIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Remove Broken Traps"));
+            if (LastIndex != -1)
+            {
+                tasks.Insert(LastIndex, new PassLegacy("Room Generation", delegate (GenerationProgress progress, GameConfiguration c)
+                {
+                    Vector2[] place = Treasures.GetFloor(0, 0, Main.maxTilesX, (int)Main.worldSurface, TileID.Grass);
+                    silentRedNPC = place[WorldGen.genRand.Next(place.Length)];
+                    
+                    int i = (int)silentRedNPC.X;
+                    int j = (int)silentRedNPC.Y;
+                    int tileType = WorldGen.genRand.Next(new int[] { TileID.RedBrick, TileID.GreenDungeonBrick, TileID.ObsidianBrick });
+                    for (int k = 0; k < 6; k++)
+                    {
+                        for (int m = 0; m < 3; m++)
+                        {
+                            Tile tile = Main.tile[i + k, j + m];
+                            tile.HasTile = false;
+                            tile.WallType = WallID.None;
+                            WorldGen.PlaceTile(i + k, j + m + 1, TileID.Grass, true, true);
+                        }
+                        WorldGen.PlaceTile(i + k, j, tileType, true, true);
+                    }
+                    WorldGen.Place3x2(i + 2, j - 1, TileID.Campfire, WorldGen.genRand.Next(6));
+                    WorldGen.PlaceWall(i + 5, j - 1, WallID.WoodenFence, true);
+                    WorldGen.PlaceWall(i + 5, j - 2, WallID.WoodenFence, true);
+                    WorldGen.PlaceWall(i + 5, j - 3, WallID.WoodenFence, true);
+                    WorldGen.PlaceWall(i + 5, j - 4, WallID.WoodenFence, true);
+                    WorldGen.PlaceWall(i + 5, j - 5, WallID.WoodenFence, true);
+                    WorldGen.PlaceTile(i + 5, j - 5, TileID.WoodBlock, true, true);
+                    WorldGen.PlaceBanner(i + 5, j -4, TileID.Banners, WorldGen.genRand.Next(4));
+                }));
+            }
         }
         public override void PostWorldGen()
         {
@@ -912,6 +945,8 @@ namespace ArchaeaMod
             }
             tag.Add("elevatorCount", elevatorCount);
             tag.Add("notFirstJoin", notFirstJoin);
+            tag.Add("silentRedNPC_x", silentRedNPC.X);
+            tag.Add("silentRedNPC_y", silentRedNPC.Y);
             playerClass.Clear();
         }
         public override void LoadWorldData(TagCompound tag)
@@ -939,6 +974,8 @@ namespace ArchaeaMod
             }
             elevatorCount = tag.GetInt("elevatorCount");
             notFirstJoin = tag.GetBool("notFirstJoin");
+            silentRedNPC.X = tag.GetFloat("silentRedNPC_x");
+            silentRedNPC.Y = tag.GetFloat("silentRedNPC_y");
         }
         public override void NetSend(BinaryWriter writer)
         {
