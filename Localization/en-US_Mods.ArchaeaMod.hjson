@@ -252,6 +252,11 @@ Items: {
 
 	BomVest: {
 	}
+
+	keypad: {
+		DisplayName: keypad
+		Tooltip: ""
+	}
 }
 
 Projectiles: {

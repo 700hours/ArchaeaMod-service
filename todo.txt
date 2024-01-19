@@ -1,47 +1,8 @@
-License for Archaea Mod
-Magno worldgen last push
--> worldgen helper
--> plants
--> magno houses
-Release Archaea Mod
-
-Major scaling difference before and after consuming life crystal
--> Add a notice, such as "By the way" for the jump from 100 to 600 life
-
-# Current
-Class starting items
-Finish class and job start dialog
-Put job items into each category
-Add "maxed out" class quest buff and extra stat points
-
-# Other
-Make a configuration
-> Mod config for setting unlocked classes
-Check out "Growing water plants" in worldgen
-Cordon biomes
-
-"All: Gold Chest", 10% off all vendor prices
-"   business man",
-"   entrepreneur",
-"   merchant",
-"Mage: Magno Core", 10% more damage dealt
-"   botanist",
-"   witch",
-"   wizard",
-"Melee: Rusty Plate", 10% faster weapon speed
-"   smith",
-"   warrior",
-"   white knight",
-"Ranged: Black Lens", Enemies glow at night
-"   bowsman",
-"   corperate usurper",
-"   outlaw",
-"Summoner: Bird Statue", 10% faster move speed
-"   alchemist",
-"   scientist",
-"   surveyor"
-
-Add bonuses for completing job side quest
-Organize UI
-
-Only get into fights with enemies upon making first contact
+Draw a compositor for various Factor functions, such as opening doors or panel interaction
+x Lessen some of the Factory hazards
+x > Make droplets only cause small debuff instead of damage
+Get mechanic to have a function with the Factory
+> Required for getting past certain obstacles
+> Give mechanic a buff when following for survival
+Rework lighting for Factory
+> Maybe make colors have Gamma difference in accordance to distance from player

@@ -81,7 +81,7 @@ namespace ArchaeaMod.Projectiles
                 { 
                     SoundEngine.PlaySound(SoundID.Drip, Projectile.Center);
                     Projectile.tileCollide = true;
-                    Projectile.damage = 30;
+                    Projectile.damage = 0;//30;
                     ai = 3;
                 }
                 if (type == Diffusion)
@@ -149,10 +149,7 @@ namespace ArchaeaMod.Projectiles
                     }
                     if (Main.LocalPlayer.Hitbox.Contains(Projectile.Center.ToPoint()))
                     {
-                        if (ArchaeaItem.Elapsed(20))
-                        {
-                            Main.LocalPlayer.Hurt(PlayerDeathReason.ByProjectile(Main.LocalPlayer.whoAmI, Projectile.whoAmI), Projectile.damage, Projectile.Center.X < Main.LocalPlayer.Center.X ? 1 : -1);
-                        }
+                        Main.LocalPlayer.AddBuff(ModContent.BuffType<Buffs.mercury>(), 60);
                     }
                     break;
                 case Diffusion:

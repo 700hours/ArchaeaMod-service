@@ -22,27 +22,38 @@ using Terraria.Graphics.Light;
 using Point = Microsoft.Xna.Framework.Point;
 using ArchaeaMod.NPCs.Bosses;
 using System.Threading;
+using Terraria.Graphics;
+using ArchaeaMod.Interface;
+using System.Drawing.Imaging;
+using System.IO;
+using Terraria.UI;
 
 namespace ArchaeaMod.Composite
 {
     internal class Composite : ModSystem
     {
-        static int width, height;
+        static int 
+            width, 
+            height,
+            _width, 
+            _height;
         int offX = 16, offY = 16;
         Lightmap[,] map = new Lightmap[,] { };
         SpriteBatch sb => Main.spriteBatch;
         public override void OnWorldLoad()
         {
-            width  = 0;
-            height = 0;
+            _width  = 0;
+            _height = 0;
         }
         public override void PostDrawTiles()
         {
-            if (Main.screenWidth != width || Main.screenHeight != height)
+            if (Main.screenWidth != _width || Main.screenHeight != _height)
             {
-                width  = Main.screenWidth + offX * 3;
-                height = Main.screenHeight + offY * 3;
-                map    = new Lightmap[width / 16, height / 16];
+                _width  = Main.screenWidth;
+                _height = Main.screenHeight;
+                width   = _width + offX * 3;
+                height  = _height + offY * 3;
+                map     = new Lightmap[width / 16, height / 16];
                 int originX = (int)(Main.screenPosition.X - offX) / 16;
                 int originY = (int)(Main.screenPosition.Y - offY) / 16;
                 int w       = (width + offX * 2) / 16;
@@ -66,7 +77,7 @@ namespace ArchaeaMod.Composite
             for (int i = 0; i < map.GetLength(0); i++)
             {
                 for (int j = 0; j < map.GetLength(1); j++)
-                {                                            // Delete offsets for parallax effect
+                {                                            // Delete offsets for offset effect
                     float x = Main.screenPosition.X + i * 16f - offX;
                     float y = Main.screenPosition.Y + j * 16f - offY;
                     x -= x % 16;
@@ -75,17 +86,17 @@ namespace ArchaeaMod.Composite
                     {
                         map[i, j].position = new Vector2(x, y) - Main.screenPosition;
                         foreach (Lamp _lamp in lamp)
-                        { 
+                        {
                             if (_lamp != null)
-                            { 
-                                LampEffect(_lamp.position - Main.screenPosition, ref map[i, j], _lamp.light);
+                            {
+                                LampEffect(_lamp.position - Main.screenPosition, ref map[i, j], _lamp.light, 200f);
                             }
                         }
                         foreach (Player plr in Main.player)
                         {
                             if (plr.active && ItemID.Sets.Torches[plr.HeldItem.type])
                             {
-                                LampEffect(plr.Center - Main.screenPosition, ref map[i, j], Lighting.GetColor((int)plr.Center.X / 16, (int)plr.Center.Y / 16));
+                                LampEffect(plr.Center - Main.screenPosition, ref map[i, j], Lighting.GetColor((int)plr.Center.X / 16, (int)plr.Center.Y / 16), 200f);
                             }
                         }
                         sb.Draw(comp[i, j].texture, new Rectangle((int)(x - Main.screenPosition.X), (int)(y - Main.screenPosition.Y), comp[i, j].tileWidth, comp[i, j].tileHeight), new Rectangle(comp[i, j].tileFrameX, comp[i, j].tileFrameY, comp[i, j].tileWidth, comp[i, j].tileHeight), map[i, j].color, 0, Vector2.Zero, comp[i, j].tileSpriteEffect, 0f);
@@ -94,6 +105,29 @@ namespace ArchaeaMod.Composite
                 }
             }
             sb.End();
+        }
+        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+        {
+            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            ModContent.GetInstance<Structure.Keypad>().DrawKeyPad(sb);
+            sb.End();
+        }
+        public static Bitmap TextureConvert(Texture2D original)
+        {
+            MemoryStream mem = new MemoryStream();
+            original.SaveAsPng(mem, original.Width, original.Height);
+            Bitmap bmp = new Bitmap(mem);
+            mem.Dispose();
+            return bmp;
+        }
+        public static Texture2D BitmapIngest(Bitmap bitmap)
+        {
+            MemoryStream mem = new MemoryStream();
+            bitmap.Save(mem, ImageFormat.Png);
+            Texture2D tex = Texture2D.FromStream(Main.graphics.GraphicsDevice, mem);
+            bitmap.Dispose();
+            mem.Dispose();
+            return tex;
         }
         public static Color getXnaColor(System.Drawing.Color c)
         {
@@ -132,7 +166,7 @@ namespace ArchaeaMod.Composite
             Lamp[,] lamp = new Lamp[width / 16, height / 16];
             for (int i = 0; i < width / 16; i++)
             {
-                for (int j = 0; j < height; j++)
+                for (int j = 0; j < height / 16; j++)
                 {
                     int x = i + (int)Main.screenPosition.X / 16;
                     int y = j + (int)Main.screenPosition.Y / 16;
@@ -154,7 +188,7 @@ namespace ArchaeaMod.Composite
             map.alpha = 0f;
             map.alpha += Math.Max(0, num);
             map.alpha = Math.Min(map.alpha, 1f);
-            map.color = AdditiveV2(map.color, c, num / 2f);
+            map.color = AdditiveV2(map.color, c, num);
         }
         public static float RangeNormal(Vector2 to, Vector2 from, float range = 100f)
         {
@@ -183,6 +217,44 @@ namespace ArchaeaMod.Composite
             int g = (int)Math.Min(Math.Max(one.G, 1f) * ((two.G / 255f) + 1), 255);
             int b = (int)Math.Min(Math.Max(one.B, 1f) * ((two.B / 255f) + 1), 255);
             return new Color(r, g, b, a);
+        }
+        public static Bitmap TextureLighting(Image texture, Rectangle hitbox, Lightmap map, Color c, float gamma, float alpha)
+        {
+            Bitmap bitmap = new Bitmap(16, 16);
+            using (Graphics gfx = Graphics.FromImage(bitmap))
+            {
+                if (alpha > 0f)
+                {
+                    var colorTransform = SetColor(AdditiveV2(c, map.color, alpha));
+                    if (true)
+                    {
+                        colorTransform.SetGamma(gamma);
+                    }
+                    gfx.DrawImage(texture, new System.Drawing.Rectangle(0, 0, hitbox.Width, hitbox.Height), 0, 0, hitbox.Width, hitbox.Height, GraphicsUnit.Pixel, colorTransform);
+                }
+                else
+                {
+                    gfx.DrawImage(texture, hitbox.X, hitbox.Y);
+                }
+            }
+            map.alpha = alpha;
+            map.color = map.DefaultColor;
+            c = map.DefaultColor;
+            return bitmap;
+        }
+        public static ImageAttributes SetColor(Color color)
+        {
+            ImageAttributes attributes = new ImageAttributes();
+            ColorMatrix transform = new ColorMatrix(new float[][]
+            {
+                new float[] { color.R / 255f, 0, 0, 0, 0 },
+                new float[] { 0, color.G / 255f, 0, 0, 0 },
+                new float[] { 0, 0, color.B / 255f, 0, 0 },
+                new float[] { 0, 0, 0, color.A / 255f, 0 },
+                new float[] { 0, 0, 0, 0, 0 }
+            });
+            attributes.SetColorMatrix(transform);
+            return attributes;
         }
     }
     public class Lamp
