@@ -328,7 +328,7 @@ namespace ArchaeaMod.Structure
         }
         private void Initialize()
         {
-            if (string.IsNullOrEmpty(compare))
+            if (string.IsNullOrEmpty(compare) && string.IsNullOrEmpty(code))
             { 
                 code = "";
                 compare = "";
