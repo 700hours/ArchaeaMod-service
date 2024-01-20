@@ -45,7 +45,7 @@ namespace ArchaeaMod.Composite
             _width  = 0;
             _height = 0;
         }
-        public override void PostDrawTiles()
+        public void DrawCompositeLayer(bool onlyTrees, bool originalTileColor = true)
         {
             if (Main.screenWidth != _width || Main.screenHeight != _height)
             {
@@ -70,10 +70,9 @@ namespace ArchaeaMod.Composite
                     }
                 }
             }
-            Composite2D[,] comp = getTextureArray();
+            Composite2D[,] comp = getTextureArray(onlyTrees);
             Lamp[,] lamp = getTorchArray();
 
-            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             for (int i = 0; i < map.GetLength(0); i++)
             {
                 for (int j = 0; j < map.GetLength(1); j++)
@@ -99,16 +98,16 @@ namespace ArchaeaMod.Composite
                                 LampEffect(plr.Center - Main.screenPosition, ref map[i, j], Lighting.GetColor((int)plr.Center.X / 16, (int)plr.Center.Y / 16), 200f);
                             }
                         }
-                        sb.Draw(comp[i, j].texture, new Rectangle((int)(x - Main.screenPosition.X), (int)(y - Main.screenPosition.Y), comp[i, j].tileWidth, comp[i, j].tileHeight), new Rectangle(comp[i, j].tileFrameX, comp[i, j].tileFrameY, comp[i, j].tileWidth, comp[i, j].tileHeight), map[i, j].color, 0, Vector2.Zero, comp[i, j].tileSpriteEffect, 0f);
+                        sb.Draw(comp[i, j].texture, new Rectangle((int)(x - Main.screenPosition.X), (int)(y - Main.screenPosition.Y), comp[i, j].tileWidth, comp[i, j].tileHeight), new Rectangle(comp[i, j].tileFrameX, comp[i, j].tileFrameY, comp[i, j].tileWidth, comp[i, j].tileHeight), originalTileColor ? comp[i, j].tileColor : map[i, j].color, 0, Vector2.Zero, comp[i, j].tileSpriteEffect, 0f);
                         map[i, j].color = map[i, j].DefaultColor;
                     }
                 }
             }
-            sb.End();
         }
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
             sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            DrawCompositeLayer(true);
             ModContent.GetInstance<Structure.Keypad>().DrawKeyPad(sb);
             sb.End();
         }
@@ -133,7 +132,7 @@ namespace ArchaeaMod.Composite
         {
             return new Color(c.R, c.G, c.B, c.A);
         }
-        private Composite2D[,] getTextureArray()
+        private Composite2D[,] getTextureArray(bool onlyTrees = true)
         {
             int originX = (int)(Main.screenPosition.X - offX) / 16;
             int originY = (int)(Main.screenPosition.Y - offY) / 16;
@@ -150,10 +149,18 @@ namespace ArchaeaMod.Composite
                     int n = j - originY;
                     if (Main.tile[i, j].HasTile)
                     {
+                        if (onlyTrees)
+                        {
+                            if (!TileID.Sets.IsATreeTrunk[Main.tile[i, j].TileType])
+                            {
+                                continue;
+                            }
+                        }
                         comp[m, n] = new Composite2D();
                         comp[m, n].texture = Main.instance.TilesRenderer.GetTileDrawTexture(Main.tile[i, j], i, j);
                         comp[m, n].tileFrameX = Main.tile[i, j].TileFrameX;
                         comp[m, n].tileFrameY = Main.tile[i, j].TileFrameY;
+                        comp[m, n].tileColor = Lighting.GetColor(i, j);
                         Main.instance.TilesRenderer.GetTileDrawData(i, j, Main.tile[i, j], Main.tile[i, j].TileType, ref Main.tile[i, j].TileFrameX, ref Main.tile[i, j].TileFrameY, out comp[m, n].tileWidth, out comp[m, n].tileHeight, out comp[m, n].tileTop, out comp[m, n].halfBrickHeight, out comp[m, n].addFrX, out comp[m, n].addFrY, out comp[m, n].tileSpriteEffect, out _, out _, out _);
                     }
                     else comp[m, n] = default;
@@ -275,6 +282,8 @@ namespace ArchaeaMod.Composite
             halfBrickHeight,
             addFrX, 
             addFrY;
+        public Color 
+            tileColor;
         public SpriteEffects tileSpriteEffect;
     }
 }

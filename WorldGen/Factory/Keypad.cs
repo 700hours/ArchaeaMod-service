@@ -27,12 +27,14 @@ using static tModPorter.ProgressUpdate;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Terraria.Utilities;
 using ArchaeaMod.Items.Tiles;
+using rail;
+using ArchaeaMod.Effects;
 
 namespace ArchaeaMod.Structure
 {
     internal class Keypad : ModTile
     {
-        public override string Texture => $"ArchaeaMod/Gores/Null";
+        public override string Texture => $"ArchaeaMod/Gores/arrow";
         public static Code[] code = new Code[201];
         public bool 
             interact,
@@ -61,6 +63,8 @@ namespace ArchaeaMod.Structure
             input = new Button[3, 3];
         public TextBox[]
             textbox = new TextBox[4];
+        private Color
+            chainColor = Color.White;
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
@@ -152,6 +156,28 @@ namespace ArchaeaMod.Structure
             }
             return display;
         }
+        public override bool PreDraw(int i, int j, SpriteBatch sb)
+        {
+            Texture2D tex = Fx.BasicArrow();//Mod.Assets.Request<Texture2D>("Gores/arrow").Value;
+            Code here, there = default;
+            here = GetLock(i, j);
+            if (here != default)
+            { 
+                there = GetLockByExit(here.portal.exit);
+            }
+            if (here != default && there != default)
+            {
+                Fx.DrawTileOnScreen(tex, i, j, 16, 16, 0, 0, 0, here.connected ? Color.Green : Color.Red, here.portal.entrance.X < there.portal.entrance.X ? SpriteEffects.None : SpriteEffects.FlipHorizontally);
+                return false;
+            }
+            if (here != default)
+            {
+                Fx.DrawTileOnScreen(tex, i, j, 16, 16, 0, 0, 0, here.connected ? Color.Green : Color.Red, SpriteEffects.None);
+                return false;
+            }
+            Fx.DrawTileOnScreen(tex, i, j, 16, 16, 0, 0, 0, Color.White, SpriteEffects.None);
+            return false;
+        }
         public void DrawKeyPad(SpriteBatch sb)
         {
             interact = Main.player[Main.myPlayer].Center.Distance(getEntrance(i, j)) < Range / 3;
@@ -161,6 +187,7 @@ namespace ArchaeaMod.Structure
                 Clear();
                 return;
             }
+            _lock = GetLock(i, j);
             if (_lock != null && !_lock.connected && display)
             {
                 int m       = (int)Main.MouseWorld.X; 
@@ -170,20 +197,27 @@ namespace ArchaeaMod.Structure
                 {
                     if (code[l] != null && code[l].portal.Hitbox(false).Intersects(r) && code[l] != _lock)
                     {
-                        ArchaeaNPC.DrawChain(Mod.Assets.Request<Texture2D>("Gores/chain").Value, sb, _lock.portal.entrance + new Vector2(12, 12), code[l].portal.entrance + new Vector2(12, 12));
+                        ArchaeaNPC.DrawChainColored(Mod.Assets.Request<Texture2D>("Gores/chain").Value, sb, _lock.portal.entrance, code[l].portal.entrance, code[l].connected ? Color.Red : Color.White);
                         if (Main.mouseLeft)
                         {
-                            _lock.portal.exit = code[l].portal.entrance;
-                            _lock.connected = true;
-                            var c = GetLockByExit(_lock.portal.exit);
-                            c.portal.exit = _lock.portal.entrance;
-                            c.connected = true;
+                            if (!code[l].connected)
+                            {
+                                _lock.portal.exit = code[l].portal.entrance;
+                                _lock.connected = true;
+                                var c = GetLockByExit(_lock.portal.exit);
+                                c.portal.exit = _lock.portal.entrance;
+                                c.connected = true;
+                            }
+                            else
+                            {
+                                SoundEngine.PlaySound(SoundID.PlayerHit, code[l].portal.exit);
+                            }
                             break;
                         }
                         return;
                     }
                 }
-                ArchaeaNPC.DrawChain(Mod.Assets.Request<Texture2D>("Gores/chain").Value, sb, _lock.portal.entrance + new Vector2(12, 12), Main.MouseWorld + new Vector2(12, 12));
+                ArchaeaNPC.DrawChainColored(Mod.Assets.Request<Texture2D>("Gores/chain").Value, sb, _lock.portal.entrance, Main.MouseWorld, Color.White);
                 return;
             }
             if (close)
@@ -198,6 +232,11 @@ namespace ArchaeaMod.Structure
         }
         public void drawKeyPad(SpriteBatch sb)
         {
+            if (_lock == null)
+            {
+                _lock = GetLock(i, j);
+                return;
+            }
             x = (int)(Main.screenWidth / 2 - 150);
             y = (int)(Main.screenHeight / 2 - 200);
             sb.Draw(TextureAssets.MagicPixel.Value, new Rectangle(x, y, width, height), Color.PaleVioletRed);
@@ -232,11 +271,11 @@ namespace ArchaeaMod.Structure
                     }
                     else
                     {
-                        num3 = 0;
                         input[m, n].reserved = 0;
                     }
                 }
             }
+            num3 = 0;
             for (int m = 0; m < 4; m++)
             {
                 sb.Draw(TextureAssets.MagicPixel.Value, textbox[m].box, Color.White * 0.5f);
@@ -266,6 +305,7 @@ namespace ArchaeaMod.Structure
     }
     internal struct Portal
     {
+        public string code;
         public Vector2 entrance, exit;
         public Rectangle Hitbox(bool getExit)
         {
@@ -326,6 +366,10 @@ namespace ArchaeaMod.Structure
             Keypad.code[num].Initialize();
             return Keypad.code[num];
         }
+        private Code GetLockByExit(Vector2 exit)
+        {
+            return Keypad.code.FirstOrDefault(t => t != null && t.portal.entrance == exit);
+        }
         private void Initialize()
         {
             if (string.IsNullOrEmpty(compare) && string.IsNullOrEmpty(code))
@@ -338,6 +382,7 @@ namespace ArchaeaMod.Structure
         {
             if (code.Length >= 4 && compare.Length == 0)
             {
+                portal.code = code;
                 compare = code;
                 return true;
             }
@@ -362,7 +407,11 @@ namespace ArchaeaMod.Structure
         }
         public bool Compare(string input)
         {
-            return compare == input;
+            return EndPointVerify(input) && compare == input;
+        }
+        public bool EndPointVerify(string input)
+        {
+            return GetLockByExit(portal.exit).compare == input;
         }
         public static bool operator !=(Code a, Code b)
         {

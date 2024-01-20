@@ -18,6 +18,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Drawing;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace ArchaeaMod.Effects
 {
@@ -129,6 +130,31 @@ namespace ArchaeaMod.Effects
                 result = Fx.FromStream(res);
             }
             return result;
+        }
+        public static void DrawTileOnScreen(Texture2D texture, int i, int j, int frameX, int frameY, float rotation, Microsoft.Xna.Framework.Color color, SpriteEffects effects)
+        {
+            Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
+            if (Main.drawToScreen)
+            {
+                zero = Vector2.Zero;
+            }
+            Main.spriteBatch.Draw(texture,
+                    new Vector2(i * 16 - (int) Main.screenPosition.X, j * 16 - (int) Main.screenPosition.Y) + zero,
+                    null,
+                    color, rotation, default(Vector2), 1f, effects, 0f);
+        }
+        public static void DrawTileOnScreen(Texture2D texture, int i, int j, int width, int height, int frameX, int frameY, float rotation, Microsoft.Xna.Framework.Color color, SpriteEffects effects)
+        {
+            Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
+            if (Main.drawToScreen)
+            {
+                zero = Vector2.Zero;
+            }
+            Vector2 draw = new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero;
+            Main.spriteBatch.Draw(texture,
+                    new Rectangle((int)draw.X, (int)draw.Y, width, height),
+                    null,
+                    color, rotation, Vector2.Zero, effects, 0f);
         }
         public static MemoryStream GenerateImage(byte index, int width, int height, Brush bg, Color transparency, PointF[] point = null)
         {

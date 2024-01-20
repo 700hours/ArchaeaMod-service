@@ -260,6 +260,22 @@ namespace ArchaeaMod.NPCs
                     1f, SpriteEffects.None, 0f);
             }
         }
+        public static void DrawChainColored(Texture2D tex, SpriteBatch sb, Vector2 start, Vector2 end, Color color, int len = 12)
+        {
+            for (int n = 0; n < start.Distance(end); n += len)
+            {
+                double f = 1f;
+                if (n > start.Distance(end) - len)
+                    f = (start.Distance(end) - n) / len;
+                float angle = start.AngleTo(end);
+                double cos = start.X + n * Math.Cos(angle);
+                double sine = start.Y + n * Math.Sin(angle);
+                sb.Draw(tex,
+                    new Vector2((float)cos, (float)sine) - Main.screenPosition,
+                    new Rectangle(0, 0, len, (int)(len * f)), color, angle - Draw.radian * 90f, Vector2.Zero,
+                    1f, SpriteEffects.None, 0f);
+            }
+        }
         public static Rectangle defaultBounds(NPC npc)
         {
             return new Rectangle((int)npc.position.X - defaultWidth / 2, (int)npc.position.Y - defaultHeight / 2, defaultWidth, defaultHeight);
