@@ -24,13 +24,16 @@ using ArchaeaMod.NPCs;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Color = Microsoft.Xna.Framework.Color;
 using static tModPorter.ProgressUpdate;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Terraria.Utilities;
+using ArchaeaMod.Items.Tiles;
 
 namespace ArchaeaMod.Structure
 {
     internal class Keypad : ModTile
     {
         public override string Texture => $"ArchaeaMod/Gores/Null";
-        public static List<Code> code = new List<Code>();
+        public static Code[] code = new Code[201];
         public bool 
             interact,
             display,
@@ -43,7 +46,8 @@ namespace ArchaeaMod.Structure
             y,
             width,
             height,
-            num2;
+            num2, 
+            num3 = 1;
         public readonly float 
             Range = 16 * 10;
         private string
@@ -70,18 +74,56 @@ namespace ArchaeaMod.Structure
             MineResist = 1f;
             MinPick = 45;
         }
+        private Vector2 getEntrance(int i, int j)
+        {
+            return new Vector2(i * 16 + 8, j * 16 - Player.defaultHeight);
+        }
+        private Code GetLock(int i, int j)
+        {
+            return code.FirstOrDefault(t => t != null && t.portal.entrance == getEntrance(i, j));
+        }
+        private Code GetLockByExit(Vector2 exit)
+        {
+            return code.FirstOrDefault(t => t != null && t.portal.entrance == exit);
+        }
+        public override bool CanPlace(int i, int j)
+        {
+            for (int n = 0; n < Vector2.Distance(Main.player[Main.myPlayer].Center, new Vector2(i * 16 + 8, j * 16 + 8)); n += 2)
+            {
+                Vector2 v = ArchaeaNPC.AngleToSpeed(ArchaeaNPC.AngleTo(Main.player[Main.myPlayer].Center, new Vector2(i * 16 + 8, j * 16 + 8)), n);
+                int x = (int)v.X / 16;
+                int y = (int)v.Y / 16;
+                if (Main.tile[x, y].HasTile && Main.tileSolid[Main.tile[x, y].TileType])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         public override void PlaceInWorld(int i, int j, Item item)
         {
-            _lock = new Code();
-            _lock.newInput = true;
-            _lock.owner = item.playerIndexTheItemIsReservedFor;
-            _lock.portal = new Portal() { entrance = new Vector2(i * 16, j *16) };
-            code.Add(_lock);
+            _lock = Code.NewLock(getEntrance(i, j));
+        }
+        public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
+        {
+            Code l = GetLock(i, j);
+            if (l != null)
+            { 
+                l.active = false;
+            }
         }
         public override bool RightClick(int i, int j)
         {
             this.i = i;
             this.j = j;
+            if (_lock == null || !_lock.active)
+            {
+                PlaceInWorld(i, j, default);
+            }
+            if (Main.player[Main.myPlayer].Distance(getEntrance(i, j)) > Range / 3)
+            {
+                return false;
+            }
             if (!init)
             {
                 x = (int)(Main.screenWidth / 2f - 150);
@@ -112,48 +154,42 @@ namespace ArchaeaMod.Structure
         }
         public void DrawKeyPad(SpriteBatch sb)
         {
-            interact = Main.player[Main.myPlayer].Center.Distance(new Vector2(i * 16, j * 16)) < 64f;
+            interact = Main.player[Main.myPlayer].Center.Distance(getEntrance(i, j)) < Range / 3;
             bool close = (!interact && display) || Main.playerInventory;
             if (close)
             {
-                _lock.Clear();
-                num2 = 0;
-                complete = "";
-                display = false;
+                Clear();
                 return;
             }
-            if (!_lock.connected && display)
+            if (_lock != null && !_lock.connected && display)
             {
                 int m       = (int)Main.MouseWorld.X; 
                 int n       = (int)Main.MouseWorld.Y;
                 Rectangle r = new Rectangle(m, n, 16, 16);
-                foreach (Code c in code)
+                for (int l = 0; l < code.Length; l++)
                 {
-                    if (c.portal.Hitbox(false).Intersects(r))
+                    if (code[l] != null && code[l].portal.Hitbox(false).Intersects(r) && code[l] != _lock)
                     {
-                        ArchaeaNPC.DrawChain(Mod.Assets.Request<Texture2D>("Gores/chain").Value, sb, _lock.portal.entrance + new Vector2(12, 12), c.portal.entrance + new Vector2(12, 12));
+                        ArchaeaNPC.DrawChain(Mod.Assets.Request<Texture2D>("Gores/chain").Value, sb, _lock.portal.entrance + new Vector2(12, 12), code[l].portal.entrance + new Vector2(12, 12));
                         if (Main.mouseLeft)
                         {
-                            _lock.portal.exit = c.portal.entrance;
+                            _lock.portal.exit = code[l].portal.entrance;
                             _lock.connected = true;
+                            var c = GetLockByExit(_lock.portal.exit);
+                            c.portal.exit = _lock.portal.entrance;
+                            c.connected = true;
                             break;
                         }
-                    }
-                    else
-                    {
-                        ArchaeaNPC.DrawChain(Mod.Assets.Request<Texture2D>("Gores/chain").Value, sb, _lock.portal.entrance + new Vector2(8, 8), Main.MouseWorld);
-                        continue;
+                        return;
                     }
                 }
+                ArchaeaNPC.DrawChain(Mod.Assets.Request<Texture2D>("Gores/chain").Value, sb, _lock.portal.entrance + new Vector2(12, 12), Main.MouseWorld + new Vector2(12, 12));
                 return;
             }
             if (close)
             {
-                complete = "";
-                _lock.Clear();
-                num2 = 0;
+                Clear();
                 SoundEngine.PlaySound(SoundID.MenuClose, Main.player[Main.myPlayer].Center);
-                display = false;
             }
             if (display && interact)
             {
@@ -176,18 +212,29 @@ namespace ArchaeaMod.Structure
                     input[m, n].Draw(input[m, n].HoverOver(idk));
                     if (input[m, n].LeftClick(idk))
                     {
-                        if (input[m, n].reserved == 0)
+                        if (num3 == 0 && input[m, n].reserved == 0)
                         {
                             input[m, n].reserved = 1;
                             if (!_lock.Complete())
                             {
-                                complete += t;
-                                textbox[num2].text = _lock.Obsfucated(ref t)[num2].ToString();
-                                num2++;
+                                if (num2 < 4)
+                                { 
+                                    complete += t;
+                                    textbox[num2].text = _lock.Obsfucated(ref t)[0].ToString();
+                                    num2++;
+                                }
+                                else
+                                {
+                                    Clear();
+                                }
                             }
                         }
                     }
-                    else input[m, n].reserved = 0;
+                    else
+                    {
+                        num3 = 0;
+                        input[m, n].reserved = 0;
+                    }
                 }
             }
             for (int m = 0; m < 4; m++)
@@ -195,14 +242,26 @@ namespace ArchaeaMod.Structure
                 sb.Draw(TextureAssets.MagicPixel.Value, textbox[m].box, Color.White * 0.5f);
                 textbox[m].DrawText();
             }
-            if (_lock.Compare(complete))
+            if (_lock != null && complete != string.Empty && _lock.Compare(complete))
             {
-                _lock.Clear();
-                num2 = 0;
-                display = false;
-                complete = "";
+                Clear();
                 Main.player[Main.myPlayer].Teleport(_lock.portal.exit);
+                _lock = GetLockByExit(_lock.portal.exit);
             }
+        }
+        private void Clear()
+        {
+            for (int k = 0; k < textbox.Length; k++)
+            {
+                if (textbox[k] != null)
+                { 
+                    textbox[k].text = string.Empty;
+                }
+            }
+            _lock?.Clear();
+            num2 = 0;
+            display = false;
+            complete = "";
         }
     }
     internal struct Portal
@@ -217,25 +276,67 @@ namespace ArchaeaMod.Structure
             }
             return new Rectangle((int)v.X, (int)v.Y, 16, 16);
         }
+        public static bool operator !=(Portal a, Portal b)
+        {
+            return a.entrance != b.entrance;
+        }
+        public static bool operator ==(Portal a, Portal b)
+        {
+            return a.entrance == b.entrance;
+        }
+        public override bool Equals(object obj)
+        {
+            return this == (Portal)obj;
+        }
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
-    internal struct Code
+    internal class Code
     {
         public bool connected;
         public bool newInput;
-        public int owner;
-        public string code;
-        public string compare;
+        public bool active;
+        public int whoAmI;
+        public string code = "";
+        public string compare = "";
         public Portal portal;
+        public static Code NewLock(Vector2 position)
+        {
+            int num = 200;
+            for (int i = 0; i < Keypad.code.Length; i++)
+            {
+                if (Keypad.code[i] == null || !Keypad.code[i].active)
+                {
+                    num = i;
+                    break;
+                }
+                if (i == num)
+                {
+                    return default;
+                }
+            }
+            Keypad.code[num] = new Code();
+            Keypad.code[num].whoAmI = num;
+            Keypad.code[num].active = true;
+            Keypad.code[num].portal = new Portal();
+            Keypad.code[num].portal.entrance = position;
+            Keypad.code[num].connected = false;
+            Keypad.code[num].Initialize();
+            return Keypad.code[num];
+        }
         private void Initialize()
         {
-            if (string.IsNullOrEmpty(code))
+            if (string.IsNullOrEmpty(compare))
             { 
                 code = "";
+                compare = "";
             }
         }
         public bool Complete()
         {
-            if (code?.Length >= 4)
+            if (code.Length >= 4 && compare.Length == 0)
             {
                 compare = code;
                 return true;
@@ -262,6 +363,22 @@ namespace ArchaeaMod.Structure
         public bool Compare(string input)
         {
             return compare == input;
+        }
+        public static bool operator !=(Code a, Code b)
+        {
+            return a?.portal != b?.portal;
+        }
+        public static bool operator ==(Code a, Code b)
+        {
+            return a?.portal == b?.portal;
+        }
+        public override bool Equals(object obj)
+        {
+            return this == (Code)obj;
+        }
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
         }
     }
 }
