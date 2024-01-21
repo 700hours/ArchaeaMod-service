@@ -1,5 +1,6 @@
 using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -9,11 +10,9 @@ namespace ArchaeaMod.Jobs.Items
 {
     internal class Tome_of_soften : ModItem
 	{
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Tome of Soften");
-			/* Tooltip.SetDefault("Weakens an enemy's defenses, including bosses.\n" +
-				"Costs mana directionally proportional to NPC size."); */
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Costs 1/4 enemy width"));
         }
         public override void SetDefaults()
         {
@@ -67,10 +66,9 @@ namespace ArchaeaMod.Jobs.Items
                     }
                     SoundEngine.PlaySound(SoundID.Item8, mousev);
                     ArchaeaNPC.AddBuffNetNPC(nPC, ModContent.BuffType<Buffs.Soft>(), Buffs.Soft.MaxTime);
-					return true;
 				}
 			}
-			return false;
+			return true;
 		}
         public override void AddRecipes()
         {

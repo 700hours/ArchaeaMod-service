@@ -97,7 +97,7 @@ namespace ArchaeaMod.Jobs.Items
                     }
                 }
 			}
-            return false;
+            return true;
         }
         public override void AddRecipes()
         {

@@ -167,15 +167,15 @@ namespace ArchaeaMod.Structure
                             {
                                 if (!placed)
                                 { 
-                                    t.PlaceTile(i, j, (ushort)ModContent.TileType<Tiles.m_chandelier>(), true, false, 4, false);
-                                    placed = Main.tile[i, j].TileType == (ushort)ModContent.TileType<Tiles.m_chandelier>();
+                                    t.PlaceTile(i, j, (ushort)ModContent.TileType<ArchaeaMod.Tiles.m_chandelier>(), true, false, 4, false);
+                                    placed = Main.tile[i, j].TileType == (ushort)ModContent.TileType<ArchaeaMod.Tiles.m_chandelier>();
                                 }
                             }
                             goto default;
                         case RoomID.Dais:
                             if (IsTop(j) && IsCenter(i))
                             {
-                                WorldGen.PlaceTile(i, j, ModContent.TileType<Tiles.m_chandelier>(), true, true);
+                                WorldGen.PlaceTile(i, j, ModContent.TileType<ArchaeaMod.Tiles.m_chandelier>(), true, true);
                             }
                             if (IsRight(i) && IsBottom(j))
                             { 
@@ -185,7 +185,7 @@ namespace ArchaeaMod.Structure
                                 WorldGen.PlaceTile(i - 2 - offX, j, ArchaeaWorld.factoryBrick, true, true);
                                 WorldGen.PlaceTile(i     - offX, j - 1, ArchaeaWorld.factoryBrick, true, true);
                                 WorldGen.PlaceTile(i - 1 - offX, j - 1, ArchaeaWorld.factoryBrick, true, true);
-                                WorldGen.PlaceTile(i     - offX, j - 2, (ushort)ModContent.TileType<Tiles.m_chair>(), true, true);
+                                WorldGen.PlaceTile(i     - offX, j - 2, (ushort)ModContent.TileType<ArchaeaMod.Tiles.m_chair>(), true, true);
                                 return;
                             }
                             goto default;

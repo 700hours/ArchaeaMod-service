@@ -5,6 +5,7 @@ using ArchaeaMod.Jobs.Projectiles;
 using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -17,12 +18,6 @@ namespace ArchaeaMod.Jobs.Items
 {
     internal class Scroll_plague_explosion : ModItem
 	{
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Scroll of Plague Explosion");
-			/* Tooltip.SetDefault("Strikes an enemy with poison.\n" +
-				"One use."); */
-        }
         public override void SetDefaults()
         {
             Item.width = 28;
@@ -42,7 +37,7 @@ namespace ArchaeaMod.Jobs.Items
         }
         public override bool? UseItem(Player player)
         {
-			Vector2 mousev = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y);
+			Vector2 mousev = Main.MouseWorld;
 			Rectangle mouse = new Rectangle((int)(mousev.X - 16f), (int)(mousev.Y - 16f), 32, 32);
 			NPC[] npc = Main.npc;
 			for(int m = 0; m < npc.Length; m++)
@@ -78,10 +73,9 @@ namespace ArchaeaMod.Jobs.Items
 						nPC.netUpdate = true;
 					}
 					SoundEngine.PlaySound(SoundID.Item8, mousev);
-					return true;
 				}
 			}
-			return false;
+			return true;
 		}
         public override void AddRecipes()
         {

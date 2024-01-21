@@ -74,7 +74,7 @@ namespace ArchaeaMod.Gen
             ScreenWidth = 800;
             ScreenHeight = 450;
         }
-        public void tGenerate(GenerationProgress progress)
+        public void tGenerate(ref GenerationProgress progress)
         {
             int width = ScreenWidth;
             int height = ScreenHeight;
@@ -95,7 +95,7 @@ namespace ArchaeaMod.Gen
             bool level = true;
             bool ash = false;
             float ashChance = 0.33f;
-            float radiusLimit = 1.05f;
+            float radiusLimit = 2.1f;  //original: 1.05f;
             int radiusDownsizer = -5;
             float emptyWallChance = 0.8f;
             while (start.X < left + width / 2)

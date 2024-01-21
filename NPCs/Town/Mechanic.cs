@@ -61,6 +61,10 @@ namespace ArchaeaMod.NPCs.Town
         }
         public override string GetChat()
         {
+            if (Main.LocalPlayer.InModBiome<FactoryBiome>())
+            {
+                return "Be sure to place wiring on all the metal doors before the Mechanic can open them.";
+            }
             if (!justTalked)
             {
                 justTalked = true;

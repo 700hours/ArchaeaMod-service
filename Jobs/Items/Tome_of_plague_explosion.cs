@@ -3,6 +3,7 @@ using ArchaeaMod.Jobs.Buffs;
 
 using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -12,10 +13,9 @@ namespace ArchaeaMod.Jobs.Items
 {
     internal class Tome_of_plague_explosion : ModItem
 	{
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Tome of Plague Explosion");
-            // Tooltip.SetDefault("Strikes an enemy with poison.");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Costs 30 mana"));
         }
         public override void SetDefaults()
         {
@@ -77,11 +77,10 @@ namespace ArchaeaMod.Jobs.Items
                         }
                         SoundEngine.PlaySound(SoundID.Item8, mousev);
                         player.statMana -= 30;
-                        return true;
                     }
                 }
             }
-            return false;
+            return true;
         }
     }
 }

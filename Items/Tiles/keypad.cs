@@ -13,8 +13,8 @@ namespace ArchaeaMod.Items.Tiles
         public override string Texture => $"Terraria/Images/Item_{ItemID.Timer5Second}";
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Magnoliac Biome"));
-            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "R.A."));
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Short-ranged directional portal"));
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Operates in sets of two"));
         }
         public override void SetDefaults()
         {
@@ -23,8 +23,8 @@ namespace ArchaeaMod.Items.Tiles
             Item.useTime = 30;
             Item.useAnimation = 35;
             Item.useStyle = 1;
-            Item.value = 500;
-            Item.maxStack = 99;
+            Item.value = 1000;
+            Item.maxStack = 999;
             Item.rare = 2;
             Item.autoReuse = false;
             Item.noMelee = true;

@@ -4,6 +4,7 @@ using ArchaeaMod.Jobs.Projectiles;
 using ArchaeaMod.NPCs;
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -14,10 +15,9 @@ namespace ArchaeaMod.Jobs.Items
 {
     internal class Tome_of_plague : ModItem
 	{
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Tome of Plague");
-			// Tooltip.SetDefault("Plagues an enemy.");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Costs 10 mana"));
         }
         public override void SetDefaults()
         {
@@ -69,12 +69,10 @@ namespace ArchaeaMod.Jobs.Items
 						Main.projectile[proj].localAI[0] = ModContent.BuffType<Plague>();
                         Main.projectile[proj].localAI[1] = DustID.GreenTorch;
                         player.statMana -= 10;
-                        return null;
 					}
 				}
-				return false;
 			}
-			return false;
+			return true;
 		}
         public override void AddRecipes()
         {	

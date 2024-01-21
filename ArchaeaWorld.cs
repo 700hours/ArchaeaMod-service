@@ -38,6 +38,18 @@ namespace ArchaeaMod
 {
     public class ArchaeaWorld : ModSystem
     {
+        public static ushort factoryMetalDoorOpen
+        {
+            get { return (ushort)ModContent.TileType<Structure.Tiles.MetalDoorOpen>(); }
+        }
+        public static ushort factoryMetalDoorOpening
+        {
+            get { return (ushort)ModContent.TileType<Structure.Tiles.MetalDoorOpening>(); }
+        }
+        public static ushort factoryMetalDoor
+        {
+            get { return (ushort)ModContent.TileType<Structure.Tiles.ClosedMetalDoor>(); }
+        }
         public static ushort factoryOilLeak
         {
             get { return (ushort)ModContent.TileType<factory_oil_leak>(); }
@@ -214,7 +226,7 @@ namespace ArchaeaMod
                     //  Getting hint 
                     MagnoBiomeOriginX = originX;
                     MagnoV2 magno = MagnoV2.NewBiome(ref originX, ref originY);
-                    magno.tGenerate(progress);
+                    magno.tGenerate(ref progress);
                 }));
             }
             int shinies = tasks.FindIndex(pass => pass.Name.Equals("Altars"));
@@ -579,14 +591,7 @@ namespace ArchaeaMod
                         }
                         WorldGen.PlaceTile(i + k, j, tileType, true, true);
                     }
-                    WorldGen.Place3x2(i + 2, j - 1, TileID.Campfire, WorldGen.genRand.Next(6));
-                    WorldGen.PlaceWall(i + 5, j - 1, WallID.WoodenFence, true);
-                    WorldGen.PlaceWall(i + 5, j - 2, WallID.WoodenFence, true);
-                    WorldGen.PlaceWall(i + 5, j - 3, WallID.WoodenFence, true);
-                    WorldGen.PlaceWall(i + 5, j - 4, WallID.WoodenFence, true);
-                    WorldGen.PlaceWall(i + 5, j - 5, WallID.WoodenFence, true);
-                    WorldGen.PlaceTile(i + 5, j - 5, TileID.WoodBlock, true, true);
-                    WorldGen.PlaceBanner(i + 5, j -4, TileID.Banners, WorldGen.genRand.Next(4));
+                    
                 }));
             }
         }

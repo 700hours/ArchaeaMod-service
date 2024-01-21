@@ -23,9 +23,7 @@ namespace ArchaeaMod.Jobs.Items
 	{
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            //tooltips.Add(new TooltipLine(Mod, "ItemName", "Tome of Summoning"));
-            //tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Displaces an NPC into your target. Costs 1/3 max mana."));
-            //tooltips.Add(new TooltipLine(Mod, "Tooltip1", "Requires line of sight with target."));
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Displaces an NPC into your target. Costs 1/3 max mana."));
         }
         public override void SetDefaults()
         {
@@ -88,9 +86,8 @@ namespace ArchaeaMod.Jobs.Items
                 #endregion
                 //Main.npc[CreatePlayered].AddBuff(ModContent.BuffType<Buffs.Summoned>(), Buffs.Summoned.MaxTime, Main.netMode == 1);
                 //Main.npc[CreatePlayered].netUpdate = true;
-                return true;
 			}
-			return false;
+			return true;
 		}
         public override void AddRecipes()
         {

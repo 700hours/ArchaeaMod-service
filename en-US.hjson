@@ -719,6 +719,11 @@ Mods: {
 				DisplayName: Bom Vest
 				Tooltip: 20% reduced explosion damage
 			}
+
+			keypad: {
+				DisplayName: Code Lock
+				Tooltip: One way in, one way out
+			}
 		}
 
 		Projectiles: {

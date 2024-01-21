@@ -6,9 +6,6 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
-using System.Collections.Generic;
-using ArchaeaMod;
-
 namespace ArchaeaMod.Gen
 {
     public class Sector

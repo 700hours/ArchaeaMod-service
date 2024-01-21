@@ -6,3 +6,11 @@ Get mechanic to have a function with the Factory
 > Give mechanic a buff when following for survival
 Rework lighting for Factory
 > Maybe make colors have Gamma difference in accordance to distance from player
+Class Instance is a thing
+
+Have door hit-check tiles
+Door NPC that mechanic attacks and breaks tile behind
+> NPC that never despawns (always loaded)
+Door that opens with enough damage hitting it (like a key)
+"    "    "     "    correct projectile hitting it
+"    "    "     "    "       key in inventory

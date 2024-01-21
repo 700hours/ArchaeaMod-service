@@ -142,6 +142,10 @@ namespace ArchaeaMod.NPCs
             {
                 shop.Add(new NPCShop.Entry(ModContent.ItemType<Items.gray_solution>()));
             }
+            else if (shop.NpcType == NPCID.Mechanic)
+            {
+                shop.Add(new NPCShop.Entry(ModContent.ItemType<Items.Tiles.keypad>()));
+            }
         }
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
@@ -237,7 +241,7 @@ namespace ArchaeaMod.NPCs
             {
                 NetMessage.SendData(55, -1, -1, null, player.whoAmI, buffType, duration);
             }
-        }
+        }                                                                    
         public static void DrawChain(Texture2D tex, SpriteBatch sb, Vector2 start, Vector2 end, int len = 12)
         {
             for (int n = 0; n < start.Distance(end); n += len)

@@ -1,5 +1,6 @@
 using ArchaeaMod.Items;
 using ArchaeaMod.NPCs;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,12 +9,6 @@ namespace ArchaeaMod.Jobs.Items
 { 
     internal class Scroll_plague_nova : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Scroll of Plague Nova");
-            /* Tooltip.SetDefault("Create a blast of poison around you.\n" + 
-                "One use."); */
-        }
         public override void SetDefaults()
         {
             Item.width = 28;
@@ -41,9 +36,8 @@ namespace ArchaeaMod.Jobs.Items
                     Main.dust[index].noGravity = true;
                 }
                 ArchaeaItem.ProjectileCircle(Main.MouseWorld, Item.damage, ModContent.ProjectileType<Projectiles.diffusion>(), 20, 61, ModContent.BuffType<Buffs.Plague>(), 300, 0);
-                return true;
             }
-            return false;
+            return true;
         }
         public override void AddRecipes()
         {

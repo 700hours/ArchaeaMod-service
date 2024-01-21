@@ -7,6 +7,7 @@ using ArchaeaMod.NPCs.Bosses;
 using Humanizer;
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Terraria;
@@ -22,10 +23,9 @@ namespace ArchaeaMod.Jobs.Items
 {
     internal class Tome_of_weaken : ModItem
 	{
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Tome of Weaken");
-			// Tooltip.SetDefault("Weakens an enemy.");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Costs 5 mana"));
         }
         public override void SetDefaults()
         {
@@ -71,11 +71,10 @@ namespace ArchaeaMod.Jobs.Items
                         int proj = Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<t_effect>(), 0, 0f, Main.myPlayer, 0, nPC.whoAmI);
                         Main.projectile[proj].localAI[0] = ModContent.BuffType<Weaken>();
                         Main.projectile[proj].localAI[1] = DustID.PinkTorch;
-                        return true;
 					}
 				}
 			}
-			return false;
+			return true;
 		}
         public override void AddRecipes()
         {

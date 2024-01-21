@@ -1,4 +1,11 @@
-version 1.4.50.307 -> 1.4.51.308
+version 1.4.51.308 -> 1.4.51.308
 ================================
+# Added
+-> Code lock item and tile
+-> Trees draw in front of player
+-> 1 biome obstacle
+-> 1 new NPC dialogue
 # Fixed
--> Life Crystal usage when not in Archaea Mode
+-> Tome and Scroll items being unusable
+# Changed
+-> Shrinking biome radius by 60% instead of 5%;

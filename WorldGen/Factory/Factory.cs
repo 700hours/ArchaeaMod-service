@@ -16,6 +16,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.WorldBuilding;
 
+using ArchaeaMod;
 using ArchaeaMod.GenLegacy;
 using ArchaeaMod.Items;
 using ArchaeaMod.Items.Alternate;
@@ -23,7 +24,6 @@ using ArchaeaMod.Merged;
 using ArchaeaMod.Merged.Items;
 using ArchaeaMod.Merged.Tiles;
 using ArchaeaMod.Merged.Walls;
-using Steamworks;
 
 namespace ArchaeaMod.Structure
 {
@@ -40,7 +40,8 @@ namespace ArchaeaMod.Structure
             Wall = ArchaeaWorld.factoryBrickWallUnsafe,
             Tile2 = ArchaeaWorld.Ash,
             ConveyerL = TileID.ConveyorBeltLeft,
-            ConveyerR = TileID.ConveyorBeltRight;
+            ConveyerR = TileID.ConveyorBeltRight,
+            Door = ArchaeaWorld.factoryMetalDoor;
         public static IList<Room> room = new List<Room>();
         public void CastleGen(out ushort[,] tile, out ushort[,] background, int width, int height, int size = 4, int maxNodes = 50, float nodeDistance = 60)
         {
@@ -366,6 +367,13 @@ namespace ArchaeaMod.Structure
                     }
                     tile[X, Y] = Air;
                     wall[X, Y] = Wall;
+                    if (j == 0 && WorldGen.genRand.NextBool(60))
+                    {
+                        for (int l = 0; l < 6; l++)
+                        {
+                            tile[X, Y + l] = Door;
+                        }
+                    }
                 }
             }
         }
@@ -523,14 +531,14 @@ namespace ArchaeaMod.Structure
                                 {
                                     if (!placed)
                                     {
-                                        t.PlaceTile(i + m, j + 2, (ushort)ModContent.TileType<Tiles.m_chandelier>(), true, false, 4, false);
-                                        placed = Main.tile[i + m, j + 2].TileType == ModContent.TileType<Tiles.m_chandelier>();
+                                        t.PlaceTile(i + m, j + 2, (ushort)ModContent.TileType<ArchaeaMod.Tiles.m_chandelier>(), true, false, 4, false);
+                                        placed = Main.tile[i + m, j + 2].TileType == ModContent.TileType<ArchaeaMod.Tiles.m_chandelier>();
                                     }
                                     if (m == 2) 
                                     {
                                         if (WorldGen.genRand.NextBool(8))
                                         { 
-                                            WorldGen.PlaceTile(i + m, j - 1, ModContent.TileType<Tiles.m_chair>(), true, true);
+                                            WorldGen.PlaceTile(i + m, j - 1, ModContent.TileType<ArchaeaMod.Tiles.m_chair>(), true, true);
                                         }
                                     }
                                 }
@@ -551,14 +559,14 @@ namespace ArchaeaMod.Structure
                                 {
                                     if (!placed)
                                     { 
-                                        t.PlaceTile(i + m, j + 2, (ushort)ModContent.TileType<Tiles.m_chandelier>(), true, false, 4, false);
-                                        placed = Main.tile[i + m, j + 2].TileType == ModContent.TileType<Tiles.m_chandelier>();
+                                        t.PlaceTile(i + m, j + 2, (ushort)ModContent.TileType<ArchaeaMod.Tiles.m_chandelier>(), true, false, 4, false);
+                                        placed = Main.tile[i + m, j + 2].TileType == ModContent.TileType<ArchaeaMod.Tiles.m_chandelier>();
                                     }
                                     if (m == 2)
                                     {
                                         if (WorldGen.genRand.NextBool(8))
                                         {
-                                            WorldGen.PlaceTile(i - m, j - 1, ModContent.TileType<Tiles.m_chair>(), true, true);
+                                            WorldGen.PlaceTile(i - m, j - 1, ModContent.TileType<ArchaeaMod.Tiles.m_chair>(), true, true);
                                         }
                                     }
                                 }

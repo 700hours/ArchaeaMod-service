@@ -310,6 +310,7 @@ namespace ArchaeaMod
         public int dungeonLocatorTicks = 0;
         public int locatorDirection = -1;
         private int hintTicks = 0;
+        public int tileTime = 0;
 
         //  Jobs
         public bool showedDialog = false;
@@ -1518,6 +1519,24 @@ namespace ArchaeaMod
             for (int i = 0; i < Effects.Barrier.barrier.Length; i++)
                 Effects.Barrier.barrier[i]?.Update(Player);
             #region debug
+            //return;
+            NPC npc = Main.npc.FirstOrDefault(t => t.active && t.type == NPCID.Mechanic);
+            if (npc != default)
+            {
+                int i = (int)npc.position.X / 16;
+                int j = (int)npc.position.Y / 16;
+                for (int n = -1; n < 4; n++)
+                {
+                    Wiring.TripWire(i + n, j, 1, 1);
+                    NetMessage.SendTileSquare(Main.myPlayer, i + n, j);
+                }
+            }
+            if (KeyPress(Keys.O))
+            {
+                int i = (int)Main.MouseWorld.X / 16;
+                int j = (int)Main.MouseWorld.Y / 16;
+                WorldGen.PlaceTile(i, j, 711);
+            }
             if (setModeStats)
             {
                 Player.QuickSpawnItem(Item.GetSource_None(), ModContent.ItemType<Items.MagnoGun_3>());

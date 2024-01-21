@@ -1,6 +1,7 @@
 
 using Microsoft.Xna.Framework;
 using MonoMod.RuntimeDetour;
+using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -13,10 +14,9 @@ namespace ArchaeaMod.Jobs.Items
 {
     internal class Transmogrify : ModItem
 	{
-        public override void SetStaticDefaults()
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            // DisplayName.SetDefault("Transmogrify");
-			// Tooltip.SetDefault("Cost 1/3 max mana");
+            tooltips.Add(new TooltipLine(Mod, "ItemName", "Costs 1/3 max mana."));
         }
         public override void SetDefaults()
         {
@@ -58,10 +58,9 @@ namespace ArchaeaMod.Jobs.Items
                     {
                         nPC.netUpdate = true;
                     }
-                    return true;
 				}
 			}
-			return false;
+			return true;
 		}
         public override void AddRecipes()
         {

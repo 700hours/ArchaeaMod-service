@@ -254,16 +254,13 @@ Items: {
 	}
 
 	keypad: {
-		DisplayName: keypad
-		Tooltip: ""
 	}
 }
 
 Projectiles: {
 }
 
-NPCs: {
-}
+NPCs.DoorNPC.DisplayName: Door N P C
 
 Tiles: {
 	m_chest: {

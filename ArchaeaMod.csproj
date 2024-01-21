@@ -67,6 +67,9 @@
     <None Remove="NPCs\Bosses\factory_02.png" />
     <None Remove="NPCs\Bosses\factory_02_arm_01.png" />
     <None Remove="NPCs\Bosses\factory_02_arm_02.png" />
+    <None Remove="WorldGen\Factory\Tiles\ClosedMetalDoor.png" />
+    <None Remove="WorldGen\Factory\Tiles\MetalDoorOpen.png" />
+    <None Remove="WorldGen\Factory\Tiles\MetalDoorOpening.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Jobs\Projectiles\art\" />

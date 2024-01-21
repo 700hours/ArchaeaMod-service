@@ -50,9 +50,8 @@ namespace ArchaeaMod.Jobs.Items
                     Main.dust[index].noGravity = true;
                 }
                 ArchaeaItem.ProjectileCircle(Main.MouseWorld, Item.damage, ModContent.ProjectileType<Projectiles.diffusion>(), 20, 59, ModContent.BuffType<ArchaeaMod.Buffs.frozen>(), 300, 0);
-				return true;
             }
-            return false;
+            return true;
 		}
         public override void AddRecipes()
         {
